@@ -1,11 +1,13 @@
-import useWindowDimensions from "../../common/useWindowDimensions";
+import getDimension from "../../common/getDimension";
 
 export default function () {
-  const { height, width } = useWindowDimensions();
+  const { ref, width, height } = getDimension();
 
   return (
-    <div>
-      width: {width} ~ height: {height}
+    <div ref={ref} style={{ width: "100%", backgroundColor: "green" }}>
+      <h2>Element Size</h2>
+      <p>Width: {width}px</p>
+      <p>Height: {height}px</p>
     </div>
   );
 }

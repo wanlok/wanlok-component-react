@@ -1,8 +1,8 @@
 import Main from "./layout/Main";
+import General from "./page/general";
 import Landing from "./page/landing";
 import Map from "./page/map";
 import Chart from "./page/chart";
-import General from "./page/general";
 
 export default [
   {
