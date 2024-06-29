@@ -1,3 +1,11 @@
+import useWindowDimensions from "../../common/useWindowDimensions";
+
 export default function () {
-  return <div>Hello World</div>;
+  const { height, width } = useWindowDimensions();
+
+  return (
+    <div>
+      width: {width} ~ height: {height}
+    </div>
+  );
 }
