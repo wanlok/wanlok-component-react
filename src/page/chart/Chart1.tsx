@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ReactDOMServer from "react-dom/server";
 import ReactApexChart, { Props as ChartProps } from "react-apexcharts";
+import getDimension from "../../common/getDimension";
 
 interface Series {
   series: any;
@@ -9,15 +10,39 @@ interface Series {
   w: any;
 }
 
+const year = 2024;
+
+function getDates() {
+  const dates = [];
+  for (var month = 1; month <= 12; month++) {
+    const numberOfDays = new Date(year, month, 0).getDate();
+    for (var day = 1; day <= numberOfDays; day++) {
+      dates.push(day + "-" + month + "-" + year);
+    }
+  }
+  return dates;
+}
+
+function getValues() {
+  const values = [];
+  for (var month = 1; month <= 12; month++) {
+    const numberOfDays = new Date(year, month, 0).getDate();
+    for (var day = 1; day <= numberOfDays; day++) {
+      values.push(Math.floor(Math.random() * 100));
+    }
+  }
+  return values;
+}
+
 const dataset: any = {
   title: "Peak Efficiency",
   series: [
     {
       name: "Line 1",
-      data: Array.from({ length: 365 }, () => Math.floor(Math.random() * 100)),
+      data: getValues(),
     },
   ],
-  x: Array.from({ length: 365 }, (_, i) => `${i + 1}`),
+  x: getDates(),
   compareEnabled: true,
 };
 
@@ -153,8 +178,10 @@ function Legend(seriesName: string, opts: any) {
 
 export default function () {
   const [options, setOptions] = useState<ChartProps>(areaChartOptions);
-  const visiblePoints = 10;
-  const chartWidth = visiblePoints * dataset["x"].length * 4;
+  const { ref, width } = getDimension();
+  const numberOfMonths = 6;
+  const chartWidth = ((width / dataset["x"].length) * 4400) / numberOfMonths;
+
   useEffect(() => {
     var legend = {};
     if (dataset["series"].length == 1) {
@@ -185,16 +212,24 @@ export default function () {
         // },
         categories: dataset["x"],
         // tickAmount: visiblePoints,
+        labels: {
+          formatter: function (value: any) {
+            if (value) {
+              const slices = value.split("-");
+              return slices[0] == "1" ? value : "";
+            } else {
+              return "";
+            }
+          },
+        },
       },
       ...legend,
       ...annotations,
     }));
   }, []);
 
-  console.log("CHECKING chartWidth: " + chartWidth);
-
   return (
-    <div style={{ overflowX: "auto" }}>
+    <div ref={ref} style={{ overflowX: "auto", overflowY: "hidden" }}>
       <div style={{ minWidth: chartWidth + "px" }}>
         <ReactApexChart
           options={options}
