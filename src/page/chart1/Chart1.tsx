@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ReactDOMServer from "react-dom/server";
 import ReactApexChart, { Props as ChartProps } from "react-apexcharts";
 
@@ -14,10 +14,10 @@ const dataset: any = {
   series: [
     {
       name: "Line 1",
-      data: Array.from({ length: 100 }, () => Math.floor(Math.random() * 100)),
+      data: Array.from({ length: 365 }, () => Math.floor(Math.random() * 100)),
     },
   ],
-  x: Array.from({ length: 100 }, (_, i) => `Point ${i + 1}`),
+  x: Array.from({ length: 365 }, (_, i) => `${i + 1}`),
   compareEnabled: true,
 };
 
@@ -153,12 +153,56 @@ function Legend(seriesName: string, opts: any) {
 
 export default function () {
   const [options, setOptions] = useState<ChartProps>(areaChartOptions);
+  const visiblePoints = 10;
+  const chartWidth = visiblePoints * dataset["x"].length * 4;
+  useEffect(() => {
+    var legend = {};
+    if (dataset["series"].length == 1) {
+      legend = {
+        legend: {
+          formatter: function (seriesName: string, opts: any) {
+            return null;
+          },
+        },
+      };
+    }
+    var annotations = {};
+    // annotations: {
+    //     yaxis: [
+    //         {
+    //             y: 70,
+    //             borderColor: 'red'
+    //         }
+    //     ]
+    // },
+    setOptions((prevState) => ({
+      ...prevState,
+      xaxis: {
+        // labels: {
+        //   style: {
+        //     colors: getColours("white", 6),
+        //   },
+        // },
+        categories: dataset["x"],
+        // tickAmount: visiblePoints,
+      },
+      ...legend,
+      ...annotations,
+    }));
+  }, []);
+
+  console.log("CHECKING chartWidth: " + chartWidth);
+
   return (
-    <ReactApexChart
-      options={options}
-      series={dataset["series"]}
-      type="area"
-      height={400}
-    />
+    <div style={{ overflowX: "auto" }}>
+      <div style={{ minWidth: chartWidth + "px" }}>
+        <ReactApexChart
+          options={options}
+          series={dataset["series"]}
+          type="area"
+          height={400}
+        />
+      </div>
+    </div>
   );
 }
