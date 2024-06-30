@@ -45,9 +45,18 @@ const dataset: Dataset = {
 
 export default function () {
   return (
-    <div>
+    <div style={{ height: "calc(100% - 40px)" }}>
       Chart
-      <LineChart dataset={dataset} />
+      <LineChart
+        dataset={dataset}
+        xFormatter={function (value: string) {
+          return value ? (value.split("-")[0] == "1" ? value : "") : "";
+        }}
+        chartWidth={function (width: number) {
+          const numberOfMonths = 6;
+          return ((width / dataset.x.length) * 4400) / numberOfMonths;
+        }}
+      />
     </div>
   );
 }

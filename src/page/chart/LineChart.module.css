@@ -1,6 +1,11 @@
-.main {
+.chart {
+  height: 100%;
   overflow-x: auto;
   overflow-y: hidden;
+}
+
+.chart > div {
+  height: calc(100% - 4px);
 }
 
 .legend {

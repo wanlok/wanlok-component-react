@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import ReactDOMServer from "react-dom/server";
 import ReactApexChart, { Props as ApexChartProps } from "react-apexcharts";
 import getDimension from "../../common/getDimension";
@@ -11,7 +10,7 @@ interface Series {
   w: any;
 }
 
-const apexChartProps = {
+const apexChartProps: ApexChartProps = {
   chart: {
     toolbar: {
       show: false,
@@ -38,6 +37,22 @@ const apexChartProps = {
     },
     axisTicks: {
       show: false,
+    },
+    labels: {
+      rotateAlways: true,
+      rotate: 360,
+      offsetY: 16,
+      offsetX: 12,
+      style: { fontSize: "12px" },
+    },
+  },
+  yaxis: {
+    labels: {
+      rotateAlways: true,
+      rotate: 360,
+      offsetY: 0,
+      offsetX: -4,
+      style: { fontSize: "12px" },
     },
   },
   legend: {
@@ -108,71 +123,44 @@ function Legend(seriesName: string, opts: any) {
 }
 
 function setX(
+  props: any,
   dataset: Dataset,
   colour: string,
   formatter: (value: string) => string
 ) {
-  return {
-    xaxis: {
-      categories: dataset.x,
-      labels: {
-        formatter: formatter,
-        style: {
-          colors: Array.from({ length: dataset.x.length }, () => colour),
-        },
-      },
-    },
-    colors: dataset.series.map((series) => series.colour),
-  };
+  props.xaxis.categories = dataset.x;
+  props.xaxis.labels.style.colors = Array.from(
+    { length: dataset.x.length },
+    () => colour
+  );
+  props.colors = dataset.series.map((series) => series.colour);
+  props.xaxis.labels.formatter = formatter;
 }
 
-function setYColour(colour: string) {
-  return {
-    yaxis: {
-      labels: {
-        style: {
-          colors: [colour],
-        },
-      },
-    },
-  };
+function setYColour(props: any, colour: string) {
+  props.yaxis.labels.style.colors = [colour];
 }
 
-function setGridColour(colour: string) {
-  return {
-    grid: {
-      borderColor: colour,
-    },
-  };
+function setGridColour(props: any, colour: string) {
+  props.grid.borderColor = colour;
 }
 
-function setLegendHidden(hidden: boolean) {
-  var legend;
+function setLegendHidden(props: any, hidden: boolean) {
   if (hidden) {
-    legend = {
-      legend: {
-        formatter: function () {
-          return null;
-        },
-      },
+    props.legend.formatter = function () {
+      return null;
     };
-  } else {
-    legend = {};
   }
-  return legend;
 }
 
-function setTooltip(dataset: Dataset) {
-  return {
-    tooltip: {
-      custom: function (series: Series) {
-        return ReactDOMServer.renderToString(Tooltip(dataset, series));
-      },
-    },
+function setTooltip(props: any, dataset: Dataset) {
+  props.tooltip = {};
+  props.tooltip.custom = function (series: Series) {
+    return ReactDOMServer.renderToString(Tooltip(dataset, series));
   };
 }
 
-function setAnnotations() {
+function addHorizontalLine() {
   var annotations = {};
   // annotations: {
   //     yaxis: [
@@ -185,34 +173,32 @@ function setAnnotations() {
   return annotations;
 }
 
-export default function ({ dataset }: { dataset: Dataset }) {
-  const [options, setOptions] = useState<ApexChartProps>(apexChartProps);
+export default function ({
+  dataset,
+  xFormatter,
+  chartWidth,
+}: {
+  dataset: Dataset;
+  xFormatter: (value: string) => string;
+  chartWidth: (width: number) => number;
+}) {
   const { ref, width } = getDimension();
-  const numberOfMonths = 6;
-  const chartWidth = ((width / dataset.x.length) * 4400) / numberOfMonths;
 
-  useEffect(() => {
-    setOptions((prevState) => ({
-      ...prevState,
-      ...setX(dataset, "black", function (value: string) {
-        return value ? (value.split("-")[0] == "1" ? value : "") : "";
-      }),
-      ...setYColour("black"),
-      ...setGridColour("blue"),
-      ...setTooltip(dataset),
-      ...setLegendHidden(dataset.series.length == 1),
-      ...setAnnotations(),
-    }));
-  }, [dataset]);
+  setX(apexChartProps, dataset, "black", xFormatter);
+  setYColour(apexChartProps, "black");
+  setGridColour(apexChartProps, "blue");
+  setTooltip(apexChartProps, dataset);
+  setLegendHidden(apexChartProps, dataset.series.length == 1);
 
   return (
-    <div ref={ref} className={classes.main}>
-      <div style={{ minWidth: chartWidth + "px" }}>
+    <div ref={ref} className={classes.chart}>
+      <div style={{ width: chartWidth(width) + "px" }}>
         <ReactApexChart
-          options={options}
+          options={apexChartProps}
           series={dataset.series}
           type="area"
-          height={400}
+          height="100%"
+          width="100%"
         />
       </div>
     </div>
