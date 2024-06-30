@@ -22,7 +22,6 @@ const areaChartOptions = {
   },
   grid: {
     show: true,
-    borderColor: "#5F6274",
   },
   dataLabels: {
     enabled: false,
@@ -39,13 +38,6 @@ const areaChartOptions = {
     },
     axisTicks: {
       show: false,
-    },
-  },
-  yaxis: {
-    labels: {
-      style: {
-        // colors: ["white"],
-      },
     },
   },
   tooltip: {
@@ -80,7 +72,6 @@ const areaChartOptions = {
       horizontal: 0,
     },
   },
-  colors: ["#8473FE", "#00F0FF"],
 };
 
 function Tooltip({ series, seriesIndex, dataPointIndex, w }: Series) {
@@ -141,23 +132,29 @@ function Legend(seriesName: string, opts: any) {
   );
 }
 
+function setLegendHidden(hidden: boolean) {
+  var legend;
+  if (hidden) {
+    legend = {
+      legend: {
+        formatter: function (seriesName: string, opts: any) {
+          return null;
+        },
+      },
+    };
+  } else {
+    legend = {};
+  }
+  return legend;
+}
+
 export default function ({ dataset }: { dataset: Dataset }) {
   const [options, setOptions] = useState<ChartProps>(areaChartOptions);
   const { ref, width } = getDimension();
   const numberOfMonths = 6;
-  const chartWidth = ((width / dataset["x"].length) * 4400) / numberOfMonths;
+  const chartWidth = ((width / dataset.x.length) * 4400) / numberOfMonths;
 
   useEffect(() => {
-    var legend = {};
-    if (dataset["series"].length == 1) {
-      legend = {
-        legend: {
-          formatter: function (seriesName: string, opts: any) {
-            return null;
-          },
-        },
-      };
-    }
     var annotations = {};
     // annotations: {
     //     yaxis: [
@@ -175,7 +172,7 @@ export default function ({ dataset }: { dataset: Dataset }) {
         //     colors: getColours("white", 6),
         //   },
         // },
-        categories: dataset["x"],
+        categories: dataset.x,
         // tickAmount: visiblePoints,
         labels: {
           formatter: function (value: any) {
@@ -188,7 +185,18 @@ export default function ({ dataset }: { dataset: Dataset }) {
           },
         },
       },
-      ...legend,
+      yaxis: {
+        labels: {
+          style: {
+            colors: ["pink"],
+          },
+        },
+      },
+      grid: {
+        borderColor: "green",
+      },
+      colors: ["red", "green"],
+      ...setLegendHidden(dataset.series.length == 1),
       ...annotations,
     }));
   }, []);
@@ -198,7 +206,7 @@ export default function ({ dataset }: { dataset: Dataset }) {
       <div style={{ minWidth: chartWidth + "px" }}>
         <ReactApexChart
           options={options}
-          series={dataset["series"]}
+          series={dataset.series}
           type="area"
           height={400}
         />

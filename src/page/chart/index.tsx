@@ -1,4 +1,4 @@
-import Chart1 from "./Chart1";
+import LineChart from "./LineChart";
 
 const year = 2024;
 
@@ -40,7 +40,7 @@ export default function () {
   return (
     <div>
       Chart
-      <Chart1 dataset={dataset} />
+      <LineChart dataset={dataset} />
     </div>
   );
 }
