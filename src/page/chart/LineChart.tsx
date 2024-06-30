@@ -123,39 +123,38 @@ function Legend(seriesName: string, opts: any) {
 }
 
 function setX(
-  props: any,
   dataset: Dataset,
   colour: string,
   formatter: (value: string) => string
 ) {
-  props.xaxis.categories = dataset.x;
-  props.xaxis.labels.style.colors = Array.from(
+  apexChartProps.xaxis.categories = dataset.x;
+  apexChartProps.xaxis.labels.style.colors = Array.from(
     { length: dataset.x.length },
     () => colour
   );
-  props.colors = dataset.series.map((series) => series.colour);
-  props.xaxis.labels.formatter = formatter;
+  apexChartProps.colors = dataset.series.map((series) => series.colour);
+  apexChartProps.xaxis.labels.formatter = formatter;
 }
 
-function setYColour(props: any, colour: string) {
-  props.yaxis.labels.style.colors = [colour];
+function setYColour(colour: string) {
+  apexChartProps.yaxis.labels.style.colors = [colour];
 }
 
-function setGridColour(props: any, colour: string) {
-  props.grid.borderColor = colour;
+function setGridColour(colour: string) {
+  apexChartProps.grid.borderColor = colour;
 }
 
-function setLegendHidden(props: any, hidden: boolean) {
+function setLegendHidden(hidden: boolean) {
   if (hidden) {
-    props.legend.formatter = function () {
+    apexChartProps.legend.formatter = function () {
       return null;
     };
   }
 }
 
-function setTooltip(props: any, dataset: Dataset) {
-  props.tooltip = {};
-  props.tooltip.custom = function (series: Series) {
+function setTooltip(dataset: Dataset) {
+  apexChartProps.tooltip = {};
+  apexChartProps.tooltip.custom = function (series: Series) {
     return ReactDOMServer.renderToString(Tooltip(dataset, series));
   };
 }
@@ -184,11 +183,11 @@ export default function ({
 }) {
   const { ref, width } = getDimension();
 
-  setX(apexChartProps, dataset, "black", xFormatter);
-  setYColour(apexChartProps, "black");
-  setGridColour(apexChartProps, "#EEEEEE");
-  setTooltip(apexChartProps, dataset);
-  setLegendHidden(apexChartProps, dataset.series.length == 1);
+  setX(dataset, "#000000", xFormatter);
+  setYColour("#000000");
+  setGridColour("#EEEEEE");
+  setTooltip(dataset);
+  setLegendHidden(dataset.series.length == 1);
 
   return (
     <div ref={ref} className={classes.chart}>
