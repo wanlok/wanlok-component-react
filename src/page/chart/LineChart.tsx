@@ -186,7 +186,7 @@ export default function ({
 
   setX(apexChartProps, dataset, "black", xFormatter);
   setYColour(apexChartProps, "black");
-  setGridColour(apexChartProps, "blue");
+  setGridColour(apexChartProps, "#EEEEEE");
   setTooltip(apexChartProps, dataset);
   setLegendHidden(apexChartProps, dataset.series.length == 1);
 

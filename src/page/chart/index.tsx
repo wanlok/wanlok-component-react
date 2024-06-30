@@ -3,12 +3,27 @@ import LineChart from "./LineChart";
 
 const year = 2024;
 
+const monthNames = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 function getDates() {
   const dates = [];
   for (var month = 1; month <= 12; month++) {
     const numberOfDays = new Date(year, month, 0).getDate();
     for (var day = 1; day <= numberOfDays; day++) {
-      dates.push(day + "-" + month + "-" + year);
+      dates.push(day + " " + monthNames[month - 1] + " " + year);
     }
   }
   return dates;
@@ -33,11 +48,11 @@ const dataset: Dataset = {
       colour: "pink",
       data: getValues(),
     },
-    {
-      name: "Line 2",
-      colour: "silver",
-      data: getValues(),
-    },
+    // {
+    //   name: "Line 2",
+    //   colour: "silver",
+    //   data: getValues(),
+    // },
   ],
   x: getDates(),
   compareEnabled: true,
@@ -45,18 +60,28 @@ const dataset: Dataset = {
 
 export default function () {
   return (
-    <div style={{ height: "calc(100% - 40px)" }}>
-      Chart
-      <LineChart
-        dataset={dataset}
-        xFormatter={function (value: string) {
-          return value ? (value.split("-")[0] == "1" ? value : "") : "";
-        }}
-        chartWidth={function (width: number) {
-          const numberOfMonths = 6;
-          return ((width / dataset.x.length) * 4400) / numberOfMonths;
-        }}
-      />
-    </div>
+    <>
+      <div style={{ height: "40px" }}>Chart</div>
+      <div style={{ height: "400px" }}>
+        <LineChart
+          dataset={dataset}
+          xFormatter={function (value: string) {
+            var label = "";
+            if (value != null) {
+              const slices = value.split(" ");
+              label = slices[0] == "1" ? slices[1] + " " + slices[2] : "";
+            }
+            return label;
+          }}
+          chartWidth={function (width: number) {
+            const numberOfMonths = 6;
+            const scalingFactor = 4392;
+            return (
+              ((width / dataset.x.length) * scalingFactor) / numberOfMonths
+            );
+          }}
+        />
+      </div>
+    </>
   );
 }
