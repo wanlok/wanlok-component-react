@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import ReactDOMServer from "react-dom/server";
 import ReactApexChart, { Props as ChartProps } from "react-apexcharts";
 import getDimension from "../../common/getDimension";
+import { Dataset } from "../../common/Types";
 
 interface Series {
   series: any;
@@ -9,42 +10,6 @@ interface Series {
   dataPointIndex: number;
   w: any;
 }
-
-const year = 2024;
-
-function getDates() {
-  const dates = [];
-  for (var month = 1; month <= 12; month++) {
-    const numberOfDays = new Date(year, month, 0).getDate();
-    for (var day = 1; day <= numberOfDays; day++) {
-      dates.push(day + "-" + month + "-" + year);
-    }
-  }
-  return dates;
-}
-
-function getValues() {
-  const values = [];
-  for (var month = 1; month <= 12; month++) {
-    const numberOfDays = new Date(year, month, 0).getDate();
-    for (var day = 1; day <= numberOfDays; day++) {
-      values.push(Math.floor(Math.random() * 100));
-    }
-  }
-  return values;
-}
-
-const dataset: any = {
-  title: "Peak Efficiency",
-  series: [
-    {
-      name: "Line 1",
-      data: getValues(),
-    },
-  ],
-  x: getDates(),
-  compareEnabled: true,
-};
 
 const areaChartOptions = {
   chart: {
@@ -176,7 +141,7 @@ function Legend(seriesName: string, opts: any) {
   );
 }
 
-export default function () {
+export default function ({ dataset }: { dataset: Dataset }) {
   const [options, setOptions] = useState<ChartProps>(areaChartOptions);
   const { ref, width } = getDimension();
   const numberOfMonths = 6;
