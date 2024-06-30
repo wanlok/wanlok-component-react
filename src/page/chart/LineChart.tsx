@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
 import ReactDOMServer from "react-dom/server";
-import ReactApexChart, { Props as ChartProps } from "react-apexcharts";
+import ReactApexChart, { Props as ApexChartProps } from "react-apexcharts";
 import getDimension from "../../common/getDimension";
 import { Dataset } from "../../common/Types";
+import classes from "./LineChart.module.css";
 
 interface Series {
-  series: any;
-  seriesIndex: number;
+  series: ApexAxisChartSeries;
   dataPointIndex: number;
   w: any;
 }
 
-const areaChartOptions = {
+const apexChartProps = {
   chart: {
     toolbar: {
       show: false,
@@ -40,20 +40,11 @@ const areaChartOptions = {
       show: false,
     },
   },
-  tooltip: {
-    custom: function (series: Series) {
-      return ReactDOMServer.renderToString(Tooltip(series));
-    },
-  },
   legend: {
     show: true,
     showForSingleSeries: true,
-    fontFamily: `'Roboto', sans-serif`,
     position: "top",
     horizontalAlign: "left",
-    labels: {
-      // colors: "white",
-    },
     onItemClick: {
       toggleDataSeries: false,
     },
@@ -74,37 +65,25 @@ const areaChartOptions = {
   },
 };
 
-function Tooltip({ series, seriesIndex, dataPointIndex, w }: Series) {
-  const dot = {
-    display: "inline-block",
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    marginTop: -3,
-    marginRight: 6,
-    verticalAlign: "middle",
-  };
+function Tooltip(dataset: Dataset, { series, dataPointIndex, w }: Series) {
   return (
     <div>
-      <div
-        style={{
-          borderBottom: "#FFFFFF33 solid 1px",
-          padding: "8px 8px 4px 8px",
-        }}
-      >
-        {w.globals.categoryLabels[dataPointIndex]}
-      </div>
+      <div className={classes["tooltip-top"]}>{dataset.x[dataPointIndex]}</div>
       {series.map((s: any, i: number) => {
         const colour = w.config.colors[i];
         const name = w.config.series[i].name;
         const value = s[dataPointIndex];
         return (
           <div
+            className={classes["tooltip-content"]}
             style={{
-              padding: "8px 8px " + (i == series.length - 1 ? 8 : 0) + "px 8px",
+              paddingBottom: i == series.length - 1 ? 8 : 0 + "px",
             }}
           >
-            <span style={{ ...dot, backgroundColor: colour }}></span>
+            <span
+              className={classes["tooltip-dot"]}
+              style={{ backgroundColor: colour }}
+            ></span>
             {series.length > 1 ? name + ": " + value : value}
           </div>
         );
@@ -114,22 +93,57 @@ function Tooltip({ series, seriesIndex, dataPointIndex, w }: Series) {
 }
 
 function Legend(seriesName: string, opts: any) {
-  const line = {
-    display: "inline-block",
-    width: 24,
-    height: 4,
-    backgroundColor: opts.w.globals.colors[opts.seriesIndex],
-    marginTop: -4,
-    marginLeft: 12,
-    marginRight: 8,
-    verticalAlign: "middle",
-  };
+  const colour = opts.w.globals.colors[opts.seriesIndex];
   return (
     <>
       {seriesName}
-      <span style={line}></span>
+      <span
+        className={classes.legend}
+        style={{
+          backgroundColor: colour,
+        }}
+      ></span>
     </>
   );
+}
+
+function setX(
+  dataset: Dataset,
+  colour: string,
+  formatter: (value: string) => string
+) {
+  return {
+    xaxis: {
+      categories: dataset.x,
+      labels: {
+        formatter: formatter,
+        style: {
+          colors: Array.from({ length: dataset.x.length }, () => colour),
+        },
+      },
+    },
+    colors: dataset.series.map((series) => series.colour),
+  };
+}
+
+function setYColour(colour: string) {
+  return {
+    yaxis: {
+      labels: {
+        style: {
+          colors: [colour],
+        },
+      },
+    },
+  };
+}
+
+function setGridColour(colour: string) {
+  return {
+    grid: {
+      borderColor: colour,
+    },
+  };
 }
 
 function setLegendHidden(hidden: boolean) {
@@ -137,7 +151,7 @@ function setLegendHidden(hidden: boolean) {
   if (hidden) {
     legend = {
       legend: {
-        formatter: function (seriesName: string, opts: any) {
+        formatter: function () {
           return null;
         },
       },
@@ -148,61 +162,51 @@ function setLegendHidden(hidden: boolean) {
   return legend;
 }
 
+function setTooltip(dataset: Dataset) {
+  return {
+    tooltip: {
+      custom: function (series: Series) {
+        return ReactDOMServer.renderToString(Tooltip(dataset, series));
+      },
+    },
+  };
+}
+
+function setAnnotations() {
+  var annotations = {};
+  // annotations: {
+  //     yaxis: [
+  //         {
+  //             y: 70,
+  //             borderColor: 'red'
+  //         }
+  //     ]
+  // },
+  return annotations;
+}
+
 export default function ({ dataset }: { dataset: Dataset }) {
-  const [options, setOptions] = useState<ChartProps>(areaChartOptions);
+  const [options, setOptions] = useState<ApexChartProps>(apexChartProps);
   const { ref, width } = getDimension();
   const numberOfMonths = 6;
   const chartWidth = ((width / dataset.x.length) * 4400) / numberOfMonths;
 
   useEffect(() => {
-    var annotations = {};
-    // annotations: {
-    //     yaxis: [
-    //         {
-    //             y: 70,
-    //             borderColor: 'red'
-    //         }
-    //     ]
-    // },
     setOptions((prevState) => ({
       ...prevState,
-      xaxis: {
-        // labels: {
-        //   style: {
-        //     colors: getColours("white", 6),
-        //   },
-        // },
-        categories: dataset.x,
-        // tickAmount: visiblePoints,
-        labels: {
-          formatter: function (value: any) {
-            if (value) {
-              const slices = value.split("-");
-              return slices[0] == "1" ? value : "";
-            } else {
-              return "";
-            }
-          },
-        },
-      },
-      yaxis: {
-        labels: {
-          style: {
-            colors: ["pink"],
-          },
-        },
-      },
-      grid: {
-        borderColor: "green",
-      },
-      colors: ["red", "green"],
+      ...setX(dataset, "black", function (value: string) {
+        return value ? (value.split("-")[0] == "1" ? value : "") : "";
+      }),
+      ...setYColour("black"),
+      ...setGridColour("blue"),
+      ...setTooltip(dataset),
       ...setLegendHidden(dataset.series.length == 1),
-      ...annotations,
+      ...setAnnotations(),
     }));
-  }, []);
+  }, [dataset]);
 
   return (
-    <div ref={ref} style={{ overflowX: "auto", overflowY: "hidden" }}>
+    <div ref={ref} className={classes.main}>
       <div style={{ minWidth: chartWidth + "px" }}>
         <ReactApexChart
           options={options}

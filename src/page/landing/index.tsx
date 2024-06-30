@@ -1,3 +1,4 @@
+import { Grid } from "@mui/material";
 import styles from "./index.module.css";
 
 export default function () {

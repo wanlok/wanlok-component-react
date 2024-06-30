@@ -1,3 +1,4 @@
+import { Dataset } from "../../common/Types";
 import LineChart from "./LineChart";
 
 const year = 2024;
@@ -24,11 +25,17 @@ function getValues() {
   return values;
 }
 
-const dataset: any = {
+const dataset: Dataset = {
   title: "Peak Efficiency",
   series: [
     {
       name: "Line 1",
+      colour: "pink",
+      data: getValues(),
+    },
+    {
+      name: "Line 2",
+      colour: "silver",
       data: getValues(),
     },
   ],
