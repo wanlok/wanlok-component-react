@@ -1,39 +1,27 @@
 import { Dataset } from "../../common/Types";
-import LineChart from "./LineChart";
+import DateLineChart from "./DateLineChart";
+import { getDateString } from "../../common/DateUtils";
 
-const monthNames = [
-  "Jan",
-  "Feb",
-  "Mar",
-  "Apr",
-  "May",
-  "Jun",
-  "Jul",
-  "Aug",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Dec",
-];
-
-function getNumberOfMonths(startDate: Date, endDate: Date) {
-  const yearMonthSet: Set<string> = new Set();
-  while (startDate <= endDate) {
-    yearMonthSet.add(
-      startDate.getFullYear() + `${startDate.getMonth() + 1}`.padStart(2, "0")
-    );
-    startDate.setDate(startDate.getDate() + 1);
+function getNumberOfDays(dates: Date[]) {
+  var numberOfDays = 0;
+  if (dates.length > 0) {
+    const startDate = dates[0];
+    const endDate = dates[dates.length - 1];
+    let diff = endDate.getTime() - startDate.getTime();
+    numberOfDays = Math.round(diff / (1000 * 3600 * 24)) + 1;
   }
-  return yearMonthSet.size;
+  return numberOfDays;
 }
 
-function getDatesBetweenDateString(
+function getDatesBetweenDateStrings(
   startDateString: string,
   endDateString: string
 ) {
   const dates = [];
   const startDate = new Date(startDateString);
+  startDate.setHours(0, 0, 0, 0);
   const endDate = new Date(endDateString);
+  endDate.setHours(0, 0, 0, 0);
   while (startDate <= endDate) {
     dates.push(new Date(startDate));
     startDate.setDate(startDate.getDate() + 1);
@@ -43,23 +31,11 @@ function getDatesBetweenDateString(
 
 function getValues(dates: Date[]) {
   const values = [];
-  if (dates.length > 0) {
-    const startDate = dates[0];
-    const endDate = dates[dates.length - 1];
-    const numberOfDays =
-      (endDate.getTime() - startDate.getTime()) / (1000 * 3600 * 24);
-    for (var i = 0; i < numberOfDays; i++) {
-      values.push(Math.floor(Math.random() * 100));
-    }
+  const numberOfDays = getNumberOfDays(dates);
+  for (var i = 0; i < numberOfDays; i++) {
+    values.push(Math.floor(Math.random() * 100));
   }
   return values;
-}
-
-function getDateString(date: Date) {
-  const day = date.getDate();
-  const monthName = monthNames[date.getMonth()];
-  const year = date.getFullYear();
-  return day + " " + monthName + " " + year;
 }
 
 function getDateStrings(dates: Date[]) {
@@ -76,15 +52,19 @@ function getDateStrings(dates: Date[]) {
 }
 
 export default function () {
-  const dates = getDatesBetweenDateString("2024-06-05", "2025-07-12");
-  const firstDateString = dates.length > 0 ? getDateString(dates[0]) : "";
+  const startDateString = "2024-01-01";
+  // const endDateString = "2024-04-31";
+  const endDateString = "2025-12-31";
+
   const dataset: Dataset = {
     title: "Peak Efficiency",
     series: [
       {
         name: "Line 1",
         colour: "pink",
-        data: getValues(dates),
+        data: getValues(
+          getDatesBetweenDateStrings(startDateString, endDateString)
+        ),
       },
       // {
       //   name: "Line 2",
@@ -92,36 +72,17 @@ export default function () {
       //   data: getValues(),
       // },
     ],
-    x: getDateStrings(dates),
+    x: getDateStrings(
+      getDatesBetweenDateStrings(startDateString, endDateString)
+    ),
     compareEnabled: true,
   };
 
   return (
     <>
-      <div style={{ height: "40px" }}>Chart</div>
+      <div>Chart</div>
       <div style={{ height: "400px" }}>
-        <LineChart
-          dataset={dataset}
-          xFormatter={function (value: string) {
-            var label = "";
-            if (value != null) {
-              const slices = value.split(" ");
-              label =
-                value == firstDateString || slices[0] == "1"
-                  ? slices[1] + " " + slices[2]
-                  : "";
-            }
-            return label;
-          }}
-          chartWidth={function (width: number) {
-            const numberOfMonthsToDisplay = 6;
-            const scalingFactor = 4392;
-            return (
-              ((width / dataset.x.length) * scalingFactor) /
-              numberOfMonthsToDisplay
-            );
-          }}
-        />
+        <DateLineChart dataset={dataset} showNumberOfMonths={6} />
       </div>
     </>
   );
