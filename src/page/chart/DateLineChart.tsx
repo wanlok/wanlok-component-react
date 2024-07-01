@@ -2,6 +2,7 @@ import { Dataset } from "../../common/Types";
 import LineChart from "./LineChart";
 
 const pointWidth = 12;
+const fullWidth = 12;
 
 function getMonthSet(x: string[]) {
   const monthSet: Set<string> = new Set();
@@ -20,8 +21,11 @@ export default function ({
   showNumberOfMonths: number;
 }) {
   const firstDateString = dataset.x.length > 0 ? dataset.x[0] : "";
-  console.log(dataset.x.length);
-  const scale = getMonthSet(dataset.x).size > 6 ? showNumberOfMonths : 12;
+  const numberOfMonths = getMonthSet(dataset.x).size;
+  const scale =
+    numberOfMonths > showNumberOfMonths
+      ? (fullWidth * showNumberOfMonths) / numberOfMonths
+      : fullWidth;
   return (
     <LineChart
       dataset={dataset}

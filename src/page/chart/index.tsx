@@ -53,7 +53,6 @@ function getDateStrings(dates: Date[]) {
 
 export default function () {
   const startDateString = "2024-01-01";
-  // const endDateString = "2024-04-31";
   const endDateString = "2025-12-31";
 
   const dataset: Dataset = {
@@ -82,7 +81,7 @@ export default function () {
     <>
       <div>Chart</div>
       <div style={{ height: "400px" }}>
-        <DateLineChart dataset={dataset} showNumberOfMonths={6} />
+        <DateLineChart dataset={dataset} showNumberOfMonths={4} />
       </div>
     </>
   );
