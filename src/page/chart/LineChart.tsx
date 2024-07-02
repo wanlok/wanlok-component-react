@@ -67,7 +67,9 @@ const apexChartProps: ApexChartProps = {
             highlightDataSeries: false
         },
         formatter: function (seriesName: string, opts: any) {
-            return ReactDOMServer.renderToString(Legend(seriesName, opts));
+            return opts.w.globals.seriesNames.length > 1
+                ? ReactDOMServer.renderToString(Legend(seriesName, opts))
+                : null;
         },
         markers: {
             width: 0,
@@ -146,14 +148,6 @@ function setGridColour(colour: string) {
     apexChartProps.grid.borderColor = colour;
 }
 
-function setLegendHidden(hidden: boolean) {
-    if (hidden) {
-        apexChartProps.legend.formatter = function () {
-            return null;
-        };
-    }
-}
-
 function setTooltip(dataset: Dataset) {
     apexChartProps.tooltip = {};
     apexChartProps.tooltip.custom = function (series: Series) {
@@ -189,7 +183,6 @@ export default function ({
     setYColour("#000000");
     setGridColour("#EEEEEE");
     setTooltip(dataset);
-    setLegendHidden(dataset.series.length == 1);
 
     return (
         <div ref={ref} className={classes.chart}>
