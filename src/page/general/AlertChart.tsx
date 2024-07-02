@@ -5,28 +5,27 @@ import EContainer from "./EContainer";
 import Header from "./Header";
 
 function AlertCircle({
-    parentWidth,
-    fontWidth,
+    height,
+    height2,
     top,
     text,
     style
 }: {
-    parentWidth: number;
-    fontWidth?: number;
+    height: number;
+    height2?: number;
     top?: boolean;
     text: string;
     style?: CSSProperties;
 }) {
-    const width = parentWidth * 0.04;
-    const fontSize = (fontWidth ? fontWidth : parentWidth) * 0.01;
+    const width = height * 0.28;
+    const fontSize = height2 ? height2 * 0.14 : height * 0.14;
     return (
         <>
             {top && (
                 <span
                     className={classes["alert-circle-text"]}
                     style={{
-                        marginBottom: parentWidth * 0.008,
-                        fontSize: fontSize
+                        fontSize: fontSize + "px"
                     }}
                 >
                     {text}
@@ -45,42 +44,13 @@ function AlertCircle({
                 <span
                     className={classes["alert-circle-text"]}
                     style={{
-                        marginTop: parentWidth * 0.004,
-                        fontSize: fontSize
+                        fontSize: fontSize + "px"
                     }}
                 >
                     {text}
                 </span>
             )}
         </>
-    );
-}
-
-function AlertCircleContainer({
-    parentWidth,
-    fontWidth,
-    top,
-    text
-}: {
-    parentWidth: number;
-    fontWidth?: number;
-    top?: boolean;
-    text: string;
-}) {
-    return (
-        <div
-            className={classes["alert-circle"]}
-            style={{
-                padding: parentWidth * 0.01
-            }}
-        >
-            <AlertCircle
-                parentWidth={parentWidth}
-                fontWidth={fontWidth ? fontWidth : parentWidth}
-                top={top}
-                text={text}
-            />
-        </div>
     );
 }
 
@@ -123,17 +93,29 @@ export default function ({
                 onClick={onClick}
             ></Button>
             <Header>Alert</Header>
-            <div style={{ textAlign: "center" }}>
-                <div style={{ display: "inline-table" }}>
+            <div
+                style={{
+                    textAlign: "center",
+                    height: height,
+                    backgroundColor: "blue"
+                }}
+            >
+                <div
+                    style={{
+                        display: "inline-table",
+                        height: "inherit",
+                        backgroundColor: "red"
+                    }}
+                >
                     <div
                         style={{
                             display: "table-cell",
+                            width: "16.5%",
                             verticalAlign: "middle"
                         }}
                     >
                         <AlertCircle
-                            parentWidth={parentWidth}
-                            fontWidth={parentWidth}
+                            height={height}
                             top={true}
                             text="PV"
                             style={{
@@ -142,37 +124,107 @@ export default function ({
                             }}
                         />
                         <div style={{ display: "table" }}>
-                            <AlertCircleContainer
-                                parentWidth={parentWidth * 0.5}
-                                fontWidth={parentWidth}
-                                text="D"
-                            />
-                            <AlertCircleContainer
-                                parentWidth={parentWidth * 0.5}
-                                fontWidth={parentWidth}
-                                text="W"
-                            />
-                            <AlertCircleContainer
-                                parentWidth={parentWidth * 0.5}
-                                fontWidth={parentWidth}
-                                text="M"
-                            />
+                            <div
+                                style={{
+                                    display: "table-cell",
+                                    width: "16.5%",
+                                    verticalAlign: "middle"
+                                }}
+                            >
+                                <AlertCircle
+                                    height={height * 0.5}
+                                    height2={height}
+                                    text="D"
+                                />
+                            </div>
+                            <div
+                                style={{
+                                    display: "table-cell",
+                                    width: "16.5%",
+                                    verticalAlign: "middle"
+                                }}
+                            >
+                                <AlertCircle
+                                    height={height * 0.5}
+                                    height2={height}
+                                    text="W"
+                                />
+                            </div>
+                            <div
+                                style={{
+                                    display: "table-cell",
+                                    width: "16.5%",
+                                    verticalAlign: "middle"
+                                }}
+                            >
+                                <AlertCircle
+                                    height={height * 0.5}
+                                    height2={height}
+                                    text="M"
+                                />
+                            </div>
                         </div>
                     </div>
-                    <AlertCircleContainer
-                        parentWidth={parentWidth}
-                        text="Inverter"
-                    />
-                    <AlertCircleContainer parentWidth={parentWidth} text="DC" />
-                    <AlertCircleContainer parentWidth={parentWidth} text="AC" />
-                    <AlertCircleContainer
-                        parentWidth={parentWidth}
-                        text="Solar"
-                    />
-                    <AlertCircleContainer
-                        parentWidth={parentWidth}
-                        text="Temp."
-                    />
+                    <div
+                        style={{
+                            display: "table-cell",
+                            width: "16.5%",
+                            verticalAlign: "middle"
+                        }}
+                    >
+                        <AlertCircle
+                            height={height}
+                            text="Inventer"
+                        />
+                    </div>
+                    <div
+                        style={{
+                            display: "table-cell",
+                            width: "16.5%",
+                            verticalAlign: "middle"
+                        }}
+                    >
+                        <AlertCircle
+                            height={height}
+                            text="DC"
+                        />
+                    </div>
+                    <div
+                        style={{
+                            display: "table-cell",
+                            width: "16.5%",
+                            verticalAlign: "middle"
+                        }}
+                    >
+                        <AlertCircle
+                            height={height}
+                            text="AC"
+                        />
+                    </div>
+                    <div
+                        style={{
+                            display: "table-cell",
+                            width: "16.5%",
+                            verticalAlign: "middle"
+                        }}
+                    >
+                        <AlertCircle
+                            height={height}
+                            text="Solar"
+                        />
+                    </div>
+                    <div
+                        style={{
+                            display: "table-cell",
+                            width: "16.5%",
+                            verticalAlign: "middle"
+                        }}
+                    >
+                        <AlertCircle
+                            height={height}
+                            text="Temp."
+                        />
+                    </div>
                 </div>
             </div>
         </EContainer>
