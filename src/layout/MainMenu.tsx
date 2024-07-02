@@ -4,23 +4,27 @@ import styles from "./MainMenu.module.css";
 import routes from "../routes";
 
 interface Props {
-  fullWidth: boolean;
+    fullWidth: boolean;
 }
 
 export default function ({ fullWidth }: Props) {
-  return (
-    <>
-      {routes.map((routes, index) => {
-        return routes.children.map((route, index) => {
-          return (
-            <Link to={route.path} key={index}>
-              <Button variant="text" fullWidth={fullWidth} className={styles.button}>
-                {route.name}
-              </Button>
-            </Link>
-          );
-        });
-      })}
-    </>
-  );
+    return (
+        <>
+            {routes.map((routes, index) => {
+                return routes.children.map((route, index) => {
+                    return (
+                        <Link to={route.path} key={index}>
+                            <Button
+                                variant="text"
+                                fullWidth={fullWidth}
+                                className={styles.button}
+                            >
+                                {route.name}
+                            </Button>
+                        </Link>
+                    );
+                });
+            })}
+        </>
+    );
 }

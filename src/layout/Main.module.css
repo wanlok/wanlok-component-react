@@ -1,8 +1,8 @@
 .root {
-  height: 100vh;
+    height: 100vh;
 }
 
 .top,
 .left {
-  background-color: #eeeeee;
+    background-color: #eeeeee;
 }
