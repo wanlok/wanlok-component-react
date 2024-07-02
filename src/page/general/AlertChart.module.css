@@ -1,0 +1,24 @@
+.alert-chart-button {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+.alert-circle {
+    display: table-cell;
+    vertical-align: middle;
+    width: 16.66%;
+    background-color: yellow;
+}
+
+.alert-circle-text {
+    display: block;
+    margin-top: 4;
+}
+
+.alert-circle-shape {
+    display: inline-block;
+    background: linear-gradient(#dfe1ec, #86888e);
+}
