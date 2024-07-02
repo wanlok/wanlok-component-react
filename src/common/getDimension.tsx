@@ -4,7 +4,7 @@ export default function () {
     const ref = useRef(null);
     const [dimension, setDimension] = useState({
         width: 0,
-        height: 0,
+        height: 0
     });
 
     useEffect(() => {

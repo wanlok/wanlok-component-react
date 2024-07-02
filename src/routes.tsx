@@ -12,7 +12,7 @@ export default [
             {
                 name: "Home",
                 path: "/",
-                element: <Landing />,
+                element: <Landing />
                 // loader: postsLoader,
                 // children: [
                 // { path: "/create-post", element: <NewPost />, action: newPostAction },
@@ -23,18 +23,18 @@ export default [
             {
                 name: "General",
                 path: "/general",
-                element: <General />,
+                element: <General />
             },
             {
                 name: "Map",
                 path: "/map",
-                element: <Map />,
+                element: <Map />
             },
             {
                 name: "Chart",
                 path: "/chart",
-                element: <Chart />,
-            },
-        ],
-    },
+                element: <Chart />
+            }
+        ]
+    }
 ];

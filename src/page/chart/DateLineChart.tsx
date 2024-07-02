@@ -15,7 +15,7 @@ function getMonthSet(x: string[]) {
 
 export default function ({
     dataset,
-    showNumberOfMonths,
+    showNumberOfMonths
 }: {
     dataset: Dataset;
     showNumberOfMonths: number;

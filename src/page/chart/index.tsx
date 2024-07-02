@@ -62,20 +62,20 @@ export default function () {
                 colour: "red",
                 data: getValues(
                     getDatesBetweenDateStrings(startDateString, endDateString)
-                ),
+                )
             },
             {
                 name: "Line 2",
                 colour: "blue",
                 data: getValues(
                     getDatesBetweenDateStrings(startDateString, endDateString)
-                ),
-            },
+                )
+            }
         ],
         x: getDateStrings(
             getDatesBetweenDateStrings(startDateString, endDateString)
         ),
-        compareEnabled: true,
+        compareEnabled: true
     };
 
     return (

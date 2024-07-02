@@ -13,38 +13,38 @@ interface Series {
 const apexChartProps: ApexChartProps = {
     chart: {
         toolbar: {
-            show: false,
+            show: false
         },
         zoom: {
-            enabled: false,
-        },
+            enabled: false
+        }
     },
     grid: {
-        show: true,
+        show: true
     },
     dataLabels: {
-        enabled: false,
+        enabled: false
     },
     stroke: {
-        curve: "straight",
+        curve: "straight"
     },
     xaxis: {
         tooltip: {
-            enabled: false,
+            enabled: false
         },
         scrollbar: {
-            enabled: true,
+            enabled: true
         },
         axisTicks: {
-            show: false,
+            show: false
         },
         labels: {
             rotateAlways: true,
             rotate: 360,
             offsetY: 16,
             offsetX: 12,
-            style: { fontSize: "12px" },
-        },
+            style: { fontSize: "12px" }
+        }
     },
     yaxis: {
         labels: {
@@ -52,8 +52,8 @@ const apexChartProps: ApexChartProps = {
             rotate: 360,
             offsetY: 0,
             offsetX: -4,
-            style: { fontSize: "12px" },
-        },
+            style: { fontSize: "12px" }
+        }
     },
     legend: {
         show: true,
@@ -61,10 +61,10 @@ const apexChartProps: ApexChartProps = {
         position: "top",
         horizontalAlign: "left",
         onItemClick: {
-            toggleDataSeries: false,
+            toggleDataSeries: false
         },
         onItemHover: {
-            highlightDataSeries: false,
+            highlightDataSeries: false
         },
         formatter: function (seriesName: string, opts: any) {
             return ReactDOMServer.renderToString(Legend(seriesName, opts));
@@ -72,12 +72,12 @@ const apexChartProps: ApexChartProps = {
         markers: {
             width: 0,
             height: 0,
-            radius: 0,
+            radius: 0
         },
         itemMargin: {
-            horizontal: 0,
-        },
-    },
+            horizontal: 0
+        }
+    }
 };
 
 function Tooltip(dataset: Dataset, { series, dataPointIndex, w }: Series) {
@@ -94,8 +94,7 @@ function Tooltip(dataset: Dataset, { series, dataPointIndex, w }: Series) {
                     <div
                         className={classes["tooltip-content"]}
                         style={{
-                            paddingBottom:
-                                i == series.length - 1 ? 8 : 0 + "px",
+                            paddingBottom: i == series.length - 1 ? 8 : 0 + "px"
                         }}
                     >
                         <span
@@ -118,7 +117,7 @@ function Legend(seriesName: string, opts: any) {
             <span
                 className={classes.legend}
                 style={{
-                    backgroundColor: colour,
+                    backgroundColor: colour
                 }}
             ></span>
         </>
@@ -178,7 +177,7 @@ function addHorizontalLine() {
 export default function ({
     dataset,
     xFormatter,
-    chartWidth,
+    chartWidth
 }: {
     dataset: Dataset;
     xFormatter: (value: string) => string;

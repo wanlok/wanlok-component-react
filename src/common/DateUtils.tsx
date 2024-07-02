@@ -10,7 +10,7 @@ export const monthNames = [
     "Sep",
     "Oct",
     "Nov",
-    "Dec",
+    "Dec"
 ];
 
 export function getDateString(date: Date) {
