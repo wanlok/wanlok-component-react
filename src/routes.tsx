@@ -1,5 +1,5 @@
 import Main from "./layout/Main";
-import General from "./page/general";
+import General, { loader as generalLoader } from "./page/general";
 import Landing from "./page/landing";
 import Map from "./page/map";
 import Chart from "./page/chart";
@@ -23,7 +23,8 @@ export default [
             {
                 name: "General",
                 path: "/general",
-                element: <General />
+                element: <General />,
+                loader: generalLoader
             },
             {
                 name: "Map",
