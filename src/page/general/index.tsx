@@ -6,7 +6,7 @@ import API from "../../common/API";
 export default function () {
     const data = useLoaderData();
     const { ref, width, height } = getDimension();
-    
+
     console.log(height);
     console.log(data);
 
@@ -34,7 +34,7 @@ export default function () {
     );
 }
 
-export async function loader() {
+export function loader() {
     const jwt =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ3YW5sb2siLCJleHAiOjE3MjAwODc1MTl9.tcEhS4lM5gEvu9nZAbXaKPzhW_dmzSkQXZNqwlay3fQ";
     return API.get_gwin(jwt);
