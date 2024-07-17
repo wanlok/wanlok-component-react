@@ -3,6 +3,7 @@ import DateLineChart from "./DateLineChart";
 import { getDateString } from "../../common/DateUtils";
 import { Button } from "@mui/material";
 import { useState } from "react";
+import moment from "moment";
 
 function getNumberOfDays(dates: Date[]) {
     var numberOfDays = 0;
@@ -53,6 +54,14 @@ function getDateStrings(dates: Date[]) {
     return dateStrings;
 }
 
+const getWeekNumber = (date: Date): number => {
+    const startOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date.getTime() - startOfYear.getTime()) / 86400000;
+
+    // Week starts on Monday (ISO week date system)
+    return Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
+};
+
 export default function () {
     const startDateString = "2024-01-01";
     const endDateString = "2025-12-31";
@@ -98,6 +107,7 @@ export default function () {
                 >
                     Dummy
                 </Button>
+                <div>{moment("27 Apr 2022", "DD MMM YYYY").week()}</div>
             </div>
         </>
     );
