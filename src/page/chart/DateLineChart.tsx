@@ -32,11 +32,12 @@ export default function ({
             xFormatter={function (value: string) {
                 var label = "";
                 if (value != null) {
-                    const slices = value.split(" ");
-                    label =
-                        value == firstDateString || slices[0] == "1"
-                            ? slices[1] + " " + slices[2]
-                            : "";
+                    // const slices = value.split(" ");
+                    // label =
+                    //     value == firstDateString || slices[0] == "1"
+                    //         ? slices[1] + " " + slices[2]
+                    //         : "";
+                    label = value;
                 }
                 return label;
             }}

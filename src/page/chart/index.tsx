@@ -1,6 +1,8 @@
 import { Dataset } from "../../common/Types";
 import DateLineChart from "./DateLineChart";
 import { getDateString } from "../../common/DateUtils";
+import { Button } from "@mui/material";
+import { useState } from "react";
 
 function getNumberOfDays(dates: Date[]) {
     var numberOfDays = 0;
@@ -55,26 +57,32 @@ export default function () {
     const startDateString = "2024-01-01";
     const endDateString = "2025-12-31";
 
+    const [dummy, setDummy] = useState(true);
+
     const dataset: Dataset = {
         title: "Peak Efficiency",
         series: [
             {
+                name: "Line 1",
                 colour: "red",
-                data: getValues(
-                    getDatesBetweenDateStrings(startDateString, endDateString)
-                )
+                // data: getValues(
+                //     getDatesBetweenDateStrings(startDateString, endDateString)
+                // )
+                data: dummy ? [9, 7, 5, 3, 1] : [1, 3, 5, 7, 9]
             },
             {
                 name: "Line 2",
                 colour: "blue",
-                data: getValues(
-                    getDatesBetweenDateStrings(startDateString, endDateString)
-                )
+                // data: getValues(
+                //     getDatesBetweenDateStrings(startDateString, endDateString)
+                // )
+                data: dummy ? [10, 8, 6, 4, 2] : [2, 4, 6, 8, 10]
             }
         ],
-        x: getDateStrings(
-            getDatesBetweenDateStrings(startDateString, endDateString)
-        ),
+        // x: getDateStrings(
+        //           getDatesBetweenDateStrings(startDateString, endDateString)
+        //       ),
+        x: dummy ? ["B", "B", "B", "B", "B"] : ["A", "A", "A", "A", "A"],
         compareEnabled: true
     };
 
@@ -83,6 +91,13 @@ export default function () {
             <div>Chart</div>
             <div style={{ height: "400px" }}>
                 <DateLineChart dataset={dataset} showNumberOfMonths={4} />
+                <Button
+                    onClick={() => {
+                        setDummy(!dummy);
+                    }}
+                >
+                    Dummy
+                </Button>
             </div>
         </>
     );
