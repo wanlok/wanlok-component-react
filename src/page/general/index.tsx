@@ -2,6 +2,44 @@ import { useLoaderData } from "react-router-dom";
 import getDimension from "../../common/getDimension";
 import AlertChart from "./AlertChart";
 import API from "../../common/API";
+import { StringMappingType } from "typescript";
+import { getDevicesOnlineStatus } from "./fetch-pq-exercise-with-instructions";
+import styled from "styled-components";
+
+const callAPI = async () => {
+    const deviceIds = [1, 2, 3];
+    const statusDict = await getDevicesOnlineStatus(deviceIds);
+    // console.log(statusDict.length);
+    console.log(statusDict);
+    // for (var i = 0; i < deviceIds.length; i++) {
+    //     console.log(statusDict[deviceIds[i]]);
+    // }
+};
+
+const Title = styled.div`
+  font-size: 1.5em;
+  text-align: center;
+  color: #BF4F74;
+  background-color: blue;
+`;
+
+// The Button from the last section without the interpolations
+const Button = styled.button`
+  color: #BF4F74;
+  font-size: 1em;
+  margin: 1em;
+  padding: 0.25em 1em;
+  border: 2px solid #BF4F74;
+  border-radius: 3px;
+`;
+
+// A new component based on Button, but with some override styles
+const TomatoButton = styled(Button)`
+  color: tomato;
+  border-color: tomato;
+`;
+
+
 
 export default function () {
     // const data = useLoaderData();
@@ -25,35 +63,8 @@ export default function () {
                 position: "relative"
             }}
         >
-            {/* <div ref={ref}>
-                <AlertChart
-                    dataset={{}}
-                    onClick={() => console.log("onClick")}
-                    onEnlargeButtonClick={() =>
-                        console.log("onEnlargeButtonClick")
-                    }
-                    style={{}}
-                    parentWidth={width}
-                    height={height * 0.4}
-                />
-            </div> */}
-            <img
-                src={require("../../assets/images/dummy.jpg")}
-                style={{ position: "absolute", top: 0, left: 0 }}
-            />
-            <div
-                style={{
-                    padding: 40,
-                    backgroundColor: "rgba(255, 0, 0, 0.4)",
-                    display: "inline-block",
-                    position: "absolute",
-                    top: 100,
-                    left: 100,
-                    backdropFilter: "blur(8px)"
-                }}
-            >
-                Hello World
-            </div>
+            <Title>Hello World</Title>
+            <Button onClick={callAPI}>Click</Button>
         </div>
     );
 }
