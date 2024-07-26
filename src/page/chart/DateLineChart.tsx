@@ -38,9 +38,9 @@ export default function ({
                     //         ? slices[1] + " " + slices[2]
                     //         : "";
                     
-                    if (parseInt(slices[0]) % 10 === 0) {
+                    // if (parseInt(slices[0]) % 10 === 0) {
                         label = value;
-                    }
+                    // }
                 }
 
                 return label;

@@ -186,7 +186,7 @@ export default function ({
 
     return (
         <div ref={ref} className={classes.chart}>
-            <div style={{ width: chartWidth(width) + "px" }}>
+            <div style={{ width: chartWidth(width) + "px", paddingRight: 4000 + "px" }}>
                 <ReactApexChart
                     options={apexChartProps}
                     series={dataset.series}
