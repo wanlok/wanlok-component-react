@@ -68,16 +68,13 @@ const generateData = (myNumber: number, value: any) => {
         my_list.push(value);
     }
     return my_list;
-}
-
+};
 
 export default function () {
-    const startDateString = "2024-01-01";
-    const endDateString = "2025-12-31";
+    const startDateString = "2024-07-01";
+    const endDateString = "2024-08-31";
 
     const [dummy, setDummy] = useState(true);
-
-    console.log(getDatesBetweenDateStrings(startDateString, endDateString).length);
 
     const dataset: Dataset = {
         title: "Peak Efficiency",
@@ -89,7 +86,7 @@ export default function () {
                 //     getDatesBetweenDateStrings(startDateString, endDateString)
                 // )
                 // data: dummy ? [9, 7, 5, 3, 1] : [1, 3, 5, 7, 9]
-                data: generateData(731, 1)
+                data: generateData(62, 1)
             },
             {
                 name: "Line 2",
@@ -98,12 +95,12 @@ export default function () {
                 //     getDatesBetweenDateStrings(startDateString, endDateString)
                 // )
                 // data: dummy ? [10, 8, 6, 4, 2] : [2, 4, 6, 8, 10]
-                data: generateData(731, 4)
+                data: generateData(62, 4)
             }
         ],
         x: getDateStrings(
-                  getDatesBetweenDateStrings(startDateString, endDateString)
-              ),
+            getDatesBetweenDateStrings(startDateString, endDateString)
+        ),
         // x: dummy ? ["B", "B", "B", "B", "B"] : ["A", "A", "A", "A", "A"],
         compareEnabled: true
     };
@@ -112,7 +109,7 @@ export default function () {
         <>
             <div>Chart</div>
             <div style={{ height: "400px" }}>
-                <DateLineChart dataset={dataset} showNumberOfMonths={4} />
+                <DateLineChart dataset={dataset} showNumberOfPoints={20} />
             </div>
         </>
     );

@@ -15,20 +15,20 @@ function getMonthSet(x: string[]) {
 
 export default function ({
     dataset,
-    showNumberOfMonths
+    showNumberOfPoints
 }: {
     dataset: Dataset;
-    showNumberOfMonths: number;
+    showNumberOfPoints: number;
 }) {
-    const firstDateString = dataset.x.length > 0 ? dataset.x[0] : "";
-    const numberOfMonths = getMonthSet(dataset.x).size;
+    // const firstDateString = dataset.x.length > 0 ? dataset.x[0] : "";
     const scale =
-        numberOfMonths > showNumberOfMonths
-            ? (fullWidth * showNumberOfMonths) / numberOfMonths
+        dataset.x.length > showNumberOfPoints
+            ? (fullWidth * showNumberOfPoints) / dataset.x.length
             : fullWidth;
     return (
         <LineChart
             dataset={dataset}
+            xLabelOffset={1.6}
             xFormatter={function (value: string) {
                 var label = "";
                 if (value != null) {
@@ -37,10 +37,10 @@ export default function ({
                     //     value == firstDateString || slices[0] == "1"
                     //         ? slices[1] + " " + slices[2]
                     //         : "";
-                    
-                    // if (parseInt(slices[0]) % 10 === 0) {
-                        label = value;
-                    // }
+
+                    if (parseInt(slices[0]) % 2 === 0) {
+                        label = slices[0];
+                    }
                 }
 
                 return label;

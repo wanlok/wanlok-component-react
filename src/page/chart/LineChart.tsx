@@ -129,7 +129,8 @@ function Legend(seriesName: string, opts: any) {
 function setX(
     dataset: Dataset,
     colour: string,
-    formatter: (value: string) => string
+    xLabelOffset: number,
+    xFormatter: (value: string) => string
 ) {
     apexChartProps.xaxis.categories = dataset.x;
     apexChartProps.xaxis.labels.style.colors = Array.from(
@@ -137,7 +138,8 @@ function setX(
         () => colour
     );
     apexChartProps.colors = dataset.series.map((series) => series.colour);
-    apexChartProps.xaxis.labels.formatter = formatter;
+    apexChartProps.xaxis.labels.offsetX = xLabelOffset;
+    apexChartProps.xaxis.labels.formatter = xFormatter;
 }
 
 function setYColour(colour: string) {
@@ -170,23 +172,30 @@ function addHorizontalLine() {
 
 export default function ({
     dataset,
+    xLabelOffset,
     xFormatter,
     chartWidth
 }: {
     dataset: Dataset;
+    xLabelOffset: number;
     xFormatter: (value: string) => string;
     chartWidth: (width: number) => number;
 }) {
     const { ref, width } = getDimension();
 
-    setX(dataset, "#000000", xFormatter);
+    setX(dataset, "#000000", xLabelOffset, xFormatter);
     setYColour("#000000");
     setGridColour("#EEEEEE");
     setTooltip(dataset);
 
     return (
         <div ref={ref} className={classes.chart}>
-            <div style={{ width: chartWidth(width) + "px", paddingRight: 4000 + "px" }}>
+            <div
+                style={{
+                    width: chartWidth(width) + "px",
+                    paddingRight: width + "px"
+                }}
+            >
                 <ReactApexChart
                     options={apexChartProps}
                     series={dataset.series}
