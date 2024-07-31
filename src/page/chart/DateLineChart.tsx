@@ -20,6 +20,10 @@ export default function ({
     dataset: Dataset;
     showNumberOfPoints: number;
 }) {
+
+    
+
+
     // const firstDateString = dataset.x.length > 0 ? dataset.x[0] : "";
     const scale =
         dataset.x.length > showNumberOfPoints
@@ -27,7 +31,8 @@ export default function ({
             : fullWidth;
     return (
         <LineChart
-            dataset={dataset}
+            series={dataset.series}
+            x={dataset.x}
             xLabelOffset={1.6}
             xFormatter={function (value: string) {
                 var label = "";

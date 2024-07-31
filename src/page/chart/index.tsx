@@ -4,6 +4,7 @@ import { getDateString } from "../../common/DateUtils";
 import { Button } from "@mui/material";
 import { useState } from "react";
 import moment from "moment";
+import LineChart from "./LineChart";
 
 function getNumberOfDays(dates: Date[]) {
     var numberOfDays = 0;
@@ -70,13 +71,8 @@ const generateData = (myNumber: number, value: any) => {
     return my_list;
 };
 
-export default function () {
-    const startDateString = "2024-07-01";
-    const endDateString = "2024-08-31";
-
-    const [dummy, setDummy] = useState(true);
-
-    const dataset: Dataset = {
+function getDataset(dummy: boolean) {
+    return {
         title: "Peak Efficiency",
         series: [
             {
@@ -86,7 +82,7 @@ export default function () {
                 //     getDatesBetweenDateStrings(startDateString, endDateString)
                 // )
                 // data: dummy ? [9, 7, 5, 3, 1] : [1, 3, 5, 7, 9]
-                data: generateData(62, 1)
+                data: dummy ? generateData(62, 1) : generateData(62, 4)
             },
             {
                 name: "Line 2",
@@ -95,22 +91,62 @@ export default function () {
                 //     getDatesBetweenDateStrings(startDateString, endDateString)
                 // )
                 // data: dummy ? [10, 8, 6, 4, 2] : [2, 4, 6, 8, 10]
-                data: generateData(62, 4)
+                data: dummy ? generateData(62, 4) : generateData(62, 1)
             }
         ],
-        x: getDateStrings(
-            getDatesBetweenDateStrings(startDateString, endDateString)
-        ),
-        // x: dummy ? ["B", "B", "B", "B", "B"] : ["A", "A", "A", "A", "A"],
+        // x: getDateStrings(
+        //     getDatesBetweenDateStrings(startDateString, endDateString)
+        // ),
+        x: dummy ? generateData(62, "A") : generateData(62, "B"),
         compareEnabled: true
     };
+}
+
+export default function () {
+    const startDateString = "2024-07-01";
+    const endDateString = "2024-08-31";
+
+    const [dummy, setDummy] = useState(true);
+
+    const dataset = getDataset(dummy);
+
+    console.log(dataset.x);
+
+    const numberOfPoints: number = dataset.x.length;
+    var numberOfPointsToShow: number = numberOfPoints;
+
+    // const [series, setSeries] = useState<any>(dataset);
 
     return (
         <>
             <div>Chart</div>
             <div style={{ height: "400px" }}>
-                <DateLineChart dataset={dataset} showNumberOfPoints={20} />
+                <LineChart
+                    series={dataset.series}
+                    x={dataset.x}
+                    xLabelOffset={0}
+                    xFormatter={(value: string) => {
+                        return value;
+                    }}
+                    chartWidth={(width: number) => {
+                        const fullWidth = 12;
+                        const pointWidth = 12;
+                        const scale =
+                            numberOfPoints > numberOfPointsToShow
+                                ? (fullWidth * numberOfPointsToShow) /
+                                  numberOfPoints
+                                : fullWidth;
+                        return (width * pointWidth) / scale;
+                    }}
+                />
             </div>
+            <Button
+                onClick={() => {
+                    setDummy(!dummy);
+                }}
+            >
+                Click
+            </Button>
         </>
     );
 }

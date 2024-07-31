@@ -3,14 +3,13 @@ import getDimension from "../../common/getDimension";
 import AlertChart from "./AlertChart";
 import API from "../../common/API";
 import { StringMappingType } from "typescript";
-import { getDevicesOnlineStatus } from "./fetch-pq-exercise-with-instructions";
 import styled from "styled-components";
 
 const callAPI = async () => {
-    const deviceIds = [1, 2, 3];
-    const statusDict = await getDevicesOnlineStatus(deviceIds);
+    // const deviceIds = [1, 2, 3];
+    // const statusDict = await getDevicesOnlineStatus(deviceIds);
     // console.log(statusDict.length);
-    console.log(statusDict);
+    // console.log(statusDict);
     // for (var i = 0; i < deviceIds.length; i++) {
     //     console.log(statusDict[deviceIds[i]]);
     // }

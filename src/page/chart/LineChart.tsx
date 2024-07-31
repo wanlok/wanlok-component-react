@@ -1,7 +1,6 @@
 import ReactDOMServer from "react-dom/server";
 import ReactApexChart, { Props as ApexChartProps } from "react-apexcharts";
 import getDimension from "../../common/getDimension";
-import { Dataset } from "../../common/Types";
 import classes from "./LineChart.module.css";
 
 interface Series {
@@ -10,7 +9,7 @@ interface Series {
     w: any;
 }
 
-const apexChartProps: ApexChartProps = {
+export const apexChartProps: ApexChartProps = {
     chart: {
         toolbar: {
             show: false
@@ -79,15 +78,14 @@ const apexChartProps: ApexChartProps = {
         itemMargin: {
             horizontal: 0
         }
-    }
+    },
+    colors: ["red", "green", "blue"]
 };
 
-function Tooltip(dataset: Dataset, { series, dataPointIndex, w }: Series) {
+function Tooltip(x: string[], { series, dataPointIndex, w }: Series) {
     return (
         <div>
-            <div className={classes["tooltip-top"]}>
-                {dataset.x[dataPointIndex]}
-            </div>
+            <div className={classes["tooltip-top"]}>{x[dataPointIndex]}</div>
             {series.map((s: any, i: number) => {
                 const colour = w.config.colors[i];
                 const name = w.config.series[i].name;
@@ -127,17 +125,17 @@ function Legend(seriesName: string, opts: any) {
 }
 
 function setX(
-    dataset: Dataset,
+    series: ApexAxisChartSeries,
+    x: string[],
     colour: string,
     xLabelOffset: number,
     xFormatter: (value: string) => string
 ) {
-    apexChartProps.xaxis.categories = dataset.x;
+    apexChartProps.xaxis.categories = x;
     apexChartProps.xaxis.labels.style.colors = Array.from(
-        { length: dataset.x.length },
+        { length: x.length },
         () => colour
     );
-    apexChartProps.colors = dataset.series.map((series) => series.colour);
     apexChartProps.xaxis.labels.offsetX = xLabelOffset;
     apexChartProps.xaxis.labels.formatter = xFormatter;
 }
@@ -150,10 +148,10 @@ function setGridColour(colour: string) {
     apexChartProps.grid.borderColor = colour;
 }
 
-function setTooltip(dataset: Dataset) {
+function setTooltip(x: string[]) {
     apexChartProps.tooltip = {};
     apexChartProps.tooltip.custom = function (series: Series) {
-        return ReactDOMServer.renderToString(Tooltip(dataset, series));
+        return ReactDOMServer.renderToString(Tooltip(x, series));
     };
 }
 
@@ -171,22 +169,26 @@ function addHorizontalLine() {
 }
 
 export default function ({
-    dataset,
+    // options,
+    series,
+    x,
     xLabelOffset,
     xFormatter,
     chartWidth
 }: {
-    dataset: Dataset;
+    // options: ApexCharts.ApexOptions;
+    series: ApexAxisChartSeries;
+    x: string[];
     xLabelOffset: number;
     xFormatter: (value: string) => string;
     chartWidth: (width: number) => number;
 }) {
     const { ref, width } = getDimension();
 
-    setX(dataset, "#000000", xLabelOffset, xFormatter);
+    setX(series, x, "#000000", xLabelOffset, xFormatter);
     setYColour("#000000");
     setGridColour("#EEEEEE");
-    setTooltip(dataset);
+    setTooltip(x);
 
     return (
         <div ref={ref} className={classes.chart}>
@@ -198,7 +200,7 @@ export default function ({
             >
                 <ReactApexChart
                     options={apexChartProps}
-                    series={dataset.series}
+                    series={series}
                     type="area"
                     height="100%"
                     width="100%"
