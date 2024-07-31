@@ -2,6 +2,7 @@ import ReactDOMServer from "react-dom/server";
 import ReactApexChart, { Props as ApexChartProps } from "react-apexcharts";
 import getDimension from "../../common/getDimension";
 import classes from "./LineChart.module.css";
+import { useEffect } from "react";
 
 interface Series {
     series: ApexAxisChartSeries;
@@ -11,6 +12,7 @@ interface Series {
 
 export const apexChartProps: ApexChartProps = {
     chart: {
+        id: "Hello World",
         toolbar: {
             show: false
         },
@@ -124,7 +126,8 @@ function Legend(seriesName: string, opts: any) {
     );
 }
 
-function setX(
+export function setX(
+    apexChartProps: ApexChartProps,
     series: ApexAxisChartSeries,
     x: string[],
     colour: string,
@@ -140,15 +143,15 @@ function setX(
     apexChartProps.xaxis.labels.formatter = xFormatter;
 }
 
-function setYColour(colour: string) {
+export function setYColour(apexChartProps: ApexChartProps, colour: string) {
     apexChartProps.yaxis.labels.style.colors = [colour];
 }
 
-function setGridColour(colour: string) {
+export function setGridColour(apexChartProps: ApexChartProps, colour: string) {
     apexChartProps.grid.borderColor = colour;
 }
 
-function setTooltip(x: string[]) {
+export function setTooltip(apexChartProps: ApexChartProps, x: string[]) {
     apexChartProps.tooltip = {};
     apexChartProps.tooltip.custom = function (series: Series) {
         return ReactDOMServer.renderToString(Tooltip(x, series));
@@ -169,14 +172,11 @@ function addHorizontalLine() {
 }
 
 export default function ({
-    // options,
+    options,
     series,
-    x,
-    xLabelOffset,
-    xFormatter,
     chartWidth
 }: {
-    // options: ApexCharts.ApexOptions;
+    options: ApexCharts.ApexOptions;
     series: ApexAxisChartSeries;
     x: string[];
     xLabelOffset: number;
@@ -185,10 +185,11 @@ export default function ({
 }) {
     const { ref, width } = getDimension();
 
-    setX(series, x, "#000000", xLabelOffset, xFormatter);
-    setYColour("#000000");
-    setGridColour("#EEEEEE");
-    setTooltip(x);
+    const chart = ApexCharts.getChartByID("Hello World");
+
+    useEffect(() => {
+        chart?.updateOptions(options, true, true, true);
+    }, [options]);
 
     return (
         <div ref={ref} className={classes.chart}>
@@ -199,7 +200,7 @@ export default function ({
                 }}
             >
                 <ReactApexChart
-                    options={apexChartProps}
+                    options={options}
                     series={series}
                     type="area"
                     height="100%"

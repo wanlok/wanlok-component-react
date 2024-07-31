@@ -2,9 +2,15 @@ import { Dataset } from "../../common/Types";
 import DateLineChart from "./DateLineChart";
 import { getDateString } from "../../common/DateUtils";
 import { Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import moment from "moment";
-import LineChart from "./LineChart";
+import LineChart, {
+    apexChartProps,
+    setGridColour,
+    setTooltip,
+    setX,
+    setYColour
+} from "./LineChart";
 
 function getNumberOfDays(dates: Date[]) {
     var numberOfDays = 0;
@@ -108,22 +114,76 @@ export default function () {
 
     const [dummy, setDummy] = useState(true);
 
-    const dataset = getDataset(dummy);
+    const [options, setOptions] = useState(apexChartProps);
 
-    console.log(dataset.x);
+    var series: ApexAxisChartSeries;
+    var x: string[];
 
-    const numberOfPoints: number = dataset.x.length;
+    if (dummy) {
+        series = [
+            {
+                name: "Line 1",
+                data: generateData(62, 1)
+            },
+            {
+                name: "Line 2",
+                data: generateData(62, 4)
+            }
+        ];
+        x = generateData(62, "A");
+    } else {
+        series = [
+            {
+                name: "Line 1",
+                data: generateData(62, 4)
+            },
+            {
+                name: "Line 2",
+                data: generateData(62, 1)
+            }
+        ];
+        x = generateData(62, "B");
+    }
+
+    const numberOfPoints: number = x.length;
     var numberOfPointsToShow: number = numberOfPoints;
 
     // const [series, setSeries] = useState<any>(dataset);
+
+    // xLabelOffset={1.6}
+    // xFormatter={function (value: string) {
+    //     var label = "";
+    //     if (value != null) {
+    //         const slices = value.split(" ");
+    //         // label =
+    //         //     value == firstDateString || slices[0] == "1"
+    //         //         ? slices[1] + " " + slices[2]
+    //         //         : "";
+
+    //         if (parseInt(slices[0]) % 2 === 0) {
+    //             label = slices[0];
+    //         }
+    //     }
+
+    //     return label;
+    // }}
+
+    useEffect(() => {
+        setYColour(options, "gold");
+        setGridColour(options, "blue");
+        setX(options, series, x, "#000000", 0, (value: string) => value);
+        setTooltip(options, x);
+        setOptions({ ...options });
+    }, []);
 
     return (
         <>
             <div>Chart</div>
             <div style={{ height: "400px" }}>
                 <LineChart
-                    series={dataset.series}
-                    x={dataset.x}
+                    options={options}
+                    series={series}
+                    x={x}
                     xLabelOffset={0}
                     xFormatter={(value: string) => {
                         return value;
@@ -143,6 +203,20 @@ export default function () {
             <Button
                 onClick={() => {
                     setDummy(!dummy);
+                    const x = dummy
+                        ? generateData(62, "A")
+                        : generateData(62, "B");
+                    setX(
+                        options,
+                        series,
+                        x,
+                        "#000000",
+                        0,
+                        (value: string) => value
+                    );
+                    setTooltip(options, x);
+                    console.log(options);
+                    setOptions({ ...options });
                 }}
             >
                 Click

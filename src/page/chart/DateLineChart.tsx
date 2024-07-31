@@ -30,29 +30,30 @@ export default function ({
             ? (fullWidth * showNumberOfPoints) / dataset.x.length
             : fullWidth;
     return (
-        <LineChart
-            series={dataset.series}
-            x={dataset.x}
-            xLabelOffset={1.6}
-            xFormatter={function (value: string) {
-                var label = "";
-                if (value != null) {
-                    const slices = value.split(" ");
-                    // label =
-                    //     value == firstDateString || slices[0] == "1"
-                    //         ? slices[1] + " " + slices[2]
-                    //         : "";
+        // <LineChart
+        //     series={dataset.series}
+        //     x={dataset.x}
+        //     xLabelOffset={1.6}
+        //     xFormatter={function (value: string) {
+        //         var label = "";
+        //         if (value != null) {
+        //             const slices = value.split(" ");
+        //             // label =
+        //             //     value == firstDateString || slices[0] == "1"
+        //             //         ? slices[1] + " " + slices[2]
+        //             //         : "";
 
-                    if (parseInt(slices[0]) % 2 === 0) {
-                        label = slices[0];
-                    }
-                }
+        //             if (parseInt(slices[0]) % 2 === 0) {
+        //                 label = slices[0];
+        //             }
+        //         }
 
-                return label;
-            }}
-            chartWidth={function (width: number) {
-                return (width * pointWidth) / scale;
-            }}
-        />
+        //         return label;
+        //     }}
+        //     chartWidth={function (width: number) {
+        //         return (width * pointWidth) / scale;
+        //     }}
+        // />
+        <></>
     );
 }
