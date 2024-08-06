@@ -63,6 +63,24 @@ export default function () {
             >
                 Hover Me
             </Button>
+            <br />
+            <br />
+            <Button
+                sx={{
+                    width: 400 + "px",
+                    background:
+                    "linear-gradient(to right, #00F0FF 0%, #66F6FF 60%, #33A9FF 80%, #8473FF 100%);",
+                    backgroundPosition: "0% 100%",
+                    backgroundSize: "200%",
+                    color: "black",
+                    "&:hover": {
+                        backgroundPosition: "100% 100%",
+                    },
+                    transition: "all 2s ease"
+                }}
+            >
+                Hover Me
+            </Button>
         </div>
     );
 }
