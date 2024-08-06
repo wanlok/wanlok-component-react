@@ -4,6 +4,7 @@ import AlertChart from "./AlertChart";
 import API from "../../common/API";
 import { StringMappingType } from "typescript";
 import styled from "styled-components";
+import { Button } from "@mui/material";
 
 const callAPI = async () => {
     // const deviceIds = [1, 2, 3];
@@ -15,55 +16,53 @@ const callAPI = async () => {
     // }
 };
 
-const Title = styled.div`
-  font-size: 1.5em;
-  text-align: center;
-  color: #BF4F74;
-  background-color: blue;
-`;
+// const Title = styled.div`
+//     font-size: 1.5em;
+//     text-align: center;
+//     color: #bf4f74;
+//     background-color: blue;
+// `;
 
-// The Button from the last section without the interpolations
-const Button = styled.button`
-  color: #BF4F74;
-  font-size: 1em;
-  margin: 1em;
-  padding: 0.25em 1em;
-  border: 2px solid #BF4F74;
-  border-radius: 3px;
-`;
+// // The Button from the last section without the interpolations
+// const Button = styled.button`
+//     color: #bf4f74;
+//     font-size: 1em;
+//     margin: 1em;
+//     padding: 0.25em 1em;
+//     border: 2px solid #bf4f74;
+//     border-radius: 3px;
+// `;
 
-// A new component based on Button, but with some override styles
-const TomatoButton = styled(Button)`
-  color: tomato;
-  border-color: tomato;
-`;
-
-
+// // A new component based on Button, but with some override styles
+// const TomatoButton = styled(Button)`
+//     color: tomato;
+//     border-color: tomato;
+// `;
 
 export default function () {
     // const data = useLoaderData();
-    const { ref, width, height } = getDimension();
-
-    console.log(height);
-    // console.log(data);
 
     return (
-        // <div ref={ref} style={{ width: "100%", backgroundColor: "green" }}>
-        //     <h2>Element Size</h2>
-        //     <p>Width: {width}px</p>
-        //     <p>Height: {height}px</p>
-        // </div>
+        <div style={{ padding: 16 + "px" }}>
+            {/* <Button onClick={callAPI}>Click</Button> */}
 
-        <div
-            ref={ref}
-            style={{
-                height: "100%",
-                backgroundColor: "green",
-                position: "relative"
-            }}
-        >
-            <Title>Hello World</Title>
-            <Button onClick={callAPI}>Click</Button>
+            <Button
+                sx={{
+                    background:
+                        "linear-gradient(to right, #b94ef7 0%, #0cb2ff 20%, orange 50%, yellow 100%);",
+                    backgroundPosition: "0% 100%",
+                    backgroundSize: "500%",
+                    color: "white",
+                    "&:hover": {
+                        backgroundPosition: "100% 100%",
+                        boxShadow: "0px 3px 20px 1px yellow",
+                        color: "black"
+                    },
+                    transition: "all 2s ease"
+                }}
+            >
+                Hover Me
+            </Button>
         </div>
     );
 }
