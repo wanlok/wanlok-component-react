@@ -5,6 +5,7 @@ import API from "../../common/API";
 import { StringMappingType } from "typescript";
 import styled from "styled-components";
 import { Button } from "@mui/material";
+import { useRef } from "react";
 
 const callAPI = async () => {
     // const deviceIds = [1, 2, 3];
@@ -44,43 +45,64 @@ export default function () {
 
     return (
         <div style={{ padding: 16 + "px" }}>
-            {/* <Button onClick={callAPI}>Click</Button> */}
-
-            <Button
-                sx={{
-                    background:
-                        "linear-gradient(to right, #b94ef7 0%, #0cb2ff 20%, orange 50%, yellow 100%);",
-                    backgroundPosition: "0% 100%",
-                    backgroundSize: "500%",
-                    color: "white",
-                    "&:hover": {
-                        backgroundPosition: "100% 100%",
-                        boxShadow: "0px 3px 20px 1px yellow",
-                        color: "black"
-                    },
-                    transition: "all 2s ease"
+            <div style={{ backgroundColor: "blue" }}>
+                <Button
+                    onClick={() => {
+                        const small = document.getElementById("small");
+                        if (small != null) {
+                            small.style.visibility = "visible";
+                        }
+                        const big = document.getElementById("big");
+                        if (big != null) {
+                            big.style.visibility = "hidden";
+                        }
+                    }}
+                >
+                    Minimise
+                </Button>
+                <Button
+                    onClick={() => {
+                        const small = document.getElementById("small");
+                        if (small != null) {
+                            small.style.visibility = "hidden";
+                        }
+                        const big = document.getElementById("big");
+                        if (big != null) {
+                            big.style.visibility = "visible";
+                        }
+                    }}
+                >
+                    Maximise
+                </Button>
+            </div>
+            <div
+                id="small"
+                style={{
+                    width: "200px",
+                    height: "200px",
+                    backgroundColor: "green",
+                    position: "absolute",
+                    top: "100px",
+                    left: "100px",
+                    visibility: "visible"
                 }}
             >
-                Hover Me
-            </Button>
-            <br />
-            <br />
-            <Button
-                sx={{
-                    width: 400 + "px",
-                    background:
-                    "linear-gradient(to right, #00F0FF 0%, #66F6FF 60%, #33A9FF 80%, #8473FF 100%);",
-                    backgroundPosition: "0% 100%",
-                    backgroundSize: "200%",
-                    color: "black",
-                    "&:hover": {
-                        backgroundPosition: "100% 100%",
-                    },
-                    transition: "all 2s ease"
+                A
+            </div>
+            <div
+                id="big"
+                style={{
+                    width: "400px",
+                    height: "400px",
+                    backgroundColor: "red",
+                    position: "absolute",
+                    top: "100px",
+                    left: "200px",
+                    visibility: "hidden"
                 }}
             >
-                Hover Me
-            </Button>
+                B
+            </div>
         </div>
     );
 }
