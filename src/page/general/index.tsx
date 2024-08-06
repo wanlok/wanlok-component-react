@@ -49,12 +49,10 @@ export default function () {
                 <Button
                     onClick={() => {
                         const small = document.getElementById("small");
-                        if (small != null) {
-                            small.style.visibility = "visible";
-                        }
                         const big = document.getElementById("big");
-                        if (big != null) {
-                            big.style.visibility = "hidden";
+                        if (small && big) {
+                            big.style.opacity = "0";
+                            small.style.opacity = "1";
                         }
                     }}
                 >
@@ -63,12 +61,10 @@ export default function () {
                 <Button
                     onClick={() => {
                         const small = document.getElementById("small");
-                        if (small != null) {
-                            small.style.visibility = "hidden";
-                        }
                         const big = document.getElementById("big");
-                        if (big != null) {
-                            big.style.visibility = "visible";
+                        if (small && big) {
+                            small.style.opacity = "0";
+                            big.style.opacity = "1";
                         }
                     }}
                 >
@@ -82,9 +78,10 @@ export default function () {
                     height: "200px",
                     backgroundColor: "green",
                     position: "absolute",
-                    top: "100px",
-                    left: "100px",
-                    visibility: "visible"
+                    top: "200px",
+                    left: "400px",
+                    opacity: "1",
+                    transition: "opacity 0.5s ease"
                 }}
             >
                 A
@@ -97,8 +94,9 @@ export default function () {
                     backgroundColor: "red",
                     position: "absolute",
                     top: "100px",
-                    left: "200px",
-                    visibility: "hidden"
+                    left: "800px",
+                    opacity: "0",
+                    transition: "opacity 0.5s ease"
                 }}
             >
                 B
