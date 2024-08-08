@@ -44,64 +44,7 @@ export default function () {
     // const data = useLoaderData();
 
     return (
-        <div style={{ padding: 16 + "px" }}>
-            <div style={{ backgroundColor: "blue" }}>
-                <Button
-                    onClick={() => {
-                        const small = document.getElementById("small");
-                        const big = document.getElementById("big");
-                        if (small && big) {
-                            big.style.opacity = "0";
-                            small.style.opacity = "1";
-                        }
-                    }}
-                >
-                    Minimise
-                </Button>
-                <Button
-                    onClick={() => {
-                        const small = document.getElementById("small");
-                        const big = document.getElementById("big");
-                        if (small && big) {
-                            small.style.opacity = "0";
-                            big.style.opacity = "1";
-                        }
-                    }}
-                >
-                    Maximise
-                </Button>
-            </div>
-            <div
-                id="small"
-                style={{
-                    width: "200px",
-                    height: "200px",
-                    backgroundColor: "green",
-                    position: "absolute",
-                    top: "200px",
-                    left: "400px",
-                    opacity: "1",
-                    transition: "opacity 0.5s ease"
-                }}
-            >
-                A
-            </div>
-            <div
-                id="big"
-                style={{
-                    width: "400px",
-                    height: "400px",
-                    backgroundColor: "red",
-                    position: "absolute",
-                    top: "100px",
-                    left: "800px",
-                    opacity: "0",
-                    transition: "opacity 0.5s ease"
-                }}
-            >
-                B
-            </div>
-        </div>
+        <div>Hello World</div>
     );
 }
 
