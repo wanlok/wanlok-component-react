@@ -1,0 +1,62 @@
+.myButton {
+    position: relative;
+    display: inline-block;
+    background-color: #00F0FF;
+    color: black;
+    border-radius: 4px;
+    overflow: hidden;
+
+    margin-left: 200px;
+    margin-top: 100px;
+}
+
+.myButton:hover > .primary {
+    top: -40px;
+}
+
+.myButton:hover > .secondary {
+    top: 0px;
+}
+
+.myButton > * {
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    transition: top 1s;
+    -moz-transition: top 1s;
+    -webkit-transition: top 1s;
+    -o-transition: top 1s;
+    -ms-transition: top 1s;
+}
+
+.myButton > svg {
+    position: absolute;
+    left: 0;
+    top: 0;
+    fill: none;
+    stroke: white;
+    stroke-width: 4;
+    stroke-dasharray: 150 480;
+    stroke-dashoffset: 150;
+    transition: 1s ease-in-out;
+}
+
+.myButton:hover > svg {
+    stroke-dashoffset: -480;
+}
+
+.primary {
+    top: 0px;
+    line-height: 40px;
+}
+
+.secondary {
+    top: 40px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.secondary > img {
+    height: 24px;
+    width: 24px;
+}

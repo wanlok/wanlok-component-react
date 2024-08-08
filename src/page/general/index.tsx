@@ -6,6 +6,7 @@ import { StringMappingType } from "typescript";
 import styled from "styled-components";
 import { Button } from "@mui/material";
 import { useRef } from "react";
+import MyButton from "./MyButton";
 
 const callAPI = async () => {
     // const deviceIds = [1, 2, 3];
@@ -44,7 +45,9 @@ export default function () {
     // const data = useLoaderData();
 
     return (
-        <div>Hello World</div>
+        <div style={{ backgroundColor: "black", paddingBottom: 100 }}>
+            <MyButton />
+        </div>
     );
 }
 
