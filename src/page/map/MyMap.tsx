@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import Map from "@arcgis/core/Map";
 import SceneLayer from "@arcgis/core/layers/SceneLayer";
@@ -21,33 +21,39 @@ const initialLocation = {
 };
 
 export default () => {
-    const [sceneView, setSceneView] = useState<SceneView>();
-    const [sceneLayer, setSceneLayer] = useState<SceneLayer>();
     const [districtExtents, setDistrictExtents] = useState<{
         [key: string]: Extent;
     }>();
 
+    const mapRef = useRef<Map>();
+
     useEffect(() => {
-        const map = new Map({
-            basemap: "dark-gray-vector",
-            ground: "world-elevation"
-        });
+        var map: Map | null = null;
+        var sceneView: SceneView | null = null;
+        var sceneLayer: SceneLayer | null = null;
 
-        const sceneView = new SceneView({
-            container: "viewDiv",
-            map: map,
-            ...initialLocation,
-        });
-        setSceneView(sceneView);
+        try {
+            map = new Map({
+                basemap: "dark-gray-vector",
+                ground: "world-elevation"
+            });
+        } catch (e) {}
 
-        const sceneLayer = new SceneLayer({
+        if (map) {
+            sceneView = new SceneView({
+                container: "viewDiv",
+                map: map,
+                ...initialLocation
+            });
+        }
+
+        sceneLayer = new SceneLayer({
             portalItem: {
                 id: "aa6b63f9143a4356b6f491819cdc1c27"
             },
             popupEnabled: false
         });
-        setSceneLayer(sceneLayer);
-        map.add(sceneLayer);
+        map?.add(sceneLayer);
 
         const outlineSymbol = new SimpleLineSymbol({
             color: "transparent",
@@ -66,19 +72,23 @@ export default () => {
             url: "https://services3.arcgis.com/6j1KwZfY2fZrfNMR/arcgis/rest/services/Hong_Kong_18_Districts/FeatureServer/0",
             renderer: renderer
         });
-        map.add(featureLayer, 0);
+        map?.add(featureLayer, 0);
 
         var query = featureLayer.createQuery();
         query.outFields = ["*"];
         query.returnGeometry = true;
-        featureLayer.queryFeatures(query).then(function (results) {
-            var extents: { [key: string]: Extent } = {};
-            for (var i = 0; i < results.features.length; i++) {
-                const feature = results.features[i];
-                extents[feature.attributes["ENAME"]] = feature.geometry.extent;
-            }
-            setDistrictExtents(extents);
-        });
+        featureLayer
+            .queryFeatures(query)
+            .then(function (results) {
+                var extents: { [key: string]: Extent } = {};
+                for (var i = 0; i < results.features.length; i++) {
+                    const feature = results.features[i];
+                    extents[feature.attributes["ENAME"]] =
+                        feature.geometry.extent;
+                }
+                setDistrictExtents(extents);
+            })
+            .catch(() => {});
 
         // sceneView.on("click", function (event) {
         //     sceneView?.hitTest(event).then(function (response) {
@@ -89,18 +99,22 @@ export default () => {
         //     });
         // });
 
-        sceneView.on("double-click", function (event) {
+        sceneView?.on("double-click", function (event) {
             event.stopPropagation();
         });
 
-        sceneView.watch("zoom", function (newValue, oldValue, propertyName) {
+        sceneView?.watch("zoom", function (newValue, oldValue, propertyName) {
             if (newValue >= 15 - 0.5) {
-                sceneView.graphics.removeAll();
+                sceneView?.graphics.removeAll();
             }
         });
 
         return () => {
+            featureLayer.destroy();
+            renderer.destroy();
+            sceneLayer?.destroy();
             sceneView?.destroy();
+            map?.destroy();
         };
     }, []);
 
