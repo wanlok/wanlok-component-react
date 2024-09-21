@@ -1,12 +1,6 @@
-import { useLoaderData } from "react-router-dom";
-import getDimension from "../../common/getDimension";
-import AlertChart from "./AlertChart";
-import API from "../../common/API";
-import { StringMappingType } from "typescript";
-import styled from "styled-components";
-import { Button } from "@mui/material";
-import { useRef } from "react";
-import MyButton from "./MyButton";
+import { useEffect } from "react";
+import Skeleton from "react-loading-skeleton";
+import 'react-loading-skeleton/dist/skeleton.css'
 
 const callAPI = async () => {
     // const deviceIds = [1, 2, 3];
@@ -18,37 +12,17 @@ const callAPI = async () => {
     // }
 };
 
-// const Title = styled.div`
-//     font-size: 1.5em;
-//     text-align: center;
-//     color: #bf4f74;
-//     background-color: blue;
-// `;
-
-// // The Button from the last section without the interpolations
-// const Button = styled.button`
-//     color: #bf4f74;
-//     font-size: 1em;
-//     margin: 1em;
-//     padding: 0.25em 1em;
-//     border: 2px solid #bf4f74;
-//     border-radius: 3px;
-// `;
-
-// // A new component based on Button, but with some override styles
-// const TomatoButton = styled(Button)`
-//     color: tomato;
-//     border-color: tomato;
-// `;
-
 export default function () {
     // const data = useLoaderData();
 
-    return (
-        <div style={{ backgroundColor: "black", paddingBottom: 100 }}>
-            <MyButton />
-        </div>
-    );
+    useEffect(() => {
+
+    }, []);
+
+    return <div style={{padding: 24}}>
+        <Skeleton count={3} />
+        <div>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.</div>
+    </div>
 }
 
 export function loader() {
