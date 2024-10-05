@@ -12,7 +12,7 @@ import SimpleLineSymbol from "@arcgis/core/symbols/SimpleLineSymbol";
 import MeshSymbol3D from "@arcgis/core/symbols/MeshSymbol3D";
 import FillSymbol3DLayer from "@arcgis/core/symbols/FillSymbol3DLayer";
 
-import './ArcGISMap.css';
+import "./ArcGISMap.css";
 // import './Tooltip.css';
 import { useNavigate } from "react-router-dom";
 
@@ -35,37 +35,26 @@ function symbol(color: string) {
     });
 }
 
-// function getUniqueValueInfos(selectedDistrictIndex: number, selectedSiteIndex: number) {
-//     var uniqueValueInfos: any[] = [];
-//     for (var i = 0; i < Districts.length; i++) {
-//         for (var j = 0; j < Districts[i].sites.length; j++) {
-//             for (var k = 0; k < Districts[i].sites[j].building_ids.length; k++) {
-//                 uniqueValueInfos.push({
-//                     value: Districts[i].sites[j].building_ids[k],
-//                     symbol: symbol(i === selectedDistrictIndex ? (j === selectedSiteIndex ? '#0094FF' : '#00F0FF') : 'white')
-//                 });
-//             }
-//         }
-//     }
-//     return uniqueValueInfos;
-// }
+function getUniqueValueInfos(buildingIds: number[]) {
+    var uniqueValueInfos: any[] = [];
+    for (var i = 0; i < buildingIds.length; i++) {
+        uniqueValueInfos.push({
+            value: buildingIds[i],
+            symbol: symbol("green")
+        });
+    }
+    return uniqueValueInfos;
+}
 
-function getSelectedDistrictIndex(
-    response: any,
-    districtMap: { [key: string]: number }
-) {
-    var selectedDistrictIndex = -1;
-    if (response.results.length > 0) {
-        for (var i = 0; i < response.results.length; i++) {
-            const attributes = response.results[i].graphic.attributes;
-            if (attributes != null) {
-                if (attributes["ENAME"] != null) {
-                    selectedDistrictIndex = districtMap[attributes["ENAME"]];
-                }
-            }
+export function getBuildingIds(response: any): number[] {
+    const buildingIds = [];
+    for (var i = 0; i < response.results.length; i++) {
+        const attributes = response.results[i].graphic.attributes;
+        if (attributes !== null && attributes["BUILDINGID"] !== null) {
+            buildingIds.push(attributes["BUILDINGID"]);
         }
     }
-    return selectedDistrictIndex;
+    return buildingIds;
 }
 
 // function getSelectedSiteIndex(response: any, selectedDistrictIndex: number) {
@@ -93,31 +82,6 @@ function getSelectedDistrictIndex(
 //     }
 //     return selectedSiteIndex;
 // }
-
-function updateDistrictCursor(
-    sceneView: SceneView,
-    featureLayer: FeatureLayer,
-    response: any
-) {
-    sceneView.graphics.removeAll();
-    const result = response.results.filter(function (result: any) {
-        return result.graphic != null && result.graphic.layer === featureLayer;
-    })[0];
-    if (result != null) {
-        const dummy: any = {
-            geometry: result.graphic.geometry,
-            symbol: new SimpleFillSymbol({
-                color: "rgba(0, 0, 0, 0.5)",
-                outline: new SimpleLineSymbol({
-                    color: "black",
-                    width: 1
-                })
-            })
-        };
-        sceneView.graphics.add(dummy);
-        sceneView.container.style.cursor = "pointer";
-    }
-}
 
 // function updateBuildingTooltipAndCursor(
 //     sceneView: SceneView,
@@ -158,37 +122,18 @@ function updateDistrictCursor(
 // }
 
 function ArcGISMap({
-    height
+    height,
+    buildingIds,
+    onClick
 }: {
-    // selectedDistrictIndex: number;
-    // setSelectedDistrictIndex: Dispatch<SetStateAction<number>>;
-    // selectedSiteIndex: number;
-    // setSelectedSiteIndex: Dispatch<SetStateAction<number>>;
     height: number;
+    buildingIds: number[];
+    onClick: (response: any) => void;
 }) {
     const navigate = useNavigate();
-    // const selectedDistrictIndexRef = useRef(selectedDistrictIndex);
-    // const selectedSiteIndexRef = useRef(selectedSiteIndex);
-
-    // useEffect(() => {
-    //     selectedDistrictIndexRef.current = selectedDistrictIndex;
-    // }, [selectedDistrictIndex]);
-
-    // useEffect(() => {
-    //     selectedSiteIndexRef.current = selectedSiteIndex;
-    // }, [selectedSiteIndex]);
-
     const [sceneView, setSceneView] = useState<SceneView>();
     const [sceneLayer, setSceneLayer] = useState<SceneLayer>();
-    const [districtExtents, setDistrictExtents] = useState<{
-        [key: string]: Extent;
-    }>();
-
-    // const districtMap: { [key: string]: number } = {};
-    // for (var i = 0; i < Districts.length; i++) {
-    //     districtMap[Districts[i]['name'].toUpperCase()] = i + 1;
-    // }
-
+    
     useEffect(() => {
         const map = new Map({
             basemap: "dark-gray-vector",
@@ -230,38 +175,10 @@ function ArcGISMap({
         });
         map.add(featureLayer, 0);
 
-        var query = featureLayer.createQuery();
-        query.outFields = ["*"];
-        query.returnGeometry = true;
-        featureLayer
-            .queryFeatures(query)
-            .then(function (results) {
-                var extents: { [key: string]: Extent } = {};
-                for (var i = 0; i < results.features.length; i++) {
-                    const feature = results.features[i];
-                    extents[feature.attributes["ENAME"]] =
-                        feature.geometry.extent;
-                }
-                setDistrictExtents(extents);
-            })
-            .catch(() => {});
-
         sceneView.on("click", function (event) {
-            // const center = sceneView.center;
-            // console.log(center.latitude, center.longitude);
-            // sceneView?.hitTest(event).then(function (response) {
-            //     const selectedSiteIndex = getSelectedSiteIndex(response, selectedDistrictIndexRef.current - 1);
-            //     if (selectedSiteIndex > -1) {
-            //         // setSelectedSiteIndex(selectedSiteIndex === selectedSiteIndexRef.current ? -1 : selectedSiteIndex);
-            //         navigate(`/floor-plan?district=${selectedDistrictIndexRef.current - 1}&site=${selectedSiteIndex}`);
-            //     } else {
-            //         const selectedDistrictIndex = getSelectedDistrictIndex(response, districtMap);
-            //         if (selectedDistrictIndex > -1) {
-            //             setSelectedSiteIndex(-1);
-            //             setSelectedDistrictIndex(selectedDistrictIndex);
-            //         }
-            //     }
-            // });
+            sceneView?.hitTest(event).then(function (response) {
+                onClick(response);
+            });
         });
 
         sceneView.on("double-click", function (event) {
@@ -286,12 +203,6 @@ function ArcGISMap({
         //     });
         // });
 
-        sceneView.watch("zoom", function (newValue, oldValue, propertyName) {
-            if (newValue >= 15 - 0.5) {
-                sceneView.graphics.removeAll();
-            }
-        });
-
         return () => {
             featureLayer.destroy();
             renderer.destroy();
@@ -302,29 +213,10 @@ function ArcGISMap({
         };
     }, []);
 
-    if (sceneView != null && districtExtents != null && sceneLayer != null) {
-        //     if (selectedDistrictIndex === 0) {
-        //         sceneView.goTo(initialLocation);
-        //     } else if (selectedDistrictIndex != selectedDistrictIndexRef.current) {
-        //         const selectedDistrict = Districts[selectedDistrictIndex - 1];
-        //         const key = selectedDistrict.name.toUpperCase();
-        //         if (selectedDistrict.center === undefined) {
-        //             sceneView.goTo({
-        //                 target: districtExtents[key],
-        //                 zoom: 15,
-        //                 tilt: 45
-        //             });
-        //         } else {
-        //             sceneView.goTo({
-        //                 center: [selectedDistrict.center.latitude, selectedDistrict.center.longitude],
-        //                 zoom: 15,
-        //                 tilt: 45
-        //             });
-        //         }
-        //     }
+    if (sceneLayer != null) {
         sceneLayer.renderer = new UniqueValueRenderer({
             field: "BUILDINGID",
-            // uniqueValueInfos: getUniqueValueInfos(selectedDistrictIndex - 1, selectedSiteIndex),
+            uniqueValueInfos: getUniqueValueInfos(buildingIds),
             defaultSymbol: symbol("white")
         });
     }
