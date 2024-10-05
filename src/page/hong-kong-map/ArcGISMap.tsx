@@ -72,7 +72,6 @@ function ArcGISMap({
     buildingIds: number[];
     onClick: (response: any) => void;
 }) {
-    const [sceneView, setSceneView] = useState<SceneView>();
     const [sceneLayer, setSceneLayer] = useState<SceneLayer>();
 
     useEffect(() => {
@@ -86,7 +85,6 @@ function ArcGISMap({
             map: map,
             ...initialLocation
         });
-        setSceneView(sceneView);
 
         const sceneLayer = new SceneLayer({
             portalItem: {
