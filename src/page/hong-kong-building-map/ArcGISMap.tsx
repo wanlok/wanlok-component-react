@@ -63,17 +63,28 @@ export function getBuildingIds(response: any): number[] {
     return buildingIds;
 }
 
+export function parseBuildingIds(buildingIdList: string): number[] {
+    const buildingIds: number[] = [];
+    const slices = buildingIdList.split(",");
+    for (var i = 0; i < slices.length; i++) {
+        buildingIds.push(Number(slices[i]));
+    }
+    return buildingIds;
+}
+
 function ArcGISMap({
     height,
-    buildingIds,
+    buildingIdList,
+    locate,
     onClick
 }: {
     height: number;
-    buildingIds: number[];
+    buildingIdList: string;
+    locate: number;
     onClick: (response: any) => void;
 }) {
     const [sceneLayer, setSceneLayer] = useState<SceneLayer>();
-
+    
     useEffect(() => {
         const map = new Map({
             basemap: "dark-gray-vector",
@@ -141,6 +152,22 @@ function ArcGISMap({
             map.destroy();
         };
     }, []);
+
+    const buildingIds = parseBuildingIds(buildingIdList);
+
+    if (buildingIds.length > 0) {
+        console.log("HELLO WORLD");
+        console.log(buildingIds[0]);
+    }
+    // sceneView.goTo({
+    //     center: [selectedDistrict.center.latitude, selectedDistrict.center.longitude],
+    //     zoom: 15,
+    //     tilt: 45
+    // });
+
+    
+
+    console.log("CHECKING LOCATE TIME: " + locate);
 
     if (sceneLayer != null) {
         sceneLayer.renderer = new UniqueValueRenderer({

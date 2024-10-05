@@ -1,7 +1,7 @@
 import Main from "./layout/Main";
 import General, { loader as generalLoader } from "./page/general";
 import Landing from "./page/landing";
-import HongKongMap from "./page/hong-kong-map";
+import HongKongBuildingMap from "./page/hong-kong-building-map";
 import Chart from "./page/chart";
 
 export default [
@@ -27,9 +27,9 @@ export default [
                 loader: generalLoader
             },
             {
-                name: "Hong Kong Map",
-                path: "/hong-kong-map",
-                element: <HongKongMap />
+                name: "Hong Kong Building Map",
+                path: "/hong-kong-building-map",
+                element: <HongKongBuildingMap />
             },
             {
                 name: "Chart",
