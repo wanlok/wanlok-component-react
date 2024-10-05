@@ -19,7 +19,7 @@ export default function () {
                         right: "24px",
                         width: "320px",
                         backgroundColor: "white",
-                        padding: "24px 24px 16px 24px"
+                        padding: "24px 24px 24px 24px"
                     }}
                 >
                     <Grid container spacing={2}>
@@ -35,7 +35,7 @@ export default function () {
                                 }}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={12} md={12}>
+                        {/* <Grid item xs={12} sm={12} md={12}>
                             <Button
                                 fullWidth
                                 onClick={() => {
@@ -44,7 +44,7 @@ export default function () {
                             >
                                 Locate
                             </Button>
-                        </Grid>
+                        </Grid> */}
                     </Grid>
                 </div>
             </div>
