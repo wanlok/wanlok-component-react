@@ -6,3 +6,7 @@
 .left {
     background-color: #eeeeee;
 }
+
+.content {
+    overflow-y: scroll;
+}

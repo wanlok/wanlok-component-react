@@ -3,11 +3,13 @@ import { Button } from "@mui/material";
 import styles from "./MainMenu.module.css";
 import routes from "../routes";
 
-interface Props {
+export default function ({
+    buttonHeight,
+    fullWidth
+}: {
+    buttonHeight: number;
     fullWidth: boolean;
-}
-
-export default function ({ fullWidth }: Props) {
+}) {
     return (
         <>
             {routes.map((routes, index) => {
@@ -18,6 +20,7 @@ export default function ({ fullWidth }: Props) {
                                 variant="text"
                                 fullWidth={fullWidth}
                                 className={styles.button}
+                                style={{ height: buttonHeight }}
                             >
                                 {route.name}
                             </Button>
