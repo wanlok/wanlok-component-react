@@ -1,0 +1,8 @@
+.esri-view-root,
+.esri-view-root > .esri-view-surface {
+    height: 100%;
+}
+
+.esri-view-root > :not(.esri-view-surface) {
+    display: none;
+}

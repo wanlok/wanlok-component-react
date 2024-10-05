@@ -9,7 +9,7 @@ export default function () {
     const mobile = useMediaQuery(theme.breakpoints.down("md"));
     const height = useWindowDimensions().height - 1;
     const buttonHeight = 56;
-
+    const contentHeight = height - (mobile ? buttonHeight : 0);
     return (
         <Grid container className={mobile ? "" : styles.root}>
             <Grid
@@ -28,9 +28,9 @@ export default function () {
                 sm={12}
                 md={10}
                 className={styles.content}
-                style={{ height: height - (mobile ? buttonHeight : 0) }}
+                style={{ height: contentHeight }}
             >
-                <Outlet />
+                <Outlet context={[contentHeight]} />
             </Grid>
         </Grid>
     );
