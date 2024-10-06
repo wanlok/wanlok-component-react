@@ -13,8 +13,8 @@ import "./ArcGISMap.css";
 const initialLocation = {
     center: [114.1095, 22.345],
     zoom: 11,
-    tilt: 0,
-    heading: 0
+    heading: 0,
+    tilt: 0
 };
 
 function symbol(color: string) {
@@ -76,15 +76,22 @@ function ArcGISMap({
     height,
     buildingIdList,
     locate,
+    onChange,
     onClick
 }: {
     height: number;
     buildingIdList: string;
     locate: number;
+    onChange: (value: {
+        position: __esri.Point;
+        heading: number;
+        tilt: number;
+    }) => void;
     onClick: (response: any) => void;
 }) {
+    const [sceneView, setSceneView] = useState<SceneView>();
     const [sceneLayer, setSceneLayer] = useState<SceneLayer>();
-    
+
     useEffect(() => {
         const map = new Map({
             basemap: "dark-gray-vector",
@@ -96,6 +103,7 @@ function ArcGISMap({
             map: map,
             ...initialLocation
         });
+        setSceneView(sceneView);
 
         const sceneLayer = new SceneLayer({
             portalItem: {
@@ -143,6 +151,16 @@ function ArcGISMap({
             });
         });
 
+        sceneView.on("drag", function (event) {
+            sceneView.hitTest(event).then(function () {
+                onChange({
+                    position: sceneView.camera.position,
+                    heading: sceneView.camera.heading,
+                    tilt: sceneView.camera.tilt
+                });
+            });
+        });
+
         return () => {
             featureLayer.destroy();
             renderer.destroy();
@@ -153,26 +171,12 @@ function ArcGISMap({
         };
     }, []);
 
-    const buildingIds = parseBuildingIds(buildingIdList);
-
-    if (buildingIds.length > 0) {
-        console.log("HELLO WORLD");
-        console.log(buildingIds[0]);
-    }
-    // sceneView.goTo({
-    //     center: [selectedDistrict.center.latitude, selectedDistrict.center.longitude],
-    //     zoom: 15,
-    //     tilt: 45
-    // });
-
-    
-
-    console.log("CHECKING LOCATE TIME: " + locate);
-
     if (sceneLayer != null) {
         sceneLayer.renderer = new UniqueValueRenderer({
             field: "BUILDINGID",
-            uniqueValueInfos: getUniqueValueInfos(buildingIds),
+            uniqueValueInfos: getUniqueValueInfos(
+                parseBuildingIds(buildingIdList)
+            ),
             defaultSymbol: symbol("white")
         });
     }

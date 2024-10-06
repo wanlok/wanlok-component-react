@@ -7,6 +7,7 @@ import { Button, Grid, TextField } from "@mui/material";
 export default function () {
     const [height] = useOutletContext() as number[];
     const [buildingIdList, setBuildingIdList] = useState<string>("");
+    const [goToJSONString, setGoToJSONString] = useState<string>("");
     const [locate, setLocate] = useState<number>(Date.now());
 
     return (
@@ -25,6 +26,15 @@ export default function () {
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={12} md={12}>
                             <TextField
+                                label="Go To"
+                                fullWidth
+                                multiline
+                                value={goToJSONString}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={12} md={12}>
+                            <TextField
+                                label="Building Ids"
                                 fullWidth
                                 multiline
                                 value={buildingIdList}
@@ -35,16 +45,6 @@ export default function () {
                                 }}
                             />
                         </Grid>
-                        {/* <Grid item xs={12} sm={12} md={12}>
-                            <Button
-                                fullWidth
-                                onClick={() => {
-                                    setLocate(Date.now());
-                                }}
-                            >
-                                Locate
-                            </Button>
-                        </Grid> */}
                     </Grid>
                 </div>
             </div>
@@ -52,6 +52,9 @@ export default function () {
                 height={height}
                 buildingIdList={buildingIdList}
                 locate={locate}
+                onChange={(value) => {
+                    setGoToJSONString(JSON.stringify(value));
+                }}
                 onClick={(response) => {
                     setBuildingIdList((previous) => {
                         const buildingIdDict: { [key: number]: number } = {};
