@@ -6,10 +6,8 @@ import { Button, Grid, TextField } from "@mui/material";
 
 export default function () {
     const [height] = useOutletContext() as number[];
+    const [cameraConfig, setCameraConfig] = useState<string>("");
     const [buildingIdList, setBuildingIdList] = useState<string>("");
-    const [goToJSONString, setGoToJSONString] = useState<string>("");
-    const [locate, setLocate] = useState<number>(Date.now());
-
     return (
         <>
             <div style={{ position: "relative" }}>
@@ -26,10 +24,10 @@ export default function () {
                     <Grid container spacing={2}>
                         <Grid item xs={12} sm={12} md={12}>
                             <TextField
-                                label="Go To"
+                                label="Camera Config"
                                 fullWidth
                                 multiline
-                                value={goToJSONString}
+                                value={cameraConfig}
                             />
                         </Grid>
                         <Grid item xs={12} sm={12} md={12}>
@@ -51,9 +49,8 @@ export default function () {
             <ArcGISMap
                 height={height}
                 buildingIdList={buildingIdList}
-                locate={locate}
                 onChange={(value) => {
-                    setGoToJSONString(JSON.stringify(value));
+                    setCameraConfig(JSON.stringify(value));
                 }}
                 onClick={(response) => {
                     setBuildingIdList((previous) => {

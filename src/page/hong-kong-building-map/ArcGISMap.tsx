@@ -10,6 +10,26 @@ import MeshSymbol3D from "@arcgis/core/symbols/MeshSymbol3D";
 import FillSymbol3DLayer from "@arcgis/core/symbols/FillSymbol3DLayer";
 import "./ArcGISMap.css";
 
+export type CameraConfig = {
+    position: {
+        spatialReference: {
+            latestWkid: number;
+            wkid: number;
+        };
+        x: number;
+        y: number;
+        z: number;
+    };
+    heading: number;
+    tilt: number;
+};
+
+export type Building = {
+    name: string;
+    cameraConfig: CameraConfig;
+    buildingIds: number[];
+};
+
 const initialLocation = {
     center: [114.1095, 22.345],
     zoom: 11,
@@ -29,13 +49,24 @@ function symbol(color: string) {
     });
 }
 
-function getUniqueValueInfos(buildingIds: number[]) {
+function getUniqueValueInfos(
+    buildingIds: number[],
+    selectedBuilding?: Building
+) {
     var uniqueValueInfos: any[] = [];
     for (var i = 0; i < buildingIds.length; i++) {
         uniqueValueInfos.push({
             value: buildingIds[i],
             symbol: symbol("green")
         });
+    }
+    if (selectedBuilding) {
+        for (var i = 0; i < selectedBuilding.buildingIds.length; i++) {
+            uniqueValueInfos.push({
+                value: selectedBuilding.buildingIds[i],
+                symbol: symbol("red")
+            });
+        }
     }
     return uniqueValueInfos;
 }
@@ -75,14 +106,14 @@ export function parseBuildingIds(buildingIdList: string): number[] {
 function ArcGISMap({
     height,
     buildingIdList,
-    locate,
+    selectedBuilding,
     onChange,
     onClick
 }: {
     height: number;
     buildingIdList: string;
-    locate: number;
-    onChange: (value: {
+    selectedBuilding?: Building;
+    onChange?: (value: {
         position: __esri.Point;
         heading: number;
         tilt: number;
@@ -151,15 +182,17 @@ function ArcGISMap({
             });
         });
 
-        sceneView.on("drag", function (event) {
-            sceneView.hitTest(event).then(function () {
-                onChange({
-                    position: sceneView.camera.position,
-                    heading: sceneView.camera.heading,
-                    tilt: sceneView.camera.tilt
+        if (onChange) {
+            sceneView.on("drag", function (event) {
+                sceneView.hitTest(event).then(function () {
+                    onChange({
+                        position: sceneView.camera.position,
+                        heading: sceneView.camera.heading,
+                        tilt: sceneView.camera.tilt
+                    });
                 });
             });
-        });
+        }
 
         return () => {
             featureLayer.destroy();
@@ -171,14 +204,19 @@ function ArcGISMap({
         };
     }, []);
 
-    if (sceneLayer != null) {
+    if (sceneLayer) {
         sceneLayer.renderer = new UniqueValueRenderer({
             field: "BUILDINGID",
             uniqueValueInfos: getUniqueValueInfos(
-                parseBuildingIds(buildingIdList)
+                parseBuildingIds(buildingIdList),
+                selectedBuilding
             ),
             defaultSymbol: symbol("white")
         });
+    }
+
+    if (selectedBuilding) {
+        sceneView?.goTo(selectedBuilding.cameraConfig);
     }
 
     return <div id="viewDiv" style={{ height: height }}></div>;
