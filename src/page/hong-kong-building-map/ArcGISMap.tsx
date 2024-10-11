@@ -219,7 +219,18 @@ function ArcGISMap({
         sceneView?.goTo(selectedBuilding.cameraConfig);
     }
 
-    return <div id="viewDiv" style={{ height: height }}></div>;
+    return (
+        <div
+            id="viewDiv"
+            style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: height
+            }}
+        ></div>
+    );
 }
 
 export default ArcGISMap;
