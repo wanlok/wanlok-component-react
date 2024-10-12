@@ -59,7 +59,20 @@ export default function () {
             <Grid item xs={12} sm={12} md={3} className={classes.panel}>
                 <BuildingListPanel
                     buildings={buildings}
-                    setSelectedBuilding={setSelectedBuilding}
+                    onLocateButtonClick={(building) => {
+                        setSelectedBuilding(building);
+                        // setCameraConfigString(building.cameraConfig);
+                        setBuildingIdsString(building.buildingIds.toString());
+                    }}
+                    onDeleteButtonClick={(building) => {
+                        setBuildingIdsString("");
+                        setSelectedBuilding(undefined);
+                        const i = buildings.indexOf(building);
+                        setBuildings([
+                            ...buildings.slice(0, i),
+                            ...buildings.slice(i + 1)
+                        ]);
+                    }}
                 />
             </Grid>
             <Grid item xs={12} sm={12} md={6}>

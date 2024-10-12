@@ -1,4 +1,6 @@
 import {
+    Button,
+    ButtonGroup,
     Card,
     CardActionArea,
     CardContent,
@@ -11,24 +13,38 @@ import { Dispatch } from "react";
 
 function BuildingListPanel({
     buildings,
-    setSelectedBuilding
+    onLocateButtonClick,
+    onDeleteButtonClick
 }: {
     buildings: Building[];
-    setSelectedBuilding: Dispatch<React.SetStateAction<Building | undefined>>;
+    onLocateButtonClick: (building: Building) => void;
+    onDeleteButtonClick: (building: Building) => void;
 }) {
     return (
-        <Grid container rowSpacing={2} className={classes.container}>
+        <Grid container className={classes.container}>
             <Grid item xs={12} sm={12} md={12}>
                 {buildings.map((building, index) => (
-                    <Card style={{ backgroundColor: "red" }}>
-                        <CardActionArea
-                            onClick={() => setSelectedBuilding(building)}
+                    <Card sx={{ mt: index === 0 ? 0 : 2 }}>
+                        <CardContent>
+                            <Typography>Building {index}</Typography>
+                            {/* <Typography>{building.buildingIdList}</Typography> */}
+                        </CardContent>
+                        <ButtonGroup
+                            variant="contained"
+                            aria-label="Basic button group"
+                            fullWidth
                         >
-                            <CardContent>
-                                <Typography>Building {index}</Typography>
-                                {/* <Typography>{building.buildingIdList}</Typography> */}
-                            </CardContent>
-                        </CardActionArea>
+                            <Button
+                                onClick={() => onLocateButtonClick(building)}
+                            >
+                                Locate
+                            </Button>
+                            <Button
+                                onClick={() => onDeleteButtonClick(building)}
+                            >
+                                Delete
+                            </Button>
+                        </ButtonGroup>
                     </Card>
                 ))}
             </Grid>
