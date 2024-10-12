@@ -1,28 +1,29 @@
 import { Dispatch } from "react";
 import { Button, Grid, TextField } from "@mui/material";
 import classes from "./AddPanel.module.css";
+import { Building, parseBuildingIds, parseCameraConfig } from "./ArcGISMap";
 
 function AddPanel({
-    cameraConfig,
-    buildingIdList,
-    setBuildingIdList
+    cameraConfigString,
+    setCameraConfigString,
+    buildingIdsString,
+    setBuildingIdsString,
+    setBuildings
 }: {
-    cameraConfig: string;
-    buildingIdList: string;
-    setBuildingIdList: Dispatch<React.SetStateAction<string>>;
+    cameraConfigString: string;
+    setCameraConfigString: Dispatch<React.SetStateAction<string>>;
+    buildingIdsString: string;
+    setBuildingIdsString: Dispatch<React.SetStateAction<string>>;
+    setBuildings: Dispatch<React.SetStateAction<Building[]>>;
 }) {
     return (
-        <Grid
-            container
-            rowSpacing={2}
-            className={classes.container}
-        >
+        <Grid container rowSpacing={2} className={classes.container}>
             <Grid item xs={12} sm={12} md={12}>
                 <TextField
                     label="Camera Config"
                     fullWidth
                     multiline
-                    value={cameraConfig}
+                    value={cameraConfigString}
                 />
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
@@ -30,14 +31,35 @@ function AddPanel({
                     label="Building Ids"
                     fullWidth
                     multiline
-                    value={buildingIdList}
+                    value={buildingIdsString}
                     onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-                        setBuildingIdList(event.target.value);
+                        setBuildingIdsString(event.target.value);
                     }}
                 />
             </Grid>
             <Grid item xs={12} sm={12} md={12}>
-                <Button fullWidth variant="contained">
+                <Button
+                    fullWidth
+                    variant="contained"
+                    onClick={() => {
+                        if (cameraConfigString.length > 0 && buildingIdsString.length > 0) {
+                            setBuildings((prevState) => {
+                                return [
+                                    ...prevState,
+                                    {
+                                        name: "Hello World",
+                                        cameraConfig:
+                                            parseCameraConfig(cameraConfigString),
+                                        buildingIds:
+                                            parseBuildingIds(buildingIdsString)
+                                    }
+                                ];
+                            });
+                            setCameraConfigString("");
+                            setBuildingIdsString("");
+                        }
+                    }}
+                >
                     Add
                 </Button>
             </Grid>

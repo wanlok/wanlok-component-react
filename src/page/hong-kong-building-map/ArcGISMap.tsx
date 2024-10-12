@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { Dispatch, useEffect, useState } from "react";
 import Map from "@arcgis/core/Map";
 import SceneLayer from "@arcgis/core/layers/SceneLayer";
 import SceneView from "@arcgis/core/views/SceneView";
@@ -30,6 +30,27 @@ export type Building = {
     buildingIds: number[];
 };
 
+export const parseCameraConfig = (cameraConfig: string): CameraConfig => {
+    return JSON.parse(cameraConfig);
+};
+
+export const parseBuildingIds = (buildingIdsString: string): number[] => {
+    const buildingIds: number[] = [];
+    const slices = buildingIdsString.split(",");
+    for (var i = 0; i < slices.length; i++) {
+        buildingIds.push(Number(slices[i]));
+    }
+    return buildingIds;
+};
+
+export const clone = (building: Building): Building => {
+    return {
+        name: building.name,
+        cameraConfig: building.cameraConfig,
+        buildingIds: building.buildingIds
+    };
+};
+
 const initialLocation = {
     center: [114.1095, 22.345],
     zoom: 11,
@@ -37,7 +58,7 @@ const initialLocation = {
     tilt: 0
 };
 
-function symbol(color: string) {
+const symbol = (color: string) => {
     return new MeshSymbol3D({
         symbolLayers: [
             new FillSymbol3DLayer({
@@ -47,12 +68,12 @@ function symbol(color: string) {
             })
         ]
     });
-}
+};
 
-function getUniqueValueInfos(
+const getUniqueValueInfos = (
     buildingIds: number[],
     selectedBuilding?: Building
-) {
+) => {
     var uniqueValueInfos: any[] = [];
     for (var i = 0; i < buildingIds.length; i++) {
         uniqueValueInfos.push({
@@ -69,9 +90,9 @@ function getUniqueValueInfos(
         }
     }
     return uniqueValueInfos;
-}
+};
 
-export function isBuilding(response: any) {
+export const isBuilding = (response: any) => {
     var building = false;
     for (var i = 0; i < response.results.length; i++) {
         const attributes = response.results[i].graphic.attributes;
@@ -81,9 +102,9 @@ export function isBuilding(response: any) {
         }
     }
     return building;
-}
+};
 
-export function getBuildingIds(response: any): number[] {
+export const getBuildingIds = (response: any): number[] => {
     const buildingIds = [];
     for (var i = 0; i < response.results.length; i++) {
         const attributes = response.results[i].graphic.attributes;
@@ -92,26 +113,18 @@ export function getBuildingIds(response: any): number[] {
         }
     }
     return buildingIds;
-}
-
-export function parseBuildingIds(buildingIdList: string): number[] {
-    const buildingIds: number[] = [];
-    const slices = buildingIdList.split(",");
-    for (var i = 0; i < slices.length; i++) {
-        buildingIds.push(Number(slices[i]));
-    }
-    return buildingIds;
-}
+};
 
 function ArcGISMap({
     height,
-    buildingIdList,
+    buildingIdsString,
     selectedBuilding,
     onChange,
-    onClick
+    onClick,
+    setCameraConfigString
 }: {
     height: number;
-    buildingIdList: string;
+    buildingIdsString: string;
     selectedBuilding?: Building;
     onChange?: (value: {
         position: __esri.Point;
@@ -119,6 +132,7 @@ function ArcGISMap({
         tilt: number;
     }) => void;
     onClick: (response: any) => void;
+    setCameraConfigString: Dispatch<React.SetStateAction<string>>;
 }) {
     const [sceneView, setSceneView] = useState<SceneView>();
     const [sceneLayer, setSceneLayer] = useState<SceneLayer>();
@@ -164,34 +178,35 @@ function ArcGISMap({
         });
         map.add(featureLayer, 0);
 
-        sceneView.on("double-click", function (event) {
-            event.stopPropagation();
-        });
+        sceneView.on("double-click", (event) => event.stopPropagation());
 
-        sceneView.on("click", function (event) {
-            sceneView?.hitTest(event).then(function (response) {
-                onClick(response);
-            });
-        });
+        sceneView.on("click", (event) =>
+            sceneView?.hitTest(event).then((response) => onClick(response))
+        );
 
-        sceneView.on("pointer-move", function (event) {
-            sceneView.hitTest(event).then(function (response) {
-                sceneView.container.style.cursor = isBuilding(response)
-                    ? "pointer"
-                    : "default";
-            });
-        });
+        sceneView.on("pointer-move", (event) =>
+            sceneView
+                .hitTest(event)
+                .then(
+                    (response) =>
+                        (sceneView.container.style.cursor = isBuilding(response)
+                            ? "pointer"
+                            : "default")
+                )
+        );
+
+        sceneView.on("mouse-wheel", () => setCameraConfigString(""));
 
         if (onChange) {
-            sceneView.on("drag", function (event) {
-                sceneView.hitTest(event).then(function () {
+            sceneView.on("drag", (event) =>
+                sceneView.hitTest(event).then(() =>
                     onChange({
                         position: sceneView.camera.position,
                         heading: sceneView.camera.heading,
                         tilt: sceneView.camera.tilt
-                    });
-                });
-            });
+                    })
+                )
+            );
         }
 
         return () => {
@@ -208,7 +223,7 @@ function ArcGISMap({
         sceneLayer.renderer = new UniqueValueRenderer({
             field: "BUILDINGID",
             uniqueValueInfos: getUniqueValueInfos(
-                parseBuildingIds(buildingIdList),
+                parseBuildingIds(buildingIdsString),
                 selectedBuilding
             ),
             defaultSymbol: symbol("white")
