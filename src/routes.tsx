@@ -3,6 +3,7 @@ import General, { loader as generalLoader } from "./page/general";
 import Landing from "./page/landing";
 import HongKongBuildingMap from "./page/hong-kong-building-map";
 import Chart from "./page/chart";
+import LoginAuth0 from "./page/login-auth0";
 
 export default [
     {
@@ -35,6 +36,11 @@ export default [
                 name: "Chart",
                 path: "/chart",
                 element: <Chart />
+            },
+            {
+                name: "Login Auth0",
+                path: "/login-auth0",
+                element: <LoginAuth0 />
             }
         ]
     }
