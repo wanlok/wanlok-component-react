@@ -1,5 +1,4 @@
 import { useAuth0 } from "@auth0/auth0-react";
-import { access } from "fs";
 import { useEffect } from "react";
 
 export function useLogin() {
@@ -11,7 +10,8 @@ export function useLogin() {
         logout
     } = useAuth0();
 
-    console.log(error);
+    // console.log("THE ERROR");
+    // console.log(error);
 
     useEffect(() => {
         if (!isAuthenticated) {
@@ -19,8 +19,8 @@ export function useLogin() {
                 .then(() => {
                     console.log("loginWithRedirect OK");
                 })
-                .catch(() => {
-                    console.log("loginWithRedirect ERROR");
+                .catch((error) => {
+                    console.log("loginWithRedirect ERROR ", error);
                 });
         } else {
             getAccessTokenSilently({ cacheMode: "on" })
