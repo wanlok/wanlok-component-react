@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { Button } from "@mui/material";
 import styles from "./MainMenu.module.css";
 import routes from "../routes";
+import { useState } from "react";
 
 export default function ({
   buttonHeight,
@@ -10,6 +11,7 @@ export default function ({
   buttonHeight: number;
   fullWidth: boolean;
 }) {
+  const [path, setPath] = useState<string>("/");
   return (
     <>
       {routes.map((routes, index) => {
@@ -18,9 +20,19 @@ export default function ({
             <Link to={route.path} key={index}>
               <Button
                 color="primary"
+                variant={path === route.path ? "contained" : "text"}
+                disableElevation
                 fullWidth={fullWidth}
                 className={styles.button}
-                sx={{ height: buttonHeight }}
+                sx={{
+                  height: buttonHeight,
+                  borderRadius: 0,
+                  p: 2,
+                  textTransform: "none"
+                }}
+                onClick={() => {
+                  setPath(route.path);
+                }}
               >
                 {route.name}
               </Button>
