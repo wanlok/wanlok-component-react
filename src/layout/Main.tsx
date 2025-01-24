@@ -5,8 +5,8 @@ import MainMenu from "./MainMenu";
 import useWindowDimensions from "../common/useWindowDimension";
 
 export default function () {
-  const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.down("md"));
+  const { breakpoints, palette } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
   const height = useWindowDimensions().height - 1;
   const buttonHeight = 56;
   const contentHeight = height - (mobile ? buttonHeight : 0);
@@ -17,8 +17,10 @@ export default function () {
         xs={12}
         sm={12}
         md={2}
-        className={mobile ? styles.top : styles.left}
-        sx={mobile ? { height: buttonHeight } : {}}
+        sx={[
+          { backgroundColor: palette.background.default },
+          mobile ? { height: buttonHeight } : {}
+        ]}
       >
         <MainMenu buttonHeight={buttonHeight} fullWidth={!mobile} />
       </Grid>
