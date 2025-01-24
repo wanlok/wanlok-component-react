@@ -4,30 +4,30 @@ import styles from "./MainMenu.module.css";
 import routes from "../routes";
 
 export default function ({
-    buttonHeight,
-    fullWidth
+  buttonHeight,
+  fullWidth
 }: {
-    buttonHeight: number;
-    fullWidth: boolean;
+  buttonHeight: number;
+  fullWidth: boolean;
 }) {
-    return (
-        <>
-            {routes.map((routes, index) => {
-                return routes.children.map((route, index) => {
-                    return (
-                        <Link to={route.path} key={index}>
-                            <Button
-                                variant="text"
-                                fullWidth={fullWidth}
-                                className={styles.button}
-                                style={{ height: buttonHeight }}
-                            >
-                                {route.name}
-                            </Button>
-                        </Link>
-                    );
-                });
-            })}
-        </>
-    );
+  return (
+    <>
+      {routes.map((routes, index) => {
+        return routes.children.map((route, index) => {
+          return (
+            <Link to={route.path} key={index}>
+              <Button
+                color="primary"
+                fullWidth={fullWidth}
+                className={styles.button}
+                sx={{ height: buttonHeight }}
+              >
+                {route.name}
+              </Button>
+            </Link>
+          );
+        });
+      })}
+    </>
+  );
 }
