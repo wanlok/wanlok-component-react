@@ -5,7 +5,7 @@ export default createTheme({
     primary: {
       main: "#FF0000",
       //   light: "#0000FF",
-      dark: "#00FFFF",
+      dark: "#00FF00",
       contrastText: "#0000FF"
     }
   }
