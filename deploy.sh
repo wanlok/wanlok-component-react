@@ -9,7 +9,7 @@ find "$GITHUB_PAGES_DIRECTORY_PATH" -mindepth 1 -not -path "$GITHUB_PAGES_DIRECT
 
 npm run build && {
   cp -r "$BUILD_DIRECTORY_PATH/." "$GITHUB_PAGES_DIRECTORY_PATH"
-  rm -rf $BUILD_DIRECTORY_PATH
+  rm -rf "$BUILD_DIRECTORY_PATH"
   cd $GITHUB_PAGES_DIRECTORY_PATH
   git add .
   git commit -m "commit"
