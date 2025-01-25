@@ -1,8 +1,8 @@
-import Main from "./layout/Main";
-import General, { loader as generalLoader } from "./page/general";
-import Landing from "./page/landing";
-import HongKongBuildingMap from "./page/hong-kong-building-map";
-import Chart from "./page/chart";
+import Main from "../layout/Main";
+import General, { loader as generalLoader } from "../page/general";
+import Landing from "../page/landing";
+import HongKongBuildingMap from "../page/hong-kong-building-map";
+import Chart from "../page/chart";
 
 export default [
   {

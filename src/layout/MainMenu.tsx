@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Button, useTheme } from "@mui/material";
 import styles from "./MainMenu.module.css";
-import routes from "../routes";
+import routes from "../configs/routes";
 import { useState } from "react";
 
 export default function ({
