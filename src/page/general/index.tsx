@@ -1,4 +1,4 @@
-import { Box, Button, createTheme, ThemeProvider } from "@mui/material";
+import { Box, Button, Card, createTheme, ThemeProvider } from "@mui/material";
 import { useEffect } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -23,7 +23,11 @@ export default function () {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box>Hello World</Box>
+      <Box sx={{ p: 8, backgroundColor: "#EEEEEE" }}>
+        <Card elevation={2} sx={{ p: 4 }}>
+          Hello World
+        </Card>
+      </Box>
     </ThemeProvider>
   );
 }

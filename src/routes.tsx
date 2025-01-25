@@ -3,45 +3,39 @@ import General, { loader as generalLoader } from "./page/general";
 import Landing from "./page/landing";
 import HongKongBuildingMap from "./page/hong-kong-building-map";
 import Chart from "./page/chart";
-import LoginAuth0 from "./page/login-auth0";
 
 export default [
-    {
+  {
+    path: "/",
+    element: <Main />,
+    children: [
+      {
+        name: "Home",
         path: "/",
-        element: <Main />,
-        children: [
-            {
-                name: "Home",
-                path: "/",
-                element: <Landing />
-                // loader: postsLoader,
-                // children: [
-                // { path: "/create-post", element: <NewPost />, action: newPostAction },
-                // { path: "/:id", element: <PostDetails />, loader: postDetailsLoader },
-                //   { path: "/", element: <Landing /> },
-                // ],
-            },
-            {
-                name: "General",
-                path: "/general",
-                element: <General />,
-                loader: generalLoader
-            },
-            {
-                name: "Hong Kong Building Map",
-                path: "/hong-kong-building-map",
-                element: <HongKongBuildingMap />
-            },
-            {
-                name: "Chart",
-                path: "/chart",
-                element: <Chart />
-            },
-            {
-                name: "Login Auth0",
-                path: "/login-auth0",
-                element: <LoginAuth0 />
-            }
-        ]
-    }
+        element: <Landing />
+        // loader: postsLoader,
+        // children: [
+        // { path: "/create-post", element: <NewPost />, action: newPostAction },
+        // { path: "/:id", element: <PostDetails />, loader: postDetailsLoader },
+        //   { path: "/", element: <Landing /> },
+        // ],
+      },
+      {
+        name: "General",
+        path: "/general",
+        element: <General />,
+        loader: generalLoader
+      },
+      {
+        name: "Hong Kong Building Map",
+        path: "/hong-kong-building-map",
+        element: <HongKongBuildingMap />
+      },
+      {
+        name: "Chart",
+        path: "/chart",
+        element: <Chart />
+      }
+    ]
+  }
 ];
