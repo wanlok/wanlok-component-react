@@ -4,8 +4,8 @@ setlocal enabledelayedexpansion
 set BUILD_DIRECTORY_PATH=C:\Files\Projects\wanlok-component-react\build
 set GITHUB_PAGES_DIRECTORY_PATH=C:\Files\Projects\wanlok.github.io
 
-if exist %BUILD_DIRECTORY_PATH% (
-  rmdir %BUILD_DIRECTORY_PATH% /s /q
+if exist "%BUILD_DIRECTORY_PATH%" (
+  rmdir "%BUILD_DIRECTORY_PATH%" /s /q
 )
 
 if exist "%GITHUB_PAGES_DIRECTORY_PATH%" (
