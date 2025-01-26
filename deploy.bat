@@ -1,33 +1,44 @@
 @echo off
-setlocal enabledelayedexpansion
 
-set BUILD_DIRECTORY_PATH="C:\Files\Projects\wanlok-component-react\build"
-set GITHUB_PAGES_DIRECTORY_PATH="C:\Files\Projects\wanlok.github.io"
+set REPOSITORY_PATH="C:\Files\Projects\wanlok-component-react"
+set DEPLOY_PATH="C:\Files\Projects\wanlok.github.io"
 
-if exist "%BUILD_DIRECTORY_PATH%" (
-  rmdir "%BUILD_DIRECTORY_PATH%" /s /q
-)
+set REPOSITORY_BUILD_PATH=%REPOSITORY_PATH%"\build"
 
-if exist "%GITHUB_PAGES_DIRECTORY_PATH%" (
-  for /f "delims=" %%D in ('dir "%GITHUB_PAGES_DIRECTORY_PATH%" /a /b') do (
-    if not "%%D"==".git" (
-      set PATH="%GITHUB_PAGES_DIRECTORY_PATH%\%%D"
-      if exist "!PATH!\*" (
-        rmdir !PATH! /s /q
-      ) else (
-        del !PATH!
-      )
+cd %DEPLOY_PATH%
+
+git pull
+
+for /f "delims=" %%D in ('dir %DEPLOY_PATH% /a /b') do (
+  if not %%D==.git (
+    setlocal enabledelayedexpansion
+
+    set FILE_PATH=%DEPLOY_PATH%\%%D
+
+    if exist !FILE_PATH!\* (
+      rmdir !FILE_PATH! /s /q
+    ) else (
+      del !FILE_PATH!
     )
+
+    endlocal
   )
 )
 
+cd %REPOSITORY_PATH%
+
+rmdir %REPOSITORY_BUILD_PATH% /s /q
+
 npm run build && (
-  xcopy "%BUILD_DIRECTORY_PATH%\*" "%GITHUB_PAGES_DIRECTORY_PATH%" /e
-  rmdir "%BUILD_DIRECTORY_PATH%" /s /q
-  cd "%GITHUB_PAGES_DIRECTORY_PATH%"
+  xcopy %REPOSITORY_BUILD_PATH%\* %DEPLOY_PATH% /e
+
+  cd %DEPLOY_PATH%
+  
   git add .
   git commit -m "commit"
   git push
-)
 
-endlocal
+  cd %REPOSITORY_PATH%
+
+  rmdir %REPOSITORY_BUILD_PATH% /s /q
+)
