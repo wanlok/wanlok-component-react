@@ -1,8 +1,8 @@
 .container {
-    position: relative;
-    margin-top: 0 !important;
+  position: relative;
+  margin-top: 0 !important;
 }
 
 .panel {
-    z-index: 1;
+  z-index: 1;
 }
