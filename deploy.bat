@@ -3,7 +3,7 @@
 set REPOSITORY_PATH="C:\Files\Projects\wanlok-component-react"
 set DEPLOY_PATH="C:\Files\Projects\wanlok.github.io"
 
-set REPOSITORY_BUILD_PATH=%REPOSITORY_PATH%"\build"
+set BUILD_PATH=%REPOSITORY_PATH%"\build"
 
 cd %DEPLOY_PATH%
 
@@ -27,10 +27,10 @@ for /f "delims=" %%D in ('dir %DEPLOY_PATH% /a /b') do (
 
 cd %REPOSITORY_PATH%
 
-rmdir %REPOSITORY_BUILD_PATH% /s /q
+rmdir %BUILD_PATH% /s /q
 
 npm run build && (
-  xcopy %REPOSITORY_BUILD_PATH%\* %DEPLOY_PATH% /e
+  xcopy %BUILD_PATH%\* %DEPLOY_PATH% /e
 
   cd %DEPLOY_PATH%
   
@@ -40,5 +40,5 @@ npm run build && (
 
   cd %REPOSITORY_PATH%
 
-  rmdir %REPOSITORY_BUILD_PATH% /s /q
+  rmdir %BUILD_PATH% /s /q
 )
