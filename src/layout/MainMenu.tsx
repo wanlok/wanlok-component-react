@@ -1,8 +1,8 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Button, useTheme } from "@mui/material";
 import styles from "./MainMenu.module.css";
 import routes from "../configs/routes";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function ({
   buttonHeight,
@@ -12,7 +12,12 @@ export default function ({
   fullWidth: boolean;
 }) {
   const { palette } = useTheme();
-  const [path, setPath] = useState<string>("/");
+  const { pathname } = useLocation();
+  const [path, setPath] = useState<string>(pathname);
+
+  useEffect(() => {
+    setPath(pathname);
+  }, [pathname]);
 
   return (
     <>
