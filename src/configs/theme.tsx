@@ -6,6 +6,9 @@ export default createTheme({
       main: "#DDDDDD",
       dark: "#CCCCCC",
       contrastText: "#000000"
+    },
+    background: {
+      paper: "#FFFFFF"
     }
   }
 });

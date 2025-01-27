@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { Button, Grid, TextField } from "@mui/material";
+import { Button, Grid, TextField, Typography } from "@mui/material";
 import classes from "./AddPanel.module.css";
 import { Building, parseBuildingIds, parseCameraConfig } from "./ArcGISMap";
 
@@ -18,6 +18,9 @@ function AddPanel({
 }) {
   return (
     <Grid container rowSpacing={2} className={classes.container}>
+      <Typography variant="h5" component="h2">
+        Map
+      </Typography>
       <Grid item xs={12} sm={12} md={12}>
         <TextField label="Camera Config" fullWidth multiline value={cameraConfigString} />
       </Grid>
@@ -54,7 +57,7 @@ function AddPanel({
             }
           }}
         >
-          Add
+          Add Building
         </Button>
       </Grid>
     </Grid>
