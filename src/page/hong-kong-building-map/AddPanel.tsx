@@ -36,6 +36,7 @@ function AddPanel({
         <Button
           fullWidth
           variant="contained"
+          disableElevation
           onClick={() => {
             if (cameraConfigString.length > 0 && buildingIdsString.length > 0) {
               setBuildings((prevState) => {

@@ -51,8 +51,7 @@ export default function () {
 
   return (
     <Grid container spacing={2} className={classes.container}>
-      <Grid item xs={12} sm={12} md={3} className={classes.panel}></Grid>
-      <Grid item xs={12} sm={12} md={6}>
+      <Grid item xs={12} sm={12} md={9}>
         <ArcGISMap
           height={height}
           buildingIdsString={buildingIdsString}
@@ -74,7 +73,6 @@ export default function () {
           buildings={buildings}
           onLocateButtonClick={(building) => {
             setSelectedBuilding(building);
-            // setCameraConfigString(building.cameraConfig);
             setBuildingIdsString("");
           }}
           onDeleteButtonClick={(building) => {

@@ -70,22 +70,19 @@ const symbol = (color: string) => {
   });
 };
 
-const getUniqueValueInfos = (
-  buildingIds: number[],
-  selectedBuilding?: Building
-) => {
+const getUniqueValueInfos = (buildingIds: number[], selectedBuilding?: Building) => {
   var uniqueValueInfos: any[] = [];
   for (var i = 0; i < buildingIds.length; i++) {
     uniqueValueInfos.push({
       value: buildingIds[i],
-      symbol: symbol("green")
+      symbol: symbol("#0000FF")
     });
   }
   if (selectedBuilding) {
     for (var i = 0; i < selectedBuilding.buildingIds.length; i++) {
       uniqueValueInfos.push({
         value: selectedBuilding.buildingIds[i],
-        symbol: symbol("red")
+        symbol: symbol("#00FF00")
       });
     }
   }
@@ -125,11 +122,7 @@ function ArcGISMap({
   height: number;
   buildingIdsString: string;
   selectedBuilding?: Building;
-  onChange?: (value: {
-    position: __esri.Point;
-    heading: number;
-    tilt: number;
-  }) => void;
+  onChange?: (value: { position: __esri.Point; heading: number; tilt: number }) => void;
   onClick?: (response: any) => void;
 }) {
   const [sceneView, setSceneView] = useState<SceneView>();
@@ -181,12 +174,7 @@ function ArcGISMap({
     sceneView.on("pointer-move", (event) =>
       sceneView
         .hitTest(event)
-        .then(
-          (response) =>
-            (sceneView.container.style.cursor = isBuilding(response)
-              ? "pointer"
-              : "default")
-        )
+        .then((response) => (sceneView.container.style.cursor = isBuilding(response) ? "pointer" : "default"))
     );
 
     if (onChange) {
@@ -210,9 +198,7 @@ function ArcGISMap({
     }
 
     if (onClick) {
-      sceneView.on("click", (event) =>
-        sceneView?.hitTest(event).then((response) => onClick(response))
-      );
+      sceneView.on("click", (event) => sceneView?.hitTest(event).then((response) => onClick(response)));
     }
 
     return () => {
@@ -228,10 +214,7 @@ function ArcGISMap({
   if (sceneLayer) {
     sceneLayer.renderer = new UniqueValueRenderer({
       field: "BUILDINGID",
-      uniqueValueInfos: getUniqueValueInfos(
-        parseBuildingIds(buildingIdsString),
-        selectedBuilding
-      ),
+      uniqueValueInfos: getUniqueValueInfos(parseBuildingIds(buildingIdsString), selectedBuilding),
       defaultSymbol: symbol("white")
     });
   }

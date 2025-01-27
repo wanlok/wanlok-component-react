@@ -15,9 +15,9 @@ function BuildingListPanel({
     <Grid container className={classes.container}>
       <Grid item xs={12} sm={12} md={12}>
         {buildings.map((building, index) => (
-          <Card sx={{ mt: index === 0 ? 0 : 2 }}>
+          <Card elevation={0} sx={{ mt: index === 0 ? 0 : 2 }}>
             <CardContent>
-              <Typography>Building {index}</Typography>
+              <Typography>Building {index + 1}</Typography>
               {/* <Typography>{building.buildingIdList}</Typography> */}
             </CardContent>
             <ButtonGroup variant="contained" aria-label="Basic button group" fullWidth>
