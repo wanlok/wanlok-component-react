@@ -120,8 +120,7 @@ function ArcGISMap({
   buildingIdsString,
   selectedBuilding,
   onChange,
-  onClick,
-  setCameraConfigString
+  onClick
 }: {
   height: number;
   buildingIdsString: string;
@@ -131,8 +130,7 @@ function ArcGISMap({
     heading: number;
     tilt: number;
   }) => void;
-  onClick: (response: any) => void;
-  setCameraConfigString: Dispatch<React.SetStateAction<string>>;
+  onClick?: (response: any) => void;
 }) {
   const [sceneView, setSceneView] = useState<SceneView>();
   const [sceneLayer, setSceneLayer] = useState<SceneLayer>();
@@ -180,10 +178,6 @@ function ArcGISMap({
 
     sceneView.on("double-click", (event) => event.stopPropagation());
 
-    sceneView.on("click", (event) =>
-      sceneView?.hitTest(event).then((response) => onClick(response))
-    );
-
     sceneView.on("pointer-move", (event) =>
       sceneView
         .hitTest(event)
@@ -195,8 +189,6 @@ function ArcGISMap({
         )
     );
 
-    sceneView.on("mouse-wheel", () => setCameraConfigString(""));
-
     if (onChange) {
       sceneView.on("drag", (event) =>
         sceneView.hitTest(event).then(() =>
@@ -206,6 +198,20 @@ function ArcGISMap({
             tilt: sceneView.camera.tilt
           })
         )
+      );
+
+      sceneView.on("mouse-wheel", (response) => {
+        onChange({
+          position: sceneView.camera.position,
+          heading: sceneView.camera.heading,
+          tilt: sceneView.camera.tilt
+        });
+      });
+    }
+
+    if (onClick) {
+      sceneView.on("click", (event) =>
+        sceneView?.hitTest(event).then((response) => onClick(response))
       );
     }
 

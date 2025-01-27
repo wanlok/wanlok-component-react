@@ -44,6 +44,8 @@ function aaa(
   });
 }
 
+const bbb = () => {};
+
 export default function () {
   const [height] = useOutletContext() as number[];
   const [cameraConfigString, setCameraConfigString] = useState<string>("");
@@ -81,7 +83,6 @@ export default function () {
           onClick={(response) =>
             aaa(response, setSelectedBuilding, setBuildingIdsString)
           }
-          setCameraConfigString={setCameraConfigString}
         />
       </Grid>
       <Grid item xs={12} sm={12} md={3} className={classes.panel}>
