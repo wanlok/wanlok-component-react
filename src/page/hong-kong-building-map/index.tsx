@@ -71,11 +71,12 @@ export default function () {
         <Divider />
         <BuildingListPanel
           buildings={buildings}
-          onLocateButtonClick={(building) => {
+          setBuildings={setBuildings}
+          onLocateBuildingButtonClick={(building) => {
             setSelectedBuilding(building);
             setBuildingIdsString("");
           }}
-          onDeleteButtonClick={(building) => {
+          onDeleteBuildingButtonClick={(building) => {
             setBuildingIdsString("");
             setSelectedBuilding(undefined);
             const i = buildings.indexOf(building);
