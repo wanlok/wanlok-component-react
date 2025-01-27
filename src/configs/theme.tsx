@@ -8,6 +8,7 @@ export default createTheme({
       contrastText: "#000000"
     },
     background: {
+      default: "#EEEEEE",
       paper: "#FFFFFF"
     }
   }

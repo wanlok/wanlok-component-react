@@ -18,7 +18,15 @@ function AddPanel({
   setBuildings: Dispatch<React.SetStateAction<Building[]>>;
 }) {
   return (
-    <Grid container rowSpacing={2} className={classes.container}>
+    <Grid
+      container
+      rowSpacing={2}
+      className={classes.container}
+      sx={{
+        p: 2,
+        backgroundColor: "background.default"
+      }}
+    >
       <Typography variant="h5" component="h2">
         Map
       </Typography>

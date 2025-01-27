@@ -24,7 +24,7 @@ function BuildingListPanel({
   };
 
   return (
-    <Grid container className={classes.container}>
+    <Grid container className={classes.container} sx={{ p: 2, backgroundColor: "background.default" }}>
       <Grid item xs={12} sm={12} md={12}>
         <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
           Building List ({buildings.length})
