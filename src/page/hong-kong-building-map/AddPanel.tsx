@@ -19,12 +19,7 @@ function AddPanel({
   return (
     <Grid container rowSpacing={2} className={classes.container}>
       <Grid item xs={12} sm={12} md={12}>
-        <TextField
-          label="Camera Config"
-          fullWidth
-          multiline
-          value={cameraConfigString}
-        />
+        <TextField label="Camera Config" fullWidth multiline value={cameraConfigString} />
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
         <TextField
