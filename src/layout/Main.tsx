@@ -17,21 +17,11 @@ export default function () {
         xs={12}
         sm={12}
         md={2}
-        sx={[
-          { backgroundColor: palette.background.default },
-          mobile ? { height: buttonHeight } : {}
-        ]}
+        sx={[{ backgroundColor: "primary.main" }, mobile ? { height: buttonHeight } : {}]}
       >
         <MainMenu buttonHeight={buttonHeight} fullWidth={!mobile} />
       </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        md={10}
-        className={styles.content}
-        sx={{ height: contentHeight }}
-      >
+      <Grid item xs={12} sm={12} md={10} className={styles.content} sx={{ height: contentHeight }}>
         <Outlet context={[contentHeight]} />
       </Grid>
     </Grid>

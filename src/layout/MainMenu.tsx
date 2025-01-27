@@ -4,13 +4,7 @@ import styles from "./MainMenu.module.css";
 import routes from "../configs/routes";
 import { useEffect, useState } from "react";
 
-export default function ({
-  buttonHeight,
-  fullWidth
-}: {
-  buttonHeight: number;
-  fullWidth: boolean;
-}) {
+export default function ({ buttonHeight, fullWidth }: { buttonHeight: number; fullWidth: boolean }) {
   const { palette } = useTheme();
   const { pathname } = useLocation();
   const [path, setPath] = useState<string>(pathname);
@@ -38,9 +32,7 @@ export default function ({
                     p: 2,
                     textTransform: "none"
                   },
-                  path === route.path
-                    ? { backgroundColor: palette.primary.dark }
-                    : {}
+                  path === route.path ? { backgroundColor: palette.primary.dark } : {}
                 ]}
                 onClick={() => {
                   setPath(route.path);
