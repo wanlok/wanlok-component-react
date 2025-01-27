@@ -3,6 +3,7 @@ import { Button, useTheme } from "@mui/material";
 import styles from "./MainMenu.module.css";
 import routes from "../configs/routes";
 import { useEffect, useState } from "react";
+import PrimaryButton from "../component/PrimaryButton";
 
 export default function ({ buttonHeight, fullWidth }: { buttonHeight: number; fullWidth: boolean }) {
   const { palette } = useTheme();
@@ -19,18 +20,13 @@ export default function ({ buttonHeight, fullWidth }: { buttonHeight: number; fu
         return routes.children.map((route, index) => {
           return (
             <Link to={route.path} key={index}>
-              <Button
-                color="primary"
-                variant="contained"
-                disableElevation
+              <PrimaryButton
                 fullWidth={fullWidth}
-                className={styles.button}
                 sx={[
                   {
                     height: buttonHeight,
-                    borderRadius: 0,
-                    p: 2,
-                    textTransform: "none"
+                    textTransform: "none",
+                    borderRadius: 0
                   },
                   path === route.path ? { backgroundColor: palette.primary.dark } : {}
                 ]}
@@ -39,7 +35,7 @@ export default function ({ buttonHeight, fullWidth }: { buttonHeight: number; fu
                 }}
               >
                 {route.name}
-              </Button>
+              </PrimaryButton>
             </Link>
           );
         });

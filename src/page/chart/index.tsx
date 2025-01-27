@@ -4,13 +4,7 @@ import { getDateString } from "../../common/DateUtils";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import moment from "moment";
-import LineChart, {
-  apexChartProps,
-  setGridColour,
-  setTooltip,
-  setX,
-  setYColour
-} from "./LineChart";
+import LineChart, { apexChartProps, setGridColour, setTooltip, setX, setYColour } from "./LineChart";
 
 function getNumberOfDays(dates: Date[]) {
   var numberOfDays = 0;
@@ -23,10 +17,7 @@ function getNumberOfDays(dates: Date[]) {
   return numberOfDays;
 }
 
-function getDatesBetweenDateStrings(
-  startDateString: string,
-  endDateString: string
-) {
+function getDatesBetweenDateStrings(startDateString: string, endDateString: string) {
   const dates = [];
   const startDate = new Date(startDateString);
   startDate.setHours(0, 0, 0, 0);
@@ -192,9 +183,7 @@ export default function () {
             const fullWidth = 12;
             const pointWidth = 12;
             const scale =
-              numberOfPoints > numberOfPointsToShow
-                ? (fullWidth * numberOfPointsToShow) / numberOfPoints
-                : fullWidth;
+              numberOfPoints > numberOfPointsToShow ? (fullWidth * numberOfPointsToShow) / numberOfPoints : fullWidth;
             return (width * pointWidth) / scale;
           }}
         />

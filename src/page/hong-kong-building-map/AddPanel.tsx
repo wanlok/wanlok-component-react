@@ -2,6 +2,7 @@ import { Dispatch } from "react";
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import classes from "./AddPanel.module.css";
 import { Building, parseBuildingIds, parseCameraConfig } from "./ArcGISMap";
+import PrimaryButton from "../../component/PrimaryButton";
 
 function AddPanel({
   cameraConfigString,
@@ -36,10 +37,7 @@ function AddPanel({
         />
       </Grid>
       <Grid item xs={12} sm={12} md={12}>
-        <Button
-          fullWidth
-          variant="contained"
-          disableElevation
+        <PrimaryButton
           onClick={() => {
             if (cameraConfigString.length > 0 && buildingIdsString.length > 0) {
               setBuildings((prevState) => {
@@ -58,7 +56,7 @@ function AddPanel({
           }}
         >
           Add Building
-        </Button>
+        </PrimaryButton>
       </Grid>
     </Grid>
   );
