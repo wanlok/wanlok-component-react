@@ -3,6 +3,7 @@ import General, { loader as generalLoader } from "../page/general";
 import Landing from "../page/landing";
 import HongKongBuildingMap from "../page/hong-kong-building-map";
 import Chart from "../page/chart";
+import T20250212 from "../page/T20250212";
 
 export default [
   {
@@ -35,6 +36,11 @@ export default [
         name: "Chart",
         path: "/chart",
         element: <Chart />
+      },
+      {
+        name: "20250212",
+        path: "/20250212",
+        element: <T20250212 />
       }
     ]
   }
