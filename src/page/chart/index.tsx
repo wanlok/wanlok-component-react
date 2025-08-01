@@ -5,6 +5,7 @@ import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import moment from "moment";
 import LineChart, { apexChartProps, setGridColour, setTooltip, setX, setYColour } from "./LineChart";
+import ReactApexChart from "react-apexcharts";
 
 function getNumberOfDays(dates: Date[]) {
   var numberOfDays = 0;
@@ -68,73 +69,27 @@ const generateData = (myNumber: number, value: any) => {
   return my_list;
 };
 
-function getDataset(dummy: boolean) {
-  return {
-    title: "Peak Efficiency",
-    series: [
-      {
-        name: "Line 1",
-        colour: "red",
-        // data: getValues(
-        //     getDatesBetweenDateStrings(startDateString, endDateString)
-        // )
-        // data: dummy ? [9, 7, 5, 3, 1] : [1, 3, 5, 7, 9]
-        data: dummy ? generateData(62, 1) : generateData(62, 4)
-      },
-      {
-        name: "Line 2",
-        colour: "blue",
-        // data: getValues(
-        //     getDatesBetweenDateStrings(startDateString, endDateString)
-        // )
-        // data: dummy ? [10, 8, 6, 4, 2] : [2, 4, 6, 8, 10]
-        data: dummy ? generateData(62, 4) : generateData(62, 1)
-      }
-    ],
-    // x: getDateStrings(
-    //     getDatesBetweenDateStrings(startDateString, endDateString)
-    // ),
-    x: dummy ? generateData(62, "A") : generateData(62, "B"),
-    compareEnabled: true
-  };
-}
-
 export default function () {
   const startDateString = "2024-07-01";
   const endDateString = "2024-08-31";
-
-  const [dummy, setDummy] = useState(true);
 
   const [options, setOptions] = useState(apexChartProps);
 
   var series: ApexAxisChartSeries;
   var x: string[];
 
-  if (dummy) {
-    series = [
-      {
-        name: "Line 1",
-        data: generateData(62, 1)
-      },
-      {
-        name: "Line 2",
-        data: generateData(62, 4)
-      }
-    ];
-    x = generateData(62, "A");
-  } else {
-    series = [
-      {
-        name: "Line 1",
-        data: generateData(62, 4)
-      },
-      {
-        name: "Line 2",
-        data: generateData(62, 1)
-      }
-    ];
-    x = generateData(62, "B");
-  }
+  series = [
+    {
+      name: "Line 1",
+      data: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
+    },
+    {
+      name: "Line 2",
+      data: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+    }
+  ];
+
+  x = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
 
   const numberOfPoints: number = x.length;
   var numberOfPointsToShow: number = numberOfPoints;
@@ -171,7 +126,7 @@ export default function () {
     <>
       <div>Chart</div>
       <div style={{ height: "400px" }}>
-        <LineChart
+        {/* <LineChart
           options={options}
           series={series}
           x={x}
@@ -184,22 +139,12 @@ export default function () {
             const pointWidth = 12;
             const scale =
               numberOfPoints > numberOfPointsToShow ? (fullWidth * numberOfPointsToShow) / numberOfPoints : fullWidth;
-            return (width * pointWidth) / scale;
+            // return (width * pointWidth) / scale;
+            return width / 2;
           }}
-        />
+        /> */}
+        <ReactApexChart options={options} series={series} type="area" height="100%" width="100%" />
       </div>
-      <Button
-        onClick={() => {
-          setDummy(!dummy);
-          const x = dummy ? generateData(62, "A") : generateData(62, "B");
-          setX(options, series, x, "#000000", 0, (value: string) => value);
-          setTooltip(options, x);
-          console.log(options);
-          setOptions({ ...options });
-        }}
-      >
-        Click
-      </Button>
     </>
   );
 }
