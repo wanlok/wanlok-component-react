@@ -1,4 +1,4 @@
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip } from "recharts";
 
 const data = [
   { name: "2017", price: 80 },
@@ -10,15 +10,13 @@ const data = [
 
 const RechartsChart = () => {
   return (
-    <ResponsiveContainer width={"100%"} height={300}>
-      <LineChart data={data}>
-        <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
-        <XAxis dataKey="name" />
-        <YAxis />
-        <Tooltip />
-        <Line type="monotone" dataKey="price" stroke="red" isAnimationActive={false} />
-      </LineChart>
-    </ResponsiveContainer>
+    <LineChart width={600} height={300} data={data}>
+      <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
+      <XAxis dataKey="name" />
+      <YAxis />
+      <Tooltip />
+      <Line type="monotone" dataKey="price" stroke="red" isAnimationActive={false} />
+    </LineChart>
   );
 };
 
