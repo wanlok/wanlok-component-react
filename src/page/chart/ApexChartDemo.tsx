@@ -1,10 +1,13 @@
 import ReactApexChart, { Props } from "react-apexcharts";
 import ReactDOMServer from "react-dom/server";
 
-const getOptions = (id: string): Props => {
+const getOptions = (id: string, animated: boolean): Props => {
   return {
     chart: {
       id,
+      animations: {
+        enabled: animated
+      },
       toolbar: {
         show: false
       },
@@ -98,12 +101,12 @@ const Legend = (seriesName: string, opts: any) => {
 
 interface ApexChartDemoProps {
   id: string;
+  animated: boolean;
 }
 
-const ApexChartDemo = ({ id }: ApexChartDemoProps) => {
-  var series: ApexAxisChartSeries;
-
-  series = [
+const ApexChartDemo = ({ id, animated }: ApexChartDemoProps) => {
+  const options = getOptions(id, animated);
+  const series: ApexAxisChartSeries = [
     {
       name: "Line 1",
       data: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]
@@ -113,8 +116,7 @@ const ApexChartDemo = ({ id }: ApexChartDemoProps) => {
       data: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
     }
   ];
-
-  return <ReactApexChart options={getOptions(id)} series={series} type="area" height="1080" width="1920" />;
+  return <ReactApexChart options={options} series={series} type="area" height="1080" width="1920" />;
 };
 
 export default ApexChartDemo;

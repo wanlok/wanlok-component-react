@@ -1,11 +1,19 @@
 import { Button } from "@mui/material";
 import ApexChartDemo from "./ApexChartDemo";
+import { useState } from "react";
+import { Image, Page, PDFViewer, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
 
 export default function () {
+  const [src, setSrc] = useState<string>();
+
   const handleExport = async () => {
-    const apexCharts = ApexCharts.getChartByID("dummy");
-    if (apexCharts) {
-      apexCharts.exports.exportToSVG();
+    const apexChart = ApexCharts.getChartByID("dummy");
+    if (apexChart) {
+      // const svgString = apexChart.exports.getSvgString(1);
+      const dataURI = await apexChart.exports.dataURI();
+      if ("imgURI" in dataURI) {
+        setSrc(dataURI.imgURI);
+      }
     }
   };
 
@@ -15,7 +23,19 @@ export default function () {
       <Button variant="contained" onClick={handleExport}>
         Export Chart
       </Button>
-      <ApexChartDemo id={"dummy"} />
+      <div></div>
+      {src && (
+        <PDFViewer style={{ width: "100%", height: "100%" }}>
+          <Document>
+            <Page size="A4">
+              <Image src={src} />
+            </Page>
+          </Document>
+        </PDFViewer>
+      )}
+      <div style={{ visibility: "hidden", position: "absolute", top: "-9999px" }}>
+        <ApexChartDemo id={"dummy"} animated={false} />
+      </div>
     </>
   );
 }
