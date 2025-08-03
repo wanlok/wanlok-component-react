@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
-import ApexChartDemo from "./ApexChartDemo";
+import ApexChartDummyChart from "./ApexChartDummyChart";
 import { useState } from "react";
-import { Image, Page, PDFViewer, Text, View, Document, StyleSheet } from "@react-pdf/renderer";
+import { Image, Page, PDFViewer, Document } from "@react-pdf/renderer";
 
 export default function () {
   const [src, setSrc] = useState<string>();
@@ -34,7 +34,7 @@ export default function () {
         </PDFViewer>
       )}
       <div style={{ visibility: "hidden", position: "absolute", top: "-9999px" }}>
-        <ApexChartDemo id={"dummy"} animated={false} />
+        <ApexChartDummyChart id={"dummy"} animated={false} />
       </div>
     </>
   );
