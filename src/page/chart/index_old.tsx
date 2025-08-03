@@ -10,7 +10,7 @@ import { Document, Page, PDFViewer, Text } from "@react-pdf/renderer";
 import Html from "react-pdf-html";
 import ReactDOMServer from "react-dom/server";
 import { SomeComponent } from "./SomeComponent";
-import ExampleChart from "./Chart2";
+import ExampleChart from "./RechartsChart";
 import { toPng } from "html-to-image";
 
 function getNumberOfDays(dates: Date[]) {

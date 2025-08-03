@@ -99,12 +99,12 @@ const Legend = (seriesName: string, opts: any) => {
   );
 };
 
-interface ApexChartDummyChartProps {
+interface ApexChartsChartProps {
   id: string;
   animated: boolean;
 }
 
-const ApexChartDummyChart = ({ id, animated }: ApexChartDummyChartProps) => {
+const ApexChartsChart = ({ id, animated }: ApexChartsChartProps) => {
   const options = getOptions(id, animated);
   const series: ApexAxisChartSeries = [
     {
@@ -119,4 +119,4 @@ const ApexChartDummyChart = ({ id, animated }: ApexChartDummyChartProps) => {
   return <ReactApexChart options={options} series={series} type="area" height="1080" width="1920" />;
 };
 
-export default ApexChartDummyChart;
+export default ApexChartsChart;

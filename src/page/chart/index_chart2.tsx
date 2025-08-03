@@ -1,5 +1,5 @@
 import { Button } from "@mui/material";
-import ExampleChart from "./Chart2";
+import ExampleChart from "./RechartsChart";
 import { toPng } from "html-to-image";
 import { createRoot } from "react-dom/client";
 

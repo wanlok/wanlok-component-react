@@ -1,29 +1,37 @@
-import { Button } from "@mui/material";
-import ApexChartDummyChart from "./ApexChartDummyChart";
-import { useState } from "react";
-import { Image, Page, PDFViewer, Document } from "@react-pdf/renderer";
+import { Button, Typography } from "@mui/material";
+import { CSSProperties, useState } from "react";
+import { Image, Page, PDFViewer, Document, Svg } from "@react-pdf/renderer";
+import ApexChartsChart from "./ApexChartsChart";
+import RechartsChart from "./RechartsChart";
+import { toPng, toSvg } from "html-to-image";
 
 export default function () {
   const [src, setSrc] = useState<string>();
 
-  const handleExport = async () => {
+  const exportRechartsChart = async () => {
+    const element = document.getElementById("recharts-container");
+    if (element) {
+      setSrc(await toPng(element, { pixelRatio: 3 }));
+    }
+  };
+
+  const exportApexChartsChart = async () => {
     const apexChart = ApexCharts.getChartByID("dummy");
     if (apexChart) {
-      // const svgString = apexChart.exports.getSvgString(1);
-      const dataURI = await apexChart.exports.dataURI({ scale: 2 });
+      const dataURI = await apexChart.exports.dataURI({ scale: 3 });
       if ("imgURI" in dataURI) {
         setSrc(dataURI.imgURI);
       }
     }
   };
-
   return (
     <>
-      <div>Hello World 1234</div>
-      <Button variant="contained" onClick={handleExport}>
-        Export Chart
+      <Button variant="contained" onClick={exportRechartsChart}>
+        Export Recharts Chart
       </Button>
-      <div></div>
+      <Button variant="contained" onClick={exportApexChartsChart}>
+        Export Apex Charts Chart
+      </Button>
       {src && (
         <PDFViewer style={{ width: "100%", height: "100%" }}>
           <Document>
@@ -33,8 +41,13 @@ export default function () {
           </Document>
         </PDFViewer>
       )}
-      <div style={{ visibility: "hidden", position: "absolute", top: "-9999px" }}>
-        <ApexChartDummyChart id={"dummy"} animated={false} />
+      <Typography variant="h4">Recharts</Typography>
+      <div id={"recharts-container"}>
+        <RechartsChart />
+      </div>
+      <Typography variant="h4">ApexCharts</Typography>
+      <div>
+        <ApexChartsChart id={"dummy"} animated={false} />
       </div>
     </>
   );
