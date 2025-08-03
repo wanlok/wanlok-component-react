@@ -10,7 +10,7 @@ export default function () {
     const apexChart = ApexCharts.getChartByID("dummy");
     if (apexChart) {
       // const svgString = apexChart.exports.getSvgString(1);
-      const dataURI = await apexChart.exports.dataURI();
+      const dataURI = await apexChart.exports.dataURI({ scale: 2 });
       if ("imgURI" in dataURI) {
         setSrc(dataURI.imgURI);
       }
