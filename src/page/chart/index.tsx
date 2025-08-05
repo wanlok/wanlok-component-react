@@ -4,6 +4,7 @@ import { Image, Page, PDFViewer, Document, Svg } from "@react-pdf/renderer";
 import ApexChartsChart from "./ApexChartsChart";
 import RechartsChart from "./RechartsChart";
 import { toPng, toSvg } from "html-to-image";
+import { usePDF } from "react-to-pdf";
 
 export default function () {
   const [src, setSrc] = useState<string>();
@@ -24,8 +25,14 @@ export default function () {
       }
     }
   };
+
+  const { toPDF, targetRef } = usePDF({ filename: "page.pdf" });
+
   return (
-    <>
+    <div ref={targetRef}>
+      <Button variant="contained" onClick={() => toPDF()}>
+        Export Entire Page as PDF
+      </Button>
       <Button variant="contained" onClick={exportRechartsChart}>
         Export Recharts Chart
       </Button>
@@ -49,6 +56,6 @@ export default function () {
       <div>
         <ApexChartsChart id={"dummy"} animated={false} />
       </div>
-    </>
+    </div>
   );
 }
