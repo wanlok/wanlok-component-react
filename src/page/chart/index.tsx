@@ -5,6 +5,7 @@ import ApexChartsChart from "./ApexChartsChart";
 import RechartsChart from "./RechartsChart";
 import { toPng, toSvg } from "html-to-image";
 import { usePDF } from "react-to-pdf";
+import { BarChart } from "@mui/x-charts";
 
 export default function () {
   const [src, setSrc] = useState<string>();
@@ -40,7 +41,7 @@ export default function () {
         Export Apex Charts Chart
       </Button>
       {src && (
-        <PDFViewer style={{ width: "100%", height: "100%" }}>
+        <PDFViewer style={{ width: "100%", height: "800px" }}>
           <Document>
             <Page size="A4">
               <Image src={src} />
@@ -48,6 +49,12 @@ export default function () {
           </Document>
         </PDFViewer>
       )}
+      <Typography variant="h4">MUI Bar Chart</Typography>
+      <BarChart
+        xAxis={[{ data: ["group A", "group B", "group C"] }]}
+        series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
+        height={300}
+      />
       <Typography variant="h4">Recharts</Typography>
       <div id={"recharts-container"}>
         <RechartsChart />

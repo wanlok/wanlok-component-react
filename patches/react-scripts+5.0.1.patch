@@ -1,0 +1,14 @@
+diff --git a/node_modules/react-scripts/config/webpack.config.js b/node_modules/react-scripts/config/webpack.config.js
+index e465d8e..2c69668 100644
+--- a/node_modules/react-scripts/config/webpack.config.js
++++ b/node_modules/react-scripts/config/webpack.config.js
+@@ -469,6 +469,9 @@ module.exports = function (webpackEnv) {
+               test: /\.(js|mjs)$/,
+               exclude: /@babel(?:\/|\\{1,2})runtime/,
+               loader: require.resolve('babel-loader'),
++              resolve: {
++                fullySpecified: false
++              },
+               options: {
+                 babelrc: false,
+                 configFile: false,
