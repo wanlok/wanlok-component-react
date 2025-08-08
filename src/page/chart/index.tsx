@@ -1,4 +1,4 @@
-import { Button, Typography } from "@mui/material";
+import { Button, Stack, Typography } from "@mui/material";
 import { CSSProperties, useState } from "react";
 import { Image, Page, PDFViewer, Document, Svg } from "@react-pdf/renderer";
 import ApexChartsChart from "./ApexChartsChart";
@@ -49,12 +49,38 @@ export default function () {
           </Document>
         </PDFViewer>
       )}
-      <Typography variant="h4">MUI Bar Chart</Typography>
-      <BarChart
-        xAxis={[{ data: ["group A", "group B", "group C"] }]}
-        series={[{ data: [4, 3, 5] }, { data: [1, 6, 3] }, { data: [2, 5, 6] }]}
-        height={300}
-      />
+      <Stack>
+        <Typography variant="h4">What is Lorem Ipsum?</Typography>
+        <Typography variant="body1">
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
+          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
+          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
+          typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
+          sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
+          PageMaker including versions of Lorem Ipsum.
+        </Typography>
+        <ul>
+          <li>
+            <img src="https://upload.wikimedia.org/wikipedia/zh/3/32/Yahoo_HK_Logo_2019.png" />
+            <a href="https://www.yahoo.com.hk">Yahoo!</a>
+          </li>
+          <li>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/280px-Google_2015_logo.svg.png" />
+            <a href="https://www.google.com">Google</a>
+          </li>
+        </ul>
+        <Typography variant="h4">MUI Bar Chart</Typography>
+        <BarChart
+          xAxis={[{ data: ["group A", "group B", "group C"] }]}
+          series={[
+            { data: [4, 3, 5], label: "Series 1" },
+            { data: [1, 6, 3], label: "Series 2" },
+            { data: [2, 5, 6], label: "Series 3" }
+          ]}
+          barLabel="value"
+          height={300}
+        />
+      </Stack>
       <Typography variant="h4">Recharts</Typography>
       <div id={"recharts-container"}>
         <RechartsChart />
