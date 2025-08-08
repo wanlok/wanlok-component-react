@@ -30,7 +30,7 @@ export default function () {
   const { toPDF, targetRef } = usePDF({ filename: "page.pdf" });
 
   return (
-    <div ref={targetRef}>
+    <div>
       <Button variant="contained" onClick={() => toPDF()}>
         Export Entire Page as PDF
       </Button>
@@ -49,7 +49,7 @@ export default function () {
           </Document>
         </PDFViewer>
       )}
-      <Stack>
+      <Stack ref={targetRef}>
         <Typography variant="h4">What is Lorem Ipsum?</Typography>
         <Typography variant="body1">
           Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
