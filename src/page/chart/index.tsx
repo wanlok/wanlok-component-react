@@ -41,7 +41,7 @@ export default function () {
         Export Apex Charts Chart
       </Button>
       {src && (
-        <PDFViewer style={{ width: "100%", height: "100%" }}>
+        <PDFViewer style={{ width: "100%", height: "800px" }}>
           <Document>
             <Page size="A4">
               <Image src={src} />
