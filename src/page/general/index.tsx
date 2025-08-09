@@ -33,7 +33,7 @@ const addItem = async (item: Item) => {
   }
 };
 
-export default function () {
+const General = () => {
   const items = useFetchItems();
 
   const [name, setName] = useState<string>();
@@ -60,4 +60,6 @@ export default function () {
       </Stack>
     </Stack>
   );
-}
+};
+
+export default General;

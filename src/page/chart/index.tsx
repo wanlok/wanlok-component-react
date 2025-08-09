@@ -1,14 +1,14 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
-import { Image, Page, PDFViewer, Document, Svg } from "@react-pdf/renderer";
+import { Image, Page, PDFViewer, Document } from "@react-pdf/renderer";
 import ApexChartsChart from "./ApexChartsChart";
 import RechartsChart from "./RechartsChart";
-import { toPng, toSvg } from "html-to-image";
+import { toPng } from "html-to-image";
 import { usePDF } from "react-to-pdf";
 import { BarChart } from "@mui/x-charts";
 import LabelsAboveBars from "./LabelsAboveBars";
 
-export default function () {
+const Chart = () => {
   const [src, setSrc] = useState<string>();
 
   const exportRechartsChart = async () => {
@@ -62,11 +62,14 @@ export default function () {
         </Typography>
         <ul>
           <li>
-            <img src="https://upload.wikimedia.org/wikipedia/zh/3/32/Yahoo_HK_Logo_2019.png" />
+            <img src="https://upload.wikimedia.org/wikipedia/zh/3/32/Yahoo_HK_Logo_2019.png" alt="" />
             <a href="https://www.yahoo.com.hk">Yahoo!</a>
           </li>
           <li>
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/280px-Google_2015_logo.svg.png" />
+            <img
+              src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2f/Google_2015_logo.svg/280px-Google_2015_logo.svg.png"
+              alt=""
+            />
             <a href="https://www.google.com">Google</a>
           </li>
         </ul>
@@ -186,4 +189,6 @@ export default function () {
       </div>
     </div>
   );
-}
+};
+
+export default Chart;

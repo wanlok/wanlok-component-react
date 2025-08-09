@@ -4,8 +4,8 @@ import styles from "./Main.module.css";
 import MainMenu from "./MainMenu";
 import useWindowDimensions from "../common/useWindowDimension";
 
-export default function () {
-  const { breakpoints, palette } = useTheme();
+const Main = () => {
+  const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const height = useWindowDimensions().height - 1;
   const buttonHeight = 56;
@@ -26,4 +26,6 @@ export default function () {
       </Grid>
     </Grid>
   );
-}
+};
+
+export default Main;

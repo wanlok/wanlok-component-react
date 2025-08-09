@@ -4,7 +4,7 @@ import Landing from "../page/landing";
 import HongKongBuildingMap from "../page/hong-kong-building-map";
 import Chart from "../page/chart";
 
-export default [
+const routes = [
   {
     path: "/",
     element: <Main />,
@@ -38,3 +38,5 @@ export default [
     ]
   }
 ];
+
+export default routes;

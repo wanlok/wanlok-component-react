@@ -1,5 +1,5 @@
 import { Dispatch } from "react";
-import { Button, Grid, TextField, Typography } from "@mui/material";
+import { Grid, TextField, Typography } from "@mui/material";
 import classes from "./AddPanel.module.css";
 import { Building, parseBuildingIds, parseCameraConfig } from "./ArcGISMap";
 import PrimaryButton from "../../component/PrimaryButton";
