@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useState } from "react";
 import Map from "@arcgis/core/Map";
 import SceneLayer from "@arcgis/core/layers/SceneLayer";
@@ -128,7 +129,6 @@ function ArcGISMap({
   const [sceneView, setSceneView] = useState<SceneView>();
   const [sceneLayer, setSceneLayer] = useState<SceneLayer>();
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const map = new Map({
       basemap: "dark-gray-vector",
