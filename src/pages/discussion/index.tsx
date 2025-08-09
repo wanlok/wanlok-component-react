@@ -1,13 +1,23 @@
 import { useState } from "react";
-import { Button, Divider, Stack, TextField, Typography } from "@mui/material";
 import { Item, useDiscussion } from "./useDiscussion";
+import { Button, Divider, Stack, TextField, Typography } from "@mui/material";
 
 const DiscussionList = ({ items }: { items: Item[] }) => {
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
-      {items.map((item) => (
-        <Typography>{JSON.stringify(item)}</Typography>
-      ))}
+      {items.map((item, i) => {
+        return (
+          <Stack key={"discussion-" + i} sx={{ backgroundColor: "#EEEEEE", mt: i === 0 ? 0 : "1px", p: 2, gap: 1 }}>
+            <Stack sx={{ flexDirection: "row", gap: 1 }}>
+              <Typography>{item.name}</Typography>
+              <Typography>({item.timestamp?.toDate().toLocaleString()})</Typography>
+            </Stack>
+            <Stack>
+              <Typography>{item.value}</Typography>
+            </Stack>
+          </Stack>
+        );
+      })}
     </Stack>
   );
 };
