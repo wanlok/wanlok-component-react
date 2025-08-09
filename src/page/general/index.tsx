@@ -1,4 +1,4 @@
-import { Button, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField, Typography } from "@mui/material";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -48,6 +48,7 @@ export default function () {
   return (
     <Stack direction="row">
       <Stack flex={0.2} sx={{ gap: 2, p: 2 }}>
+        <Typography>Input</Typography>
         <TextField label="Name" value={name} onChange={(event) => setName(event.target.value)} />
         <TextField label="Value" value={value} onChange={(event) => setValue(event.target.value)} />
         <Button onClick={submit}>Submit</Button>
