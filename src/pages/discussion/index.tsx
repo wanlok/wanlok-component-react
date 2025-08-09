@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Discussion, useDiscussion } from "./useDiscussion";
-import { Button, Divider, Stack, TextField, Typography } from "@mui/material";
+import { Button, Divider, FormControl, FormHelperText, Stack, TextField, Typography } from "@mui/material";
+import { PrimaryButton } from "../../components/PrimaryButton";
 
 const DiscussionList = ({ discussions }: { discussions: Discussion[] }) => {
   const stackRef = useRef<HTMLDivElement>(null);
@@ -46,13 +47,12 @@ const DiscussionForm = ({ addDiscussion }: { addDiscussion: (discussion: Discuss
   };
 
   return (
-    <>
-      <Divider />
-      <Stack sx={{ flexDirection: "row", gap: 2, p: 2 }}>
-        <Stack sx={{ flex: 1, gap: 2 }}>
-          <TextField label="Name" value={name} onChange={(event) => setName(event.target.value)} />
+    <Stack sx={{ flexDirection: "row", gap: 2, p: 2 }}>
+      <Stack sx={{ flex: 1, gap: 2 }}>
+        <TextField placeholder="Name" value={name} onChange={(event) => setName(event.target.value)} />
+        <FormControl>
           <TextField
-            label="Message (Shift + Enter for multiple lines)"
+            placeholder="Message"
             value={message}
             multiline
             onChange={(event) => setMessage(event.target.value)}
@@ -63,14 +63,13 @@ const DiscussionForm = ({ addDiscussion }: { addDiscussion: (discussion: Discuss
               }
             }}
           />
-        </Stack>
-        <Stack sx={{ justifyContent: "center" }}>
-          <Button variant="contained" onClick={submit}>
-            Send
-          </Button>
-        </Stack>
+          <FormHelperText sx={{ mt: 1 }}>Shift + Enter for multiple lines</FormHelperText>
+        </FormControl>
       </Stack>
-    </>
+      <Stack sx={{ justifyContent: "center" }}>
+        <PrimaryButton onClick={submit}>Send</PrimaryButton>
+      </Stack>
+    </Stack>
   );
 };
 
