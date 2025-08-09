@@ -37,7 +37,7 @@ export const parseCameraConfig = (cameraConfig: string): CameraConfig => {
 export const parseBuildingIds = (buildingIdsString: string): number[] => {
   const buildingIds: number[] = [];
   const slices = buildingIdsString.split(",");
-  for (var i = 0; i < slices.length; i++) {
+  for (let i = 0; i < slices.length; i++) {
     buildingIds.push(Number(slices[i]));
   }
   return buildingIds;
@@ -72,14 +72,14 @@ const symbol = (color: string) => {
 
 const getUniqueValueInfos = (buildingIds: number[], selectedBuilding?: Building) => {
   var uniqueValueInfos: any[] = [];
-  for (var i = 0; i < buildingIds.length; i++) {
+  for (let i = 0; i < buildingIds.length; i++) {
     uniqueValueInfos.push({
       value: buildingIds[i],
       symbol: symbol("#0000FF")
     });
   }
   if (selectedBuilding) {
-    for (var i = 0; i < selectedBuilding.buildingIds.length; i++) {
+    for (let i = 0; i < selectedBuilding.buildingIds.length; i++) {
       uniqueValueInfos.push({
         value: selectedBuilding.buildingIds[i],
         symbol: symbol("#00FF00")
@@ -91,7 +91,7 @@ const getUniqueValueInfos = (buildingIds: number[], selectedBuilding?: Building)
 
 export const isBuilding = (response: any) => {
   var building = false;
-  for (var i = 0; i < response.results.length; i++) {
+  for (let i = 0; i < response.results.length; i++) {
     const attributes = response.results[i].graphic.attributes;
     if (attributes !== null && attributes["BUILDINGID"] !== null) {
       building = true;
@@ -103,7 +103,7 @@ export const isBuilding = (response: any) => {
 
 export const getBuildingIds = (response: any): number[] => {
   const buildingIds = [];
-  for (var i = 0; i < response.results.length; i++) {
+  for (let i = 0; i < response.results.length; i++) {
     const attributes = response.results[i].graphic.attributes;
     if (attributes !== null && attributes["BUILDINGID"] !== null) {
       buildingIds.push(attributes["BUILDINGID"]);
@@ -128,6 +128,7 @@ function ArcGISMap({
   const [sceneView, setSceneView] = useState<SceneView>();
   const [sceneLayer, setSceneLayer] = useState<SceneLayer>();
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const map = new Map({
       basemap: "dark-gray-vector",

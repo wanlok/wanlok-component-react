@@ -1,9 +1,8 @@
-import { Grid } from "@mui/material";
-import styles from "./index.module.css";
+const Landing = () => {
+  return <div>Landing</div>;
+};
 
-export default function () {
-    return <div>Landing</div>;
-}
+export default Landing;
 
 // // <div className={styles.app}>
 //       {/* <Button

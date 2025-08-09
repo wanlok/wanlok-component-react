@@ -1,18 +1,18 @@
 import { useOutletContext } from "react-router-dom";
 import classes from "./index.module.css";
 import ArcGISMap, { Building, getBuildingIds, parseBuildingIds } from "./ArcGISMap";
-import { Dispatch, SetStateAction, useState } from "react";
-import { Divider, Grid, useMediaQuery, useTheme } from "@mui/material";
+import { useState } from "react";
+import { Divider, Grid } from "@mui/material";
 import AddPanel from "./AddPanel";
 import BuildingListPanel from "./BuildingListPanel";
 
-export default function () {
+const HongKongBuildingMap = () => {
   const [height] = useOutletContext() as number[];
   const [cameraConfigString, setCameraConfigString] = useState<string>("");
   const [buildingIdsString, setBuildingIdsString] = useState<string>("");
   const [buildings, setBuildings] = useState<Building[]>([]);
   const [selectedBuilding, setSelectedBuilding] = useState<Building | undefined>();
-  const mobile = useMediaQuery(useTheme().breakpoints.down("md"));
+  // const mobile = useMediaQuery(useTheme().breakpoints.down("md"));
 
   const onArcGISMapChange = (value: { position: __esri.Point; heading: number; tilt: number }) => {
     setCameraConfigString(JSON.stringify(value));
@@ -24,12 +24,12 @@ export default function () {
     setBuildingIdsString((previous) => {
       const buildingIdDict: { [key: number]: number } = {};
 
-      for (var i = 0; i < previous.length; i++) {
+      for (let i = 0; i < previous.length; i++) {
         buildingIdDict[parseBuildingIds(previous)[i]] = 1;
       }
 
       const current = getBuildingIds(response);
-      for (var i = 0; i < current.length; i++) {
+      for (let i = 0; i < current.length; i++) {
         if (buildingIdDict.hasOwnProperty(current[i])) {
           delete buildingIdDict[current[i]];
         } else {
@@ -86,4 +86,6 @@ export default function () {
       </Grid>
     </Grid>
   );
-}
+};
+
+export default HongKongBuildingMap;
