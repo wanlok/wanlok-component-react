@@ -4,7 +4,7 @@ import { db } from "../../firebase";
 
 export interface Discussion {
   name: string;
-  value: string;
+  message: string;
   timestamp?: Timestamp;
 }
 

@@ -13,7 +13,7 @@ const DiscussionList = ({ discussions }: { discussions: Discussion[] }) => {
               <Typography>({discussion.timestamp?.toDate().toLocaleString()})</Typography>
             </Stack>
             <Stack>
-              <Typography>{discussion.value}</Typography>
+              <Typography>{discussion.message}</Typography>
             </Stack>
           </Stack>
         );
@@ -30,13 +30,13 @@ const DiscussionInput = ({
   addDiscussion: (discussion: Discussion) => Promise<void>;
 }) => {
   const [name, setName] = useState<string>("");
-  const [value, setValue] = useState<string>("");
+  const [message, setMessage] = useState<string>("");
 
   const submit = async () => {
-    if (name && value) {
-      await addDiscussion({ name, value });
+    if (name && message) {
+      await addDiscussion({ name, message });
       setName("");
-      setValue("");
+      setMessage("");
       fetchDiscussions();
     }
   };
@@ -47,7 +47,7 @@ const DiscussionInput = ({
       <Stack sx={{ flexDirection: "row", gap: 2, p: 2 }}>
         <Stack sx={{ flex: 1, gap: 2 }}>
           <TextField label="Name" value={name} onChange={(event) => setName(event.target.value)} />
-          <TextField label="Value" value={value} onChange={(event) => setValue(event.target.value)} />
+          <TextField label="Message" value={message} onChange={(event) => setMessage(event.target.value)} />
         </Stack>
         <Stack>
           <Button variant="contained" onClick={submit}>
