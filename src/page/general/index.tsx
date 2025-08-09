@@ -1,11 +1,9 @@
 import { Button, Stack, TextField, Typography } from "@mui/material";
 import { addDoc, collection, getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import "react-loading-skeleton/dist/skeleton.css";
 import { db } from "../../firebase";
 
 interface Item {
-  id?: string | undefined;
   name: string;
   value: string;
 }
@@ -13,16 +11,16 @@ interface Item {
 const useFetchItems = () => {
   const [items, setItems] = useState<Item[]>([]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      const querySnapshot = await getDocs(collection(db, "items"));
-      setItems(querySnapshot.docs.map((doc) => doc.data() as Item));
-    };
+  const fetchItems = async () => {
+    const querySnapshot = await getDocs(collection(db, "items"));
+    setItems(querySnapshot.docs.map((doc) => doc.data() as Item));
+  };
 
-    fetchData();
+  useEffect(() => {
+    fetchItems();
   }, []);
 
-  return items;
+  return { items, fetchItems };
 };
 
 const addItem = async (item: Item) => {
@@ -34,14 +32,17 @@ const addItem = async (item: Item) => {
 };
 
 const General = () => {
-  const items = useFetchItems();
+  const { items, fetchItems } = useFetchItems();
 
-  const [name, setName] = useState<string>();
-  const [value, setValue] = useState<string>();
+  const [name, setName] = useState<string>("");
+  const [value, setValue] = useState<string>("");
 
-  const submit = () => {
+  const submit = async () => {
     if (name && value) {
-      addItem({ name, value });
+      await addItem({ name, value });
+      setName("");
+      setValue("");
+      fetchItems();
     }
   };
 
