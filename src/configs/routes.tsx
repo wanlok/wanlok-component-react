@@ -1,8 +1,8 @@
-import Main from "../layout/Main";
-import General from "../page/general";
-import Landing from "../page/landing";
-import HongKongBuildingMap from "../page/hong-kong-building-map";
-import Chart from "../page/chart";
+import Main from "../layouts/Main";
+import General from "../pages/general";
+import Landing from "../pages/landing";
+import HongKongBuildingMap from "../pages/hong-kong-building-map";
+import Chart from "../pages/chart";
 
 const routes = [
   {
