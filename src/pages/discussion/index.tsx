@@ -29,13 +29,14 @@ const DiscussionInput = ({
   fetchDiscussions: () => Promise<void>;
   addDiscussion: (discussion: Discussion) => Promise<void>;
 }) => {
-  const [name, setName] = useState<string>("");
+  const getName = () => localStorage.getItem("discussion_name") ?? "";
+  const [name, setName] = useState<string>(getName());
   const [message, setMessage] = useState<string>("");
 
   const submit = async () => {
     if (name && message) {
+      localStorage.setItem("discussion_name", name);
       await addDiscussion({ name, message });
-      setName("");
       setMessage("");
       fetchDiscussions();
     }
@@ -47,12 +48,22 @@ const DiscussionInput = ({
       <Stack sx={{ flexDirection: "row", gap: 2, p: 2 }}>
         <Stack sx={{ flex: 1, gap: 2 }}>
           <TextField label="Name" value={name} onChange={(event) => setName(event.target.value)} />
-          <TextField label="Message" value={message} onChange={(event) => setMessage(event.target.value)} />
+          <TextField
+            label="Message"
+            value={message}
+            onChange={(event) => setMessage(event.target.value)}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault();
+                submit();
+              }
+            }}
+          />
         </Stack>
         <Stack>
           <Button variant="contained" onClick={submit}>
             Send
-          </Button>{" "}
+          </Button>
         </Stack>
       </Stack>
     </>
