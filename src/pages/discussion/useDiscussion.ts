@@ -1,4 +1,4 @@
-import { addDoc, collection, getDocs, orderBy, query, serverTimestamp, Timestamp } from "firebase/firestore";
+import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp, Timestamp } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 
@@ -13,23 +13,22 @@ const c = collection(db, "discussions");
 export const useDiscussion = () => {
   const [discussions, setDiscussions] = useState<Discussion[]>([]);
 
-  const fetchDiscussions = async () => {
-    const q = query(c, orderBy("timestamp", "asc"));
-    const querySnapshot = await getDocs(q);
-    setDiscussions(querySnapshot.docs.map((doc) => doc.data() as Discussion));
-  };
+  useEffect(() => {
+    const q = query(collection(db, "discussions"), orderBy("timestamp"));
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      const discussions = snapshot.docs.map((doc) => doc.data() as Discussion);
+      setDiscussions(discussions);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const addDiscussion = async (discussion: Discussion) => {
     try {
       await addDoc(c, { ...discussion, timestamp: serverTimestamp() });
     } catch (error) {
-      console.error("Error adding document:", error);
+      console.log(error);
     }
   };
 
-  useEffect(() => {
-    fetchDiscussions();
-  }, []);
-
-  return { discussions, fetchDiscussions, addDiscussion };
+  return { discussions, addDiscussion };
 };

@@ -30,13 +30,7 @@ const DiscussionList = ({ discussions }: { discussions: Discussion[] }) => {
   );
 };
 
-const DiscussionInput = ({
-  fetchDiscussions,
-  addDiscussion
-}: {
-  fetchDiscussions: () => Promise<void>;
-  addDiscussion: (discussion: Discussion) => Promise<void>;
-}) => {
+const DiscussionInput = ({ addDiscussion }: { addDiscussion: (discussion: Discussion) => Promise<void> }) => {
   const getName = () => localStorage.getItem("discussion_name") ?? "";
   const [name, setName] = useState<string>(getName());
   const [message, setMessage] = useState<string>("");
@@ -46,7 +40,6 @@ const DiscussionInput = ({
       localStorage.setItem("discussion_name", name);
       await addDiscussion({ name, message });
       setMessage("");
-      fetchDiscussions();
     }
   };
 
@@ -79,11 +72,11 @@ const DiscussionInput = ({
 };
 
 export const DiscussionPage = () => {
-  const { discussions, fetchDiscussions, addDiscussion } = useDiscussion();
+  const { discussions, addDiscussion } = useDiscussion();
   return (
     <Stack sx={{ height: "100%" }}>
       <DiscussionList discussions={discussions} />
-      <DiscussionInput fetchDiscussions={fetchDiscussions} addDiscussion={addDiscussion} />
+      <DiscussionInput addDiscussion={addDiscussion} />
     </Stack>
   );
 };
