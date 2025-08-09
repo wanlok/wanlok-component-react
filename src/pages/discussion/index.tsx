@@ -15,9 +15,11 @@ const DiscussionList = ({ discussions }: { discussions: Discussion[] }) => {
     <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto" }}>
       {discussions.map((discussion, i) => (
         <Stack key={`discussion-${i}`} sx={{ backgroundColor: "#EEEEEE", mt: i === 0 ? 0 : "1px", p: 2, gap: 1 }}>
-          <Stack sx={{ flexDirection: "row", gap: 1 }}>
+          <Stack sx={{ flexDirection: "row" }}>
             <Typography>{discussion.name}</Typography>
-            <Typography>({discussion.timestamp?.toDate().toLocaleString()})</Typography>
+            <Typography sx={{ flex: 1, textAlign: "right" }}>
+              {discussion.timestamp?.toDate().toLocaleString()}
+            </Typography>
           </Stack>
           <Stack>
             {discussion.message.split("\n").map((line, j) => (
