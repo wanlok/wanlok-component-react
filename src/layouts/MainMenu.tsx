@@ -1,10 +1,10 @@
 import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@mui/material";
-import routes from "../configs/routes";
 import { useEffect, useState } from "react";
-import PrimaryButton from "../components/PrimaryButton";
+import { routes } from "../configs/routes";
+import { PrimaryButton } from "../components/PrimaryButton";
 
-const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fullWidth: boolean }) => {
+export const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fullWidth: boolean }) => {
   const { palette } = useTheme();
   const { pathname } = useLocation();
   const [path, setPath] = useState<string>(pathname);
@@ -15,7 +15,7 @@ const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fullWidth
 
   return (
     <>
-      {routes.map((routes, index) => {
+      {routes.map((routes) => {
         return routes.children.map((route, index) => {
           return (
             <Link to={route.path} key={index}>
@@ -42,5 +42,3 @@ const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fullWidth
     </>
   );
 };
-
-export default MainMenu;

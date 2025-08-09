@@ -1,17 +1,16 @@
 import { Dataset } from "../../common/Types";
-import DateLineChart from "./DateLineChart";
 import { getDateString } from "../../common/DateUtils";
 import { Button } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import moment from "moment";
-import LineChart, { apexChartProps, setGridColour, setTooltip, setX, setYColour } from "./LineChart";
+import { apexChartProps, setGridColour, setTooltip, setX, setYColour } from "./LineChart";
 import ReactApexChart from "react-apexcharts";
 import { Document, Page, PDFViewer, Text } from "@react-pdf/renderer";
 import Html from "react-pdf-html";
 import ReactDOMServer from "react-dom/server";
 import { SomeComponent } from "./SomeComponent";
-import ExampleChart from "./RechartsChart";
 import { toPng } from "html-to-image";
+import { RechartsChart } from "./RechartsChart";
 
 function getNumberOfDays(dates: Date[]) {
   var numberOfDays = 0;
@@ -75,7 +74,7 @@ const generateData = (myNumber: number, value: any) => {
   return my_list;
 };
 
-export default function () {
+export const DummyChart1 = () => {
   const startDateString = "2024-07-01";
   const endDateString = "2024-08-31";
 
@@ -202,11 +201,11 @@ export default function () {
         Click
       </Button>
       <div ref={chartRef}>
-        <ExampleChart />
+        <RechartsChart />
       </div>
       {/* <PDFViewer style={{ width: "100%", height: "calc(100% - 20px)" }}>
         <SomeComponent />
       </PDFViewer> */}
     </>
   );
-}
+};

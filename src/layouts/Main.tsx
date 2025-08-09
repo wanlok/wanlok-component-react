@@ -1,10 +1,10 @@
 import { Grid, useMediaQuery, useTheme } from "@mui/material";
 import { Outlet } from "react-router-dom";
 import styles from "./Main.module.css";
-import MainMenu from "./MainMenu";
-import useWindowDimensions from "../common/useWindowDimension";
+import { MainMenu } from "./MainMenu";
+import { useWindowDimensions } from "../common/useWindowDimension";
 
-const Main = () => {
+export const Main = () => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const height = useWindowDimensions().height - 1;
@@ -27,5 +27,3 @@ const Main = () => {
     </Grid>
   );
 };
-
-export default Main;

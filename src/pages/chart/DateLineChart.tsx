@@ -1,5 +1,4 @@
 import { Dataset } from "../../common/Types";
-import LineChart from "./LineChart";
 
 const pointWidth = 12;
 const fullWidth = 12;
@@ -13,7 +12,7 @@ function getMonthSet(x: string[]) {
   return monthSet;
 }
 
-export default function ({ dataset, showNumberOfPoints }: { dataset: Dataset; showNumberOfPoints: number }) {
+export const DateLineChart = ({ dataset, showNumberOfPoints }: { dataset: Dataset; showNumberOfPoints: number }) => {
   // const firstDateString = dataset.x.length > 0 ? dataset.x[0] : "";
   const scale = dataset.x.length > showNumberOfPoints ? (fullWidth * showNumberOfPoints) / dataset.x.length : fullWidth;
   return (
@@ -43,4 +42,4 @@ export default function ({ dataset, showNumberOfPoints }: { dataset: Dataset; sh
     // />
     <></>
   );
-}
+};

@@ -1,12 +1,12 @@
 import { useOutletContext } from "react-router-dom";
 import classes from "./index.module.css";
-import ArcGISMap, { Building, getBuildingIds, parseBuildingIds } from "./ArcGISMap";
+import { ArcGISMap, Building, getBuildingIds, parseBuildingIds } from "./ArcGISMap";
 import { useState } from "react";
 import { Divider, Grid } from "@mui/material";
-import AddPanel from "./AddPanel";
-import BuildingListPanel from "./BuildingListPanel";
+import { BuildingListPanel } from "./BuildingListPanel";
+import { AddPanel } from "./AddPanel";
 
-const HongKongBuildingMap = () => {
+export const HongKongBuildingMap = () => {
   const [height] = useOutletContext() as number[];
   const [cameraConfigString, setCameraConfigString] = useState<string>("");
   const [buildingIdsString, setBuildingIdsString] = useState<string>("");
@@ -87,5 +87,3 @@ const HongKongBuildingMap = () => {
     </Grid>
   );
 };
-
-export default HongKongBuildingMap;

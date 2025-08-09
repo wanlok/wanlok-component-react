@@ -113,7 +113,7 @@ export const getBuildingIds = (response: any): number[] => {
   return buildingIds;
 };
 
-function ArcGISMap({
+export const ArcGISMap = ({
   height,
   buildingIdsString,
   selectedBuilding,
@@ -125,7 +125,7 @@ function ArcGISMap({
   selectedBuilding?: Building;
   onChange?: (value: { position: __esri.Point; heading: number; tilt: number }) => void;
   onClick?: (response: any) => void;
-}) {
+}) => {
   const [sceneView, setSceneView] = useState<SceneView>();
   const [sceneLayer, setSceneLayer] = useState<SceneLayer>();
 
@@ -236,6 +236,4 @@ function ArcGISMap({
       }}
     ></div>
   );
-}
-
-export default ArcGISMap;
+};

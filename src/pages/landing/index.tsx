@@ -1,8 +1,6 @@
-const Landing = () => {
+export const Landing = () => {
   return <div>Landing</div>;
 };
-
-export default Landing;
 
 // // <div className={styles.app}>
 //       {/* <Button

@@ -1,9 +1,9 @@
 import { Button } from "@mui/material";
-import ExampleChart from "./RechartsChart";
 import { toPng } from "html-to-image";
 import { createRoot } from "react-dom/client";
+import { RechartsChart } from "./RechartsChart";
 
-export default function () {
+export const DummyChart2 = () => {
   const handleExport = async () => {
     // Create and append temp container
     const tempContainer = document.createElement("div");
@@ -17,7 +17,7 @@ export default function () {
 
     // Render chart into container
     const root = createRoot(tempContainer);
-    root.render(<ExampleChart />);
+    root.render(<RechartsChart />);
 
     // Wait for chart to render — use requestAnimationFrame for layout cycle
     requestAnimationFrame(() => {
@@ -46,4 +46,4 @@ export default function () {
       </Button>
     </>
   );
-}
+};

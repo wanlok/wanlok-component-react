@@ -104,7 +104,7 @@ interface ApexChartsChartProps {
   animated: boolean;
 }
 
-const ApexChartsChart = ({ id, animated }: ApexChartsChartProps) => {
+export const ApexChartsChart = ({ id, animated }: ApexChartsChartProps) => {
   const options = getOptions(id, animated);
   const series: ApexAxisChartSeries = [
     {
@@ -118,5 +118,3 @@ const ApexChartsChart = ({ id, animated }: ApexChartsChartProps) => {
   ];
   return <ReactApexChart options={options} series={series} type="area" height="1080" width="1920" />;
 };
-
-export default ApexChartsChart;

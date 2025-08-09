@@ -1,14 +1,14 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { Image, Page, PDFViewer, Document } from "@react-pdf/renderer";
-import ApexChartsChart from "./ApexChartsChart";
-import RechartsChart from "./RechartsChart";
 import { toPng } from "html-to-image";
 import { usePDF } from "react-to-pdf";
 import { BarChart } from "@mui/x-charts";
-import LabelsAboveBars from "./LabelsAboveBars";
+import { RechartsChart } from "./RechartsChart";
+import { LabelsAboveBars } from "./LabelsAboveBars";
+import { ApexChartsChart } from "./ApexChartsChart";
 
-const Chart = () => {
+export const Chart = () => {
   const [src, setSrc] = useState<string>();
 
   const exportRechartsChart = async () => {
@@ -190,5 +190,3 @@ const Chart = () => {
     </div>
   );
 };
-
-export default Chart;

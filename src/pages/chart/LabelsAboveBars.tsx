@@ -9,7 +9,7 @@ import { interpolateObject } from "@mui/x-charts-vendor/d3-interpolate";
 
 const data = [5, 17, 11];
 
-export default function LabelsAboveBars() {
+export const LabelsAboveBars = () => {
   return (
     <ChartContainer
       xAxis={[{ scaleType: "band", data: ["A", "B", "C"] }]}
@@ -24,7 +24,7 @@ export default function LabelsAboveBars() {
       <ChartsYAxis />
     </ChartContainer>
   );
-}
+};
 
 const Text = styled("text")(({ theme }) => ({
   ...theme?.typography?.body2,

@@ -1,10 +1,10 @@
 import { ButtonGroup, Card, CardContent, Grid, Typography } from "@mui/material";
 import classes from "./BuildingListPanel.module.css";
 import { Building } from "./ArcGISMap";
-import PrimaryButton from "../../components/PrimaryButton";
 import { Dispatch, useRef } from "react";
+import { PrimaryButton } from "../../components/PrimaryButton";
 
-function BuildingListPanel({
+export const BuildingListPanel = ({
   buildings,
   setBuildings,
   onLocateBuildingButtonClick,
@@ -14,7 +14,7 @@ function BuildingListPanel({
   setBuildings: Dispatch<React.SetStateAction<Building[]>>;
   onLocateBuildingButtonClick: (building: Building) => void;
   onDeleteBuildingButtonClick: (building: Building) => void;
-}) {
+}) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   const load = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -72,6 +72,4 @@ function BuildingListPanel({
       </Grid>
     </Grid>
   );
-}
-
-export default BuildingListPanel;
+};

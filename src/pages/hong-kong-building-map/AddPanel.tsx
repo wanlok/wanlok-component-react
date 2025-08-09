@@ -2,9 +2,9 @@ import { Dispatch } from "react";
 import { Grid, TextField, Typography } from "@mui/material";
 import classes from "./AddPanel.module.css";
 import { Building, parseBuildingIds, parseCameraConfig } from "./ArcGISMap";
-import PrimaryButton from "../../components/PrimaryButton";
+import { PrimaryButton } from "../../components/PrimaryButton";
 
-function AddPanel({
+export function AddPanel({
   cameraConfigString,
   setCameraConfigString,
   buildingIdsString,
@@ -69,5 +69,3 @@ function AddPanel({
     </Grid>
   );
 }
-
-export default AddPanel;

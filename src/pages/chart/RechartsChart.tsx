@@ -8,7 +8,7 @@ const data = [
   { name: "2021", price: 120 }
 ];
 
-const RechartsChart = () => {
+export const RechartsChart = () => {
   return (
     <LineChart width={600} height={300} data={data}>
       <CartesianGrid stroke="#eee" strokeDasharray="5 5" />
@@ -19,5 +19,3 @@ const RechartsChart = () => {
     </LineChart>
   );
 };
-
-export default RechartsChart;

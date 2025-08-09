@@ -1,10 +1,10 @@
-import Main from "../layouts/Main";
-import Landing from "../pages/landing";
+import { Main } from "../layouts/Main";
+import { Landing } from "../pages/landing";
 import { DiscussionPage } from "../pages/discussion";
-import HongKongBuildingMap from "../pages/hong-kong-building-map";
-import Chart from "../pages/chart";
+import { HongKongBuildingMap } from "../pages/hong-kong-building-map";
+import { Chart } from "../pages/chart";
 
-const routes = [
+export const routes = [
   {
     path: "/",
     element: <Main />,
@@ -38,5 +38,3 @@ const routes = [
     ]
   }
 ];
-
-export default routes;

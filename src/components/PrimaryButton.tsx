@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 export const height = 40;
 
-const PrimaryButton = ({
+export const PrimaryButton = ({
   children,
   fullWidth,
   sx,
@@ -32,5 +32,3 @@ const PrimaryButton = ({
     </Button>
   );
 };
-
-export default PrimaryButton;

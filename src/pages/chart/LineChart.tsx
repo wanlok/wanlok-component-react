@@ -1,8 +1,8 @@
 import ReactDOMServer from "react-dom/server";
 import ReactApexChart, { Props as ApexChartProps } from "react-apexcharts";
-import getDimension from "../../common/getDimension";
 import classes from "./LineChart.module.css";
 import { useEffect } from "react";
+import { getDimension } from "../../common/getDimension";
 
 interface Series {
   series: ApexAxisChartSeries;
@@ -163,7 +163,7 @@ function addHorizontalLine() {
   return annotations;
 }
 
-export default function ({
+export const LineChart = ({
   options,
   series,
   chartWidth
@@ -174,7 +174,7 @@ export default function ({
   xLabelOffset: number;
   xFormatter: (value: string) => string;
   chartWidth: (width: number) => number;
-}) {
+}) => {
   const { ref, width } = getDimension();
 
   const chart = ApexCharts.getChartByID("Hello World");
@@ -195,4 +195,4 @@ export default function ({
       </div>
     </div>
   );
-}
+};
