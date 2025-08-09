@@ -1,7 +1,7 @@
 import { ButtonGroup, Card, CardContent, Grid, Typography } from "@mui/material";
 import classes from "./BuildingListPanel.module.css";
 import { Building } from "./ArcGISMap";
-import PrimaryButton from "../../component/PrimaryButton";
+import PrimaryButton from "../../components/PrimaryButton";
 import { Dispatch, useRef } from "react";
 
 function BuildingListPanel({

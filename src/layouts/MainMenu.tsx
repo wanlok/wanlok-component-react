@@ -2,7 +2,7 @@ import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@mui/material";
 import routes from "../configs/routes";
 import { useEffect, useState } from "react";
-import PrimaryButton from "../component/PrimaryButton";
+import PrimaryButton from "../components/PrimaryButton";
 
 const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fullWidth: boolean }) => {
   const { palette } = useTheme();
