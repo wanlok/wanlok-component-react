@@ -1,6 +1,6 @@
 import Main from "../layouts/Main";
 import Landing from "../pages/landing";
-import { Discussion } from "../pages/discussion";
+import { DiscussionPage } from "../pages/discussion";
 import HongKongBuildingMap from "../pages/hong-kong-building-map";
 import Chart from "../pages/chart";
 
@@ -23,7 +23,7 @@ const routes = [
       {
         name: "Discussion",
         path: "/discussion",
-        element: <Discussion />
+        element: <DiscussionPage />
       },
       {
         name: "Hong Kong Building Map",

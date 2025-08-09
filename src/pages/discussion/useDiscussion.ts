@@ -2,32 +2,34 @@ import { addDoc, collection, getDocs, orderBy, query, serverTimestamp, Timestamp
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 
-export interface Item {
+export interface Discussion {
   name: string;
   value: string;
   timestamp?: Timestamp;
 }
 
-export const useDiscussion = () => {
-  const [items, setItems] = useState<Item[]>([]);
+const c = collection(db, "discussions");
 
-  const fetchItems = async () => {
-    const q = query(collection(db, "items"), orderBy("timestamp", "asc"));
+export const useDiscussion = () => {
+  const [discussions, setDiscussions] = useState<Discussion[]>([]);
+
+  const fetchDiscussions = async () => {
+    const q = query(c, orderBy("timestamp", "asc"));
     const querySnapshot = await getDocs(q);
-    setItems(querySnapshot.docs.map((doc) => doc.data() as Item));
+    setDiscussions(querySnapshot.docs.map((doc) => doc.data() as Discussion));
   };
 
-  const addItem = async (item: Item) => {
+  const addDiscussion = async (discussion: Discussion) => {
     try {
-      await addDoc(collection(db, "items"), { ...item, timestamp: serverTimestamp() });
+      await addDoc(c, { ...discussion, timestamp: serverTimestamp() });
     } catch (error) {
       console.error("Error adding document:", error);
     }
   };
 
   useEffect(() => {
-    fetchItems();
+    fetchDiscussions();
   }, []);
 
-  return { items, fetchItems, addItem };
+  return { discussions, fetchDiscussions, addDiscussion };
 };

@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { Item, useDiscussion } from "./useDiscussion";
+import { Discussion, useDiscussion } from "./useDiscussion";
 import { Button, Divider, Stack, TextField, Typography } from "@mui/material";
 
-const DiscussionList = ({ items }: { items: Item[] }) => {
+const DiscussionList = ({ discussions }: { discussions: Discussion[] }) => {
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
-      {items.map((item, i) => {
+      {discussions.map((discussion, i) => {
         return (
           <Stack key={"discussion-" + i} sx={{ backgroundColor: "#EEEEEE", mt: i === 0 ? 0 : "1px", p: 2, gap: 1 }}>
             <Stack sx={{ flexDirection: "row", gap: 1 }}>
-              <Typography>{item.name}</Typography>
-              <Typography>({item.timestamp?.toDate().toLocaleString()})</Typography>
+              <Typography>{discussion.name}</Typography>
+              <Typography>({discussion.timestamp?.toDate().toLocaleString()})</Typography>
             </Stack>
             <Stack>
-              <Typography>{item.value}</Typography>
+              <Typography>{discussion.value}</Typography>
             </Stack>
           </Stack>
         );
@@ -23,21 +23,21 @@ const DiscussionList = ({ items }: { items: Item[] }) => {
 };
 
 const DiscussionInput = ({
-  fetchItems,
-  addItem
+  fetchDiscussions,
+  addDiscussion
 }: {
-  fetchItems: () => Promise<void>;
-  addItem: (item: Item) => Promise<void>;
+  fetchDiscussions: () => Promise<void>;
+  addDiscussion: (discussion: Discussion) => Promise<void>;
 }) => {
   const [name, setName] = useState<string>("");
   const [value, setValue] = useState<string>("");
 
   const submit = async () => {
     if (name && value) {
-      await addItem({ name, value });
+      await addDiscussion({ name, value });
       setName("");
       setValue("");
-      fetchItems();
+      fetchDiscussions();
     }
   };
 
@@ -59,12 +59,12 @@ const DiscussionInput = ({
   );
 };
 
-export const Discussion = () => {
-  const { items, fetchItems, addItem } = useDiscussion();
+export const DiscussionPage = () => {
+  const { discussions, fetchDiscussions, addDiscussion } = useDiscussion();
   return (
     <Stack sx={{ height: "100%" }}>
-      <DiscussionList items={items} />
-      <DiscussionInput fetchItems={fetchItems} addItem={addItem} />
+      <DiscussionList discussions={discussions} />
+      <DiscussionInput fetchDiscussions={fetchDiscussions} addDiscussion={addDiscussion} />
     </Stack>
   );
 };
