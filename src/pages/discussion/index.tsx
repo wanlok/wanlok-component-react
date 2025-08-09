@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Discussion, useDiscussion } from "./useDiscussion";
-import { Button, Divider, FormControl, FormHelperText, Stack, TextField, Typography } from "@mui/material";
+import { FormControl, FormHelperText, Stack, TextField, Typography } from "@mui/material";
 import { PrimaryButton } from "../../components/PrimaryButton";
 
 const DiscussionList = ({ discussions }: { discussions: Discussion[] }) => {
