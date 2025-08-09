@@ -13,24 +13,24 @@ const DiscussionList = ({ discussions }: { discussions: Discussion[] }) => {
 
   return (
     <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto" }}>
-      {discussions.map((discussion, i) => {
-        return (
-          <Stack key={"discussion-" + i} sx={{ backgroundColor: "#EEEEEE", mt: i === 0 ? 0 : "1px", p: 2, gap: 1 }}>
-            <Stack sx={{ flexDirection: "row", gap: 1 }}>
-              <Typography>{discussion.name}</Typography>
-              <Typography>({discussion.timestamp?.toDate().toLocaleString()})</Typography>
-            </Stack>
-            <Stack>
-              <Typography>{discussion.message}</Typography>
-            </Stack>
+      {discussions.map((discussion, i) => (
+        <Stack key={`discussion-${i}`} sx={{ backgroundColor: "#EEEEEE", mt: i === 0 ? 0 : "1px", p: 2, gap: 1 }}>
+          <Stack sx={{ flexDirection: "row", gap: 1 }}>
+            <Typography>{discussion.name}</Typography>
+            <Typography>({discussion.timestamp?.toDate().toLocaleString()})</Typography>
           </Stack>
-        );
-      })}
+          <Stack>
+            {discussion.message.split("\n").map((line, j) => (
+              <Typography key={`discussion-${i}-message-${j}`}>{line.length > 0 ? line : <br />}</Typography>
+            ))}
+          </Stack>
+        </Stack>
+      ))}
     </Stack>
   );
 };
 
-const DiscussionInput = ({ addDiscussion }: { addDiscussion: (discussion: Discussion) => Promise<void> }) => {
+const DiscussionForm = ({ addDiscussion }: { addDiscussion: (discussion: Discussion) => Promise<void> }) => {
   const getName = () => localStorage.getItem("discussion_name") ?? "";
   const [name, setName] = useState<string>(getName());
   const [message, setMessage] = useState<string>("");
@@ -50,18 +50,19 @@ const DiscussionInput = ({ addDiscussion }: { addDiscussion: (discussion: Discus
         <Stack sx={{ flex: 1, gap: 2 }}>
           <TextField label="Name" value={name} onChange={(event) => setName(event.target.value)} />
           <TextField
-            label="Message"
+            label="Message (Shift + Enter for multiple lines)"
             value={message}
+            multiline
             onChange={(event) => setMessage(event.target.value)}
             onKeyDown={(event) => {
-              if (event.key === "Enter") {
+              if (event.key === "Enter" && !event.shiftKey) {
                 event.preventDefault();
                 submit();
               }
             }}
           />
         </Stack>
-        <Stack>
+        <Stack sx={{ justifyContent: "center" }}>
           <Button variant="contained" onClick={submit}>
             Send
           </Button>
@@ -76,7 +77,7 @@ export const DiscussionPage = () => {
   return (
     <Stack sx={{ height: "100%" }}>
       <DiscussionList discussions={discussions} />
-      <DiscussionInput addDiscussion={addDiscussion} />
+      <DiscussionForm addDiscussion={addDiscussion} />
     </Stack>
   );
 };
