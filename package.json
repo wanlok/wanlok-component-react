@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@arcgis/core": "4.29.10",
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@fontsource/roboto": "^5.0.13",
