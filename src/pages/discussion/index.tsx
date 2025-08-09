@@ -1,10 +1,18 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Discussion, useDiscussion } from "./useDiscussion";
 import { Button, Divider, Stack, TextField, Typography } from "@mui/material";
 
 const DiscussionList = ({ discussions }: { discussions: Discussion[] }) => {
+  const stackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (stackRef.current) {
+      stackRef.current.scrollTop = stackRef.current.scrollHeight;
+    }
+  }, [discussions]);
+
   return (
-    <Stack sx={{ flex: 1, overflowY: "auto" }}>
+    <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto" }}>
       {discussions.map((discussion, i) => {
         return (
           <Stack key={"discussion-" + i} sx={{ backgroundColor: "#EEEEEE", mt: i === 0 ? 0 : "1px", p: 2, gap: 1 }}>
