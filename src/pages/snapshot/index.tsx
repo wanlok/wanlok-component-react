@@ -10,7 +10,7 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { Row, Snapshot, useSnapshot } from "./useSnapshot";
 
@@ -93,14 +93,14 @@ export const SnapshotList = ({
   onSnapshotClick
 }: {
   snapshots: Snapshot[];
-  onSnapshotClick: (snapshot: Snapshot) => void;
+  onSnapshotClick: (index: number, snapshot: Snapshot) => void;
 }) => {
   return (
     <Stack sx={{ width: 400, overflowY: "auto", p: 2 }}>
       <Stack>
         {snapshots.map((snapshot, i) => (
           <Card key={`snapshot-${i + 1}`} sx={{ mt: i === 0 ? 0 : 2 }}>
-            <CardActionArea onClick={() => onSnapshotClick(snapshot)}>
+            <CardActionArea onClick={() => onSnapshotClick(i, snapshot)}>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">{`Snapshot ${i + 1}`}</Typography>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
@@ -158,7 +158,8 @@ export const SnapshotForm = ({
 };
 
 export const SnapshotPage = () => {
-  const { snapshots, addOrUpdateSnapshot } = useSnapshot();
+  const { snapshots, addSnapshot, updateSnapshot } = useSnapshot();
+  const snapshotIndexRef = useRef<number>();
   const [snapshot, setSnapshot] = useState<Snapshot>({ rows: [{ type: "text", value: "" }] });
 
   const onAddButtonClick = () => {
@@ -198,13 +199,19 @@ export const SnapshotPage = () => {
   };
 
   const onSaveButtonClick = async () => {
-    const valid = await addOrUpdateSnapshot(snapshot);
+    let valid;
+    if (snapshotIndexRef.current && snapshot.id) {
+      valid = await updateSnapshot(snapshotIndexRef.current, snapshot);
+    } else {
+      valid = await addSnapshot(snapshot);
+    }
     if (!valid) {
       alert("Invalid submission. Please check that you’ve entered all required data.");
     }
   };
 
-  const onSnapshotClick = (snapshot: Snapshot) => {
+  const onSnapshotClick = (index: number, snapshot: Snapshot) => {
+    snapshotIndexRef.current = index;
     setSnapshot(snapshot);
   };
 

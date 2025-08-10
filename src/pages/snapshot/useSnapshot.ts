@@ -46,25 +46,35 @@ export const useSnapshot = () => {
     );
   };
 
-  const addOrUpdateSnapshot = async (snapshot: Snapshot) => {
+  const addSnapshot = async (snapshot: Snapshot) => {
     const valid = isValid(snapshot);
     if (valid) {
-      const { id, ...data } = snapshot;
+      snapshot.timestamp = serverTimestamp() as Timestamp;
       const c = collection(db, "snapshots");
-      if (id) {
-        await setDoc(doc(c, id), data, { merge: true });
-      } else {
-        snapshot.timestamp = serverTimestamp() as Timestamp;
-        snapshot.id = (await addDoc(c, snapshot)).id;
-        setSnapshots((previous) => {
-          const snapshots = [...previous];
-          snapshots.push(snapshot);
-          return snapshots;
-        });
-      }
+      snapshot.id = (await addDoc(c, snapshot)).id;
+      setSnapshots((previous) => {
+        const snapshots = [...previous];
+        snapshots.push(snapshot);
+        return snapshots;
+      });
     }
     return valid;
   };
 
-  return { snapshots, addOrUpdateSnapshot };
+  const updateSnapshot = async (index: number, snapshot: Snapshot) => {
+    const valid = isValid(snapshot);
+    if (valid) {
+      const { id, ...data } = snapshot;
+      const c = collection(db, "snapshots");
+      await setDoc(doc(c, id), data, { merge: true });
+      setSnapshots((previous) => {
+        const snapshots = [...previous];
+        snapshots[index] = snapshot;
+        return snapshots;
+      });
+    }
+    return valid;
+  };
+
+  return { snapshots, addSnapshot, updateSnapshot };
 };
