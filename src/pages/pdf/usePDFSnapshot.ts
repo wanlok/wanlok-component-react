@@ -12,7 +12,7 @@ export const usePDFSnapshot = () => {
     if (id) {
       fetchSnapshot(id);
     }
-  }, []);
+  }, [id]);
 
   const fetchSnapshot = async (id: string) => {
     const docRef = doc(db, "snapshots", id);
