@@ -2,6 +2,7 @@ import {
   addDoc,
   collection,
   doc,
+  getDoc,
   getDocs,
   orderBy,
   query,
@@ -35,6 +36,7 @@ export const useSnapshot = () => {
   }, []);
 
   const fetchSnapshots = async () => {
+    console.log("fetchSnapshots");
     const c = collection(db, "snapshots");
     const q = query(c, orderBy("timestamp", "asc"));
     setSnapshots(
@@ -51,10 +53,12 @@ export const useSnapshot = () => {
     if (valid) {
       snapshot.timestamp = serverTimestamp() as Timestamp;
       const c = collection(db, "snapshots");
-      snapshot.id = (await addDoc(c, snapshot)).id;
+      const docRef = await addDoc(c, snapshot);
+      const d = (await getDoc(docRef)).data() as Snapshot;
+      d.id = docRef.id;
       setSnapshots((previous) => {
         const snapshots = [...previous];
-        snapshots.push(snapshot);
+        snapshots.push(d);
         return snapshots;
       });
     }

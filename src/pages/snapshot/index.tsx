@@ -10,9 +10,10 @@ import {
   TextField,
   Typography
 } from "@mui/material";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { Row, Snapshot, useSnapshot } from "./useSnapshot";
+import { useNavigate, useParams } from "react-router-dom";
 
 export const TextInput = ({
   placeholder,
@@ -163,6 +164,19 @@ export const SnapshotPage = () => {
   const { snapshots, addSnapshot, updateSnapshot } = useSnapshot();
   const snapshotIndexRef = useRef<number>();
   const [snapshot, setSnapshot] = useState<Snapshot>({ rows: [{ type: "text", value: "" }] });
+  const { id } = useParams();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const index = snapshots.findIndex((s) => s.id === id);
+    if (index > -1) {
+      snapshotIndexRef.current = index;
+      setSnapshot(snapshots[index]);
+    } else {
+      snapshotIndexRef.current = undefined;
+      setSnapshot({ rows: [{ type: "text", value: "" }] });
+    }
+  }, [snapshots, id]);
 
   const onAddButtonClick = () => {
     setSnapshot((previous) => {
@@ -197,7 +211,7 @@ export const SnapshotPage = () => {
   };
 
   const onNewButtonClick = () => {
-    setSnapshot({ rows: [{ type: "text", value: "" }] });
+    navigate("/snapshot");
   };
 
   const onSaveButtonClick = async () => {
@@ -213,8 +227,7 @@ export const SnapshotPage = () => {
   };
 
   const onSnapshotClick = (index: number, snapshot: Snapshot) => {
-    snapshotIndexRef.current = index;
-    setSnapshot(snapshot);
+    navigate(`/snapshot/${snapshot.id}`);
   };
 
   return (

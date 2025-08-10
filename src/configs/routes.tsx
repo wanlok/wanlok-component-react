@@ -37,8 +37,12 @@ export const routes = [
         element: <Chart />
       },
       {
-        name: "Snapshot",
         path: "/snapshot",
+        element: <SnapshotPage />
+      },
+      {
+        name: "Snapshot",
+        path: "/snapshot/:id",
         element: <SnapshotPage />
       }
     ]

@@ -16,28 +16,30 @@ export const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fu
   return (
     <>
       {routes.map((routes) => {
-        return routes.children.map((route, index) => {
-          return (
-            <Link to={route.path} key={index}>
-              <PrimaryButton
-                fullWidth={fullWidth}
-                sx={[
-                  {
-                    height: buttonHeight,
-                    textTransform: "none",
-                    borderRadius: 0
-                  },
-                  path === route.path ? { backgroundColor: palette.primary.dark } : {}
-                ]}
-                onClick={() => {
-                  setPath(route.path);
-                }}
-              >
-                {route.name}
-              </PrimaryButton>
-            </Link>
-          );
-        });
+        return routes.children
+          .filter((children) => children.name !== undefined)
+          .map((route, index) => {
+            return (
+              <Link to={route.path} key={index}>
+                <PrimaryButton
+                  fullWidth={fullWidth}
+                  sx={[
+                    {
+                      height: buttonHeight,
+                      textTransform: "none",
+                      borderRadius: 0
+                    },
+                    path === route.path ? { backgroundColor: palette.primary.dark } : {}
+                  ]}
+                  onClick={() => {
+                    setPath(route.path);
+                  }}
+                >
+                  {route.name}
+                </PrimaryButton>
+              </Link>
+            );
+          });
       })}
     </>
   );
