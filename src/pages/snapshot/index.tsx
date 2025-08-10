@@ -236,7 +236,8 @@ export const SnapshotPage = () => {
   };
 
   const onDownloadPDFButtonClick = () => {
-    navigate(`/pdf/${snapshot.id}`);
+    const url = `#/pdf/${snapshot.id}`;
+    window.open(url, "_blank");
   };
 
   return (
