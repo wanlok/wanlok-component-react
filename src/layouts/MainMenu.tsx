@@ -3,6 +3,7 @@ import { useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { routes } from "../configs/routes";
 import { PrimaryButton } from "../components/PrimaryButton";
+import { Main } from "./Main";
 
 export const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fullWidth: boolean }) => {
   const { palette } = useTheme();
@@ -13,10 +14,8 @@ export const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fu
     setPath(pathname);
   }, [pathname]);
 
-  const filteredRoutes =
-    routes
-      .find((route) => route.children?.some((children) => children.name !== undefined))
-      ?.children?.filter((children) => children.name !== undefined) ?? [];
+  const mainRoute = routes.find((route) => route.element?.type === Main);
+  const filteredRoutes = mainRoute?.children?.filter((child) => child.name !== undefined) ?? [];
 
   return (
     <>

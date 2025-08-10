@@ -1,3 +1,6 @@
+import { usePdf } from "./usePdf";
+
 export const PdfPage = () => {
-  return <div>Hello World</div>;
+  const { snapshot } = usePdf();
+  return <div>{JSON.stringify(snapshot)}</div>;
 };

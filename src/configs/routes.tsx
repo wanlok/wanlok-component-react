@@ -47,6 +47,13 @@ export const routes = [
   },
   {
     path: "/pdf",
-    element: <PdfPage />
+    element: <PdfPage />,
+    children: [
+      {
+        name: "", // TODO: remove this name later
+        path: ":id",
+        element: <PdfPage />
+      }
+    ]
   }
 ];
