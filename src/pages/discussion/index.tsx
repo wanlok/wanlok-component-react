@@ -15,14 +15,14 @@ const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
   return (
     <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto" }}>
       {discussion.messages.map((message, i) => (
-        <Stack key={`discussion-${i}`} sx={{ backgroundColor: "#EEEEEE", mt: i === 0 ? 0 : "1px", p: 2, gap: 1 }}>
+        <Stack key={`message-${i}`} sx={{ backgroundColor: "#EEEEEE", mt: i === 0 ? 0 : "1px", p: 2, gap: 1 }}>
           <Stack sx={{ flexDirection: "row" }}>
             <Typography>{message.name}</Typography>
-            {/* <Typography sx={{ flex: 1, textAlign: "right" }}>{message.date?.toLocaleString()}</Typography> */}
+            <Typography sx={{ flex: 1, textAlign: "right" }}>{message.timestamp?.toDate().toLocaleString()}</Typography>
           </Stack>
           <Stack>
             {message.lines.split("\n").map((line, j) => (
-              <Typography key={`discussion-${i}-message-${j}`}>{line.length > 0 ? line : <br />}</Typography>
+              <Typography key={`message-${i}-line-${j}`}>{line.length > 0 ? line : <br />}</Typography>
             ))}
           </Stack>
         </Stack>
@@ -31,20 +31,16 @@ const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
   );
 };
 
-const DiscussionForm = ({
-  updateDiscussion
-}: {
-  updateDiscussion: (name: string, message: string) => Promise<void>;
-}) => {
+const DiscussionForm = ({ addMessage }: { addMessage: (name: string, lines: string) => Promise<void> }) => {
   const getName = () => localStorage.getItem("discussion_name") ?? "";
   const [name, setName] = useState<string>(getName());
-  const [message, setMessage] = useState<string>("");
+  const [lines, setLines] = useState<string>("");
 
   const submit = async () => {
-    if (name && message) {
+    if (name && lines) {
+      await addMessage(name, lines);
       localStorage.setItem("discussion_name", name);
-      await updateDiscussion(name, message);
-      setMessage("");
+      setLines("");
     }
   };
 
@@ -55,9 +51,9 @@ const DiscussionForm = ({
         <FormControl>
           <TextField
             placeholder="Message"
-            value={message}
+            value={lines}
             multiline
-            onChange={(event) => setMessage(event.target.value)}
+            onChange={(event) => setLines(event.target.value)}
             onKeyDown={(event) => {
               if (event.key === "Enter" && !event.shiftKey) {
                 event.preventDefault();
@@ -76,11 +72,11 @@ const DiscussionForm = ({
 };
 
 export const DiscussionPage = () => {
-  const { discussion, updateDiscussion } = useDiscussion();
+  const { discussion, addMessage } = useDiscussion();
   return (
     <Stack sx={{ height: "100%" }}>
       <DiscussionList discussion={discussion ?? { messages: [] }} />
-      <DiscussionForm updateDiscussion={updateDiscussion} />
+      <DiscussionForm addMessage={addMessage} />
     </Stack>
   );
 };

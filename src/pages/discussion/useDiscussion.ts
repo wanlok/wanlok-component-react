@@ -1,11 +1,11 @@
-import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { doc, onSnapshot, setDoc, Timestamp, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 
 interface Message {
   name: string;
   lines: string;
-  date?: Date;
+  timestamp?: Timestamp;
 }
 
 export interface Discussion {
@@ -23,15 +23,20 @@ export const useDiscussion = () => {
     return () => unsubscribe();
   }, []);
 
-  const updateDiscussion = async (name: string, message: string) => {
+  const addMessage = async (name: string, lines: string) => {
     const docRef = doc(db, "discussions", "20250810");
-    const m: Message = { name, lines: message, date: new Date() };
+    const message = { name, lines, timestamp: new Date() };
     if (discussion) {
-      await updateDoc(docRef, { ...discussion, messages: [...discussion.messages, m] });
+      await updateDoc(docRef, {
+        ...discussion,
+        messages: [...discussion.messages, message]
+      });
     } else {
-      await setDoc(docRef, { messages: [m] });
+      await setDoc(docRef, {
+        messages: [message]
+      });
     }
   };
 
-  return { discussion, updateDiscussion };
+  return { discussion, addMessage };
 };
