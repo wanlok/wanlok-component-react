@@ -162,7 +162,7 @@ export const SnapshotForm = ({
 
 export const SnapshotPage = () => {
   const { snapshots, addSnapshot, updateSnapshot } = useSnapshot();
-  const snapshotIndexRef = useRef<number>();
+  const snapshotIndexRef = useRef<number>(-1);
   const [snapshot, setSnapshot] = useState<Snapshot>({ rows: [{ type: "text", value: "" }] });
   const { id } = useParams();
   const navigate = useNavigate();
@@ -173,7 +173,7 @@ export const SnapshotPage = () => {
       snapshotIndexRef.current = index;
       setSnapshot(snapshots[index]);
     } else {
-      snapshotIndexRef.current = undefined;
+      snapshotIndexRef.current = -1;
       setSnapshot({ rows: [{ type: "text", value: "" }] });
     }
   }, [snapshots, id]);
@@ -216,12 +216,14 @@ export const SnapshotPage = () => {
 
   const onSaveButtonClick = async () => {
     let valid;
-    if (snapshotIndexRef.current && snapshot.id) {
+    if (snapshotIndexRef.current > -1 && snapshot.id) {
       valid = await updateSnapshot(snapshotIndexRef.current, snapshot);
     } else {
       valid = await addSnapshot(snapshot);
     }
-    if (!valid) {
+    if (valid) {
+      alert("Saved");
+    } else {
       alert("Invalid submission. Please check that you’ve entered all required data.");
     }
   };

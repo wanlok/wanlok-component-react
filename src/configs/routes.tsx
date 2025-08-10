@@ -4,6 +4,7 @@ import { DiscussionPage } from "../pages/discussion";
 import { HongKongBuildingMap } from "../pages/hong-kong-building-map";
 import { Chart } from "../pages/chart";
 import { SnapshotPage } from "../pages/snapshot";
+import { PdfPage } from "../pages/pdf";
 
 export const routes = [
   {
@@ -43,5 +44,9 @@ export const routes = [
         children: [{ path: ":id", element: <SnapshotPage /> }]
       }
     ]
+  },
+  {
+    path: "/pdf",
+    element: <PdfPage />
   }
 ];

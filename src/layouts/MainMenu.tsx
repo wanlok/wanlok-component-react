@@ -13,34 +13,33 @@ export const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fu
     setPath(pathname);
   }, [pathname]);
 
+  const filteredRoutes =
+    routes
+      .find((route) => route.children?.some((children) => children.name !== undefined))
+      ?.children?.filter((children) => children.name !== undefined) ?? [];
+
   return (
     <>
-      {routes.map((routes) => {
-        return routes.children
-          .filter((children) => children.name !== undefined)
-          .map((route, index) => {
-            return (
-              <Link to={route.path} key={index}>
-                <PrimaryButton
-                  fullWidth={fullWidth}
-                  sx={[
-                    {
-                      height: buttonHeight,
-                      textTransform: "none",
-                      borderRadius: 0
-                    },
-                    path === route.path ? { backgroundColor: palette.primary.dark } : {}
-                  ]}
-                  onClick={() => {
-                    setPath(route.path);
-                  }}
-                >
-                  {route.name}
-                </PrimaryButton>
-              </Link>
-            );
-          });
-      })}
+      {filteredRoutes.map((route, index) => (
+        <Link to={route.path} key={index}>
+          <PrimaryButton
+            fullWidth={fullWidth}
+            sx={[
+              {
+                height: buttonHeight,
+                textTransform: "none",
+                borderRadius: 0
+              },
+              path === route.path ? { backgroundColor: palette.primary.dark } : {}
+            ]}
+            onClick={() => {
+              setPath(route.path);
+            }}
+          >
+            {route.name}
+          </PrimaryButton>
+        </Link>
+      ))}
     </>
   );
 };
