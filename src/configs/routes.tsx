@@ -4,7 +4,7 @@ import { DiscussionPage } from "../pages/discussion";
 import { HongKongBuildingMap } from "../pages/hong-kong-building-map";
 import { Chart } from "../pages/chart";
 import { SnapshotPage } from "../pages/snapshot";
-import { PdfPage } from "../pages/pdf";
+import { PDFPage } from "../pages/pdf";
 
 export const routes = [
   {
@@ -47,12 +47,12 @@ export const routes = [
   },
   {
     path: "/pdf",
-    element: <PdfPage />,
+    element: <PDFPage />,
     children: [
       {
         name: "", // TODO: remove this name later
         path: ":id",
-        element: <PdfPage />
+        element: <PDFPage />
       }
     ]
   }

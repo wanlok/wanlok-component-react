@@ -126,7 +126,8 @@ export const SnapshotForm = ({
   onRowValueChange,
   onRowDeleteButtonClick,
   onNewButtonClick,
-  onSaveButtonClick
+  onSaveButtonClick,
+  onDownloadPDFButtonClick
 }: {
   snapshot: Snapshot;
   onAddButtonClick: () => void;
@@ -135,6 +136,7 @@ export const SnapshotForm = ({
   onRowDeleteButtonClick: (index: number) => void;
   onNewButtonClick: () => void;
   onSaveButtonClick: () => void;
+  onDownloadPDFButtonClick: () => void;
 }) => {
   return (
     <Stack sx={{ flexDirection: "column", flex: 1, overflowY: "auto" }}>
@@ -142,6 +144,7 @@ export const SnapshotForm = ({
         <div>
           <button onClick={onNewButtonClick}>New</button>
           <button onClick={onSaveButtonClick}>Save</button>
+          {snapshot.id && <button onClick={onDownloadPDFButtonClick}>Download PDF</button>}
         </div>
         {snapshot.rows.map((row, i) => (
           <Stack key={`snapshot-input-${i}`} sx={{ flexDirection: "column", flex: 1, mt: i === 0 ? 0 : "1px" }}>
@@ -232,6 +235,10 @@ export const SnapshotPage = () => {
     navigate(`/snapshot/${snapshot.id}`);
   };
 
+  const onDownloadPDFButtonClick = () => {
+    navigate(`/pdf/${snapshot.id}`);
+  };
+
   return (
     <Stack sx={{ flexDirection: "row", height: "100%" }}>
       <SnapshotForm
@@ -242,6 +249,7 @@ export const SnapshotPage = () => {
         onRowDeleteButtonClick={onRowDeleteButtonClick}
         onNewButtonClick={onNewButtonClick}
         onSaveButtonClick={onSaveButtonClick}
+        onDownloadPDFButtonClick={onDownloadPDFButtonClick}
       />
       <SnapshotList snapshots={snapshots} onSnapshotClick={onSnapshotClick} />
     </Stack>

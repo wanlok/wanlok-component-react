@@ -1,6 +1,6 @@
-import { usePdf } from "./usePdf";
+import { usePDFSnapshot } from "./usePDFSnapshot";
 
-export const PdfPage = () => {
-  const { snapshot } = usePdf();
+export const PDFPage = () => {
+  const { snapshot } = usePDFSnapshot();
   return <div>{JSON.stringify(snapshot)}</div>;
 };

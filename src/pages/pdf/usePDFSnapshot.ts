@@ -4,7 +4,7 @@ import { db } from "../../firebase";
 import { Snapshot } from "../snapshot/useSnapshot";
 import { useParams } from "react-router-dom";
 
-export const usePdf = () => {
+export const usePDFSnapshot = () => {
   const { id } = useParams();
   const [snapshot, setSnapshot] = useState<Snapshot>();
 
