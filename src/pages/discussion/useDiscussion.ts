@@ -1,34 +1,47 @@
-import { addDoc, collection, onSnapshot, orderBy, query, serverTimestamp, Timestamp } from "firebase/firestore";
+import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 
-export interface Discussion {
+interface Message {
   name: string;
   message: string;
-  timestamp?: Timestamp;
+  date?: Date;
 }
 
-const c = collection(db, "discussions");
+export interface Discussion {
+  messages: Message[];
+}
 
 export const useDiscussion = () => {
-  const [discussions, setDiscussions] = useState<Discussion[]>([]);
+  const [discussion, setDiscussion] = useState<Discussion>();
+  const docRef = doc(db, "discussions", "20250810");
 
   useEffect(() => {
-    const q = query(collection(db, "discussions"), orderBy("timestamp"));
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      const discussions = snapshot.docs.map((doc) => doc.data() as Discussion);
-      setDiscussions(discussions);
+    const unsubscribe = onSnapshot(docRef, (snapshot) => {
+      const data = snapshot.data() as Discussion;
+      setDiscussion(data);
     });
     return () => unsubscribe();
   }, []);
 
-  const addDiscussion = async (discussion: Discussion) => {
+  const updateDiscussion = async (name: string, message: string) => {
     try {
-      await addDoc(c, { ...discussion, timestamp: serverTimestamp() });
+      const m = {
+        name,
+        message,
+        date: new Date()
+      };
+      if (discussion) {
+        await updateDoc(docRef, { ...discussion, messages: [...discussion.messages, m] });
+      } else {
+        await setDoc(docRef, {
+          messages: [m]
+        });
+      }
     } catch (error) {
-      console.log(error);
+      console.log("Failed to add discussion:", error);
     }
   };
 
-  return { discussions, addDiscussion };
+  return { discussion, updateDiscussion };
 };
