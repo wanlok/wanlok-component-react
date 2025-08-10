@@ -1,11 +1,18 @@
-import { FormControl, FormHelperText, MenuItem, Select, Stack, TextField } from "@mui/material";
+import {
+  Card,
+  CardActionArea,
+  CardContent,
+  FormControl,
+  FormHelperText,
+  MenuItem,
+  Select,
+  Stack,
+  TextField,
+  Typography
+} from "@mui/material";
 import { useState } from "react";
 import { PrimaryButton } from "../../components/PrimaryButton";
-
-interface Row {
-  type: string;
-  value: string;
-}
+import { Row, Snapshot, useSnapshot } from "./useSnapshot";
 
 export const TextInput = ({
   placeholder,
@@ -16,17 +23,13 @@ export const TextInput = ({
   value: string;
   onChange: (value: string) => void;
 }) => {
-  const [v, setValue] = useState(value);
   return (
     <FormControl>
       <TextField
         placeholder={placeholder}
-        value={v}
+        value={value}
         multiline
-        onChange={(event) => {
-          setValue(event.target.value);
-          onChange(event.target.value);
-        }}
+        onChange={(event) => onChange(event.target.value)}
         // onKeyDown={(event) => {
         //   if (event.key === "Enter" && !event.shiftKey) {
         //     event.preventDefault();
@@ -43,12 +46,14 @@ export const SnapshotInput = ({
   row,
   rowIndex,
   onRowTypeChange,
-  onRowValueChange
+  onRowValueChange,
+  onRowDeleteButtonClick
 }: {
   row: Row;
   rowIndex: number;
   onRowTypeChange: (index: number, type: string) => void;
   onRowValueChange: (index: number, value: string) => void;
+  onRowDeleteButtonClick: (index: number) => void;
 }) => {
   return (
     <Stack sx={{ flexDirection: "row", flex: 1, gap: 2, backgroundColor: "#EEEEEE", p: 2 }}>
@@ -77,69 +82,144 @@ export const SnapshotInput = ({
         )}
       </Stack>
       <Stack sx={{ flexDirection: "row" }}>
-        <PrimaryButton>Delete</PrimaryButton>
+        <PrimaryButton onClick={() => onRowDeleteButtonClick(rowIndex)}>Delete</PrimaryButton>
+      </Stack>
+    </Stack>
+  );
+};
+
+export const SnapshotList = ({
+  snapshots,
+  onSnapshotClick
+}: {
+  snapshots: Snapshot[];
+  onSnapshotClick: (snapshot: Snapshot) => void;
+}) => {
+  return (
+    <Stack sx={{ width: 400, overflowY: "auto", p: 2 }}>
+      <Stack>
+        {snapshots.map((snapshot, i) => (
+          <Card key={`snapshot-${i + 1}`} sx={{ mt: i === 0 ? 0 : 2 }}>
+            <CardActionArea onClick={() => onSnapshotClick(snapshot)}>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="div">{`Snapshot ${i + 1}`}</Typography>
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all
+                  continents except Antarctica
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        ))}
       </Stack>
     </Stack>
   );
 };
 
 export const SnapshotForm = ({
-  rows,
+  snapshot,
   onAddButtonClick,
   onRowTypeChange,
-  onRowValueChange
+  onRowValueChange,
+  onRowDeleteButtonClick,
+  onNewButtonClick,
+  onSaveButtonClick
 }: {
-  rows: Row[];
+  snapshot: Snapshot;
   onAddButtonClick: () => void;
   onRowTypeChange: (index: number, type: string) => void;
   onRowValueChange: (index: number, value: string) => void;
+  onRowDeleteButtonClick: (index: number) => void;
+  onNewButtonClick: () => void;
+  onSaveButtonClick: () => void;
 }) => {
   return (
-    <Stack sx={{ flexDirection: "column", flex: 1 }}>
-      {rows.map((row, i) => (
-        <Stack sx={{ flexDirection: "column", flex: 1, mt: i === 0 ? 0 : "1px" }}>
-          <SnapshotInput row={row} rowIndex={i} onRowTypeChange={onRowTypeChange} onRowValueChange={onRowValueChange} />
-          {i === rows.length - 1 && <PrimaryButton onClick={onAddButtonClick}>Add</PrimaryButton>}
-        </Stack>
-      ))}
+    <Stack sx={{ flexDirection: "column", flex: 1, overflowY: "auto" }}>
+      <Stack>
+        <div>
+          <button onClick={onNewButtonClick}>New</button>
+          <button onClick={onSaveButtonClick}>Save</button>
+        </div>
+        {snapshot.rows.map((row, i) => (
+          <Stack key={`snapshot-input-${i}`} sx={{ flexDirection: "column", flex: 1, mt: i === 0 ? 0 : "1px" }}>
+            <SnapshotInput
+              row={row}
+              rowIndex={i}
+              onRowTypeChange={onRowTypeChange}
+              onRowValueChange={onRowValueChange}
+              onRowDeleteButtonClick={onRowDeleteButtonClick}
+            />
+            {i === snapshot.rows.length - 1 && <PrimaryButton onClick={onAddButtonClick}>Add</PrimaryButton>}
+          </Stack>
+        ))}
+      </Stack>
     </Stack>
   );
 };
 
-export const Snapshot = () => {
-  const [rows, setRows] = useState<Row[]>([{ type: "text", value: "" }]);
+export const SnapshotPage = () => {
+  const { snapshots, addOrUpdateSnapshot } = useSnapshot();
+  const [snapshot, setSnapshot] = useState<Snapshot>({ rows: [{ type: "text", value: "" }] });
 
   const onAddButtonClick = () => {
-    setRows((previous) => {
-      return [...previous, { type: "text", value: "" }];
+    setSnapshot((previous) => {
+      const snapshot = { ...previous };
+      snapshot.rows.push({ type: "text", value: "" });
+      return snapshot;
     });
   };
 
   const onRowTypeChange = (index: number, type: string) => {
-    setRows((previous) => {
-      const rows = [...previous];
-      rows[index].type = type;
-      return rows;
+    setSnapshot((previous) => {
+      const snapshot = { ...previous };
+      snapshot.rows[index].type = type;
+      return snapshot;
     });
   };
 
   const onRowValueChange = (index: number, value: string) => {
-    setRows((previous) => {
-      const rows = [...previous];
-      rows[index].value = value;
-      return rows;
+    setSnapshot((previous) => {
+      const snapshot = { ...previous };
+      snapshot.rows[index].value = value;
+      return snapshot;
     });
   };
 
+  const onRowDeleteButtonClick = (index: number) => {
+    setSnapshot((previous) => {
+      const snapshot = { ...previous };
+      snapshot.rows = [...snapshot.rows.slice(0, index), ...snapshot.rows.slice(index + 1)];
+      return snapshot;
+    });
+  };
+
+  const onNewButtonClick = () => {
+    setSnapshot({ rows: [{ type: "text", value: "" }] });
+  };
+
+  const onSaveButtonClick = async () => {
+    const valid = await addOrUpdateSnapshot(snapshot);
+    if (!valid) {
+      alert("Invalid submission. Please check that you’ve entered all required data.");
+    }
+  };
+
+  const onSnapshotClick = (snapshot: Snapshot) => {
+    setSnapshot(snapshot);
+  };
+
   return (
-    <Stack sx={{ flexDirection: "row" }}>
-      <Stack sx={{ width: 400 }}></Stack>
+    <Stack sx={{ flexDirection: "row", height: "100%" }}>
       <SnapshotForm
-        rows={rows}
+        snapshot={snapshot}
         onAddButtonClick={onAddButtonClick}
         onRowTypeChange={onRowTypeChange}
         onRowValueChange={onRowValueChange}
+        onRowDeleteButtonClick={onRowDeleteButtonClick}
+        onNewButtonClick={onNewButtonClick}
+        onSaveButtonClick={onSaveButtonClick}
       />
+      <SnapshotList snapshots={snapshots} onSnapshotClick={onSnapshotClick} />
     </Stack>
   );
 };
