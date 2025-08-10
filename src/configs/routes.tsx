@@ -3,6 +3,7 @@ import { Landing } from "../pages/landing";
 import { DiscussionPage } from "../pages/discussion";
 import { HongKongBuildingMap } from "../pages/hong-kong-building-map";
 import { Chart } from "../pages/chart";
+import { Snapshot } from "../pages/snapshot";
 
 export const routes = [
   {
@@ -34,6 +35,11 @@ export const routes = [
         name: "Chart",
         path: "/chart",
         element: <Chart />
+      },
+      {
+        name: "Snapshot",
+        path: "/snapshot",
+        element: <Snapshot />
       }
     ]
   }
