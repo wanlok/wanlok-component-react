@@ -21,7 +21,7 @@ const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
             {/* <Typography sx={{ flex: 1, textAlign: "right" }}>{message.date?.toLocaleString()}</Typography> */}
           </Stack>
           <Stack>
-            {message.message.split("\n").map((line, j) => (
+            {message.lines.split("\n").map((line, j) => (
               <Typography key={`discussion-${i}-message-${j}`}>{line.length > 0 ? line : <br />}</Typography>
             ))}
           </Stack>

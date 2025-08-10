@@ -4,7 +4,7 @@ import { db } from "../../firebase";
 
 interface Message {
   name: string;
-  message: string;
+  lines: string;
   date?: Date;
 }
 
@@ -18,28 +18,17 @@ export const useDiscussion = () => {
 
   useEffect(() => {
     const unsubscribe = onSnapshot(docRef, (snapshot) => {
-      const data = snapshot.data() as Discussion;
-      setDiscussion(data);
+      setDiscussion(snapshot.data() as Discussion);
     });
     return () => unsubscribe();
   }, []);
 
   const updateDiscussion = async (name: string, message: string) => {
-    try {
-      const m = {
-        name,
-        message,
-        date: new Date()
-      };
-      if (discussion) {
-        await updateDoc(docRef, { ...discussion, messages: [...discussion.messages, m] });
-      } else {
-        await setDoc(docRef, {
-          messages: [m]
-        });
-      }
-    } catch (error) {
-      console.log("Failed to add discussion:", error);
+    const m: Message = { name, lines: message, date: new Date() };
+    if (discussion) {
+      await updateDoc(docRef, { ...discussion, messages: [...discussion.messages, m] });
+    } else {
+      await setDoc(docRef, { messages: [m] });
     }
   };
 
