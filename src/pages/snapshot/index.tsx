@@ -104,8 +104,10 @@ export const SnapshotList = ({
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">{`Snapshot ${i + 1}`}</Typography>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  Lizards are a widespread group of squamate reptiles, with over 6,000 species, ranging across all
-                  continents except Antarctica
+                  Document Id: {snapshot.id}
+                </Typography>
+                <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                  Date/Time: {snapshot.timestamp?.toDate().toLocaleString()}
                 </Typography>
               </CardContent>
             </CardActionArea>
