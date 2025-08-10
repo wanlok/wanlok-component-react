@@ -14,9 +14,9 @@ export interface Discussion {
 
 export const useDiscussion = () => {
   const [discussion, setDiscussion] = useState<Discussion>();
-  const docRef = doc(db, "discussions", "20250810");
 
   useEffect(() => {
+    const docRef = doc(db, "discussions", "20250810");
     const unsubscribe = onSnapshot(docRef, (snapshot) => {
       setDiscussion(snapshot.data() as Discussion);
     });
@@ -24,6 +24,7 @@ export const useDiscussion = () => {
   }, []);
 
   const updateDiscussion = async (name: string, message: string) => {
+    const docRef = doc(db, "discussions", "20250810");
     const m: Message = { name, lines: message, date: new Date() };
     if (discussion) {
       await updateDoc(docRef, { ...discussion, messages: [...discussion.messages, m] });
