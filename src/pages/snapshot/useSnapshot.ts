@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, setDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, orderBy, query, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 
@@ -69,5 +69,13 @@ export const useSnapshot = () => {
     return valid;
   };
 
-  return { snapshots, addSnapshot, updateSnapshot };
+  const deleteSnapshot = async (snapshot: Snapshot) => {
+    const c = collection(db, "snapshots");
+    await deleteDoc(doc(c, snapshot.id));
+    setSnapshots((previous) => {
+      return previous.filter((s) => s.id !== snapshot.id);
+    });
+  };
+
+  return { snapshots, addSnapshot, updateSnapshot, deleteSnapshot };
 };

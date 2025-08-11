@@ -94,14 +94,14 @@ export const SnapshotList = ({
   onSnapshotClick
 }: {
   snapshots: Snapshot[];
-  onSnapshotClick: (index: number, snapshot: Snapshot) => void;
+  onSnapshotClick: (snapshot: Snapshot) => void;
 }) => {
   return (
     <Stack sx={{ width: 400, overflowY: "auto", p: 2 }}>
       <Stack>
         {snapshots.map((snapshot, i) => (
           <Card key={`snapshot-${i + 1}`} sx={{ mt: i === 0 ? 0 : 2 }}>
-            <CardActionArea onClick={() => onSnapshotClick(i, snapshot)}>
+            <CardActionArea onClick={() => onSnapshotClick(snapshot)}>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">{`Snapshot ${i + 1}`}</Typography>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
@@ -128,7 +128,8 @@ export const SnapshotForm = ({
   onNewButtonClick,
   onSaveButtonClick,
   onSaveAsNewButtonClick,
-  onDownloadPDFButtonClick
+  onDownloadPDFButtonClick,
+  onDeleteButtonClick
 }: {
   snapshot: Snapshot;
   onAddButtonClick: () => void;
@@ -139,6 +140,7 @@ export const SnapshotForm = ({
   onSaveButtonClick: () => void;
   onSaveAsNewButtonClick: () => void;
   onDownloadPDFButtonClick: () => void;
+  onDeleteButtonClick: () => void;
 }) => {
   return (
     <Stack sx={{ flexDirection: "column", flex: 1, overflowY: "auto" }}>
@@ -148,6 +150,7 @@ export const SnapshotForm = ({
           <button onClick={onSaveButtonClick}>Save</button>
           {snapshot.id && <button onClick={onSaveAsNewButtonClick}>Save as New</button>}
           {snapshot.id && <button onClick={onDownloadPDFButtonClick}>Download PDF</button>}
+          {snapshot.id && <button onClick={onDeleteButtonClick}>Delete</button>}
         </div>
         {snapshot.rows.map((row, i) => (
           <Stack key={`snapshot-input-${i}`} sx={{ flexDirection: "column", flex: 1, mt: i === 0 ? 0 : "1px" }}>
@@ -169,7 +172,7 @@ export const SnapshotForm = ({
 const emptySnapshot: Snapshot = { timestamp: new Date().getTime(), rows: [{ type: "text", value: "" }] };
 
 export const SnapshotPage = () => {
-  const { snapshots, addSnapshot, updateSnapshot } = useSnapshot();
+  const { snapshots, addSnapshot, updateSnapshot, deleteSnapshot } = useSnapshot();
   const snapshotIndexRef = useRef<number>(-1);
   const snapshotRef = useRef<Snapshot>(emptySnapshot);
   const [snapshot, setSnapshot] = useState<Snapshot>(emptySnapshot);
@@ -248,13 +251,17 @@ export const SnapshotPage = () => {
     }
   };
 
-  const onSnapshotClick = (index: number, snapshot: Snapshot) => {
-    navigate(`/snapshot/${snapshot.id}`);
-  };
-
   const onDownloadPDFButtonClick = () => {
     const url = `#/pdf/${snapshot.id}`;
     window.open(url, "_blank");
+  };
+
+  const onDeleteButtonClick = async () => {
+    await deleteSnapshot(snapshot);
+  };
+
+  const onSnapshotClick = (snapshot: Snapshot) => {
+    navigate(`/snapshot/${snapshot.id}`);
   };
 
   return (
@@ -269,6 +276,7 @@ export const SnapshotPage = () => {
         onSaveButtonClick={onSaveButtonClick}
         onSaveAsNewButtonClick={onSaveAsNewButtonClick}
         onDownloadPDFButtonClick={onDownloadPDFButtonClick}
+        onDeleteButtonClick={onDeleteButtonClick}
       />
       <SnapshotList snapshots={snapshots} onSnapshotClick={onSnapshotClick} />
     </Stack>
