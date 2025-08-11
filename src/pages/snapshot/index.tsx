@@ -145,13 +145,29 @@ export const SnapshotForm = ({
   return (
     <Stack sx={{ flexDirection: "column", flex: 1, overflowY: "auto" }}>
       <Stack>
-        <div>
-          <button onClick={onNewButtonClick}>New</button>
-          <button onClick={onSaveButtonClick}>Save</button>
-          {snapshot.id && <button onClick={onSaveAsNewButtonClick}>Save as New</button>}
-          {snapshot.id && <button onClick={onDownloadPDFButtonClick}>Download PDF</button>}
-          {snapshot.id && <button onClick={onDeleteButtonClick}>Delete</button>}
-        </div>
+        <Stack sx={{ flexDirection: "row", gap: 1, p: 2 }}>
+          <PrimaryButton sx={{ textTransform: "none" }} fullWidth={false} onClick={onNewButtonClick}>
+            New
+          </PrimaryButton>
+          <PrimaryButton sx={{ textTransform: "none" }} fullWidth={false} onClick={onSaveButtonClick}>
+            Save
+          </PrimaryButton>
+          {snapshot.id && (
+            <PrimaryButton sx={{ textTransform: "none" }} fullWidth={false} onClick={onSaveAsNewButtonClick}>
+              Save as New
+            </PrimaryButton>
+          )}
+          {snapshot.id && (
+            <PrimaryButton sx={{ textTransform: "none" }} fullWidth={false} onClick={onDownloadPDFButtonClick}>
+              Download PDF
+            </PrimaryButton>
+          )}
+          {snapshot.id && (
+            <PrimaryButton sx={{ textTransform: "none" }} fullWidth={false} onClick={onDeleteButtonClick}>
+              Delete
+            </PrimaryButton>
+          )}
+        </Stack>
         {snapshot.rows.map((row, i) => (
           <Stack key={`snapshot-input-${i}`} sx={{ flexDirection: "column", flex: 1, mt: i === 0 ? 0 : "1px" }}>
             <SnapshotInput
