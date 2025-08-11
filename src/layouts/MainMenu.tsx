@@ -8,7 +8,7 @@ import { Main } from "./Main";
 export const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fullWidth: boolean }) => {
   const { palette } = useTheme();
   const { pathname } = useLocation();
-  const [path, setPath] = useState<string>(pathname);
+  const [_, setPath] = useState<string>(pathname);
 
   useEffect(() => {
     setPath(pathname);
