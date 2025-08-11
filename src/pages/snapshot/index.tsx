@@ -180,12 +180,12 @@ export const SnapshotPage = () => {
     const index = snapshots.findIndex((s) => s.id === id);
     if (index > -1) {
       snapshotIndexRef.current = index;
-      snapshotRef.current = snapshots[index];
-      setSnapshot(snapshots[index]);
+      snapshotRef.current = JSON.parse(JSON.stringify(snapshots[index]));
+      setSnapshot(JSON.parse(JSON.stringify(snapshots[index])));
     } else {
       snapshotIndexRef.current = -1;
-      snapshotRef.current = emptySnapshot;
-      setSnapshot(emptySnapshot);
+      snapshotRef.current = JSON.parse(JSON.stringify(emptySnapshot));
+      setSnapshot(JSON.parse(JSON.stringify(emptySnapshot)));
     }
   }, [snapshots, id]);
 
@@ -242,8 +242,6 @@ export const SnapshotPage = () => {
   const onSaveAsNewButtonClick = async () => {};
 
   const onSnapshotClick = (index: number, snapshot: Snapshot) => {
-    // console.log(snapshotIndexRef.current, snapshotRef.current);
-    // setSnapshot(JSON.parse(JSON.stringify(snapshotRef.current)));
     navigate(`/snapshot/${snapshot.id}`);
   };
 
