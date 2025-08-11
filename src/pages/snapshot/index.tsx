@@ -97,10 +97,10 @@ export const SnapshotList = ({
   onSnapshotClick: (snapshot: Snapshot) => void;
 }) => {
   return (
-    <Stack sx={{ width: 400, overflowY: "auto", p: 2 }}>
-      <Stack>
+    <Stack sx={{ width: 360, overflowY: "auto", backgroundColor: "primary.main" }}>
+      <Stack sx={{ gap: "1px", p: 1 }}>
         {snapshots.map((snapshot, i) => (
-          <Card key={`snapshot-${i + 1}`} sx={{ mt: i === 0 ? 0 : 2 }}>
+          <Card elevation={0} key={`snapshot-${i + 1}`} sx={{ borderRadius: 0 }}>
             <CardActionArea onClick={() => onSnapshotClick(snapshot)}>
               <CardContent>
                 <Typography gutterBottom variant="h5" component="div">{`Snapshot ${i + 1}`}</Typography>
