@@ -65,14 +65,6 @@ export const useSnapshot = () => {
     return valid;
   };
 
-  const addSnapshot2 = async (snapshot: Snapshot, index: number, oldSnapshot: Snapshot) => {
-    console.log("revert");
-    setSnapshots((previous) => {
-      const snapshots = [...previous];
-      return previous;
-    });
-  };
-
   const updateSnapshot = async (index: number, snapshot: Snapshot) => {
     const valid = isValid(snapshot);
     if (valid) {
@@ -96,5 +88,5 @@ export const useSnapshot = () => {
     });
   };
 
-  return { snapshots, addSnapshot, addSnapshot2, updateSnapshot, replaceLocalSnapshot };
+  return { snapshots, addSnapshot, updateSnapshot, replaceLocalSnapshot };
 };
