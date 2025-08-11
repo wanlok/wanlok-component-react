@@ -97,7 +97,7 @@ export const SnapshotList = ({
   onSnapshotClick: (snapshot: Snapshot) => void;
 }) => {
   return (
-    <Stack sx={{ width: 360, overflowY: "auto", backgroundColor: "primary.main" }}>
+    <Stack sx={{ width: 360, overflowY: "auto", backgroundColor: "primary.dark" }}>
       <Stack sx={{ gap: "1px", p: 1 }}>
         {snapshots.map((snapshot, i) => (
           <Card elevation={0} key={`snapshot-${i + 1}`} sx={{ borderRadius: 0 }}>
