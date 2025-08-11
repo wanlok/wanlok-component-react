@@ -239,7 +239,14 @@ export const SnapshotPage = () => {
     }
   };
 
-  const onSaveAsNewButtonClick = async () => {};
+  const onSaveAsNewButtonClick = async () => {
+    let valid = await addSnapshot(snapshot);
+    if (valid) {
+      alert("Saved");
+    } else {
+      alert("Invalid submission. Please check that you’ve entered all required data.");
+    }
+  };
 
   const onSnapshotClick = (index: number, snapshot: Snapshot) => {
     navigate(`/snapshot/${snapshot.id}`);

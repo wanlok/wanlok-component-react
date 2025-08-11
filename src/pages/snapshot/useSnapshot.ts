@@ -69,13 +69,5 @@ export const useSnapshot = () => {
     return valid;
   };
 
-  const replaceLocalSnapshot = (index: number, snapshot: Snapshot) => {
-    setSnapshots((previous) => {
-      const snapshots = [...previous];
-      snapshots[index] = snapshot;
-      return previous;
-    });
-  };
-
-  return { snapshots, addSnapshot, updateSnapshot, replaceLocalSnapshot };
+  return { snapshots, addSnapshot, updateSnapshot };
 };
