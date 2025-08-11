@@ -229,23 +229,24 @@ export const SnapshotPage = () => {
   };
 
   const onSaveButtonClick = async () => {
-    let valid;
+    let updatedSnapshot: Snapshot | undefined;
+    let savedSnapshot: Snapshot | undefined;
     if (snapshotIndexRef.current > -1 && snapshot.id) {
-      valid = await updateSnapshot(snapshotIndexRef.current, snapshot);
+      updatedSnapshot = await updateSnapshot(snapshotIndexRef.current, snapshot);
     } else {
-      valid = await addSnapshot(snapshot);
+      savedSnapshot = await addSnapshot(snapshot);
     }
-    if (valid) {
+    if (updatedSnapshot) {
       alert("Saved");
-    } else {
+    } else if (!updatedSnapshot && !savedSnapshot) {
       alert("Invalid submission. Please check that you’ve entered all required data.");
     }
   };
 
   const onSaveAsNewButtonClick = async () => {
-    let valid = await addSnapshot(snapshot);
-    if (valid) {
-      alert("Saved");
+    let savedSnapshot = await addSnapshot(snapshot);
+    if (savedSnapshot) {
+      navigate(`/snapshot/${savedSnapshot.id}`);
     } else {
       alert("Invalid submission. Please check that you’ve entered all required data.");
     }
@@ -258,6 +259,7 @@ export const SnapshotPage = () => {
 
   const onDeleteButtonClick = async () => {
     await deleteSnapshot(snapshot);
+    navigate("/snapshot");
   };
 
   const onSnapshotClick = (snapshot: Snapshot) => {

@@ -37,36 +37,39 @@ export const useSnapshot = () => {
   };
 
   const addSnapshot = async (snapshot: Snapshot) => {
-    const valid = isValid(snapshot);
-    if (valid) {
+    let savedSnapshot: Snapshot | undefined = undefined;
+    if (isValid(snapshot)) {
       delete snapshot.id;
       snapshot.timestamp = new Date().getTime();
       const c = collection(db, "snapshots");
       const docRef = await addDoc(c, snapshot);
-      const savedSnapshot = (await getDoc(docRef)).data() as Snapshot;
+      savedSnapshot = (await getDoc(docRef)).data() as Snapshot;
       savedSnapshot.id = docRef.id;
       setSnapshots((previous) => {
         const snapshots = [...previous];
-        snapshots.push(savedSnapshot);
+        if (savedSnapshot) {
+          snapshots.push(savedSnapshot);
+        }
         return snapshots;
       });
     }
-    return valid;
+    return savedSnapshot;
   };
 
   const updateSnapshot = async (index: number, snapshot: Snapshot) => {
-    const valid = isValid(snapshot);
-    if (valid) {
+    let updatedSnapshot: Snapshot | undefined = undefined;
+    if (isValid(snapshot)) {
       const { id, ...data } = snapshot;
       const c = collection(db, "snapshots");
       await setDoc(doc(c, id), data, { merge: true });
+      updatedSnapshot = snapshot;
       setSnapshots((previous) => {
         const snapshots = [...previous];
         snapshots[index] = snapshot;
         return snapshots;
       });
     }
-    return valid;
+    return updatedSnapshot;
   };
 
   const deleteSnapshot = async (snapshot: Snapshot) => {
