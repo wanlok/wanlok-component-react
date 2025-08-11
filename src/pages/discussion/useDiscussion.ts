@@ -5,7 +5,7 @@ import { db } from "../../firebase";
 interface Message {
   name: string;
   lines: string;
-  timestamp?: Timestamp;
+  timestamp: number;
 }
 
 export interface Discussion {
@@ -25,7 +25,7 @@ export const useDiscussion = () => {
 
   const addMessage = async (name: string, lines: string) => {
     const docRef = doc(db, "discussions", "20250810");
-    const message = { name, lines, timestamp: new Date() };
+    const message: Message = { name, lines, timestamp: new Date().getTime() };
     if (discussion) {
       await updateDoc(docRef, {
         ...discussion,

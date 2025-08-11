@@ -1,15 +1,4 @@
-import {
-  addDoc,
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  orderBy,
-  query,
-  serverTimestamp,
-  setDoc,
-  Timestamp
-} from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 
@@ -20,7 +9,7 @@ export interface Row {
 
 export interface Snapshot {
   id?: string;
-  timestamp?: Timestamp;
+  timestamp: number;
   rows: Row[];
 }
 
@@ -51,7 +40,7 @@ export const useSnapshot = () => {
     const valid = isValid(snapshot);
     if (valid) {
       delete snapshot.id;
-      snapshot.timestamp = serverTimestamp() as Timestamp;
+      snapshot.timestamp = new Date().getTime();
       const c = collection(db, "snapshots");
       const docRef = await addDoc(c, snapshot);
       const savedSnapshot = (await getDoc(docRef)).data() as Snapshot;

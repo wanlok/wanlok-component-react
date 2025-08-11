@@ -108,7 +108,7 @@ export const SnapshotList = ({
                   Document Id: {snapshot.id}
                 </Typography>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  Date/Time: {snapshot.timestamp?.toDate().toLocaleString()}
+                  Date/Time: {new Date(snapshot.timestamp).toLocaleString()}
                 </Typography>
               </CardContent>
             </CardActionArea>
@@ -127,6 +127,7 @@ export const SnapshotForm = ({
   onRowDeleteButtonClick,
   onNewButtonClick,
   onSaveButtonClick,
+  onSaveAsNewButtonClick,
   onDownloadPDFButtonClick
 }: {
   snapshot: Snapshot;
@@ -136,6 +137,7 @@ export const SnapshotForm = ({
   onRowDeleteButtonClick: (index: number) => void;
   onNewButtonClick: () => void;
   onSaveButtonClick: () => void;
+  onSaveAsNewButtonClick: () => void;
   onDownloadPDFButtonClick: () => void;
 }) => {
   return (
@@ -144,6 +146,7 @@ export const SnapshotForm = ({
         <div>
           <button onClick={onNewButtonClick}>New</button>
           <button onClick={onSaveButtonClick}>Save</button>
+          {snapshot.id && <button onClick={onSaveAsNewButtonClick}>Save as New</button>}
           {snapshot.id && <button onClick={onDownloadPDFButtonClick}>Download PDF</button>}
         </div>
         {snapshot.rows.map((row, i) => (
@@ -163,10 +166,13 @@ export const SnapshotForm = ({
   );
 };
 
+const emptySnapshot: Snapshot = { timestamp: new Date().getTime(), rows: [{ type: "text", value: "" }] };
+
 export const SnapshotPage = () => {
   const { snapshots, addSnapshot, updateSnapshot } = useSnapshot();
   const snapshotIndexRef = useRef<number>(-1);
-  const [snapshot, setSnapshot] = useState<Snapshot>({ rows: [{ type: "text", value: "" }] });
+  const snapshotRef = useRef<Snapshot>(emptySnapshot);
+  const [snapshot, setSnapshot] = useState<Snapshot>(emptySnapshot);
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -174,10 +180,12 @@ export const SnapshotPage = () => {
     const index = snapshots.findIndex((s) => s.id === id);
     if (index > -1) {
       snapshotIndexRef.current = index;
+      snapshotRef.current = snapshots[index];
       setSnapshot(snapshots[index]);
     } else {
       snapshotIndexRef.current = -1;
-      setSnapshot({ rows: [{ type: "text", value: "" }] });
+      snapshotRef.current = emptySnapshot;
+      setSnapshot(emptySnapshot);
     }
   }, [snapshots, id]);
 
@@ -231,7 +239,11 @@ export const SnapshotPage = () => {
     }
   };
 
+  const onSaveAsNewButtonClick = async () => {};
+
   const onSnapshotClick = (index: number, snapshot: Snapshot) => {
+    // console.log(snapshotIndexRef.current, snapshotRef.current);
+    // setSnapshot(JSON.parse(JSON.stringify(snapshotRef.current)));
     navigate(`/snapshot/${snapshot.id}`);
   };
 
@@ -250,6 +262,7 @@ export const SnapshotPage = () => {
         onRowDeleteButtonClick={onRowDeleteButtonClick}
         onNewButtonClick={onNewButtonClick}
         onSaveButtonClick={onSaveButtonClick}
+        onSaveAsNewButtonClick={onSaveAsNewButtonClick}
         onDownloadPDFButtonClick={onDownloadPDFButtonClick}
       />
       <SnapshotList snapshots={snapshots} onSnapshotClick={onSnapshotClick} />
