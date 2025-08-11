@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, matchPath, useLocation } from "react-router-dom";
 import { useTheme } from "@mui/material";
 import { useEffect, useState } from "react";
 import { routes } from "../configs/routes";
@@ -29,7 +29,9 @@ export const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fu
                 textTransform: "none",
                 borderRadius: 0
               },
-              path === route.path ? { backgroundColor: palette.primary.dark } : {}
+              matchPath({ path: route.path, end: route.path === "/" }, pathname)
+                ? { backgroundColor: palette.primary.dark }
+                : {}
             ]}
             onClick={() => {
               setPath(route.path);
