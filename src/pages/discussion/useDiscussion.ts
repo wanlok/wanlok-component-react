@@ -1,4 +1,4 @@
-import { doc, onSnapshot, setDoc, Timestamp, updateDoc } from "firebase/firestore";
+import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 
