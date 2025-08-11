@@ -50,7 +50,7 @@ export const useSnapshot = () => {
   const addSnapshot = async (snapshot: Snapshot) => {
     const valid = isValid(snapshot);
     if (valid) {
-      snapshot.id = undefined;
+      delete snapshot.id;
       snapshot.timestamp = serverTimestamp() as Timestamp;
       const c = collection(db, "snapshots");
       const docRef = await addDoc(c, snapshot);
@@ -63,6 +63,14 @@ export const useSnapshot = () => {
       });
     }
     return valid;
+  };
+
+  const addSnapshot2 = async (snapshot: Snapshot, index: number, oldSnapshot: Snapshot) => {
+    console.log("revert");
+    setSnapshots((previous) => {
+      const snapshots = [...previous];
+      return previous;
+    });
   };
 
   const updateSnapshot = async (index: number, snapshot: Snapshot) => {
@@ -80,5 +88,13 @@ export const useSnapshot = () => {
     return valid;
   };
 
-  return { snapshots, addSnapshot, updateSnapshot };
+  const replaceLocalSnapshot = (index: number, snapshot: Snapshot) => {
+    setSnapshots((previous) => {
+      const snapshots = [...previous];
+      snapshots[index] = snapshot;
+      return previous;
+    });
+  };
+
+  return { snapshots, addSnapshot, addSnapshot2, updateSnapshot, replaceLocalSnapshot };
 };
