@@ -58,7 +58,7 @@ export const SnapshotInput = ({
 }) => {
   return (
     <Stack sx={{ flexDirection: "row", flex: 1, gap: 2, backgroundColor: "#EEEEEE", p: 2 }}>
-      <Stack sx={{ justifyContent: "center", width: 160 }}>
+      <Stack sx={{ width: 160 }}>
         <Select
           value={row.type}
           onChange={(event) => {
@@ -145,25 +145,25 @@ export const SnapshotForm = ({
   return (
     <Stack sx={{ flexDirection: "column", flex: 1, overflowY: "auto" }}>
       <Stack>
-        <Stack sx={{ flexDirection: "row", gap: 1, p: 2 }}>
-          <PrimaryButton sx={{ textTransform: "none" }} fullWidth={false} onClick={onNewButtonClick}>
+        <Stack sx={{ flexDirection: "row", gap: "1px", p: 1 }}>
+          <PrimaryButton fullWidth={false} onClick={onNewButtonClick}>
             New
           </PrimaryButton>
-          <PrimaryButton sx={{ textTransform: "none" }} fullWidth={false} onClick={onSaveButtonClick}>
+          <PrimaryButton fullWidth={false} onClick={onSaveButtonClick}>
             Save
           </PrimaryButton>
           {snapshot.id && (
-            <PrimaryButton sx={{ textTransform: "none" }} fullWidth={false} onClick={onSaveAsNewButtonClick}>
+            <PrimaryButton fullWidth={false} onClick={onSaveAsNewButtonClick}>
               Save as New
             </PrimaryButton>
           )}
           {snapshot.id && (
-            <PrimaryButton sx={{ textTransform: "none" }} fullWidth={false} onClick={onDownloadPDFButtonClick}>
+            <PrimaryButton fullWidth={false} onClick={onDownloadPDFButtonClick}>
               Download PDF
             </PrimaryButton>
           )}
           {snapshot.id && (
-            <PrimaryButton sx={{ textTransform: "none" }} fullWidth={false} onClick={onDeleteButtonClick}>
+            <PrimaryButton fullWidth={false} onClick={onDeleteButtonClick}>
               Delete
             </PrimaryButton>
           )}
