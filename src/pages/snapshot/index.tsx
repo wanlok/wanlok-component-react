@@ -137,6 +137,7 @@ export const SnapshotForm = ({
   onNewButtonClick,
   onSaveButtonClick,
   onSaveAsNewButtonClick,
+  onViewPDFButtonClick,
   onDownloadPDFButtonClick,
   onDeleteButtonClick
 }: {
@@ -148,6 +149,7 @@ export const SnapshotForm = ({
   onNewButtonClick: () => void;
   onSaveButtonClick: () => void;
   onSaveAsNewButtonClick: () => void;
+  onViewPDFButtonClick: () => void;
   onDownloadPDFButtonClick: () => void;
   onDeleteButtonClick: () => void;
 }) => {
@@ -164,6 +166,11 @@ export const SnapshotForm = ({
           {snapshot.id && (
             <PrimaryButton fullWidth={false} onClick={onSaveAsNewButtonClick}>
               Save as New
+            </PrimaryButton>
+          )}
+          {snapshot.id && (
+            <PrimaryButton fullWidth={false} onClick={onViewPDFButtonClick}>
+              View PDF
             </PrimaryButton>
           )}
           {snapshot.id && (
@@ -277,6 +284,11 @@ export const SnapshotPage = () => {
     }
   };
 
+  const onViewPDFButtonClick = () => {
+    const url = `#/pdf/${snapshot.id}?view=true`;
+    window.open(url, "_blank");
+  };
+
   const onDownloadPDFButtonClick = () => {
     const url = `#/pdf/${snapshot.id}`;
     window.open(url, "_blank");
@@ -302,6 +314,7 @@ export const SnapshotPage = () => {
         onNewButtonClick={onNewButtonClick}
         onSaveButtonClick={onSaveButtonClick}
         onSaveAsNewButtonClick={onSaveAsNewButtonClick}
+        onViewPDFButtonClick={onViewPDFButtonClick}
         onDownloadPDFButtonClick={onDownloadPDFButtonClick}
         onDeleteButtonClick={onDeleteButtonClick}
       />
