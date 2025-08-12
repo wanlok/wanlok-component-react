@@ -13,7 +13,7 @@ export const PDFPage = () => {
       toPDF();
     }, 500);
     return () => clearTimeout(timeout);
-  }, [snapshot]);
+  }, [snapshot, toPDF]);
 
   return (
     <>
