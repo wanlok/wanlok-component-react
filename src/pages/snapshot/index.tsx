@@ -81,6 +81,15 @@ export const SnapshotInput = ({
             }}
           />
         )}
+        {row.type === "barchart" && (
+          <TextInput
+            placeholder="Bar Chart Data"
+            value={row.value}
+            onChange={(value) => {
+              onRowValueChange(rowIndex, value);
+            }}
+          />
+        )}
       </Stack>
       <Stack sx={{ flexDirection: "row" }}>
         <PrimaryButton onClick={() => onRowDeleteButtonClick(rowIndex)}>Delete</PrimaryButton>

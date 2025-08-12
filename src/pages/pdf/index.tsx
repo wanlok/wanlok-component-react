@@ -1,21 +1,34 @@
-import { PDFViewer, Document, Page, View, Text } from "@react-pdf/renderer";
 import { usePDFSnapshot } from "./usePDFSnapshot";
-import { useWindowDimensions } from "../../common/useWindowDimension";
+import { BarChart } from "@mui/x-charts";
+import { usePDF } from "react-to-pdf";
+import { useEffect } from "react";
 
 export const PDFPage = () => {
   const { snapshot } = usePDFSnapshot();
-  const { height } = useWindowDimensions();
+
+  const { toPDF, targetRef } = usePDF({ filename: "page.pdf" });
+
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      toPDF();
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, [snapshot]);
+
   return (
-    <PDFViewer style={{ border: "none", width: "100%", height: height - 4 }}>
-      <Document>
-        <Page size="A4" style={{ padding: 20 }}>
-          {snapshot?.rows.map((row, index) => (
-            <View key={index} style={{ marginBottom: 10 }}>
-              <Text>{row.value}</Text>
-            </View>
-          ))}
-        </Page>
-      </Document>
-    </PDFViewer>
+    <>
+      <div ref={targetRef}>
+        {snapshot?.rows.map((row) => {
+          if (row.type === "barchart") {
+            return <BarChart {...JSON.parse(row.value)} barLabel="value" />;
+          } else {
+            return <div>{row.value}</div>;
+          }
+        })}
+      </div>
+      <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0, backgroundColor: "white" }}>
+        Downloading...
+      </div>
+    </>
   );
 };
