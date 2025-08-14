@@ -295,7 +295,7 @@ export const SnapshotPage = () => {
     // const url = `#/pdf/${snapshot.id}?view=true`;
     // const url = `https://wanlok2025.github.io/?rows=${JSON.stringify(snapshot.rows)}`;
     // const url = `https://wanlok2025.github.io/#/${snapshot.id}`;
-    const url = `https://wanlok2025.github.io/?id={snapshot.id}`;
+    const url = `https://wanlok2025.github.io/?id=${snapshot.id}`;
     window.open(url, "_blank");
   };
 
