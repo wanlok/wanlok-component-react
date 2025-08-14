@@ -300,7 +300,9 @@ export const SnapshotPage = () => {
   };
 
   const onViewPDF2ButtonClick = () => {
-    const url = `http://localhost:3000/pdf?url=https://wanlok2025.github.io/?id=${snapshot.id}`;
+    const url = `http://localhost:3000/pdf?url=${encodeURIComponent(
+      `https://wanlok2025.github.io/?id=${snapshot.id}`
+    )}`;
     window.open(url, "_blank");
   };
 
