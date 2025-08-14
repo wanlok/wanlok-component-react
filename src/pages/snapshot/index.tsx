@@ -287,7 +287,7 @@ export const SnapshotPage = () => {
   const onViewPDFButtonClick = () => {
     // const url = `#/pdf/${snapshot.id}?view=true`;
     // const url = `https://wanlok2025.github.io/?rows=${JSON.stringify(snapshot.rows)}`;
-    const url = `https://wanlok2025.github.io/${snapshot.id}`;
+    const url = `https://wanlok2025.github.io/#/${snapshot.id}`;
     window.open(url, "_blank");
   };
 
