@@ -138,6 +138,7 @@ export const SnapshotForm = ({
   onSaveButtonClick,
   onSaveAsNewButtonClick,
   onViewPDFButtonClick,
+  onViewPDF2ButtonClick,
   onDownloadPDFButtonClick,
   onDeleteButtonClick
 }: {
@@ -150,6 +151,7 @@ export const SnapshotForm = ({
   onSaveButtonClick: () => void;
   onSaveAsNewButtonClick: () => void;
   onViewPDFButtonClick: () => void;
+  onViewPDF2ButtonClick: () => void;
   onDownloadPDFButtonClick: () => void;
   onDeleteButtonClick: () => void;
 }) => {
@@ -171,6 +173,11 @@ export const SnapshotForm = ({
           {snapshot.id && (
             <PrimaryButton fullWidth={false} onClick={onViewPDFButtonClick}>
               View PDF
+            </PrimaryButton>
+          )}
+          {snapshot.id && (
+            <PrimaryButton fullWidth={false} onClick={onViewPDF2ButtonClick}>
+              View PDF 2
             </PrimaryButton>
           )}
           {snapshot.id && (
@@ -292,6 +299,11 @@ export const SnapshotPage = () => {
     window.open(url, "_blank");
   };
 
+  const onViewPDF2ButtonClick = () => {
+    const url = `http://localhost:3000/pdf?url=https://wanlok2025.github.io/?id=${snapshot.id}`;
+    window.open(url, "_blank");
+  };
+
   const onDownloadPDFButtonClick = () => {
     const url = `#/pdf/${snapshot.id}`;
     window.open(url, "_blank");
@@ -318,6 +330,7 @@ export const SnapshotPage = () => {
         onSaveButtonClick={onSaveButtonClick}
         onSaveAsNewButtonClick={onSaveAsNewButtonClick}
         onViewPDFButtonClick={onViewPDFButtonClick}
+        onViewPDF2ButtonClick={onViewPDF2ButtonClick}
         onDownloadPDFButtonClick={onDownloadPDFButtonClick}
         onDeleteButtonClick={onDeleteButtonClick}
       />
