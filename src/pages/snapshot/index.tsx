@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, MenuItem, Select, Stack, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, MenuItem, Select, Stack, Theme, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { Row, Snapshot, useSnapshot } from "./useSnapshot";
@@ -27,7 +27,13 @@ export const SnapshotInput = ({
             onRowTypeChange(rowIndex, event.target.value);
           }}
           displayEmpty
-          inputProps={{ "aria-label": "Without label" }}
+          inputProps={{
+            "aria-label": "Without label"
+          }}
+          sx={(theme: Theme) => ({
+            backgroundColor: theme.palette.common.white,
+            borderRadius: 0
+          })}
         >
           <MenuItem value={"text"}>Text</MenuItem>
           <MenuItem value={"barchart"}>Bar Chart</MenuItem>
