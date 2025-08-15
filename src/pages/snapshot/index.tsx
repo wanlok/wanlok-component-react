@@ -1,47 +1,9 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  FormControl,
-  FormHelperText,
-  MenuItem,
-  Select,
-  Stack,
-  TextField,
-  Typography
-} from "@mui/material";
+import { Card, CardActionArea, CardContent, MenuItem, Select, Stack, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { Row, Snapshot, useSnapshot } from "./useSnapshot";
 import { useNavigate, useParams } from "react-router-dom";
-
-export const TextInput = ({
-  placeholder,
-  value,
-  onChange
-}: {
-  placeholder: string;
-  value: string;
-  onChange: (value: string) => void;
-}) => {
-  return (
-    <FormControl>
-      <TextField
-        placeholder={placeholder}
-        value={value}
-        multiline
-        onChange={(event) => onChange(event.target.value)}
-        // onKeyDown={(event) => {
-        //   if (event.key === "Enter" && !event.shiftKey) {
-        //     event.preventDefault();
-        //     submit();
-        //   }
-        // }}
-      />
-      <FormHelperText sx={{ mt: 1 }}>Shift + Enter for multiple lines</FormHelperText>
-    </FormControl>
-  );
-};
+import { TextInput } from "../../components/TextInput";
 
 export const SnapshotInput = ({
   row,
