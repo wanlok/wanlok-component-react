@@ -1,13 +1,15 @@
-import { FormControl, FormHelperText, TextField } from "@mui/material";
+import { FormControl, FormHelperText, SxProps, TextField, Theme } from "@mui/material";
 
 export const TextInput = ({
   placeholder,
   value,
-  onChange
+  onChange,
+  inputPropsSx
 }: {
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
+  inputPropsSx?: SxProps<Theme>;
 }) => {
   return (
     <FormControl>
@@ -16,10 +18,11 @@ export const TextInput = ({
         value={value}
         multiline
         InputProps={{
-          sx: (theme) => ({
-            backgroundColor: theme.palette.common.white,
-            borderRadius: 0
-          })
+          sx: {
+            backgroundColor: "common.white",
+            borderRadius: 0,
+            ...inputPropsSx
+          }
         }}
         onChange={(event) => onChange(event.target.value)}
         // onKeyDown={(event) => {

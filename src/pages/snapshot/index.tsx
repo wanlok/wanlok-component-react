@@ -56,6 +56,9 @@ export const SnapshotInput = ({
             onChange={(value) => {
               onRowValueChange(rowIndex, value);
             }}
+            inputPropsSx={{
+              fontFamily: "courier"
+            }}
           />
         )}
       </Stack>
