@@ -8,12 +8,14 @@ const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
 
   const playAudio = useCallback(() => {
     if (discussion.messages.length > 0) {
-      const fileName = discussion.messages[discussion.messages.length - 1]?.lines;
-      import(`../../assets/audio/${fileName}.mp3`)
-        .then((module) => {
-          new Audio(module.default).play().catch(() => {});
-        })
-        .catch(() => {});
+      const slices = discussion.messages[discussion.messages.length - 1]?.lines.split(" ");
+      if (slices.length > 0) {
+        import(`../../assets/audio/${slices[0]}.mp3`)
+          .then((module) => {
+            new Audio(module.default).play().catch(() => {});
+          })
+          .catch(() => {});
+      }
     }
   }, [discussion]);
 
@@ -49,7 +51,7 @@ const DiscussionForm = ({ addMessage }: { addMessage: (name: string, lines: stri
   const [lines, setLines] = useState<string>("");
 
   const submit = async () => {
-    if (name && lines) {
+    if (name && lines && lines.trim().length > 0) {
       await addMessage(name, lines);
       localStorage.setItem("discussion_name", name);
       setLines("");
