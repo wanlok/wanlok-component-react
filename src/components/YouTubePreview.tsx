@@ -48,9 +48,9 @@ export const YouTubePreview = ({ message }: { message: Message }) => {
         <CardContent>
           <Stack sx={{ flexDirection: "row", gap: 2 }}>
             <Stack>
-              <img src={youTube?.oembed.thumbnail_url} height={youTube?.oembed.height} />
+              <img src={youTube?.oembed.thumbnail_url} height={youTube?.oembed.height} alt="" />
             </Stack>
-            <Stack>
+            <Stack sx={{ justifyContent: "center" }}>
               <Typography variant="h6">{youTube?.oembed.title}</Typography>
             </Stack>
           </Stack>
