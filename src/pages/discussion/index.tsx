@@ -10,7 +10,19 @@ const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
     if (stackRef.current) {
       stackRef.current.scrollTop = stackRef.current.scrollHeight;
     }
+    playAudio();
   }, [discussion]);
+
+  const playAudio = () => {
+    if (discussion.messages.length > 0) {
+      const fileName = discussion.messages[discussion.messages.length - 1]?.lines;
+      import(`../../assets/audio/${fileName}.mp3`)
+        .then((module) => {
+          new Audio(module.default).play();
+        })
+        .catch((e) => {});
+    }
+  };
 
   return (
     <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto" }}>
