@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, Divider, Stack, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { Row, Snapshot, useSnapshot } from "./useSnapshot";
@@ -24,69 +24,76 @@ export const SnapshotInput = ({
   onRowDeleteButtonClick: (index: number) => void;
 }) => {
   return (
-    <Stack sx={{ flexDirection: "row", flex: 1, gap: 2, backgroundColor: "#EEEEEE", p: 2 }}>
-      <Typography variant="h6">{rowIndex + 1}</Typography>
-      <Stack sx={{ flex: 1, gap: 1 }}>
-        {row.type === "text" && (
-          <TextInput
-            placeholder="Text"
-            value={row.value}
-            onChange={(value) => {
-              onRowValueChange(rowIndex, value);
-            }}
-            hideHelperText={true}
-          />
-        )}
-        {row.type === "mui-bar-chart" && (
-          <TextInput
-            placeholder="Bar Chart Data"
-            value={row.value}
-            onChange={(value) => {
-              onRowValueChange(rowIndex, value);
-            }}
-            hideHelperText={true}
-            tabAllowed={true}
-            inputPropsSx={{
-              fontFamily: "courier"
-            }}
-          />
-        )}
-        {row.type === "mui-line-chart" && (
-          <TextInput
-            placeholder="MUI Line Chart Data"
-            value={row.value}
-            onChange={(value) => {
-              onRowValueChange(rowIndex, value);
-            }}
-            hideHelperText={true}
-            tabAllowed={true}
-            inputPropsSx={{
-              fontFamily: "courier"
-            }}
-          />
-        )}
-      </Stack>
-      <Stack sx={{ gap: 1, width: 160 }}>
-        <SelectInput
-          items={[
-            { label: "Text", value: "text" },
-            { label: "MUI Bar Chart", value: "mui-bar-chart" },
-            { label: "MUI Line Chart", value: "mui-line-chart" }
-          ]}
-          value={row.type}
-          onChange={(value: string) => {
-            onRowTypeChange(rowIndex, value);
-          }}
-        />
-        <Stack sx={{ gap: "1px" }}>
-          <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-            <PrimaryButton onClick={() => onRowUpButtonClick(rowIndex)}>Up</PrimaryButton>
-            <PrimaryButton onClick={() => onRowDownButtonClick(rowIndex)}>Down</PrimaryButton>
-          </Stack>
+    <>
+      <Stack sx={{ flexDirection: "row", backgroundColor: "#EEEEEE" }}>
+        <Stack sx={{ flex: 1, px: 2 }}>
+          <Typography variant="h6" sx={{ py: 1 }}>
+            {rowIndex + 1}
+          </Typography>
+          <Divider />
+        </Stack>
+        <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+          <PrimaryButton onClick={() => onRowUpButtonClick(rowIndex)}>Up</PrimaryButton>
+          <PrimaryButton onClick={() => onRowDownButtonClick(rowIndex)}>Down</PrimaryButton>
           <PrimaryButton onClick={() => onRowDeleteButtonClick(rowIndex)}>Delete</PrimaryButton>
         </Stack>
       </Stack>
-    </Stack>
+      <Stack sx={{ flexDirection: "row", flex: 1, gap: 2, backgroundColor: "#EEEEEE", p: 2 }}>
+        <Stack sx={{ flex: 1, gap: 1 }}>
+          {row.type === "text" && (
+            <TextInput
+              placeholder="Text"
+              value={row.value}
+              onChange={(value) => {
+                onRowValueChange(rowIndex, value);
+              }}
+              hideHelperText={true}
+            />
+          )}
+          {row.type === "mui-bar-chart" && (
+            <TextInput
+              placeholder="Bar Chart Data"
+              value={row.value}
+              onChange={(value) => {
+                onRowValueChange(rowIndex, value);
+              }}
+              hideHelperText={true}
+              tabAllowed={true}
+              inputPropsSx={{
+                fontFamily: "courier"
+              }}
+            />
+          )}
+          {row.type === "mui-line-chart" && (
+            <TextInput
+              placeholder="MUI Line Chart Data"
+              value={row.value}
+              onChange={(value) => {
+                onRowValueChange(rowIndex, value);
+              }}
+              hideHelperText={true}
+              tabAllowed={true}
+              inputPropsSx={{
+                fontFamily: "courier"
+              }}
+            />
+          )}
+        </Stack>
+        <Stack sx={{ gap: 1, width: 160 }}>
+          <SelectInput
+            items={[
+              { label: "Text", value: "text" },
+              { label: "MUI Bar Chart", value: "mui-bar-chart" },
+              { label: "MUI Line Chart", value: "mui-line-chart" }
+            ]}
+            value={row.type}
+            onChange={(value: string) => {
+              onRowTypeChange(rowIndex, value);
+            }}
+          />
+        </Stack>
+      </Stack>
+    </>
   );
 };
 
@@ -104,7 +111,7 @@ export const SnapshotList = ({
           <Card elevation={0} key={`snapshot-${i + 1}`} sx={{ borderRadius: 0 }}>
             <CardActionArea onClick={() => onSnapshotClick(snapshot)}>
               <CardContent>
-                <Typography gutterBottom variant="h5" component="div">{`Snapshot ${i + 1}`}</Typography>
+                <Typography variant="h5">{`Snapshot ${i + 1}`}</Typography>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   Document Id: {snapshot.id}
                 </Typography>
@@ -121,6 +128,7 @@ export const SnapshotList = ({
 };
 
 export const SnapshotForm = ({
+  snapshotIndex,
   snapshot,
   onAddButtonClick,
   onRowTypeChange,
@@ -136,6 +144,7 @@ export const SnapshotForm = ({
   onDownloadPDFButtonClick,
   onDeleteButtonClick
 }: {
+  snapshotIndex: number;
   snapshot: Snapshot;
   onAddButtonClick: () => void;
   onRowTypeChange: (index: number, type: string) => void;
@@ -154,38 +163,42 @@ export const SnapshotForm = ({
   return (
     <Stack sx={{ flexDirection: "column", flex: 1, overflowY: "auto" }}>
       <Stack>
-        <Stack sx={{ flexDirection: "row", gap: "1px", p: 1 }}>
-          <PrimaryButton fullWidth={false} onClick={onNewButtonClick}>
-            New
-          </PrimaryButton>
-          <PrimaryButton fullWidth={false} onClick={onSaveButtonClick}>
-            Save
-          </PrimaryButton>
-          {snapshot.id && (
-            <PrimaryButton fullWidth={false} onClick={onSaveAsNewButtonClick}>
-              Save as New
+        <Stack sx={{ p: 1, gap: 1 }}>
+          <Typography variant="h5">{snapshotIndex > -1 ? `Snapshot ${snapshotIndex + 1}` : "New Snapshot"}</Typography>
+          <Divider />
+          <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+            <PrimaryButton fullWidth={false} onClick={onNewButtonClick}>
+              New
             </PrimaryButton>
-          )}
-          {snapshot.id && (
-            <PrimaryButton fullWidth={false} onClick={onViewPageButtonClick}>
-              View Page
+            <PrimaryButton fullWidth={false} onClick={onSaveButtonClick}>
+              Save
             </PrimaryButton>
-          )}
-          {snapshot.id && (
-            <PrimaryButton fullWidth={false} onClick={onViewPDFButtonClick}>
-              View PDF
-            </PrimaryButton>
-          )}
-          {snapshot.id && (
-            <PrimaryButton fullWidth={false} onClick={onDownloadPDFButtonClick}>
-              Download PDF
-            </PrimaryButton>
-          )}
-          {snapshot.id && (
-            <PrimaryButton fullWidth={false} onClick={onDeleteButtonClick}>
-              Delete
-            </PrimaryButton>
-          )}
+            {snapshot.id && (
+              <PrimaryButton fullWidth={false} onClick={onSaveAsNewButtonClick}>
+                Save as New
+              </PrimaryButton>
+            )}
+            {snapshot.id && (
+              <PrimaryButton fullWidth={false} onClick={onViewPageButtonClick}>
+                View Page
+              </PrimaryButton>
+            )}
+            {snapshot.id && (
+              <PrimaryButton fullWidth={false} onClick={onViewPDFButtonClick}>
+                View PDF
+              </PrimaryButton>
+            )}
+            {snapshot.id && (
+              <PrimaryButton fullWidth={false} onClick={onDownloadPDFButtonClick}>
+                Download PDF
+              </PrimaryButton>
+            )}
+            {snapshot.id && (
+              <PrimaryButton fullWidth={false} onClick={onDeleteButtonClick}>
+                Delete
+              </PrimaryButton>
+            )}
+          </Stack>
         </Stack>
         {snapshot.rows.map((row, i) => (
           <Stack key={`snapshot-input-${i}`} sx={{ flexDirection: "column", flex: 1, mt: i === 0 ? 0 : "1px" }}>
@@ -341,6 +354,7 @@ export const SnapshotPage = () => {
   return (
     <Stack sx={{ flexDirection: "row", height: "100%" }}>
       <SnapshotForm
+        snapshotIndex={snapshotIndexRef.current}
         snapshot={snapshot}
         onAddButtonClick={onAddButtonClick}
         onRowTypeChange={onRowTypeChange}
