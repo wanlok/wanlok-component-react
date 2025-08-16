@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { Discussion, useDiscussion } from "./useDiscussion";
 import { FormControl, FormHelperText, Stack, TextField, Typography } from "@mui/material";
 import { PrimaryButton } from "../../components/PrimaryButton";
@@ -6,7 +6,7 @@ import { PrimaryButton } from "../../components/PrimaryButton";
 const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
   const stackRef = useRef<HTMLDivElement>(null);
 
-  const playAudio = () => {
+  const playAudio = useCallback(() => {
     if (discussion.messages.length > 0) {
       const fileName = discussion.messages[discussion.messages.length - 1]?.lines;
       import(`../../assets/audio/${fileName}.mp3`)
@@ -15,7 +15,7 @@ const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
         })
         .catch((e) => {});
     }
-  };
+  }, [discussion]);
 
   useEffect(() => {
     if (stackRef.current) {
