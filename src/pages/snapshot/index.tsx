@@ -41,6 +41,7 @@ export const SnapshotInput = ({
             onChange={(value) => {
               onRowValueChange(rowIndex, value);
             }}
+            hideHelperText={true}
           />
         )}
         {row.type === "barchart" && (
@@ -50,6 +51,7 @@ export const SnapshotInput = ({
             onChange={(value) => {
               onRowValueChange(rowIndex, value);
             }}
+            hideHelperText={true}
             inputPropsSx={{
               fontFamily: "courier"
             }}

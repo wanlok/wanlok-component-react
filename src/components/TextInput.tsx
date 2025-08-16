@@ -4,11 +4,13 @@ export const TextInput = ({
   placeholder,
   value,
   onChange,
+  hideHelperText = false,
   inputPropsSx
 }: {
   placeholder: string;
   value: string;
   onChange: (value: string) => void;
+  hideHelperText?: boolean;
   inputPropsSx?: SxProps<Theme>;
 }) => {
   return (
@@ -32,7 +34,7 @@ export const TextInput = ({
         //   }
         // }}
       />
-      <FormHelperText sx={{ mt: 1 }}>Shift + Enter for multiple lines</FormHelperText>
+      {!hideHelperText && <FormHelperText sx={{ mt: 1 }}>Shift + Enter for multiple lines</FormHelperText>}
     </FormControl>
   );
 };
