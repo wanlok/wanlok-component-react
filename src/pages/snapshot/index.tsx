@@ -25,7 +25,8 @@ export const SnapshotInput = ({
         <SelectInput
           items={[
             { label: "Text", value: "text" },
-            { label: "Bar Chart", value: "barchart" }
+            { label: "MUI Bar Chart", value: "mui-bar-chart" },
+            { label: "MUI Line Chart", value: "mui-line-chart" }
           ]}
           value={row.type}
           onChange={(value: string) => {
@@ -44,9 +45,22 @@ export const SnapshotInput = ({
             hideHelperText={true}
           />
         )}
-        {row.type === "barchart" && (
+        {row.type === "mui-bar-chart" && (
           <TextInput
             placeholder="Bar Chart Data"
+            value={row.value}
+            onChange={(value) => {
+              onRowValueChange(rowIndex, value);
+            }}
+            hideHelperText={true}
+            inputPropsSx={{
+              fontFamily: "courier"
+            }}
+          />
+        )}
+        {row.type === "mui-line-chart" && (
+          <TextInput
+            placeholder="MUI Line Chart Data"
             value={row.value}
             onChange={(value) => {
               onRowValueChange(rowIndex, value);
