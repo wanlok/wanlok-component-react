@@ -4,6 +4,7 @@ import { PrimaryButton } from "../../components/PrimaryButton";
 import { Row, Snapshot, useSnapshot } from "./useSnapshot";
 import { useNavigate, useParams } from "react-router-dom";
 import { TextInput } from "../../components/TextInput";
+import { SelectInput } from "../../components/SelectInput";
 
 export const SnapshotInput = ({
   row,
@@ -21,23 +22,16 @@ export const SnapshotInput = ({
   return (
     <Stack sx={{ flexDirection: "row", flex: 1, gap: 2, backgroundColor: "#EEEEEE", p: 2 }}>
       <Stack sx={{ width: 160 }}>
-        <Select
+        <SelectInput
+          items={[
+            { label: "Text", value: "text" },
+            { label: "Bar Chart", value: "barchart" }
+          ]}
           value={row.type}
-          onChange={(event) => {
-            onRowTypeChange(rowIndex, event.target.value);
+          onChange={(value: string) => {
+            onRowTypeChange(rowIndex, value);
           }}
-          displayEmpty
-          inputProps={{
-            "aria-label": "Without label"
-          }}
-          sx={(theme: Theme) => ({
-            backgroundColor: theme.palette.common.white,
-            borderRadius: 0
-          })}
-        >
-          <MenuItem value={"text"}>Text</MenuItem>
-          <MenuItem value={"barchart"}>Bar Chart</MenuItem>
-        </Select>
+        />
       </Stack>
       <Stack sx={{ flex: 1 }}>
         {row.type === "text" && (
