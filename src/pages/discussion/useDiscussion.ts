@@ -31,7 +31,7 @@ export const useDiscussion = () => {
       setDiscussion(snapshot.data() as Discussion);
     });
     return () => unsubscribe();
-  }, []);
+  }, [documentId]);
 
   const addMessage = async (name: string, lines: string) => {
     const docRef = doc(db, "discussions", documentId);
