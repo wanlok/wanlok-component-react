@@ -53,6 +53,7 @@ export const SnapshotInput = ({
               onRowValueChange(rowIndex, value);
             }}
             hideHelperText={true}
+            tabAllowed={true}
             inputPropsSx={{
               fontFamily: "courier"
             }}
@@ -66,6 +67,7 @@ export const SnapshotInput = ({
               onRowValueChange(rowIndex, value);
             }}
             hideHelperText={true}
+            tabAllowed={true}
             inputPropsSx={{
               fontFamily: "courier"
             }}
