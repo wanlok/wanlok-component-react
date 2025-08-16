@@ -14,6 +14,9 @@ interface YouTubeOembed {
   height: number;
 }
 
+const FULL_YOUTUBE_URL_REGEX =
+  /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=[\w-]{11}|embed\/[\w-]{11})|youtu\.be\/[\w-]{11})(?:[^\s]*)?/;
+
 export const YouTubePreview = ({ message }: { message: Message }) => {
   const [youTube, setYouTube] = useState<{ oembed: YouTubeOembed; urlString: string }>();
 
@@ -27,9 +30,6 @@ export const YouTubePreview = ({ message }: { message: Message }) => {
   };
 
   useEffect(() => {
-    const FULL_YOUTUBE_URL_REGEX =
-      /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=[\w-]{11}|embed\/[\w-]{11})|youtu\.be\/[\w-]{11})(?:[^\s]*)?/;
-
     function extractYouTubeUrl(text: string): string | null {
       const match = text.match(FULL_YOUTUBE_URL_REGEX);
       return match ? match[0] : null;

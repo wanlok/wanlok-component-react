@@ -12,11 +12,21 @@ export interface Discussion {
   messages: Message[];
 }
 
+const getYYYYMMDD = () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0");
+  const dd = String(today.getDate()).padStart(2, "0");
+  return `${yyyy}${mm}${dd}`; // "20250816"
+};
+
 export const useDiscussion = () => {
   const [discussion, setDiscussion] = useState<Discussion>();
 
+  const documentId = getYYYYMMDD();
+
   useEffect(() => {
-    const docRef = doc(db, "discussions", "20250810");
+    const docRef = doc(db, "discussions", documentId);
     const unsubscribe = onSnapshot(docRef, (snapshot) => {
       setDiscussion(snapshot.data() as Discussion);
     });
@@ -24,7 +34,7 @@ export const useDiscussion = () => {
   }, []);
 
   const addMessage = async (name: string, lines: string) => {
-    const docRef = doc(db, "discussions", "20250810");
+    const docRef = doc(db, "discussions", documentId);
     const message: Message = { name, lines, timestamp: new Date().getTime() };
     if (discussion) {
       await updateDoc(docRef, {
