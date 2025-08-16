@@ -131,8 +131,8 @@ export const SnapshotForm = ({
   onNewButtonClick,
   onSaveButtonClick,
   onSaveAsNewButtonClick,
+  onViewPageButtonClick,
   onViewPDFButtonClick,
-  onViewPDF2ButtonClick,
   onDownloadPDFButtonClick,
   onDeleteButtonClick
 }: {
@@ -146,8 +146,8 @@ export const SnapshotForm = ({
   onNewButtonClick: () => void;
   onSaveButtonClick: () => void;
   onSaveAsNewButtonClick: () => void;
+  onViewPageButtonClick: () => void;
   onViewPDFButtonClick: () => void;
-  onViewPDF2ButtonClick: () => void;
   onDownloadPDFButtonClick: () => void;
   onDeleteButtonClick: () => void;
 }) => {
@@ -167,13 +167,13 @@ export const SnapshotForm = ({
             </PrimaryButton>
           )}
           {snapshot.id && (
-            <PrimaryButton fullWidth={false} onClick={onViewPDFButtonClick}>
-              View PDF
+            <PrimaryButton fullWidth={false} onClick={onViewPageButtonClick}>
+              View Page
             </PrimaryButton>
           )}
           {snapshot.id && (
-            <PrimaryButton fullWidth={false} onClick={onViewPDF2ButtonClick}>
-              View PDF 2
+            <PrimaryButton fullWidth={false} onClick={onViewPDFButtonClick}>
+              View PDF
             </PrimaryButton>
           )}
           {snapshot.id && (
@@ -309,7 +309,7 @@ export const SnapshotPage = () => {
     }
   };
 
-  const onViewPDFButtonClick = () => {
+  const onViewPageButtonClick = () => {
     // const url = `#/pdf/${snapshot.id}?view=true`;
     // const url = `https://wanlok2025.github.io/?rows=${JSON.stringify(snapshot.rows)}`;
     // const url = `https://wanlok2025.github.io/#/${snapshot.id}`;
@@ -317,7 +317,7 @@ export const SnapshotPage = () => {
     window.open(url, "_blank");
   };
 
-  const onViewPDF2ButtonClick = () => {
+  const onViewPDFButtonClick = () => {
     const url = `http://localhost:3000/pdf?url=${encodeURIComponent(
       `https://wanlok2025.github.io/?id=${snapshot.id}`
     )}`;
@@ -351,8 +351,8 @@ export const SnapshotPage = () => {
         onNewButtonClick={onNewButtonClick}
         onSaveButtonClick={onSaveButtonClick}
         onSaveAsNewButtonClick={onSaveAsNewButtonClick}
+        onViewPageButtonClick={onViewPageButtonClick}
         onViewPDFButtonClick={onViewPDFButtonClick}
-        onViewPDF2ButtonClick={onViewPDF2ButtonClick}
         onDownloadPDFButtonClick={onDownloadPDFButtonClick}
         onDeleteButtonClick={onDeleteButtonClick}
       />
