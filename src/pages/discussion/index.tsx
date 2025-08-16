@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Discussion, useDiscussion } from "./useDiscussion";
 import { FormControl, FormHelperText, Stack, TextField, Typography } from "@mui/material";
 import { PrimaryButton } from "../../components/PrimaryButton";
+import { YouTubePreview } from "../../components/YouTubePreview";
 
 const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
   const stackRef = useRef<HTMLDivElement>(null);
@@ -26,6 +27,7 @@ const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
             {message.lines.split("\n").map((line, j) => (
               <Typography key={`message-${i}-line-${j}`}>{line.length > 0 ? line : <br />}</Typography>
             ))}
+            {message.lines.includes("https://www.youtube.com/") && <YouTubePreview message={message} />}
           </Stack>
         </Stack>
       ))}

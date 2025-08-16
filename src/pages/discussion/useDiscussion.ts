@@ -2,7 +2,7 @@ import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 
-interface Message {
+export interface Message {
   name: string;
   lines: string;
   timestamp: number;
