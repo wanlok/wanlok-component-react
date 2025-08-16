@@ -12,7 +12,7 @@ const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
       stackRef.current.scrollTop = stackRef.current.scrollHeight;
     }
     playAudio();
-  }, [discussion]);
+  }, [discussion, playAudio]);
 
   return (
     <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto" }}>
