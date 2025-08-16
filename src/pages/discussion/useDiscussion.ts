@@ -38,5 +38,18 @@ export const useDiscussion = () => {
     }
   };
 
-  return { discussion, addMessage };
+  const playAudio = () => {
+    if (discussion && discussion.messages.length > 0) {
+      const slices = discussion.messages[discussion.messages.length - 1]?.lines.split(" ");
+      if (slices.length > 0) {
+        import(`../../assets/audio/${slices[0]}.mp3`)
+          .then((module) => {
+            new Audio(module.default).play().catch(() => {});
+          })
+          .catch(() => {});
+      }
+    }
+  };
+
+  return { discussion, addMessage, playAudio };
 };

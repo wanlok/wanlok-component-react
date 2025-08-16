@@ -1,30 +1,18 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Discussion, useDiscussion } from "./useDiscussion";
 import { FormControl, FormHelperText, Stack, TextField, Typography } from "@mui/material";
 import { PrimaryButton } from "../../components/PrimaryButton";
 
 const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
   const stackRef = useRef<HTMLDivElement>(null);
-
-  const playAudio = useCallback(() => {
-    if (discussion.messages.length > 0) {
-      const slices = discussion.messages[discussion.messages.length - 1]?.lines.split(" ");
-      if (slices.length > 0) {
-        import(`../../assets/audio/${slices[0]}.mp3`)
-          .then((module) => {
-            new Audio(module.default).play().catch(() => {});
-          })
-          .catch(() => {});
-      }
-    }
-  }, [discussion]);
+  const { playAudio } = useDiscussion();
 
   useEffect(() => {
     if (stackRef.current) {
       stackRef.current.scrollTop = stackRef.current.scrollHeight;
     }
     playAudio();
-  }, [discussion, playAudio]);
+  }, [discussion]);
 
   return (
     <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto" }}>
