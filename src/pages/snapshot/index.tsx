@@ -11,30 +11,22 @@ export const SnapshotInput = ({
   rowIndex,
   onRowTypeChange,
   onRowValueChange,
+  onRowUpButtonClick,
+  onRowDownButtonClick,
   onRowDeleteButtonClick
 }: {
   row: Row;
   rowIndex: number;
   onRowTypeChange: (index: number, type: string) => void;
   onRowValueChange: (index: number, value: string) => void;
+  onRowUpButtonClick: (index: number) => void;
+  onRowDownButtonClick: (index: number) => void;
   onRowDeleteButtonClick: (index: number) => void;
 }) => {
   return (
     <Stack sx={{ flexDirection: "row", flex: 1, gap: 2, backgroundColor: "#EEEEEE", p: 2 }}>
-      <Stack sx={{ width: 160 }}>
-        <SelectInput
-          items={[
-            { label: "Text", value: "text" },
-            { label: "MUI Bar Chart", value: "mui-bar-chart" },
-            { label: "MUI Line Chart", value: "mui-line-chart" }
-          ]}
-          value={row.type}
-          onChange={(value: string) => {
-            onRowTypeChange(rowIndex, value);
-          }}
-        />
-      </Stack>
-      <Stack sx={{ flex: 1 }}>
+      <Typography variant="h6">{rowIndex + 1}</Typography>
+      <Stack sx={{ flex: 1, gap: 1 }}>
         {row.type === "text" && (
           <TextInput
             placeholder="Text"
@@ -74,8 +66,25 @@ export const SnapshotInput = ({
           />
         )}
       </Stack>
-      <Stack sx={{ flexDirection: "row" }}>
-        <PrimaryButton onClick={() => onRowDeleteButtonClick(rowIndex)}>Delete</PrimaryButton>
+      <Stack sx={{ gap: 1, width: 160 }}>
+        <SelectInput
+          items={[
+            { label: "Text", value: "text" },
+            { label: "MUI Bar Chart", value: "mui-bar-chart" },
+            { label: "MUI Line Chart", value: "mui-line-chart" }
+          ]}
+          value={row.type}
+          onChange={(value: string) => {
+            onRowTypeChange(rowIndex, value);
+          }}
+        />
+        <Stack sx={{ gap: "1px" }}>
+          <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+            <PrimaryButton onClick={() => onRowUpButtonClick(rowIndex)}>Up</PrimaryButton>
+            <PrimaryButton onClick={() => onRowDownButtonClick(rowIndex)}>Down</PrimaryButton>
+          </Stack>
+          <PrimaryButton onClick={() => onRowDeleteButtonClick(rowIndex)}>Delete</PrimaryButton>
+        </Stack>
       </Stack>
     </Stack>
   );
@@ -116,6 +125,8 @@ export const SnapshotForm = ({
   onAddButtonClick,
   onRowTypeChange,
   onRowValueChange,
+  onRowUpButtonClick,
+  onRowDownButtonClick,
   onRowDeleteButtonClick,
   onNewButtonClick,
   onSaveButtonClick,
@@ -129,6 +140,8 @@ export const SnapshotForm = ({
   onAddButtonClick: () => void;
   onRowTypeChange: (index: number, type: string) => void;
   onRowValueChange: (index: number, value: string) => void;
+  onRowUpButtonClick: (index: number) => void;
+  onRowDownButtonClick: (index: number) => void;
   onRowDeleteButtonClick: (index: number) => void;
   onNewButtonClick: () => void;
   onSaveButtonClick: () => void;
@@ -181,6 +194,8 @@ export const SnapshotForm = ({
               rowIndex={i}
               onRowTypeChange={onRowTypeChange}
               onRowValueChange={onRowValueChange}
+              onRowUpButtonClick={onRowUpButtonClick}
+              onRowDownButtonClick={onRowDownButtonClick}
               onRowDeleteButtonClick={onRowDeleteButtonClick}
             />
             {i === snapshot.rows.length - 1 && <PrimaryButton onClick={onAddButtonClick}>Add</PrimaryButton>}
@@ -234,6 +249,26 @@ export const SnapshotPage = () => {
     setSnapshot((previous) => {
       const snapshot = { ...previous };
       snapshot.rows[index].value = value;
+      return snapshot;
+    });
+  };
+
+  const onRowUpButtonClick = (index: number) => {
+    setSnapshot((previous) => {
+      const snapshot = { ...previous };
+      const temp = snapshot.rows[index];
+      snapshot.rows[index] = snapshot.rows[index - 1];
+      snapshot.rows[index - 1] = temp;
+      return snapshot;
+    });
+  };
+
+  const onRowDownButtonClick = (index: number) => {
+    setSnapshot((previous) => {
+      const snapshot = { ...previous };
+      const temp = snapshot.rows[index];
+      snapshot.rows[index] = snapshot.rows[index + 1];
+      snapshot.rows[index + 1] = temp;
       return snapshot;
     });
   };
@@ -310,6 +345,8 @@ export const SnapshotPage = () => {
         onAddButtonClick={onAddButtonClick}
         onRowTypeChange={onRowTypeChange}
         onRowValueChange={onRowValueChange}
+        onRowUpButtonClick={onRowUpButtonClick}
+        onRowDownButtonClick={onRowDownButtonClick}
         onRowDeleteButtonClick={onRowDeleteButtonClick}
         onNewButtonClick={onNewButtonClick}
         onSaveButtonClick={onSaveButtonClick}
