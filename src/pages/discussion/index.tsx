@@ -11,9 +11,9 @@ const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
       const fileName = discussion.messages[discussion.messages.length - 1]?.lines;
       import(`../../assets/audio/${fileName}.mp3`)
         .then((module) => {
-          new Audio(module.default).play();
+          new Audio(module.default).play().catch(() => {});
         })
-        .catch((e) => {});
+        .catch(() => {});
     }
   }, [discussion]);
 
