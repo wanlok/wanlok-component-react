@@ -6,13 +6,6 @@ import { PrimaryButton } from "../../components/PrimaryButton";
 const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
   const stackRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (stackRef.current) {
-      stackRef.current.scrollTop = stackRef.current.scrollHeight;
-    }
-    playAudio();
-  }, [discussion]);
-
   const playAudio = () => {
     if (discussion.messages.length > 0) {
       const fileName = discussion.messages[discussion.messages.length - 1]?.lines;
@@ -23,6 +16,13 @@ const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
         .catch((e) => {});
     }
   };
+
+  useEffect(() => {
+    if (stackRef.current) {
+      stackRef.current.scrollTop = stackRef.current.scrollHeight;
+    }
+    playAudio();
+  }, [discussion, playAudio]);
 
   return (
     <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto" }}>
