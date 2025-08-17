@@ -5,6 +5,7 @@ import { HongKongBuildingMap } from "../pages/hong-kong-building-map";
 import { Chart } from "../pages/chart";
 import { SnapshotPage } from "../pages/snapshot";
 import { PDFPage } from "../pages/pdf";
+import { Image } from "../pages/image";
 
 export const routes = [
   {
@@ -42,6 +43,11 @@ export const routes = [
         path: "/snapshot",
         element: <SnapshotPage />,
         children: [{ path: ":id", element: <SnapshotPage /> }]
+      },
+      {
+        name: "Image",
+        path: "/image",
+        element: <Image />
       }
     ]
   },
