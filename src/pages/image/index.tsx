@@ -7,7 +7,7 @@ interface FileInfo {
   path?: string;
 }
 
-const serverAddress = "http://wanlok.ddns.net:3000";
+const serverAddress = "https://wanlok.ddns.net:3000";
 
 export const Image = () => {
   const [files, setFiles] = useState<File[]>([]);
