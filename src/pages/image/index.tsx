@@ -49,7 +49,7 @@ export const Image = () => {
       <div>
         {response.length > 0 && (
           <a href={`${serverAddress}${response[0].path}`}>
-            <img src={`${serverAddress}${response[0].path}`} />
+            <img src={`${serverAddress}${response[0].path}`} alt="" />
           </a>
         )}
       </div>
