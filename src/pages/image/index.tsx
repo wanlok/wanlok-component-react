@@ -42,9 +42,9 @@ export const Image = () => {
         <input type="file" multiple name="files" accept="image/*" onChange={onChange} />
         <button onClick={handleUpload}>Upload</button>
       </div>
-      <Stack sx={{ flexDirection: "row" }}>
+      <Stack sx={{ flexDirection: "row", flexWrap: "wrap" }}>
         {imageDocument?.fileInfoList.map((fileInfo) => (
-          <Stack sx={{ flex: 0.25 }}>
+          <Stack sx={{ flex: "0 0 25%" }}>
             <img style={{ width: "100%" }} src={`${serverAddress}${fileInfo.path}`} />
           </Stack>
         ))}
