@@ -25,7 +25,7 @@ export const useImage = () => {
       setImageDocument(snapshot.data() as ImageDocument);
     });
     return () => unsubscribe();
-  }, [documentId]);
+  }, []);
 
   const addFileInfoList = async (fileInfoList: FileInfo[]) => {
     const docRef = doc(db, collectionName, documentId);
@@ -35,9 +35,7 @@ export const useImage = () => {
         fileInfoList: [...imageDocument.fileInfoList, ...fileInfoList]
       });
     } else {
-      await setDoc(docRef, {
-        fileInfoList
-      });
+      await setDoc(docRef, { fileInfoList });
     }
   };
 

@@ -45,7 +45,7 @@ export const Image = () => {
       <Stack sx={{ flexDirection: "row", flexWrap: "wrap" }}>
         {imageDocument?.fileInfoList.map((fileInfo) => (
           <Stack sx={{ flex: "0 0 25%" }}>
-            <img style={{ width: "100%" }} src={`${serverAddress}${fileInfo.path}`} />
+            <img style={{ width: "100%" }} src={`${serverAddress}${fileInfo.path}`} alt="" />
           </Stack>
         ))}
       </Stack>
