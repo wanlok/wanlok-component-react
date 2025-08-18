@@ -1,0 +1,84 @@
+import { useEffect, useState } from "react";
+import { db } from "../../firebase";
+import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+
+const collectionName = "dummy";
+const documentId = "youtube";
+
+export interface YouTubeOembed {
+  title: string;
+  author_name: string;
+  author_url: string;
+  thumbnail_url: string;
+  thumbnail_width: number;
+  thumbnail_height: number;
+  html: string;
+  width: number;
+  height: number;
+}
+
+export interface YouTubeDocument {
+  [key: string]: YouTubeOembed;
+}
+
+const fetchYouTubeOembed = async (urlString: string) => {
+  let youTubeOembed: YouTubeOembed | undefined = undefined;
+  try {
+    const response = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(urlString)}&format=json`);
+    if (response.ok) {
+      youTubeOembed = (await response.json()) as YouTubeOembed;
+    }
+  } catch (e) {}
+  return youTubeOembed;
+};
+
+function extractYouTubeUrlStrings(text: string): string[] {
+  const matches = text.match(
+    /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=[\w-]{11}|embed\/[\w-]{11})|youtu\.be\/[\w-]{11})(?:[^\s]*)?/g
+  );
+  return matches ?? [];
+}
+
+function extractYouTubeUrlStringV(urlString: string): string | null {
+  const match = urlString.match(/(?:v=|\/embed\/|\.be\/)([a-zA-Z0-9_-]{11})/);
+  return match ? match[1] : null;
+}
+
+export const useYouTube = () => {
+  const [document, setDocument] = useState<YouTubeDocument>();
+
+  useEffect(() => {
+    const docRef = doc(db, collectionName, documentId);
+    const unsubscribe = onSnapshot(docRef, (snapshot) => {
+      setDocument(snapshot.data() as YouTubeDocument);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  const add = async (text: string) => {
+    const urlStrings = extractYouTubeUrlStrings(text);
+    const entries = (
+      await Promise.all(
+        urlStrings.map(async (urlString) => {
+          const key = extractYouTubeUrlStringV(urlString);
+          const value = await fetchYouTubeOembed(urlString);
+          return key && value ? [key, value] : null;
+        })
+      )
+    ).filter(Boolean) as [string, YouTubeOembed][];
+    if (entries.length > 0) {
+      const dict = Object.fromEntries(entries);
+      const docRef = doc(db, collectionName, documentId);
+      if (document) {
+        await updateDoc(docRef, {
+          ...document,
+          ...dict
+        });
+      } else {
+        await setDoc(docRef, dict);
+      }
+    }
+  };
+
+  return { document, add };
+};

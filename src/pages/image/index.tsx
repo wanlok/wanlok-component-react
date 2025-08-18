@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FileInfo, useImage } from "./useImage";
-import { Stack } from "@mui/material";
+import { Box, Link, Stack } from "@mui/material";
 
 const serverAddress = "https://wanlok.ddns.net:3000";
 
@@ -44,9 +44,23 @@ export const Image = () => {
       </div>
       <Stack sx={{ flexDirection: "row", flexWrap: "wrap" }}>
         {imageDocument?.fileInfoList.map((fileInfo) => (
-          <Stack sx={{ flex: "0 0 25%" }}>
-            <img style={{ width: "100%" }} src={`${serverAddress}${fileInfo.path}`} alt="" />
-          </Stack>
+          <Link
+            sx={{ flex: "0 0 20%", aspectRatio: "1 / 1" }}
+            href={`${serverAddress}${fileInfo.path}`}
+            target="_blank"
+          >
+            <Box
+              component="img"
+              src={`${serverAddress}${fileInfo.path}`}
+              alt=""
+              sx={{
+                display: "block",
+                objectFit: "cover",
+                width: "100%",
+                height: "100%"
+              }}
+            />
+          </Link>
         ))}
       </Stack>
     </div>
