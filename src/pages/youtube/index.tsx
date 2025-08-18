@@ -13,7 +13,7 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
           Object.entries(document).map(([v, youTubeOembed]) => (
             <Link
               href={`${youTubeUrl}${v}`}
-              sx={{ width: "calc(25% - 1px)", backgroundColor: "#CCCCCC", textDecoration: "none" }}
+              sx={{ width: "calc(25% - 1px)", backgroundColor: "#000000", textDecoration: "none" }}
             >
               <Stack sx={{ aspectRatio: "16/9" }}>
                 <Box
@@ -37,7 +37,7 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
-                    color: "black"
+                    color: "#FFFFFF"
                   }}
                 >
                   {youTubeOembed.title}
