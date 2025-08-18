@@ -23,7 +23,8 @@ export const PrimaryButton = ({
       sx={
         sx ?? {
           height: height,
-          p: 0,
+          py: 0,
+          px: 2,
           textTransform: "none",
           borderRadius: 0,
           fontSize: 14
