@@ -23,8 +23,10 @@ export const PrimaryButton = ({
       sx={
         sx ?? {
           height: height,
+          p: 0,
           textTransform: "none",
-          borderRadius: 0
+          borderRadius: 0,
+          fontSize: 14
         }
       }
       onClick={onClick}

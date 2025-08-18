@@ -39,7 +39,8 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
                     WebkitBoxOrient: "vertical",
                     overflow: "hidden",
                     textOverflow: "ellipsis",
-                    color: "#FFFFFF"
+                    color: "#FFFFFF",
+                    fontSize: 16
                   }}
                 >
                   {youTubeOembed.title}
@@ -63,8 +64,8 @@ const YouTubeForm = ({ add }: { add: (text: string) => Promise<void> }) => {
   };
 
   return (
-    <Stack sx={{ flexDirection: "row", gap: 2, p: 2, backgroundColor: "#EEEEEE" }}>
-      <Stack sx={{ flex: 1, gap: 2 }}>
+    <Stack sx={{ flexDirection: "row", gap: 1, p: 1, backgroundColor: "#EEEEEE" }}>
+      <Stack sx={{ flex: 1 }}>
         <TextInput
           placeholder="YouTube Links"
           value={text}

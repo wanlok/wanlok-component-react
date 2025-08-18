@@ -81,6 +81,15 @@ export const TextInput = ({
           //     submit();
           //   }
         }}
+        sx={{
+          "& .MuiInputBase-root": {
+            p: 0
+          },
+          "& textarea": {
+            p: 1,
+            fontSize: 14
+          }
+        }}
       />
       {!hideHelperText && <FormHelperText sx={{ mt: 1 }}>Shift + Enter for multiple lines</FormHelperText>}
     </FormControl>
