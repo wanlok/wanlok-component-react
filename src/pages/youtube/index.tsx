@@ -1,10 +1,12 @@
 import { useState } from "react";
-import { Box, Link, Stack, Typography } from "@mui/material";
+import { Box, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { PrimaryButton } from "../../components/PrimaryButton";
 import { TextInput } from "../../components/TextInput";
 import { useYouTube, YouTubeDocument } from "./useYouTube";
 
 const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) => {
+  const { breakpoints } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
   const youTubeUrl = "https://www.youtube.com/watch?v=";
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
@@ -13,7 +15,7 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
           Object.entries(document).map(([v, youTubeOembed]) => (
             <Link
               href={`${youTubeUrl}${v}`}
-              sx={{ width: "calc(25% - 1px)", backgroundColor: "#000000", textDecoration: "none" }}
+              sx={{ width: mobile ? "100%" : "calc(25% - 1px)", backgroundColor: "#000000", textDecoration: "none" }}
             >
               <Stack sx={{ aspectRatio: "16/9" }}>
                 <Box
