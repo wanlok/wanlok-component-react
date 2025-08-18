@@ -10,12 +10,15 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
         {document &&
-          Object.entries(document).map(([v, a]) => (
-            <Link href={`${youTubeUrl}${v}`} sx={{ width: "calc(25% - 1px)", backgroundColor: "#DDDDDD" }}>
+          Object.entries(document).map(([v, youTubeOembed]) => (
+            <Link
+              href={`${youTubeUrl}${v}`}
+              sx={{ width: "calc(25% - 1px)", backgroundColor: "#CCCCCC", textDecoration: "none" }}
+            >
               <Stack sx={{ aspectRatio: "16/9" }}>
                 <Box
                   component="img"
-                  src={a.thumbnail_url}
+                  src={youTubeOembed.thumbnail_url}
                   alt=""
                   sx={{
                     display: "block",
@@ -37,7 +40,7 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
                     color: "black"
                   }}
                 >
-                  {a.title}
+                  {youTubeOembed.title}
                 </Typography>
               </Stack>
             </Link>
