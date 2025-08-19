@@ -10,8 +10,9 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
         {document &&
-          Object.entries(document).map(([v, youTubeOembed]) => (
+          Object.entries(document).map(([v, youTubeOembed], index) => (
             <Link
+              key={`youtube-${index}`}
               href={`${youTubeUrl}${v}`}
               sx={{ width: mobile ? "100%" : "calc(25% - 1px)", backgroundColor: "#000000", textDecoration: "none" }}
             >

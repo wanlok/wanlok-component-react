@@ -57,13 +57,14 @@ export const TextInputForm = ({ placeholder, rightButtons }: { placeholder: stri
         <TextInput placeholder={placeholder} value={text} onChange={(value) => setText(value)} hideHelperText={true} />
       </Stack>
       <Stack sx={{ flexDirection: sufficientSpaces ? "column" : "row", gap: "1px" }}>
-        {rightButtons.map(({ label, onClick, onClickWithText }) => (
+        {rightButtons.map(({ label, onClick, onClickWithText }, index) => (
           <WButton
             onClick={() => {
               onClick && onClick();
               onClickWithText && getText(onClickWithText);
             }}
             sx={{ height: buttonHeight }}
+            key={`right-button-${index}`}
           >
             {label}
           </WButton>
