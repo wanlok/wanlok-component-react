@@ -2,7 +2,7 @@ import { ButtonGroup, Card, CardContent, Grid, Typography } from "@mui/material"
 import classes from "./BuildingListPanel.module.css";
 import { Building } from "./ArcGISMap";
 import { Dispatch, useRef } from "react";
-import { PrimaryButton } from "../../components/PrimaryButton";
+import { WButton } from "../../components/WButton";
 
 export const BuildingListPanel = ({
   buildings,
@@ -49,14 +49,14 @@ export const BuildingListPanel = ({
         </Typography>
         <input ref={inputRef} style={{ display: "none" }} type="file" onChange={load} />
         <ButtonGroup disableElevation variant="contained" aria-label="Basic button group" fullWidth>
-          <PrimaryButton
+          <WButton
             onClick={() => {
               inputRef.current?.click();
             }}
           >
             Load
-          </PrimaryButton>
-          <PrimaryButton onClick={save}>Save</PrimaryButton>
+          </WButton>
+          <WButton onClick={save}>Save</WButton>
         </ButtonGroup>
         {buildings.map((building, index) => (
           <Card elevation={0} sx={{ mt: 2 }}>
@@ -64,8 +64,8 @@ export const BuildingListPanel = ({
               <Typography>Building {index + 1}</Typography>
             </CardContent>
             <ButtonGroup disableElevation variant="contained" aria-label="Basic button group" fullWidth>
-              <PrimaryButton onClick={() => onLocateBuildingButtonClick(building)}>Locate</PrimaryButton>
-              <PrimaryButton onClick={() => onDeleteBuildingButtonClick(building)}>Delete</PrimaryButton>
+              <WButton onClick={() => onLocateBuildingButtonClick(building)}>Locate</WButton>
+              <WButton onClick={() => onDeleteBuildingButtonClick(building)}>Delete</WButton>
             </ButtonGroup>
           </Card>
         ))}

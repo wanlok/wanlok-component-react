@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Discussion, useDiscussion } from "./useDiscussion";
 import { FormControl, FormHelperText, Stack, TextField, Typography } from "@mui/material";
-import { PrimaryButton } from "../../components/PrimaryButton";
+import { WButton } from "../../components/WButton";
 import { YouTubePreview } from "../../components/YouTubePreview";
 
 const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
@@ -69,7 +69,7 @@ const DiscussionForm = ({ addMessage }: { addMessage: (name: string, lines: stri
         </FormControl>
       </Stack>
       <Stack sx={{ justifyContent: "center" }}>
-        <PrimaryButton onClick={submit}>Send</PrimaryButton>
+        <WButton onClick={submit}>Send</WButton>
       </Stack>
     </Stack>
   );

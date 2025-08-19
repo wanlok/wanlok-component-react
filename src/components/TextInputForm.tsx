@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import { useState } from "react";
 import { TextInput } from "./TextInput";
-import { PrimaryButton } from "./PrimaryButton";
+import { WButton } from "./WButton";
 
 export const TextInputForm = ({
   placeholder,
@@ -20,12 +20,17 @@ export const TextInputForm = ({
   };
 
   return (
-    <Stack sx={{ flexDirection: "row", gap: 1, p: 1, backgroundColor: "#EEEEEE" }}>
-      <Stack sx={{ flex: 1 }}>
+    <Stack sx={{ flexDirection: "row", backgroundColor: "#EEEEEE" }}>
+      <Stack sx={{ flex: 1, p: 1 }}>
         <TextInput placeholder={placeholder} value={text} onChange={(value) => setText(value)} hideHelperText={true} />
       </Stack>
-      <Stack sx={{}}>
-        <PrimaryButton onClick={onClick}>Save</PrimaryButton>
+      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+        <WButton onClick={onClick} sx={{ height: "100%" }}>
+          Save
+        </WButton>{" "}
+        <WButton onClick={onClick} sx={{ height: "100%" }}>
+          Button 2
+        </WButton>
       </Stack>
     </Stack>
   );

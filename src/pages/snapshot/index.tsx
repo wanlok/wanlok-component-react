@@ -1,6 +1,6 @@
 import { Card, CardActionArea, CardContent, Divider, Stack, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { PrimaryButton } from "../../components/PrimaryButton";
+import { WButton } from "../../components/WButton";
 import { Row, Snapshot, useSnapshot } from "./useSnapshot";
 import { useNavigate, useParams } from "react-router-dom";
 import { TextInput } from "../../components/TextInput";
@@ -33,9 +33,9 @@ export const SnapshotInput = ({
           <Divider />
         </Stack>
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          <PrimaryButton onClick={() => onRowUpButtonClick(rowIndex)}>Up</PrimaryButton>
-          <PrimaryButton onClick={() => onRowDownButtonClick(rowIndex)}>Down</PrimaryButton>
-          <PrimaryButton onClick={() => onRowDeleteButtonClick(rowIndex)}>Delete</PrimaryButton>
+          <WButton onClick={() => onRowUpButtonClick(rowIndex)}>Up</WButton>
+          <WButton onClick={() => onRowDownButtonClick(rowIndex)}>Down</WButton>
+          <WButton onClick={() => onRowDeleteButtonClick(rowIndex)}>Delete</WButton>
         </Stack>
       </Stack>
       <Stack sx={{ flexDirection: "row", flex: 1, gap: 2, backgroundColor: "#EEEEEE", p: 2 }}>
@@ -167,13 +167,13 @@ export const SnapshotForm = ({
           <Typography variant="h5">{snapshotIndex > -1 ? `Snapshot ${snapshotIndex + 1}` : "New Snapshot"}</Typography>
           <Divider />
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-            <PrimaryButton onClick={onNewButtonClick}>New</PrimaryButton>
-            <PrimaryButton onClick={onSaveButtonClick}>Save</PrimaryButton>
-            {snapshot.id && <PrimaryButton onClick={onSaveAsNewButtonClick}>Save as New</PrimaryButton>}
-            {snapshot.id && <PrimaryButton onClick={onViewPageButtonClick}>View Page</PrimaryButton>}
-            {snapshot.id && <PrimaryButton onClick={onViewPDFButtonClick}>View PDF</PrimaryButton>}
-            {snapshot.id && <PrimaryButton onClick={onDownloadPDFButtonClick}>Download PDF</PrimaryButton>}
-            {snapshot.id && <PrimaryButton onClick={onDeleteButtonClick}>Delete</PrimaryButton>}
+            <WButton onClick={onNewButtonClick}>New</WButton>
+            <WButton onClick={onSaveButtonClick}>Save</WButton>
+            {snapshot.id && <WButton onClick={onSaveAsNewButtonClick}>Save as New</WButton>}
+            {snapshot.id && <WButton onClick={onViewPageButtonClick}>View Page</WButton>}
+            {snapshot.id && <WButton onClick={onViewPDFButtonClick}>View PDF</WButton>}
+            {snapshot.id && <WButton onClick={onDownloadPDFButtonClick}>Download PDF</WButton>}
+            {snapshot.id && <WButton onClick={onDeleteButtonClick}>Delete</WButton>}
           </Stack>
         </Stack>
         {snapshot.rows.map((row, i) => (
@@ -187,7 +187,7 @@ export const SnapshotForm = ({
               onRowDownButtonClick={onRowDownButtonClick}
               onRowDeleteButtonClick={onRowDeleteButtonClick}
             />
-            {i === snapshot.rows.length - 1 && <PrimaryButton onClick={onAddButtonClick}>Add</PrimaryButton>}
+            {i === snapshot.rows.length - 1 && <WButton onClick={onAddButtonClick}>Add</WButton>}
           </Stack>
         ))}
       </Stack>

@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 
 export const height = 40;
 
-export const PrimaryButton = ({
+export const WButton = ({
   children,
   fullWidth = false,
   sx,

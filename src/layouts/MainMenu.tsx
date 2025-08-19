@@ -1,7 +1,7 @@
 import { Link, matchPath, useLocation } from "react-router-dom";
 import { useTheme } from "@mui/material";
 import { routes } from "../configs/routes";
-import { PrimaryButton } from "../components/PrimaryButton";
+import { WButton } from "../components/WButton";
 import { Main } from "./Main";
 
 export const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fullWidth: boolean }) => {
@@ -15,7 +15,7 @@ export const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fu
     <>
       {filteredRoutes.map((route, index) => (
         <Link to={route.path} key={index}>
-          <PrimaryButton
+          <WButton
             fullWidth={fullWidth}
             sx={[
               {
@@ -29,7 +29,7 @@ export const MainMenu = ({ buttonHeight, fullWidth }: { buttonHeight: number; fu
             ]}
           >
             {route.name}
-          </PrimaryButton>
+          </WButton>
         </Link>
       ))}
     </>
