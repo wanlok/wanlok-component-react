@@ -21,6 +21,8 @@ export interface YouTubeDocument {
   [key: string]: YouTubeOembed;
 }
 
+export const youTubeUrl = "https://www.youtube.com/watch?v=";
+
 const fetchYouTubeOembed = async (urlString: string) => {
   let youTubeOembed: YouTubeOembed | undefined = undefined;
   try {
@@ -45,12 +47,12 @@ function extractYouTubeUrlStringV(urlString: string): string | null {
 }
 
 export const useYouTube = () => {
-  const [document, setDocument] = useState<YouTubeDocument>();
+  const [youTubeDocument, setYouTubeDocument] = useState<YouTubeDocument>();
 
   useEffect(() => {
     const docRef = doc(db, collectionName, documentId);
     const unsubscribe = onSnapshot(docRef, (snapshot) => {
-      setDocument(snapshot.data() as YouTubeDocument);
+      setYouTubeDocument(snapshot.data() as YouTubeDocument);
     });
     return () => unsubscribe();
   }, []);
@@ -69,9 +71,9 @@ export const useYouTube = () => {
     if (entries.length > 0) {
       const dict = Object.fromEntries(entries);
       const docRef = doc(db, collectionName, documentId);
-      if (document) {
+      if (youTubeDocument) {
         await updateDoc(docRef, {
-          ...document,
+          ...youTubeDocument,
           ...dict
         });
       } else {
@@ -80,5 +82,21 @@ export const useYouTube = () => {
     }
   };
 
-  return { document, add };
+  const exportUrls = () => {
+    const urls = [];
+    if (youTubeDocument) {
+      for (const [v] of Object.entries(youTubeDocument)) {
+        urls.push(`${youTubeUrl}${v}`);
+      }
+    }
+    const blob = new Blob([urls.join("\n")], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "export.txt";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return { document: youTubeDocument, add, exportUrls };
 };

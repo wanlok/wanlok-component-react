@@ -1,11 +1,10 @@
 import { Box, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { useYouTube, YouTubeDocument } from "./useYouTube";
+import { useYouTube, YouTubeDocument, youTubeUrl } from "./useYouTube";
 import { TextInputForm } from "../../components/TextInputForm";
 
 const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
-  const youTubeUrl = "https://www.youtube.com/watch?v=";
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
@@ -53,7 +52,7 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
 };
 
 export const YouTube = () => {
-  const { document, add } = useYouTube();
+  const { document, add, exportUrls } = useYouTube();
   return (
     <Stack sx={{ height: "100%" }}>
       <YouTubeList document={document} />
@@ -66,9 +65,7 @@ export const YouTube = () => {
           },
           {
             label: "Export",
-            onClick: () => {
-              console.log("export");
-            }
+            onClick: exportUrls
           }
         ]}
       />
