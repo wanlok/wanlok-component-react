@@ -5,7 +5,7 @@ export const height = 40;
 
 export const PrimaryButton = ({
   children,
-  fullWidth,
+  fullWidth = false,
   sx,
   onClick
 }: {
@@ -19,17 +19,18 @@ export const PrimaryButton = ({
       color="primary"
       variant="contained"
       disableElevation
-      fullWidth={fullWidth ?? true}
-      sx={
-        sx ?? {
-          height: height,
-          py: 0,
-          px: 2,
-          textTransform: "none",
-          borderRadius: 0,
-          fontSize: 14
-        }
-      }
+      fullWidth={fullWidth}
+      sx={{
+        height: height,
+        minWidth: 0,
+        textTransform: "none",
+        borderRadius: 0,
+        fontSize: 14,
+        whiteSpace: "nowrap",
+        px: 2,
+        py: 0,
+        ...sx
+      }}
       onClick={onClick}
     >
       {children}

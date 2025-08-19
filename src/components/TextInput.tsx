@@ -1,5 +1,46 @@
-import { FormControl, FormHelperText, SxProps, TextField, Theme } from "@mui/material";
 import { useRef } from "react";
+import { FormControl, FormHelperText, SxProps, TextField, Theme } from "@mui/material";
+
+const tabSpaces = "  ";
+
+const handleTab = (
+  element: HTMLTextAreaElement | null,
+  event: React.KeyboardEvent<HTMLDivElement>,
+  onChange: (value: string) => void
+) => {
+  if (element && event.key === "Tab") {
+    event.preventDefault();
+
+    const start = element.selectionStart;
+    const end = element.selectionEnd;
+
+    if (event.shiftKey) {
+      const lineStart = element.value.lastIndexOf("\n", start - 1) + 1;
+      const hasIndent = element.value.startsWith(tabSpaces, lineStart);
+
+      if (hasIndent) {
+        const newStart = start - tabSpaces.length;
+        const newEnd = end - tabSpaces.length;
+
+        element.setRangeText("", lineStart, lineStart + tabSpaces.length, "start");
+
+        onChange(element.value);
+
+        requestAnimationFrame(() => {
+          element.selectionStart = newStart;
+          element.selectionEnd = newEnd;
+        });
+      }
+    } else {
+      element.setRangeText(tabSpaces, start, end, "end");
+      onChange(element.value);
+
+      requestAnimationFrame(() => {
+        element.selectionStart = element.selectionEnd = start + tabSpaces.length;
+      });
+    }
+  }
+};
 
 export const TextInput = ({
   placeholder,
@@ -17,46 +58,6 @@ export const TextInput = ({
   inputPropsSx?: SxProps<Theme>;
 }) => {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
-
-  const handleTab = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const input = inputRef.current;
-    if (!input) return;
-
-    const tabSpaces = "  "; // or "\t"
-    const start = input.selectionStart!;
-    const end = input.selectionEnd!;
-    const valueBefore = input.value;
-    if (event.key === "Tab") {
-      event.preventDefault();
-
-      if (event.shiftKey) {
-        const lineStart = valueBefore.lastIndexOf("\n", start - 1) + 1;
-        const hasIndent = valueBefore.startsWith(tabSpaces, lineStart);
-
-        if (hasIndent) {
-          const newStart = start - tabSpaces.length;
-          const newEnd = end - tabSpaces.length;
-
-          input.setRangeText("", lineStart, lineStart + tabSpaces.length, "start");
-
-          onChange(input.value);
-
-          requestAnimationFrame(() => {
-            input.selectionStart = newStart;
-            input.selectionEnd = newEnd;
-          });
-        }
-      } else {
-        input.setRangeText(tabSpaces, start, end, "end");
-        onChange(input.value);
-
-        requestAnimationFrame(() => {
-          input.selectionStart = input.selectionEnd = start + tabSpaces.length;
-        });
-      }
-    }
-  };
-
   return (
     <FormControl>
       <TextField
@@ -74,7 +75,7 @@ export const TextInput = ({
         onChange={(event) => onChange(event.target.value)}
         onKeyDown={(event) => {
           if (tabAllowed) {
-            handleTab(event);
+            handleTab(inputRef.current, event, onChange);
           }
           //   if (event.key === "Enter" && !event.shiftKey) {
           //     event.preventDefault();
@@ -82,6 +83,15 @@ export const TextInput = ({
           //   }
         }}
         sx={{
+          "& .MuiOutlinedInput-root": {
+            "&.Mui-focused fieldset": {
+              borderWidth: "1px",
+              borderColor: "green"
+            },
+            "&:hover fieldset": {
+              borderColor: "green"
+            }
+          },
           "& .MuiInputBase-root": {
             p: 0
           },

@@ -167,37 +167,13 @@ export const SnapshotForm = ({
           <Typography variant="h5">{snapshotIndex > -1 ? `Snapshot ${snapshotIndex + 1}` : "New Snapshot"}</Typography>
           <Divider />
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-            <PrimaryButton fullWidth={false} onClick={onNewButtonClick}>
-              New
-            </PrimaryButton>
-            <PrimaryButton fullWidth={false} onClick={onSaveButtonClick}>
-              Save
-            </PrimaryButton>
-            {snapshot.id && (
-              <PrimaryButton fullWidth={false} onClick={onSaveAsNewButtonClick}>
-                Save as New
-              </PrimaryButton>
-            )}
-            {snapshot.id && (
-              <PrimaryButton fullWidth={false} onClick={onViewPageButtonClick}>
-                View Page
-              </PrimaryButton>
-            )}
-            {snapshot.id && (
-              <PrimaryButton fullWidth={false} onClick={onViewPDFButtonClick}>
-                View PDF
-              </PrimaryButton>
-            )}
-            {snapshot.id && (
-              <PrimaryButton fullWidth={false} onClick={onDownloadPDFButtonClick}>
-                Download PDF
-              </PrimaryButton>
-            )}
-            {snapshot.id && (
-              <PrimaryButton fullWidth={false} onClick={onDeleteButtonClick}>
-                Delete
-              </PrimaryButton>
-            )}
+            <PrimaryButton onClick={onNewButtonClick}>New</PrimaryButton>
+            <PrimaryButton onClick={onSaveButtonClick}>Save</PrimaryButton>
+            {snapshot.id && <PrimaryButton onClick={onSaveAsNewButtonClick}>Save as New</PrimaryButton>}
+            {snapshot.id && <PrimaryButton onClick={onViewPageButtonClick}>View Page</PrimaryButton>}
+            {snapshot.id && <PrimaryButton onClick={onViewPDFButtonClick}>View PDF</PrimaryButton>}
+            {snapshot.id && <PrimaryButton onClick={onDownloadPDFButtonClick}>Download PDF</PrimaryButton>}
+            {snapshot.id && <PrimaryButton onClick={onDeleteButtonClick}>Delete</PrimaryButton>}
           </Stack>
         </Stack>
         {snapshot.rows.map((row, i) => (
