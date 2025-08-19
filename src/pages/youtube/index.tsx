@@ -1,8 +1,6 @@
-import { useState } from "react";
 import { Box, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { PrimaryButton } from "../../components/PrimaryButton";
-import { TextInput } from "../../components/TextInput";
 import { useYouTube, YouTubeDocument } from "./useYouTube";
+import { TextInputForm } from "../../components/TextInputForm";
 
 const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) => {
   const { breakpoints } = useTheme();
@@ -53,39 +51,17 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
   );
 };
 
-const YouTubeForm = ({ add }: { add: (text: string) => Promise<void> }) => {
-  const [text, setText] = useState<string>("");
-
-  const submit = async () => {
-    if (text && text.trim().length > 0) {
-      await add(text);
-      setText("");
-    }
-  };
-
-  return (
-    <Stack sx={{ flexDirection: "row", gap: 1, p: 1, backgroundColor: "#EEEEEE" }}>
-      <Stack sx={{ flex: 1 }}>
-        <TextInput
-          placeholder="YouTube Links"
-          value={text}
-          onChange={(value) => setText(value)}
-          hideHelperText={true}
-        />
-      </Stack>
-      <Stack sx={{}}>
-        <PrimaryButton onClick={submit}>Save</PrimaryButton>
-      </Stack>
-    </Stack>
-  );
-};
-
 export const YouTube = () => {
   const { document, add } = useYouTube();
   return (
     <Stack sx={{ height: "100%" }}>
       <YouTubeList document={document} />
-      <YouTubeForm add={add} />
+      <TextInputForm
+        placeholder="YouTube Links"
+        onSubmitClick={async (text: string) => {
+          await add(text);
+        }}
+      />
     </Stack>
   );
 };
