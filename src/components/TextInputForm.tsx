@@ -3,15 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import { TextInput } from "./TextInput";
 import { WButton } from "./WButton";
 
-const buttonWidth = 80;
+interface RightButton {
+  label: string;
+  onClickWithText?: (text: string) => void;
+  onClick?: () => void;
+}
 
-export const TextInputForm = ({
-  placeholder,
-  onSubmitClick
-}: {
-  placeholder: string;
-  onSubmitClick: (text: string) => void;
-}) => {
+export const TextInputForm = ({ placeholder, rightButtons }: { placeholder: string; rightButtons: RightButton[] }) => {
   const [text, setText] = useState<string>("");
   const [buttonHeight, setButtonHeight] = useState<number>();
   const [sufficientSpaces, setSufficientSpaces] = useState<boolean>(false);
@@ -24,7 +22,7 @@ export const TextInputForm = ({
       if (entries.length > 0) {
         const height = entries[0].contentRect.height;
         if (buttonHeight) {
-          if (height >= buttonHeight * 2) {
+          if (height >= buttonHeight * rightButtons.length) {
             if (sufficientSpacesHeightRef.current === undefined) {
               setSufficientSpaces(true);
               sufficientSpacesHeightRef.current = height;
@@ -46,9 +44,9 @@ export const TextInputForm = ({
     return () => resizeObserver.disconnect();
   }, [buttonHeight]);
 
-  const onClick = async () => {
+  const getText = (onClick: (text: string) => void) => {
     if (text && text.trim().length > 0) {
-      onSubmitClick(text);
+      onClick(text);
       setText("");
     }
   };
@@ -59,12 +57,17 @@ export const TextInputForm = ({
         <TextInput placeholder={placeholder} value={text} onChange={(value) => setText(value)} hideHelperText={true} />
       </Stack>
       <Stack sx={{ flexDirection: sufficientSpaces ? "column" : "row", gap: "1px" }}>
-        <WButton onClick={onClick} sx={{ width: buttonWidth, height: buttonHeight }}>
-          Add
-        </WButton>
-        <WButton onClick={onClick} sx={{ width: buttonWidth, height: buttonHeight }}>
-          Export
-        </WButton>
+        {rightButtons.map(({ label, onClick, onClickWithText }) => (
+          <WButton
+            onClick={() => {
+              onClick && onClick();
+              onClickWithText && getText(onClickWithText);
+            }}
+            sx={{ height: buttonHeight }}
+          >
+            {label}
+          </WButton>
+        ))}
       </Stack>
     </Stack>
   );

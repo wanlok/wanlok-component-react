@@ -58,9 +58,18 @@ export const YouTube = () => {
       <YouTubeList document={document} />
       <TextInputForm
         placeholder="YouTube Links"
-        onSubmitClick={async (text: string) => {
-          await add(text);
-        }}
+        rightButtons={[
+          {
+            label: "Add",
+            onClickWithText: async (text) => await add(text)
+          },
+          {
+            label: "Export",
+            onClick: () => {
+              console.log("export");
+            }
+          }
+        ]}
       />
     </Stack>
   );
