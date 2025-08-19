@@ -42,7 +42,7 @@ export const TextInputForm = ({ placeholder, rightButtons }: { placeholder: stri
       resizeObserver.observe(stackRef.current);
     }
     return () => resizeObserver.disconnect();
-  }, [buttonHeight]);
+  }, [buttonHeight, rightButtons.length]);
 
   const getText = (onClick: (text: string) => void) => {
     if (text && text.trim().length > 0) {
