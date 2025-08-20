@@ -1,29 +1,36 @@
-import { Grid, useMediaQuery, useTheme } from "@mui/material";
+import { Stack, useMediaQuery, useTheme } from "@mui/material";
 import { Outlet } from "react-router-dom";
-import styles from "./Main.module.css";
 import { MainMenu } from "./MainMenu";
 import { useWindowDimensions } from "../common/useWindowDimension";
 
 export const Main = () => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
-  const height = useWindowDimensions().height - 1;
+  const height = useWindowDimensions().height;
   const buttonHeight = 56;
   const contentHeight = height - (mobile ? buttonHeight : 0);
   return (
-    <Grid container className={mobile ? "" : styles.root}>
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        md={2}
-        sx={[{ backgroundColor: "primary.main" }, mobile ? { height: buttonHeight } : {}]}
+    <Stack sx={{ flexDirection: mobile ? "column" : "row", height: "100vh" }}>
+      <Stack
+        sx={[
+          { backgroundColor: "primary.main" },
+          mobile
+            ? {
+                flexDirection: "row",
+                height: buttonHeight,
+                overflowX: "auto"
+              }
+            : {
+                flexDirection: "column",
+                width: "320px"
+              }
+        ]}
       >
         <MainMenu buttonHeight={buttonHeight} fullWidth={!mobile} />
-      </Grid>
-      <Grid item xs={12} sm={12} md={10} className={styles.content} sx={{ height: contentHeight }}>
+      </Stack>
+      <Stack sx={[{ flex: 1 }, mobile ? { height: "1%" } : {}]}>
         <Outlet context={[contentHeight]} />
-      </Grid>
-    </Grid>
+      </Stack>
+    </Stack>
   );
 };
