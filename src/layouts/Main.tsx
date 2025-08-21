@@ -33,19 +33,16 @@ export const Main = () => {
             {index > 0 && <Divider sx={{ m: 0 }} />}
             <Link to={route.path} key={index}>
               <WButton
-                sx={
-                  {
-                    height: buttonHeight,
-                    aspectRatio: "1 / 1",
-                    flexDirection: "column",
-                    // backgroundColor: "blue",
-                    gap: "4px",
-                    fontSize: 12
-                  }
-                  // matchPath({ path: route.path, end: route.path === "/" }, pathname)
-                  //   ? { backgroundColor: palette.primary.dark }
-                  //   : {}
-                }
+                sx={{
+                  height: buttonHeight,
+                  aspectRatio: "1 / 1",
+                  flexDirection: "column",
+                  gap: "4px",
+                  fontSize: 12,
+                  backgroundColor: matchPath({ path: route.path, end: route.path === "/" }, pathname)
+                    ? palette.primary.dark
+                    : palette.primary.main
+                }}
               >
                 <img src={route.image} alt="" style={{ width: 32, height: 32 }} />
                 {route.name}
