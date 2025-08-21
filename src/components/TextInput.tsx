@@ -97,7 +97,7 @@ export const TextInput = ({
           },
           "& textarea": {
             p: 1,
-            fontSize: 14
+            fontSize: 16
           }
         }}
       />

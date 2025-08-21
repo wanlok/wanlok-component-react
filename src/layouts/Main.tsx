@@ -7,8 +7,9 @@ import { WButton } from "../components/WButton";
 export const Main = () => {
   const { pathname } = useLocation();
   const { breakpoints, palette } = useTheme();
-  const { height } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
   const mobile = useMediaQuery(breakpoints.down("md"));
+
   const buttonHeight = 56;
   const contentHeight = height - (mobile ? buttonHeight : 0);
 
@@ -19,10 +20,11 @@ export const Main = () => {
     <Stack sx={{ flexDirection: mobile ? "column" : "row", height }}>
       <Stack
         sx={{
-          backgroundColor: "primary.main",
+          width: mobile ? width : 320,
           height: mobile ? buttonHeight : height,
           flexDirection: mobile ? "row" : "column",
-          overflowX: "auto"
+          overflowX: "auto",
+          backgroundColor: "primary.main"
         }}
       >
         {filteredRoutes.map((route, index) => (
@@ -45,7 +47,7 @@ export const Main = () => {
           </Link>
         ))}
       </Stack>
-      <Stack sx={[{ flex: 1, height: contentHeight }]}>
+      <Stack sx={[{ flex: 1, height: contentHeight, overflow: "auto" }]}>
         <Outlet context={[contentHeight]} />
       </Stack>
     </Stack>

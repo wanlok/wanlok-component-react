@@ -25,7 +25,7 @@ export const WButton = ({
         minWidth: 0,
         textTransform: "none",
         borderRadius: 0,
-        fontSize: 14,
+        fontSize: 16,
         whiteSpace: "nowrap",
         px: 2,
         py: 0,
