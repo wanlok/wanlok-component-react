@@ -7,6 +7,11 @@ import { SnapshotPage } from "../pages/snapshot";
 import { PDFPage } from "../pages/pdf";
 import { Image } from "../pages/image";
 import { YouTube } from "../pages/youtube";
+import DiscussionImage from "../assets/images/icons/discussion.png";
+import MapImage from "../assets/images/icons/map.png";
+import SnapshotImage from "../assets/images/icons/snapshot.png";
+import ImageImage from "../assets/images/icons/image.png";
+import YouTubeImage from "../assets/images/icons/youtube.png";
 
 export const routes = [
   {
@@ -14,6 +19,7 @@ export const routes = [
     element: <Main />,
     children: [
       {
+        image: YouTubeImage,
         name: "Home",
         path: "/",
         element: <Landing />
@@ -25,32 +31,38 @@ export const routes = [
         // ],
       },
       {
+        image: DiscussionImage,
         name: "Discussion",
         path: "/discussion",
         element: <DiscussionPage />
       },
       {
-        name: "Hong Kong Building Map",
+        image: MapImage,
+        name: "Maps",
         path: "/hong-kong-building-map",
         element: <HongKongBuildingMap />
       },
       {
+        image: YouTubeImage,
         name: "Chart",
         path: "/chart",
         element: <Chart />
       },
       {
+        image: SnapshotImage,
         name: "Snapshot",
         path: "/snapshot",
         element: <SnapshotPage />,
         children: [{ path: ":id", element: <SnapshotPage /> }]
       },
       {
+        image: ImageImage,
         name: "Image",
         path: "/image",
         element: <Image />
       },
       {
+        image: YouTubeImage,
         name: "YouTube",
         path: "/youtube",
         element: <YouTube />
@@ -62,6 +74,7 @@ export const routes = [
     element: <PDFPage />,
     children: [
       {
+        image: YouTubeImage,
         name: "", // TODO: remove this name later
         path: ":id",
         element: <PDFPage />

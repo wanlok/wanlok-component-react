@@ -5,12 +5,10 @@ export const height = 40;
 
 export const WButton = ({
   children,
-  fullWidth = false,
   sx,
   onClick
 }: {
   children?: ReactNode;
-  fullWidth?: boolean;
   sx?: SxProps<Theme>;
   onClick?: () => void;
 }) => {
@@ -19,7 +17,7 @@ export const WButton = ({
       color="primary"
       variant="contained"
       disableElevation
-      fullWidth={fullWidth}
+      fullWidth={false}
       sx={{
         height: height,
         minWidth: 0,
