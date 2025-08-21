@@ -30,7 +30,7 @@ export const Main = () => {
       >
         {filteredRoutes.map((route, index) => (
           <>
-            {index > 0 && <Divider sx={{ m: 0 }} />}
+            {index > 0 && <Divider orientation={mobile ? "vertical" : "horizontal"} />}
             <Link to={route.path} key={index}>
               <WButton
                 sx={{
