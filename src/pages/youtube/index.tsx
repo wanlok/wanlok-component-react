@@ -91,6 +91,11 @@ const categories: CardItem[] = [
     image: CallOfDutyImage
   },
   {
+    id: "war",
+    name: "War",
+    image: CallOfDutyImage
+  },
+  {
     id: "programming",
     name: "Programming",
     image: CallOfDutyImage
