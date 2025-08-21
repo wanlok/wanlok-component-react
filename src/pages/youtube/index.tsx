@@ -76,6 +76,11 @@ const categories: CardItem[] = [
     image: CallOfDutyImage
   },
   {
+    id: "football",
+    name: "Football",
+    image: CallOfDutyImage
+  },
+  {
     id: "hong-kong",
     name: "Hong Kong",
     image: CallOfDutyImage

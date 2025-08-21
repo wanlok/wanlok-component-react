@@ -1,5 +1,5 @@
 import { Fragment, ReactNode } from "react";
-import { Card, CardActionArea, CardContent, Divider, Stack } from "@mui/material";
+import { Card, CardActionArea, CardContent, Stack } from "@mui/material";
 
 export interface CardItem {
   [key: string]: any;
