@@ -84,12 +84,15 @@ export const TextInput = ({
         }}
         sx={{
           "& .MuiOutlinedInput-root": {
-            "&.Mui-focused fieldset": {
-              borderWidth: "1px",
-              borderColor: "green"
+            "& fieldset": {
+              borderColor: "#CCCCCC" // your custom default
             },
             "&:hover fieldset": {
-              borderColor: "green"
+              borderColor: "#000000"
+            },
+            "&.Mui-focused fieldset": {
+              borderWidth: "1px",
+              borderColor: "#000000"
             }
           },
           "& .MuiInputBase-root": {
