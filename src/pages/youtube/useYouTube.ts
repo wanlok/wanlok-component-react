@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 
-const collectionName = "dummy";
-const documentId = "youtube";
+const collectionName = "youtube";
 
 export interface YouTubeOembed {
   title: string;
@@ -46,16 +45,18 @@ function extractYouTubeUrlStringV(urlString: string): string | null {
   return match ? match[1] : null;
 }
 
-export const useYouTube = () => {
+export const useYouTube = (documentId: string) => {
   const [youTubeDocument, setYouTubeDocument] = useState<YouTubeDocument>();
 
   useEffect(() => {
+    console.log(collectionName, documentId);
+
     const docRef = doc(db, collectionName, documentId);
     const unsubscribe = onSnapshot(docRef, (snapshot) => {
       setYouTubeDocument(snapshot.data() as YouTubeDocument);
     });
     return () => unsubscribe();
-  }, []);
+  }, [documentId]);
 
   const add = async (text: string) => {
     const urlStrings = extractYouTubeUrlStrings(text);
