@@ -38,7 +38,7 @@ export const Main = () => {
                   aspectRatio: "1 / 1",
                   flexDirection: "column",
                   gap: "4px",
-                  fontSize: 12,
+                  fontSize: 14,
                   backgroundColor: matchPath({ path: route.path, end: route.path === "/" }, pathname)
                     ? palette.primary.dark
                     : palette.primary.main
