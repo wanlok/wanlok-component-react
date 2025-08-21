@@ -10,6 +10,7 @@ export const theme = createTheme({
     background: {
       default: "#EEEEEE",
       paper: "#FFFFFF"
-    }
+    },
+    divider: "#CCCCCC"
   }
 });
