@@ -47,7 +47,7 @@ export const Main = () => {
                   //   : {}
                 }
               >
-                <img src={route.image} alt="YouTube" style={{ width: 32, height: 32 }} />
+                <img src={route.image} alt="" style={{ width: 32, height: 32 }} />
                 {route.name}
               </WButton>
             </Link>
