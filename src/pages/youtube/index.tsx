@@ -1,7 +1,7 @@
-import { Box, Divider, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useYouTube, YouTubeDocument, youTubeUrl } from "./useYouTube";
 import { TextInputForm } from "../../components/TextInputForm";
-import { CardItem, CardList } from "../../components/CardList";
+import { CardItem, CardList, WCard } from "../../components/CardList";
 import { useState } from "react";
 import CallOfDutyImage from "../../assets/images/call-of-duty.jpg";
 import { DummyContainer } from "../../components/DummyContainer";
@@ -103,19 +103,23 @@ const categories: CardItem[] = [
   }
 ];
 
-const DummyList = ({ onItemClick }: { onItemClick: (item: CardItem) => void }) => {
+const CardContent = ({ item }: { item: CardItem }) => {
+  return (
+    <Stack sx={{ flexDirection: "row", gap: 2 }}>
+      <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
+        <Typography sx={{ fontSize: 16 }}>{item.name}</Typography>
+      </Stack>
+    </Stack>
+  );
+};
+
+const DummyList = ({ onItemClick }: { onItemClick: (item?: CardItem) => void }) => {
   return (
     <DummyContainer>
       <CardList
         width={200}
         items={categories}
-        renderItem={(item) => (
-          <Stack sx={{ flexDirection: "row", gap: 2 }}>
-            <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
-              <Typography sx={{ fontSize: 16 }}>{item.name}</Typography>
-            </Stack>
-          </Stack>
-        )}
+        renderItem={(item) => <CardContent item={item} />}
         onItemClick={onItemClick}
         sx={{ backgroundColor: "#CCCCCC", p: 1 }}
       />
@@ -124,12 +128,21 @@ const DummyList = ({ onItemClick }: { onItemClick: (item: CardItem) => void }) =
 };
 
 export const YouTube = () => {
+  const { breakpoints } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
   const [category, setCategory] = useState(categories[0]);
   const { document, add, exportUrls } = useYouTube(category.id);
   return (
     <Stack sx={{ height: "100%", flexDirection: "row" }}>
-      <DummyList onItemClick={(item) => setCategory(item)} />
+      {!mobile && <DummyList onItemClick={(item) => item && setCategory(item)} />}
       <Stack sx={{ flex: 1 }}>
+        {mobile && (
+          <DummyContainer>
+            <WCard onItemClick={() => console.log("Clicked")}>
+              <CardContent item={category} />
+            </WCard>
+          </DummyContainer>
+        )}
         <YouTubeList document={document} />
         <TextInputForm
           placeholder="YouTube Links"

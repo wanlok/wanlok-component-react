@@ -1,7 +1,15 @@
 import { Divider, Stack, SxProps, Theme, useMediaQuery, useTheme } from "@mui/material";
 import { ReactNode } from "react";
 
-export const DummyContainer = ({ sx, children }: { sx?: SxProps<Theme>; children?: ReactNode }) => {
+export const DummyContainer = ({
+  hideDivider = false,
+  sx,
+  children
+}: {
+  hideDivider?: boolean;
+  sx?: SxProps<Theme>;
+  children?: ReactNode;
+}) => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   return (
@@ -12,7 +20,7 @@ export const DummyContainer = ({ sx, children }: { sx?: SxProps<Theme>; children
       }}
     >
       {children}
-      <Divider orientation={mobile ? "horizontal" : "vertical"} />
+      {!hideDivider && <Divider orientation={mobile ? "horizontal" : "vertical"} />}
     </Stack>
   );
 };
