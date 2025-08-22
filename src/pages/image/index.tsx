@@ -44,11 +44,7 @@ export const Image = () => {
       </div>
       <Stack sx={{ flexDirection: "row", flexWrap: "wrap" }}>
         {imageDocument?.fileInfoList.map((fileInfo) => (
-          <Link
-            sx={{ flex: "0 0 20%", aspectRatio: "1 / 1" }}
-            href={`${serverAddress}${fileInfo.path}`}
-            target="_blank"
-          >
+          <Link sx={{ flex: "0 0 20%", aspectRatio: "1/1" }} href={`${serverAddress}${fileInfo.path}`} target="_blank">
             <Box
               component="img"
               src={`${serverAddress}${fileInfo.path}`}

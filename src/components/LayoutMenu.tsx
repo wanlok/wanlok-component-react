@@ -36,7 +36,7 @@ export const LayoutMenu = () => {
                 <WButton
                   sx={{
                     height: buttonHeight,
-                    aspectRatio: "1 / 1",
+                    aspectRatio: "1/1",
                     flexDirection: "column",
                     gap: "4px",
                     fontSize: 14,
