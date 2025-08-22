@@ -1,4 +1,4 @@
-import { Main } from "../layouts/Main";
+import { LayoutMenu } from "../components/LayoutMenu";
 import { Landing } from "../pages/landing";
 import { DiscussionPage } from "../pages/discussion";
 import { HongKongBuildingMap } from "../pages/hong-kong-building-map";
@@ -16,7 +16,7 @@ import YouTubeImage from "../assets/images/icons/youtube.png";
 export const routes = [
   {
     path: "/",
-    element: <Main />,
+    element: <LayoutMenu />,
     children: [
       {
         image: YouTubeImage,

@@ -2,13 +2,13 @@ import { Divider, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { Link, matchPath, Outlet, useLocation } from "react-router-dom";
 import { useWindowDimensions } from "../common/useWindowDimension";
 import { routes } from "../configs/routes";
-import { WButton } from "../components/WButton";
+import { WButton } from "./WButton";
 import { Fragment } from "react/jsx-runtime";
-import { DummyContainer } from "../components/DummyContainer";
+import { DummyContainer } from "./DummyContainer";
 
 const buttonHeight = 100;
 
-export const Main = () => {
+export const LayoutMenu = () => {
   const { pathname } = useLocation();
   const { breakpoints, palette } = useTheme();
   const { height } = useWindowDimensions();
@@ -16,7 +16,7 @@ export const Main = () => {
 
   const contentHeight = height - (mobile ? buttonHeight : 0);
 
-  const mainRoute = routes.find((route) => route.element?.type === Main);
+  const mainRoute = routes.find((route) => route.element?.type === LayoutMenu);
   const filteredRoutes = mainRoute?.children?.filter((child) => child.name !== undefined) ?? [];
 
   return (
