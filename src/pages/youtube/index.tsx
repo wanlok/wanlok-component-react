@@ -4,7 +4,7 @@ import { TextInputForm } from "../../components/TextInputForm";
 import { CardItem, CardList, WCard } from "../../components/CardList";
 import { useState } from "react";
 import CallOfDutyImage from "../../assets/images/call-of-duty.jpg";
-import { DummyContainer } from "../../components/DummyContainer";
+import { LayoutDivider } from "../../components/LayoutDivider";
 
 const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) => {
   const { breakpoints } = useTheme();
@@ -115,14 +115,14 @@ const CardContent = ({ item }: { item: CardItem }) => {
 
 const DummyList = ({ onItemClick }: { onItemClick: (item?: CardItem) => void }) => {
   return (
-    <DummyContainer>
+    <LayoutDivider>
       <CardList
         width={200}
         items={categories}
         renderItem={(item) => <CardContent item={item} />}
         onItemClick={onItemClick}
       />
-    </DummyContainer>
+    </LayoutDivider>
   );
 };
 
@@ -145,11 +145,11 @@ export const YouTube = () => {
       {!menuOpened && (
         <Stack sx={{ flex: 1 }}>
           {mobile && (
-            <DummyContainer>
+            <LayoutDivider>
               <WCard onItemClick={() => setMenuOpened(!menuOpened)}>
                 <CardContent item={category} />
               </WCard>
-            </DummyContainer>
+            </LayoutDivider>
           )}
           <YouTubeList document={document} />
           <TextInputForm

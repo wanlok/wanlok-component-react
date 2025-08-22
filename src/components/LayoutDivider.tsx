@@ -1,7 +1,7 @@
 import { Divider, Stack, SxProps, Theme, useMediaQuery, useTheme } from "@mui/material";
 import { ReactNode } from "react";
 
-export const DummyContainer = ({
+export const LayoutDivider = ({
   hideDivider = false,
   sx,
   children

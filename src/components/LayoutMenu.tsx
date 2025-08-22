@@ -4,7 +4,7 @@ import { useWindowDimensions } from "../common/useWindowDimension";
 import { routes } from "../configs/routes";
 import { WButton } from "./WButton";
 import { Fragment } from "react/jsx-runtime";
-import { DummyContainer } from "./DummyContainer";
+import { LayoutDivider } from "./LayoutDivider";
 
 const buttonHeight = 100;
 
@@ -21,7 +21,7 @@ export const LayoutMenu = () => {
 
   return (
     <Stack sx={{ flexDirection: mobile ? "column" : "row", height }}>
-      <DummyContainer sx={{ backgroundColor: "primary.main" }}>
+      <LayoutDivider sx={{ backgroundColor: "primary.main" }}>
         <Stack sx={{ flexDirection: mobile ? "row" : "column", overflowX: "auto", alignItems: "center" }}>
           {filteredRoutes.map((route, index) => (
             <Fragment key={`menu-fragment-${index}`}>
@@ -52,7 +52,7 @@ export const LayoutMenu = () => {
             </Fragment>
           ))}
         </Stack>
-      </DummyContainer>
+      </LayoutDivider>
       <Stack sx={[{ flex: 1, height: contentHeight, overflow: "auto" }]}>
         <Outlet context={[contentHeight]} />
       </Stack>
