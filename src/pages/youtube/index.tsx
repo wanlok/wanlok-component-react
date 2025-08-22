@@ -121,7 +121,6 @@ const DummyList = ({ onItemClick }: { onItemClick: (item?: CardItem) => void }) 
         items={categories}
         renderItem={(item) => <CardContent item={item} />}
         onItemClick={onItemClick}
-        sx={{ backgroundColor: "#CCCCCC", p: 1 }}
       />
     </DummyContainer>
   );
@@ -132,32 +131,42 @@ export const YouTube = () => {
   const mobile = useMediaQuery(breakpoints.down("md"));
   const [category, setCategory] = useState(categories[0]);
   const { document, add, exportUrls } = useYouTube(category.id);
+  const [menuOpened, setMenuOpened] = useState(false);
   return (
     <Stack sx={{ height: "100%", flexDirection: "row" }}>
-      {!mobile && <DummyList onItemClick={(item) => item && setCategory(item)} />}
-      <Stack sx={{ flex: 1 }}>
-        {mobile && (
-          <DummyContainer>
-            <WCard onItemClick={() => console.log("Clicked")} sx={{ backgroundColor: "#CCCCCC" }}>
-              <CardContent item={category} />
-            </WCard>
-          </DummyContainer>
-        )}
-        <YouTubeList document={document} />
-        <TextInputForm
-          placeholder="YouTube Links"
-          rightButtons={[
-            {
-              label: "Add",
-              onClickWithText: async (text) => await add(text)
-            },
-            {
-              label: "Export",
-              onClick: exportUrls
-            }
-          ]}
+      {(!mobile || menuOpened) && (
+        <DummyList
+          onItemClick={(item) => {
+            item && setCategory(item);
+            setMenuOpened(false);
+          }}
         />
-      </Stack>
+      )}
+      {!menuOpened && (
+        <Stack sx={{ flex: 1 }}>
+          {mobile && (
+            <DummyContainer>
+              <WCard onItemClick={() => setMenuOpened(!menuOpened)}>
+                <CardContent item={category} />
+              </WCard>
+            </DummyContainer>
+          )}
+          <YouTubeList document={document} />
+          <TextInputForm
+            placeholder="YouTube Links"
+            rightButtons={[
+              {
+                label: "Add",
+                onClickWithText: async (text) => await add(text)
+              },
+              {
+                label: "Export",
+                onClick: exportUrls
+              }
+            ]}
+          />
+        </Stack>
+      )}
     </Stack>
   );
 };
