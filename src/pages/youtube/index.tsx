@@ -138,7 +138,7 @@ export const YouTube = () => {
       <Stack sx={{ flex: 1 }}>
         {mobile && (
           <DummyContainer>
-            <WCard onItemClick={() => console.log("Clicked")}>
+            <WCard onItemClick={() => console.log("Clicked")} sx={{ backgroundColor: "#CCCCCC" }}>
               <CardContent item={category} />
             </WCard>
           </DummyContainer>

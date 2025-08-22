@@ -49,8 +49,6 @@ export const useYouTube = (documentId: string) => {
   const [youTubeDocument, setYouTubeDocument] = useState<YouTubeDocument>();
 
   useEffect(() => {
-    console.log(collectionName, documentId);
-
     const docRef = doc(db, collectionName, documentId);
     const unsubscribe = onSnapshot(docRef, (snapshot) => {
       setYouTubeDocument(snapshot.data() as YouTubeDocument);

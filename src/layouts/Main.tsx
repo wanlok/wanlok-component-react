@@ -21,7 +21,7 @@ export const Main = () => {
 
   return (
     <Stack sx={{ flexDirection: mobile ? "column" : "row", height }}>
-      <DummyContainer sx={{ backgroundColor: "primary.main" }}>
+      <DummyContainer hideDivider={pathname === "/youtube"} sx={{ backgroundColor: "primary.main" }}>
         <Stack sx={{ flexDirection: mobile ? "row" : "column", overflowX: "auto", alignItems: "center" }}>
           {filteredRoutes.map((route, index) => (
             <Fragment key={`menu-fragment-${index}`}>
