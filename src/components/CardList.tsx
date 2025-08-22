@@ -1,5 +1,5 @@
 import { Fragment, ReactNode } from "react";
-import { Card, CardActionArea, CardContent, Stack } from "@mui/material";
+import { Card, CardActionArea, CardContent, Stack, SxProps, Theme } from "@mui/material";
 
 export interface CardItem {
   [key: string]: any;
@@ -9,15 +9,17 @@ export const CardList = ({
   items,
   width,
   renderItem,
-  onItemClick
+  onItemClick,
+  sx
 }: {
   items: { [key: string]: any }[];
   width: number;
   renderItem: (item: CardItem, index: number) => ReactNode;
   onItemClick: (item: CardItem) => void;
+  sx?: SxProps<Theme>;
 }) => {
   return (
-    <Stack sx={{ width, overflowY: "auto" }}>
+    <Stack sx={{ width, overflowY: "auto", ...sx }}>
       <Stack sx={{ gap: "1px" }}>
         {items.map((item, index) => (
           <Fragment key={`card-list-${index}`}>

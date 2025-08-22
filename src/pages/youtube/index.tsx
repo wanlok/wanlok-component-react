@@ -1,9 +1,10 @@
-import { Box, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Divider, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useYouTube, YouTubeDocument, youTubeUrl } from "./useYouTube";
 import { TextInputForm } from "../../components/TextInputForm";
 import { CardItem, CardList } from "../../components/CardList";
 import { useState } from "react";
 import CallOfDutyImage from "../../assets/images/call-of-duty.jpg";
+import { DummyContainer } from "../../components/DummyContainer";
 
 const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) => {
   const { breakpoints } = useTheme();
@@ -104,29 +105,21 @@ const categories: CardItem[] = [
 
 const DummyList = ({ onItemClick }: { onItemClick: (item: CardItem) => void }) => {
   return (
-    <CardList
-      width={400}
-      items={categories}
-      renderItem={(item) => (
-        <Stack sx={{ flexDirection: "row", gap: 2 }}>
-          <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
-            <Typography variant="h6">{item.name}</Typography>
+    <DummyContainer>
+      <CardList
+        width={200}
+        items={categories}
+        renderItem={(item) => (
+          <Stack sx={{ flexDirection: "row", gap: 2 }}>
+            <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
+              <Typography sx={{ fontSize: 16 }}>{item.name}</Typography>
+            </Stack>
           </Stack>
-          <Box
-            component="img"
-            src={item.image}
-            alt=""
-            sx={{
-              display: "block",
-              objectFit: "cover",
-              height: 100,
-              aspectRatio: "16/9"
-            }}
-          />
-        </Stack>
-      )}
-      onItemClick={onItemClick}
-    />
+        )}
+        onItemClick={onItemClick}
+        sx={{ backgroundColor: "#CCCCCC", p: 1 }}
+      />
+    </DummyContainer>
   );
 };
 
@@ -134,7 +127,7 @@ export const YouTube = () => {
   const [category, setCategory] = useState(categories[0]);
   const { document, add, exportUrls } = useYouTube(category.id);
   return (
-    <Stack sx={{ height: "100%", flexDirection: "row", gap: "1px" }}>
+    <Stack sx={{ height: "100%", flexDirection: "row" }}>
       <DummyList onItemClick={(item) => setCategory(item)} />
       <Stack sx={{ flex: 1 }}>
         <YouTubeList document={document} />

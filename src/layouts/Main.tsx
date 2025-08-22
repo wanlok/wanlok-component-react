@@ -4,13 +4,14 @@ import { useWindowDimensions } from "../common/useWindowDimension";
 import { routes } from "../configs/routes";
 import { WButton } from "../components/WButton";
 import { Fragment } from "react/jsx-runtime";
+import { DummyContainer } from "../components/DummyContainer";
 
 const buttonHeight = 100;
 
 export const Main = () => {
   const { pathname } = useLocation();
   const { breakpoints, palette } = useTheme();
-  const { width, height } = useWindowDimensions();
+  const { height } = useWindowDimensions();
   const mobile = useMediaQuery(breakpoints.down("md"));
 
   const contentHeight = height - (mobile ? buttonHeight : 0);
@@ -20,14 +21,7 @@ export const Main = () => {
 
   return (
     <Stack sx={{ flexDirection: mobile ? "column" : "row", height }}>
-      <Stack
-        sx={{
-          width: mobile ? width : buttonHeight,
-          height: mobile ? buttonHeight : height,
-          flexDirection: mobile ? "column" : "row",
-          backgroundColor: "primary.main"
-        }}
-      >
+      <DummyContainer sx={{ backgroundColor: "primary.main" }}>
         <Stack sx={{ flexDirection: mobile ? "row" : "column", overflowX: "auto", alignItems: "center" }}>
           {filteredRoutes.map((route, index) => (
             <Fragment key={`menu-fragment-${index}`}>
@@ -58,8 +52,7 @@ export const Main = () => {
             </Fragment>
           ))}
         </Stack>
-        <Divider orientation={mobile ? "horizontal" : "vertical"} />
-      </Stack>
+      </DummyContainer>
       <Stack sx={[{ flex: 1, height: contentHeight, overflow: "auto" }]}>
         <Outlet context={[contentHeight]} />
       </Stack>
