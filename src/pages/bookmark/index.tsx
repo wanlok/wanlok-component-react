@@ -8,6 +8,8 @@ import { Folder, getDocumentId, useFolder } from "./useFolder";
 import { WButton } from "../../components/WButton";
 import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
+import UpIcon from "../../assets/images/icons/up.png";
+import DownIcon from "../../assets/images/icons/down.png";
 import CrossIcon from "../../assets/images/icons/cross.png";
 import CrossWhiteIcon from "../../assets/images/icons/cross-white.png";
 
@@ -70,16 +72,27 @@ const YouTubeList = ({
   );
 };
 
-const FolderRow = ({ folder, selectedFolder }: { folder: Folder; selectedFolder?: Folder }) => {
+const FolderRow = ({
+  folder,
+  selectedFolder,
+  panelOpened
+}: {
+  folder: Folder;
+  selectedFolder?: Folder;
+  panelOpened?: boolean;
+}) => {
   return (
     <Stack sx={{ flexDirection: "row", p: 2, gap: 2, alignItems: "center" }}>
       <Box
         component="img"
         src={folder === selectedFolder ? FolderSelectedIcon : FolderIcon}
         alt=""
-        sx={folder === selectedFolder ? { width: "24px", height: "24px" } : { width: "24px", height: "24px" }}
+        sx={{ width: "24px", height: "24px" }}
       />
-      <Typography sx={{ fontSize: 16 }}>{folder.name}</Typography>
+      <Typography sx={{ flex: 1, fontSize: 16 }}>{folder.name}</Typography>
+      {(panelOpened === true || panelOpened === false) && (
+        <Box component="img" src={panelOpened ? UpIcon : DownIcon} alt="" sx={{ width: "16px", height: "16px" }} />
+      )}
     </Stack>
   );
 };
@@ -87,8 +100,8 @@ const FolderRow = ({ folder, selectedFolder }: { folder: Folder; selectedFolder?
 const FolderRowButtons = ({ folder, onDeleteClick }: { folder: Folder; onDeleteClick: (folder: Folder) => void }) => {
   return (
     <Stack>
-      <WButton onClick={() => onDeleteClick(folder)} sx={{ flex: 1, width: 40, p: 0, backgroundColor: "transparent" }}>
-        <Box component="img" src={CrossIcon} alt="" sx={{ width: "14px", height: "14px" }} />
+      <WButton onClick={() => onDeleteClick(folder)} sx={{ flex: 1, p: 2, backgroundColor: "transparent" }}>
+        <Box component="img" src={CrossIcon} alt="" sx={{ width: "16px", height: "16px" }} />
       </WButton>
     </Stack>
   );
@@ -128,7 +141,13 @@ export const Bookmarks = () => {
           />
         </>
       }
-      topChildren={selectedFolder ? <FolderRow folder={selectedFolder} selectedFolder={selectedFolder} /> : <></>}
+      topChildren={
+        selectedFolder ? (
+          <FolderRow folder={selectedFolder} selectedFolder={selectedFolder} panelOpened={panelOpened} />
+        ) : (
+          <></>
+        )
+      }
     >
       <YouTubeList document={document} onDeleteButtonClick={deleteVideo} />
       <TextInputForm
