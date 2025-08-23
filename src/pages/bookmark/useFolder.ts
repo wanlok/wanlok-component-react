@@ -15,7 +15,12 @@ interface FolderDocument {
 }
 
 export const getDocumentId = (folder?: Folder) => {
-  return folder ? folder.name.toLowerCase().replace(/\s+/g, "-") : undefined;
+  return folder
+    ? folder.name
+        .toLowerCase()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "")
+    : undefined;
 };
 
 export const useFolder = () => {
