@@ -32,6 +32,10 @@ export const useFolder = () => {
     fetchFolderDocument();
   }, []);
 
+  const openFolder = (folder: Folder) => {
+    navigate(`/bookmarks/${getDocumentId(folder)}`);
+  };
+
   useEffect(() => {
     if (folderDocument) {
       const folders = folderDocument.folders;
@@ -47,7 +51,7 @@ export const useFolder = () => {
         }
       }
     }
-  }, [folderDocument, id]);
+  }, [folderDocument, id, openFolder]);
 
   const addFolder = async (name: string) => {
     if (name.length > 0) {
@@ -77,10 +81,6 @@ export const useFolder = () => {
       await updateDoc(docRef, { ...folderDocument, folders });
       setFolderDocument((previous) => (previous ? { ...previous, folders } : undefined));
     }
-  };
-
-  const openFolder = (folder: Folder) => {
-    navigate(`/bookmarks/${getDocumentId(folder)}`);
   };
 
   return {
