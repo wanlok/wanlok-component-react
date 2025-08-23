@@ -10,7 +10,7 @@ const buttonHeight = 100;
 
 export const LayoutMenu = () => {
   const { pathname } = useLocation();
-  const { breakpoints, palette } = useTheme();
+  const { breakpoints } = useTheme();
   const { height } = useWindowDimensions();
   const mobile = useMediaQuery(breakpoints.down("md"));
 
