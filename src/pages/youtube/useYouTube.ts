@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 const collectionName = "youtube";
 
@@ -51,13 +51,13 @@ export const useYouTube = (folderName?: string) => {
   const documentId = folderName?.toLowerCase().replace(/\s+/g, "-");
 
   useEffect(() => {
-    if (documentId) {
-      const docRef = doc(db, collectionName, documentId);
-      const unsubscribe = onSnapshot(docRef, (snapshot) => {
-        setYouTubeDocument(snapshot.data() as YouTubeDocument);
-      });
-      return () => unsubscribe();
-    }
+    const fetchYouTubeDocument = async () => {
+      if (documentId) {
+        const docRef = doc(db, collectionName, documentId);
+        setYouTubeDocument((await getDoc(docRef)).data() as YouTubeDocument | undefined);
+      }
+    };
+    fetchYouTubeDocument();
   }, [documentId]);
 
   const add = async (text: string) => {

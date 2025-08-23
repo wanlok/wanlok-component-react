@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 const collectionName = "folders";
 const documentId = "folders";
@@ -19,17 +19,18 @@ export const useFolder = () => {
   const [selectedFolder, setSelectedFolder] = useState<Folder>();
 
   useEffect(() => {
-    const docRef = doc(db, collectionName, documentId);
-    const unsubscribe = onSnapshot(docRef, (snapshot) => {
-      const folderDocument = snapshot.data() as FolderDocument | undefined;
-      if (folderDocument) {
-        setFolderDocument(folderDocument);
-        if (folderDocument.folders.length > 0) {
-          setSelectedFolder(folderDocument.folders[0]);
+    const fetchFolderDocument = async () => {
+      const docRef = doc(db, collectionName, documentId);
+      const document = (await getDoc(docRef)).data() as FolderDocument | undefined;
+      if (document) {
+        document.folders.sort((a, b) => a.name.localeCompare(b.name));
+        setFolderDocument(document);
+        if (document.folders.length > 0) {
+          setSelectedFolder(document.folders[0]);
         }
       }
-    });
-    return () => unsubscribe();
+    };
+    fetchFolderDocument();
   }, []);
 
   const addFolder = async (name: string) => {
