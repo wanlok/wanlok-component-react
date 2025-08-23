@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
 const collectionName = "youtube";
 
@@ -87,6 +87,20 @@ export const useYouTube = (folderName?: string) => {
     }
   };
 
+  const deleteVideo = async (v: string) => {
+    if (youTubeDocument && documentId) {
+      const document = { ...youTubeDocument };
+      delete document[v];
+      const docRef = doc(db, collectionName, documentId);
+      if (Object.keys(document).length === 0) {
+        await deleteDoc(docRef);
+      } else {
+        await updateDoc(docRef, { [v]: deleteField() });
+      }
+      setYouTubeDocument(document);
+    }
+  };
+
   const exportUrls = () => {
     const urls = [];
     if (youTubeDocument) {
@@ -103,5 +117,5 @@ export const useYouTube = (folderName?: string) => {
     URL.revokeObjectURL(url);
   };
 
-  return { document: youTubeDocument, add, exportUrls };
+  return { document: youTubeDocument, add, deleteVideo, exportUrls };
 };
