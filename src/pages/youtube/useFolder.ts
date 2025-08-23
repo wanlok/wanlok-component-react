@@ -37,8 +37,13 @@ export const useFolder = () => {
       const folder = { name };
       const docRef = doc(db, collectionName, documentId);
       if (folderDocument) {
-        folders = [...folderDocument.folders, folder].sort((a, b) => a.name.localeCompare(b.name));
-        await updateDoc(docRef, { ...folderDocument, folders });
+        const duplicated = folderDocument.folders.some((f) => f.name === folder.name);
+        if (duplicated) {
+          folders = folderDocument.folders;
+        } else {
+          folders = [...folderDocument.folders, folder].sort((a, b) => a.name.localeCompare(b.name));
+          await updateDoc(docRef, { ...folderDocument, folders });
+        }
       } else {
         folders = [folder];
         await setDoc(docRef, { folders: [folder] });
