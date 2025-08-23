@@ -14,7 +14,7 @@ const Top = ({
 }) => {
   return (
     <LayoutDivider>
-      <WCard onItemClick={() => setOpened(!opened)}>{children}</WCard>
+      <WCard onClick={() => setOpened(!opened)}>{children}</WCard>
     </LayoutDivider>
   );
 };

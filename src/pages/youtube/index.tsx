@@ -55,7 +55,7 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
   );
 };
 
-const CardContent = ({ folder }: { folder: Folder }) => {
+const FolderRow = ({ folder }: { folder: Folder }) => {
   return (
     <Stack sx={{ flexDirection: "row", gap: 2 }}>
       <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
@@ -78,10 +78,10 @@ export const YouTube = () => {
       panel={
         <>
           <CardList
-            items={folders}
-            renderItem={(item) => <CardContent folder={item} />}
-            onItemClick={(item) => {
-              item && setSelectedFolder(item);
+            rows={folders}
+            renderContent={(folder) => <FolderRow folder={folder} />}
+            onContentClick={(folder) => {
+              folder && setSelectedFolder(folder);
               setPanelOpened(false);
             }}
           />
@@ -96,7 +96,7 @@ export const YouTube = () => {
           />
         </>
       }
-      topChildren={selectedFolder ? <CardContent folder={selectedFolder} /> : <></>}
+      topChildren={selectedFolder ? <FolderRow folder={selectedFolder} /> : <></>}
     >
       <YouTubeList document={document} />
       <TextInputForm
