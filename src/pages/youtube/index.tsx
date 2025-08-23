@@ -1,10 +1,10 @@
 import { Box, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useYouTube, YouTubeDocument, youTubeUrl } from "./useYouTube";
 import { TextInputForm } from "../../components/TextInputForm";
-import { CardItem, CardList } from "../../components/CardList";
+import { CardList } from "../../components/CardList";
 import { useState } from "react";
-import CallOfDutyImage from "../../assets/images/call-of-duty.jpg";
 import { LayoutPanel } from "../../components/LayoutPanel";
+import { Folder, useFolder } from "./useFolder";
 
 const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) => {
   const { breakpoints } = useTheme();
@@ -55,68 +55,21 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
   );
 };
 
-const categories: CardItem[] = [
-  {
-    id: "call-of-duty",
-    name: "Call of Duty",
-    image: CallOfDutyImage
-  },
-  {
-    id: "diablo",
-    name: "Diablo",
-    image: CallOfDutyImage
-  },
-  {
-    id: "gundam",
-    name: "Gundam",
-    image: CallOfDutyImage
-  },
-  {
-    id: "pokemon",
-    name: "Pokemon",
-    image: CallOfDutyImage
-  },
-  {
-    id: "football",
-    name: "Football",
-    image: CallOfDutyImage
-  },
-  {
-    id: "hong-kong",
-    name: "Hong Kong",
-    image: CallOfDutyImage
-  },
-  {
-    id: "japan",
-    name: "Japan",
-    image: CallOfDutyImage
-  },
-  {
-    id: "war",
-    name: "War",
-    image: CallOfDutyImage
-  },
-  {
-    id: "programming",
-    name: "Programming",
-    image: CallOfDutyImage
-  }
-];
-
-const CardContent = ({ item }: { item: CardItem }) => {
+const CardContent = ({ folder }: { folder: Folder }) => {
   return (
     <Stack sx={{ flexDirection: "row", gap: 2 }}>
       <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
-        <Typography sx={{ fontSize: 16 }}>{item.name}</Typography>
+        <Typography sx={{ fontSize: 16 }}>{folder.name}</Typography>
       </Stack>
     </Stack>
   );
 };
 
 export const YouTube = () => {
-  const [category, setCategory] = useState(categories[0]);
-  const { document, add, exportUrls } = useYouTube(category.id);
+  const { folders, selectedFolder, setSelectedFolder, addFolder } = useFolder();
+  const { document, add, exportUrls } = useYouTube(selectedFolder?.id);
   const [panelOpened, setPanelOpened] = useState(false);
+
   return (
     <LayoutPanel
       panelOpened={panelOpened}
@@ -125,10 +78,10 @@ export const YouTube = () => {
       panel={
         <>
           <CardList
-            items={categories}
-            renderItem={(item) => <CardContent item={item} />}
+            items={folders}
+            renderItem={(item) => <CardContent folder={item} />}
             onItemClick={(item) => {
-              item && setCategory(item);
+              item && setSelectedFolder(item);
               setPanelOpened(false);
             }}
           />
@@ -137,13 +90,13 @@ export const YouTube = () => {
             rightButtons={[
               {
                 label: "Add",
-                onClickWithText: async (text) => {}
+                onClickWithText: (text) => addFolder(text)
               }
             ]}
           />
         </>
       }
-      topChildren={<CardContent item={category} />}
+      topChildren={selectedFolder ? <CardContent folder={selectedFolder} /> : <></>}
     >
       <YouTubeList document={document} />
       <TextInputForm

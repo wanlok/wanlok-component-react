@@ -45,38 +45,42 @@ function extractYouTubeUrlStringV(urlString: string): string | null {
   return match ? match[1] : null;
 }
 
-export const useYouTube = (documentId: string) => {
+export const useYouTube = (documentId?: string) => {
   const [youTubeDocument, setYouTubeDocument] = useState<YouTubeDocument>();
 
   useEffect(() => {
-    const docRef = doc(db, collectionName, documentId);
-    const unsubscribe = onSnapshot(docRef, (snapshot) => {
-      setYouTubeDocument(snapshot.data() as YouTubeDocument);
-    });
-    return () => unsubscribe();
+    if (documentId) {
+      const docRef = doc(db, collectionName, documentId);
+      const unsubscribe = onSnapshot(docRef, (snapshot) => {
+        setYouTubeDocument(snapshot.data() as YouTubeDocument);
+      });
+      return () => unsubscribe();
+    }
   }, [documentId]);
 
   const add = async (text: string) => {
-    const urlStrings = extractYouTubeUrlStrings(text);
-    const entries = (
-      await Promise.all(
-        urlStrings.map(async (urlString) => {
-          const key = extractYouTubeUrlStringV(urlString);
-          const value = await fetchYouTubeOEmbed(urlString);
-          return key && value ? [key, value] : null;
-        })
-      )
-    ).filter(Boolean) as [string, YouTubeOEmbed][];
-    if (entries.length > 0) {
-      const dict = Object.fromEntries(entries);
-      const docRef = doc(db, collectionName, documentId);
-      if (youTubeDocument) {
-        await updateDoc(docRef, {
-          ...youTubeDocument,
-          ...dict
-        });
-      } else {
-        await setDoc(docRef, dict);
+    if (documentId) {
+      const urlStrings = extractYouTubeUrlStrings(text);
+      const entries = (
+        await Promise.all(
+          urlStrings.map(async (urlString) => {
+            const key = extractYouTubeUrlStringV(urlString);
+            const value = await fetchYouTubeOEmbed(urlString);
+            return key && value ? [key, value] : null;
+          })
+        )
+      ).filter(Boolean) as [string, YouTubeOEmbed][];
+      if (entries.length > 0) {
+        const dict = Object.fromEntries(entries);
+        const docRef = doc(db, collectionName, documentId);
+        if (youTubeDocument) {
+          await updateDoc(docRef, {
+            ...youTubeDocument,
+            ...dict
+          });
+        } else {
+          await setDoc(docRef, dict);
+        }
       }
     }
   };

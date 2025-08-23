@@ -1,9 +1,5 @@
-import { Fragment, ReactNode } from "react";
+import { ReactNode } from "react";
 import { Card, CardActionArea, CardContent, Stack, SxProps, Theme } from "@mui/material";
-
-export interface CardItem {
-  [key: string]: any;
-}
 
 export const WCard = ({
   item,
@@ -12,7 +8,7 @@ export const WCard = ({
   sx
 }: {
   item?: { [key: string]: any };
-  onItemClick: (item?: CardItem) => void;
+  onItemClick: (item?: any) => void;
   children?: ReactNode;
   sx?: SxProps<Theme>;
 }) => {
@@ -31,19 +27,20 @@ export const CardList = ({
   onItemClick
 }: {
   items: { [key: string]: any }[];
-  renderItem: (item: CardItem, index: number) => ReactNode;
-  onItemClick: (item?: CardItem) => void;
+  renderItem: (item: any, index: number) => ReactNode;
+  onItemClick: (item?: any) => void;
 }) => {
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ gap: "1px" }}>
         {items.map((item, index) => (
-          <Fragment key={`card-list-${index}`}>
+          <Stack key={`card-list-${index}`} sx={{ flexDirection: "row" }}>
             {/* {index > 0 && <Divider sx={{ mx: 2 }} />} */}
-            <WCard item={item} onItemClick={onItemClick}>
+            <WCard item={item} onItemClick={onItemClick} sx={{ flex: 1 }}>
               {renderItem(item, index)}
             </WCard>
-          </Fragment>
+            {/* <Button>Button</Button> */}
+          </Stack>
         ))}
       </Stack>
     </Stack>
