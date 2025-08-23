@@ -3,19 +3,35 @@ import { Stack, useMediaQuery, useTheme } from "@mui/material";
 import { LayoutDivider } from "./LayoutDivider";
 import { WCard } from "./CardList";
 
+const Top = ({
+  opened,
+  setOpened,
+  children
+}: {
+  opened: boolean;
+  setOpened: Dispatch<React.SetStateAction<boolean>>;
+  children?: ReactNode;
+}) => {
+  return (
+    <LayoutDivider>
+      <WCard onItemClick={() => setOpened(!opened)}>{children}</WCard>
+    </LayoutDivider>
+  );
+};
+
 export const LayoutPanel = ({
   panelOpened,
   setPanelOpened,
   width,
   panel,
-  mobilePanel,
+  topChildren,
   children
 }: {
   panelOpened: boolean;
   setPanelOpened: Dispatch<React.SetStateAction<boolean>>;
   width: number;
   panel: ReactNode;
-  mobilePanel?: ReactNode;
+  topChildren?: ReactNode;
   children?: ReactNode;
 }) => {
   const { breakpoints } = useTheme();
@@ -24,21 +40,19 @@ export const LayoutPanel = ({
     <Stack sx={{ height: "100%", flexDirection: "row" }}>
       {(!mobile || panelOpened) && (
         <LayoutDivider hideDivider={mobile} sx={mobile ? { flex: 1 } : { width }}>
-          {mobile && (
-            <LayoutDivider>
-              <WCard onItemClick={() => setPanelOpened(!panelOpened)}>{mobilePanel}</WCard>
-            </LayoutDivider>
+          {mobile ? (
+            <>
+              {<Top opened={panelOpened} setOpened={setPanelOpened} children={topChildren} />}
+              {panel}
+            </>
+          ) : (
+            <Stack sx={{ flex: 1 }}>{panel}</Stack>
           )}
-          {panel}
         </LayoutDivider>
       )}
       {!panelOpened && (
         <Stack sx={{ flex: 1 }}>
-          {mobile && (
-            <LayoutDivider>
-              <WCard onItemClick={() => setPanelOpened(!panelOpened)}>{mobilePanel}</WCard>
-            </LayoutDivider>
-          )}
+          {mobile && <Top opened={panelOpened} setOpened={setPanelOpened} children={topChildren} />}
           {children}
         </Stack>
       )}

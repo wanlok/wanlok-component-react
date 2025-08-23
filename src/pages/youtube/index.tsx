@@ -121,18 +121,29 @@ export const YouTube = () => {
     <LayoutPanel
       panelOpened={panelOpened}
       setPanelOpened={setPanelOpened}
-      width={240}
+      width={300}
       panel={
-        <CardList
-          items={categories}
-          renderItem={(item) => <CardContent item={item} />}
-          onItemClick={(item) => {
-            item && setCategory(item);
-            setPanelOpened(false);
-          }}
-        />
+        <>
+          <CardList
+            items={categories}
+            renderItem={(item) => <CardContent item={item} />}
+            onItemClick={(item) => {
+              item && setCategory(item);
+              setPanelOpened(false);
+            }}
+          />
+          <TextInputForm
+            placeholder="New Folder"
+            rightButtons={[
+              {
+                label: "Add",
+                onClickWithText: async (text) => {}
+              }
+            ]}
+          />
+        </>
       }
-      mobilePanel={<CardContent item={category} />}
+      topChildren={<CardContent item={category} />}
     >
       <YouTubeList document={document} />
       <TextInputForm
