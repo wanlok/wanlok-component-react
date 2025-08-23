@@ -6,12 +6,12 @@ import { Chart } from "../pages/chart";
 import { SnapshotPage } from "../pages/snapshot";
 import { PDFPage } from "../pages/pdf";
 import { Image } from "../pages/image";
-import { YouTube } from "../pages/youtube";
+import { YouTube } from "../pages/bookmark";
 import DiscussionImage from "../assets/images/icons/discussion.png";
 import MapImage from "../assets/images/icons/map.png";
 import SnapshotImage from "../assets/images/icons/snapshot.png";
 import ImageImage from "../assets/images/icons/image.png";
-import YouTubeImage from "../assets/images/icons/youtube.png";
+import FolderIcon from "../assets/images/icons/folder.png";
 
 export const routes = [
   {
@@ -19,7 +19,7 @@ export const routes = [
     element: <LayoutMenu />,
     children: [
       {
-        image: YouTubeImage,
+        image: FolderIcon,
         name: "Home",
         path: "/",
         element: <Landing />
@@ -43,7 +43,7 @@ export const routes = [
         element: <HongKongBuildingMap />
       },
       {
-        image: YouTubeImage,
+        image: FolderIcon,
         name: "Chart",
         path: "/chart",
         element: <Chart />
@@ -62,9 +62,9 @@ export const routes = [
         element: <Image />
       },
       {
-        image: YouTubeImage,
-        name: "YouTube",
-        path: "/youtube",
+        image: FolderIcon,
+        name: "Bookmarks",
+        path: "/bookmarks",
         element: <YouTube />
       }
     ]
@@ -74,7 +74,7 @@ export const routes = [
     element: <PDFPage />,
     children: [
       {
-        image: YouTubeImage,
+        image: FolderIcon,
         name: "", // TODO: remove this name later
         path: ":id",
         element: <PDFPage />
