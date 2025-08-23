@@ -67,6 +67,16 @@ const FolderRow = ({ folder }: { folder: Folder }) => {
   );
 };
 
+const FolderRowButtons = ({ folder, onDeleteClick }: { folder: Folder; onDeleteClick: (folder: Folder) => void }) => {
+  return (
+    <Stack>
+      <WButton onClick={() => onDeleteClick(folder)} sx={{ flex: 1, width: 40, p: 0, backgroundColor: "transparent" }}>
+        <Box component="img" src={CrossIcon} alt="" sx={{ width: "24px", height: "24px" }} />
+      </WButton>
+    </Stack>
+  );
+};
+
 export const YouTube = () => {
   const { folders, selectedFolder, setSelectedFolder, addFolder, deleteFolder } = useFolder();
   const { document, add, exportUrls } = useYouTube(selectedFolder?.name);
@@ -87,14 +97,7 @@ export const YouTube = () => {
               setPanelOpened(false);
             }}
             renderRightContent={(folder) => (
-              <Stack>
-                <WButton
-                  onClick={() => deleteFolder(folder)}
-                  sx={{ flex: 1, width: 40, p: 0, backgroundColor: "transparent" }}
-                >
-                  <Box component="img" src={CrossIcon} alt="" sx={{ width: "24px", height: "24px" }} />
-                </WButton>
-              </Stack>
+              <FolderRowButtons folder={folder} onDeleteClick={(folder) => deleteFolder(folder)} />
             )}
           />
           <TextInputForm

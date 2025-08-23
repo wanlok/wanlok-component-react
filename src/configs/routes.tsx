@@ -31,6 +31,12 @@ export const routes = [
         // ],
       },
       {
+        image: FolderIcon,
+        name: "Bookmarks",
+        path: "/bookmarks",
+        element: <YouTube />
+      },
+      {
         image: DiscussionImage,
         name: "Discussion",
         path: "/discussion",
@@ -60,12 +66,6 @@ export const routes = [
         name: "Image",
         path: "/image",
         element: <Image />
-      },
-      {
-        image: FolderIcon,
-        name: "Bookmarks",
-        path: "/bookmarks",
-        element: <YouTube />
       }
     ]
   },
