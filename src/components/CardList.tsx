@@ -28,16 +28,14 @@ export const WCard = ({
 export const CardList = ({
   items,
   renderItem,
-  onItemClick,
-  sx
+  onItemClick
 }: {
   items: { [key: string]: any }[];
   renderItem: (item: CardItem, index: number) => ReactNode;
   onItemClick: (item?: CardItem) => void;
-  sx?: SxProps<Theme>;
 }) => {
   return (
-    <Stack sx={{ flex: 1, overflowY: "auto", ...sx }}>
+    <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ gap: "1px" }}>
         {items.map((item, index) => (
           <Fragment key={`card-list-${index}`}>

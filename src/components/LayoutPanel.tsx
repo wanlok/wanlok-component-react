@@ -22,7 +22,11 @@ export const LayoutPanel = ({
   const mobile = useMediaQuery(breakpoints.down("md"));
   return (
     <Stack sx={{ height: "100%", flexDirection: "row" }}>
-      {(!mobile || panelOpened) && <LayoutDivider sx={mobile ? { flex: 1 } : { width }}>{panel}</LayoutDivider>}
+      {(!mobile || panelOpened) && (
+        <LayoutDivider hideDivider={mobile} sx={mobile ? { flex: 1 } : { width }}>
+          {panel}
+        </LayoutDivider>
+      )}
       {!panelOpened && (
         <Stack sx={{ flex: 1 }}>
           {mobile && (
