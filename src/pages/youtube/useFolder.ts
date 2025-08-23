@@ -30,7 +30,7 @@ export const useFolder = () => {
       }
     });
     return () => unsubscribe();
-  }, [documentId]);
+  }, []);
 
   const addFolder = async (name: string) => {
     if (name.length > 0) {
