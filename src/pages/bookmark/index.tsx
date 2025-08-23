@@ -1,5 +1,5 @@
 import { Box, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { useYouTube, YouTubeDocument, youTubeUrl } from "./useYouTube";
+import { useYouTube, YouTubeOEmbed, youTubeUrl } from "./useYouTube";
 import { TextInputForm } from "../../components/TextInputForm";
 import { CardList } from "../../components/CardList";
 import { useState } from "react";
@@ -17,7 +17,7 @@ const YouTubeList = ({
   document,
   onDeleteButtonClick
 }: {
-  document: YouTubeDocument | undefined;
+  document: { [key: string]: YouTubeOEmbed } | undefined;
   onDeleteButtonClick: (v: string) => void;
 }) => {
   const { breakpoints } = useTheme();
@@ -30,7 +30,7 @@ const YouTubeList = ({
             <Stack sx={{ position: "relative", width: mobile ? "100%" : "calc(25% - 1px)" }} key={`youtube-${index}`}>
               <WButton
                 onClick={() => onDeleteButtonClick(v)}
-                sx={{ position: "absolute", top: 0, right: 0, width: 40, height: 40, backgroundColor: "black" }}
+                sx={{ position: "absolute", top: 0, right: 0, width: 48, height: 48, backgroundColor: "black" }}
               >
                 <Box component="img" src={CrossWhiteIcon} alt="" sx={{ width: "16px", height: "16px" }} />
               </WButton>
