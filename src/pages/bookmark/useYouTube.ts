@@ -83,6 +83,7 @@ export const useYouTube = (folderName?: string) => {
         } else {
           await setDoc(docRef, dict);
         }
+        setYouTubeDocument({ ...youTubeDocument, ...dict });
       }
     }
   };
