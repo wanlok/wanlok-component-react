@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { useNavigate, useParams } from "react-router-dom";
 
 const collectionName = "folders";
 const documentId = "folders";
@@ -13,23 +14,40 @@ interface FolderDocument {
   folders: Folder[];
 }
 
+export const getDocumentId = (folder?: Folder) => {
+  return folder ? folder.name.toLowerCase().replace(/\s+/g, "-") : undefined;
+};
+
 export const useFolder = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
   const [folderDocument, setFolderDocument] = useState<FolderDocument>();
   const [selectedFolder, setSelectedFolder] = useState<Folder>();
 
   useEffect(() => {
     const fetchFolderDocument = async () => {
       const docRef = doc(db, collectionName, documentId);
-      const document = (await getDoc(docRef)).data() as FolderDocument | undefined;
-      if (document) {
-        setFolderDocument(document);
-        if (document.folders.length > 0) {
-          setSelectedFolder(document.folders[0]);
-        }
-      }
+      setFolderDocument((await getDoc(docRef)).data() as FolderDocument | undefined);
     };
     fetchFolderDocument();
   }, []);
+
+  useEffect(() => {
+    if (folderDocument) {
+      const folders = folderDocument.folders;
+      if (folders.length > 0) {
+        let folder: Folder | undefined = undefined;
+        if (id) {
+          folder = folders.find((f) => getDocumentId(f) === id);
+        }
+        if (folder) {
+          setSelectedFolder(folder);
+        } else {
+          openFolder(folders[0]);
+        }
+      }
+    }
+  }, [folderDocument, id]);
 
   const addFolder = async (name: string) => {
     if (name.length > 0) {
@@ -61,11 +79,15 @@ export const useFolder = () => {
     }
   };
 
+  const openFolder = (folder: Folder) => {
+    navigate(`/bookmarks/${getDocumentId(folder)}`);
+  };
+
   return {
     folders: folderDocument ? folderDocument?.folders : [],
     selectedFolder,
-    setSelectedFolder,
     addFolder,
-    deleteFolder
+    deleteFolder,
+    openFolder
   };
 };

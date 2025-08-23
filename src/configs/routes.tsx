@@ -35,7 +35,8 @@ export const routes = [
         image: FolderIcon,
         name: "Bookmarks",
         path: "/bookmarks",
-        element: <Bookmarks />
+        element: <Bookmarks />,
+        children: [{ path: ":id", element: <SnapshotPage /> }]
       },
       {
         image: DiscussionImage,

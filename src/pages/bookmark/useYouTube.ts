@@ -45,10 +45,8 @@ function extractYouTubeUrlStringV(urlString: string): string | null {
   return match ? match[1] : null;
 }
 
-export const useYouTube = (folderName?: string) => {
+export const useYouTube = (documentId?: string) => {
   const [youTubeDocument, setYouTubeDocument] = useState<YouTubeDocument>();
-
-  const documentId = folderName?.toLowerCase().replace(/\s+/g, "-");
 
   useEffect(() => {
     const fetchYouTubeDocument = async () => {

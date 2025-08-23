@@ -4,7 +4,7 @@ import { TextInputForm } from "../../components/TextInputForm";
 import { CardList } from "../../components/CardList";
 import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
-import { Folder, useFolder } from "./useFolder";
+import { Folder, getDocumentId, useFolder } from "./useFolder";
 import { WButton } from "../../components/WButton";
 import FolderIcon from "../../assets/images/icons/folder.png";
 import CrossIcon from "../../assets/images/icons/cross.png";
@@ -24,18 +24,14 @@ const YouTubeList = ({
       <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
         {document &&
           Object.entries(document).map(([v, youTubeOEmbed], index) => (
-            <Stack sx={{ position: "relative", width: mobile ? "100%" : "calc(25% - 1px)" }}>
+            <Stack sx={{ position: "relative", width: mobile ? "100%" : "calc(25% - 1px)" }} key={`youtube-${index}`}>
               <WButton
                 onClick={() => onDeleteButtonClick(v)}
                 sx={{ position: "absolute", top: 0, right: 0, width: 40, height: 40, backgroundColor: "black" }}
               >
                 <Box component="img" src={CrossWhiteIcon} alt="" sx={{ width: "16px", height: "16px" }} />
               </WButton>
-              <Link
-                key={`youtube-${index}`}
-                href={`${youTubeUrl}${v}`}
-                sx={{ flex: 1, backgroundColor: "#000000", textDecoration: "none" }}
-              >
+              <Link href={`${youTubeUrl}${v}`} sx={{ flex: 1, backgroundColor: "#000000", textDecoration: "none" }}>
                 <Stack sx={{ aspectRatio: "16/9" }}>
                   <Box
                     component="img"
@@ -93,8 +89,8 @@ const FolderRowButtons = ({ folder, onDeleteClick }: { folder: Folder; onDeleteC
 };
 
 export const Bookmarks = () => {
-  const { folders, selectedFolder, setSelectedFolder, addFolder, deleteFolder } = useFolder();
-  const { document, add, deleteVideo, exportUrls } = useYouTube(selectedFolder?.name);
+  const { folders, selectedFolder, addFolder, deleteFolder, openFolder } = useFolder();
+  const { document, add, deleteVideo, exportUrls } = useYouTube(getDocumentId(selectedFolder));
   const [panelOpened, setPanelOpened] = useState(false);
 
   return (
@@ -108,7 +104,7 @@ export const Bookmarks = () => {
             items={folders}
             renderContent={(folder) => <FolderRow folder={folder} />}
             onContentClick={(folder) => {
-              folder && setSelectedFolder(folder);
+              openFolder(folder);
               setPanelOpened(false);
             }}
             renderRightContent={(folder) => (
