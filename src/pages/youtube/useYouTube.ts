@@ -4,7 +4,7 @@ import { doc, onSnapshot, setDoc, updateDoc } from "firebase/firestore";
 
 const collectionName = "youtube";
 
-export interface YouTubeOembed {
+export interface YouTubeOEmbed {
   title: string;
   author_name: string;
   author_url: string;
@@ -17,20 +17,20 @@ export interface YouTubeOembed {
 }
 
 export interface YouTubeDocument {
-  [key: string]: YouTubeOembed;
+  [key: string]: YouTubeOEmbed;
 }
 
 export const youTubeUrl = "https://www.youtube.com/watch?v=";
 
-const fetchYouTubeOembed = async (urlString: string) => {
-  let youTubeOembed: YouTubeOembed | undefined = undefined;
+const fetchYouTubeOEmbed = async (urlString: string) => {
+  let youTubeOEmbed: YouTubeOEmbed | undefined = undefined;
   try {
     const response = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(urlString)}&format=json`);
     if (response.ok) {
-      youTubeOembed = (await response.json()) as YouTubeOembed;
+      youTubeOEmbed = (await response.json()) as YouTubeOEmbed;
     }
   } catch (e) {}
-  return youTubeOembed;
+  return youTubeOEmbed;
 };
 
 function extractYouTubeUrlStrings(text: string): string[] {
@@ -62,11 +62,11 @@ export const useYouTube = (documentId: string) => {
       await Promise.all(
         urlStrings.map(async (urlString) => {
           const key = extractYouTubeUrlStringV(urlString);
-          const value = await fetchYouTubeOembed(urlString);
+          const value = await fetchYouTubeOEmbed(urlString);
           return key && value ? [key, value] : null;
         })
       )
-    ).filter(Boolean) as [string, YouTubeOembed][];
+    ).filter(Boolean) as [string, YouTubeOEmbed][];
     if (entries.length > 0) {
       const dict = Object.fromEntries(entries);
       const docRef = doc(db, collectionName, documentId);

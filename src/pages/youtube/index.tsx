@@ -13,7 +13,7 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
         {document &&
-          Object.entries(document).map(([v, youTubeOembed], index) => (
+          Object.entries(document).map(([v, youTubeOEmbed], index) => (
             <Link
               key={`youtube-${index}`}
               href={`${youTubeUrl}${v}`}
@@ -22,7 +22,7 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
               <Stack sx={{ aspectRatio: "16/9" }}>
                 <Box
                   component="img"
-                  src={youTubeOembed.thumbnail_url}
+                  src={youTubeOEmbed.thumbnail_url}
                   alt=""
                   sx={{
                     display: "block",
@@ -45,7 +45,7 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
                     fontSize: 16
                   }}
                 >
-                  {youTubeOembed.title}
+                  {youTubeOEmbed.title}
                 </Typography>
               </Stack>
             </Link>
