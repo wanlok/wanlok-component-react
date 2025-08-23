@@ -25,7 +25,7 @@ export const LayoutMenu = () => {
         <Stack sx={{ flexDirection: mobile ? "row" : "column", overflowX: "auto", alignItems: "center" }}>
           {filteredRoutes.map((route, index) => (
             <Fragment key={`menu-fragment-${index}`}>
-              {index > 0 && (
+              {index > 1 && (
                 <Divider
                   key={`menu-divider-${index}`}
                   orientation={mobile ? "vertical" : "horizontal"}
@@ -40,13 +40,20 @@ export const LayoutMenu = () => {
                     flexDirection: "column",
                     gap: "4px",
                     fontSize: 14,
+                    p: 0,
                     backgroundColor: matchPath({ path: route.path, end: route.path === "/" }, pathname)
                       ? palette.primary.main
                       : "transparent"
                   }}
                 >
-                  <img src={route.image} alt="" style={{ width: 32, height: 32 }} />
-                  {route.name}
+                  {index === 0 ? (
+                    <img src={route.image} alt="" style={{ width: "100%", height: "100%" }} />
+                  ) : (
+                    <>
+                      <img src={route.image} alt="" style={{ width: 32, height: 32 }} />
+                      {route.name}
+                    </>
+                  )}
                 </WButton>
               </Link>
             </Fragment>

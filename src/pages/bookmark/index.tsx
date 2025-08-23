@@ -92,7 +92,7 @@ const FolderRowButtons = ({ folder, onDeleteClick }: { folder: Folder; onDeleteC
   );
 };
 
-export const YouTube = () => {
+export const Bookmarks = () => {
   const { folders, selectedFolder, setSelectedFolder, addFolder, deleteFolder } = useFolder();
   const { document, add, deleteVideo, exportUrls } = useYouTube(selectedFolder?.name);
   const [panelOpened, setPanelOpened] = useState(false);

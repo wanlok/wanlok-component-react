@@ -6,7 +6,8 @@ import { Chart } from "../pages/chart";
 import { SnapshotPage } from "../pages/snapshot";
 import { PDFPage } from "../pages/pdf";
 import { Image } from "../pages/image";
-import { YouTube } from "../pages/bookmark";
+import { Bookmarks } from "../pages/bookmark";
+import WANLOKImage from "../assets/images/wanlok.png";
 import DiscussionImage from "../assets/images/icons/discussion.png";
 import MapImage from "../assets/images/icons/map.png";
 import SnapshotImage from "../assets/images/icons/snapshot.png";
@@ -19,7 +20,7 @@ export const routes = [
     element: <LayoutMenu />,
     children: [
       {
-        image: FolderIcon,
+        image: WANLOKImage,
         name: "Home",
         path: "/",
         element: <Landing />
@@ -34,7 +35,7 @@ export const routes = [
         image: FolderIcon,
         name: "Bookmarks",
         path: "/bookmarks",
-        element: <YouTube />
+        element: <Bookmarks />
       },
       {
         image: DiscussionImage,
