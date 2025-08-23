@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode } from "react";
-import { Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { LayoutDivider } from "./LayoutDivider";
 import { WCard } from "./CardList";
 
@@ -24,6 +24,11 @@ export const LayoutPanel = ({
     <Stack sx={{ height: "100%", flexDirection: "row" }}>
       {(!mobile || panelOpened) && (
         <LayoutDivider hideDivider={mobile} sx={mobile ? { flex: 1 } : { width }}>
+          {mobile && (
+            <LayoutDivider>
+              <WCard onItemClick={() => setPanelOpened(!panelOpened)}>{mobilePanel}</WCard>
+            </LayoutDivider>
+          )}
           {panel}
         </LayoutDivider>
       )}
