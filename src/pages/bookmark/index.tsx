@@ -1,5 +1,5 @@
 import { Box, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { useYouTube, YouTubeOEmbed, youTubeUrl } from "./useYouTube";
+import { useYouTube } from "./useYouTube";
 import { TextInputForm } from "../../components/TextInputForm";
 import { CardList } from "../../components/CardList";
 import { useState } from "react";
@@ -12,6 +12,8 @@ import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import CrossIcon from "../../assets/images/icons/cross.png";
 import CrossWhiteIcon from "../../assets/images/icons/cross-white.png";
+import { regularUrl } from "../../common/YouTube";
+import { YouTubeOEmbed } from "../../common/Bookmark";
 
 const YouTubeList = ({
   document,
@@ -34,7 +36,7 @@ const YouTubeList = ({
               >
                 <Box component="img" src={CrossWhiteIcon} alt="" sx={{ width: "16px", height: "16px" }} />
               </WButton>
-              <Link href={`${youTubeUrl}${v}`} sx={{ flex: 1, backgroundColor: "#000000", textDecoration: "none" }}>
+              <Link href={`${regularUrl}${v}`} sx={{ flex: 1, backgroundColor: "#000000", textDecoration: "none" }}>
                 <Stack sx={{ aspectRatio: "16/9" }}>
                   <Box
                     component="img"
