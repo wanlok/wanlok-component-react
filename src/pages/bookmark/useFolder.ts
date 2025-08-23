@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
@@ -32,9 +32,12 @@ export const useFolder = () => {
     fetchFolderDocument();
   }, []);
 
-  const openFolder = (folder: Folder) => {
-    navigate(`/bookmarks/${getDocumentId(folder)}`);
-  };
+  const openFolder = useCallback(
+    (folder: Folder) => {
+      navigate(`/bookmarks/${getDocumentId(folder)}`);
+    },
+    [navigate]
+  );
 
   useEffect(() => {
     if (folderDocument) {
