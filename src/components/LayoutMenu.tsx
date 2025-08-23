@@ -21,7 +21,7 @@ export const LayoutMenu = () => {
 
   return (
     <Stack sx={{ flexDirection: mobile ? "column" : "row", height }}>
-      <LayoutDivider sx={{ backgroundColor: "primary.main" }}>
+      <LayoutDivider>
         <Stack sx={{ flexDirection: mobile ? "row" : "column", overflowX: "auto", alignItems: "center" }}>
           {filteredRoutes.map((route, index) => (
             <Fragment key={`menu-fragment-${index}`}>
@@ -41,8 +41,8 @@ export const LayoutMenu = () => {
                     gap: "4px",
                     fontSize: 14,
                     backgroundColor: matchPath({ path: route.path, end: route.path === "/" }, pathname)
-                      ? palette.primary.dark
-                      : palette.primary.main
+                      ? palette.primary.main
+                      : "transparent"
                   }}
                 >
                   <img src={route.image} alt="" style={{ width: 32, height: 32 }} />
