@@ -34,7 +34,7 @@ const YouTubeList = ({
               <Link
                 key={`youtube-${index}`}
                 href={`${youTubeUrl}${v}`}
-                sx={{ backgroundColor: "#000000", textDecoration: "none" }}
+                sx={{ flex: 1, backgroundColor: "#000000", textDecoration: "none" }}
               >
                 <Stack sx={{ aspectRatio: "16/9" }}>
                   <Box
