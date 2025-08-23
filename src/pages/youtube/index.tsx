@@ -6,7 +6,8 @@ import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { Folder, useFolder } from "./useFolder";
 import { WButton } from "../../components/WButton";
-import Cross from "../../assets/images/icons/cross.png";
+import FolderIcon from "../../assets/images/icons/folder.png";
+import CrossIcon from "../../assets/images/icons/cross.png";
 
 const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) => {
   const { breakpoints } = useTheme();
@@ -59,10 +60,9 @@ const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) =>
 
 const FolderRow = ({ folder }: { folder: Folder }) => {
   return (
-    <Stack sx={{ flexDirection: "row", gap: 2 }}>
-      <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
-        <Typography sx={{ fontSize: 16 }}>{folder.name}</Typography>
-      </Stack>
+    <Stack sx={{ flexDirection: "row", p: 2, gap: 2, alignItems: "center" }}>
+      <Box component="img" src={FolderIcon} alt="" sx={{ width: "20px", height: "20px" }} />
+      <Typography sx={{ fontSize: 16 }}>{folder.name}</Typography>
     </Stack>
   );
 };
@@ -87,12 +87,14 @@ export const YouTube = () => {
               setPanelOpened(false);
             }}
             renderRightContent={(folder) => (
-              <WButton
-                onClick={() => deleteFolder(folder)}
-                sx={{ height: "100%", aspectRatio: "1/1", p: 0, backgroundColor: "transparent" }}
-              >
-                <Box component="img" src={Cross} alt="" sx={{ width: "32px", height: "32px" }} />
-              </WButton>
+              <Stack>
+                <WButton
+                  onClick={() => deleteFolder(folder)}
+                  sx={{ flex: 1, width: 40, p: 0, backgroundColor: "transparent" }}
+                >
+                  <Box component="img" src={CrossIcon} alt="" sx={{ width: "24px", height: "24px" }} />
+                </WButton>
+              </Stack>
             )}
           />
           <TextInputForm
