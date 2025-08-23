@@ -18,7 +18,7 @@ const YouTubeList = ({
   onDeleteButtonClick
 }: {
   document: { [key: string]: YouTubeOEmbed } | undefined;
-  onDeleteButtonClick: (v: string) => void;
+  onDeleteButtonClick: (type: string, id: string) => void;
 }) => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
@@ -29,7 +29,7 @@ const YouTubeList = ({
           Object.entries(document).map(([v, youTubeOEmbed], index) => (
             <Stack sx={{ position: "relative", width: mobile ? "100%" : "calc(25% - 1px)" }} key={`youtube-${index}`}>
               <WButton
-                onClick={() => onDeleteButtonClick(v)}
+                onClick={() => onDeleteButtonClick("youtube_regular", v)}
                 sx={{ position: "absolute", top: 0, right: 0, width: 48, height: 48, backgroundColor: "black" }}
               >
                 <Box component="img" src={CrossWhiteIcon} alt="" sx={{ width: "16px", height: "16px" }} />

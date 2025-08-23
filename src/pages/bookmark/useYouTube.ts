@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
-const collectionName = "youtube";
+const collectionName = "bookmarks";
 
 export interface YouTubeOEmbed {
   title: string;
@@ -17,8 +17,8 @@ export interface YouTubeOEmbed {
 }
 
 export interface YouTubeDocument {
-  regular: { [key: string]: YouTubeOEmbed };
-  shorts: { [key: string]: YouTubeOEmbed };
+  youtube_regular: { [key: string]: YouTubeOEmbed };
+  youtube_shorts: { [key: string]: YouTubeOEmbed };
 }
 
 export const youTubeUrl = "https://www.youtube.com/watch?v=";
@@ -49,10 +49,10 @@ function extractYouTubeInfo(text: string): { urlString: string; id: string; type
 
     if (shortsId) {
       id = shortsId;
-      type = "shorts";
+      type = "youtube_shorts";
     } else {
       id = watchId ?? embedId ?? shareId;
-      type = "regular";
+      type = "youtube_regular";
     }
 
     if (id) {
@@ -76,12 +76,12 @@ const getYouTubeDocument = async (text: string) => {
   ).filter(Boolean) as { id: string; type: string; value: YouTubeOEmbed }[];
 
   const youTubeDocument: YouTubeDocument = {
-    regular: {},
-    shorts: {}
+    youtube_regular: {},
+    youtube_shorts: {}
   };
 
   for (const { id, type, value } of results) {
-    if (type === "regular" || type === "shorts") {
+    if (type === "youtube_regular" || type === "youtube_shorts") {
       youTubeDocument[type][id] = value;
     }
   }
@@ -105,14 +105,13 @@ export const useYouTube = (documentId?: string) => {
   const add = async (text: string) => {
     if (documentId) {
       const newYouTubeDocument = await getYouTubeDocument(text);
-      console.log(collectionName, documentId);
       const docRef = doc(db, collectionName, documentId);
       let document;
       if (youTubeDocument) {
         document = {
           ...youTubeDocument,
-          regular: { ...youTubeDocument.regular, ...newYouTubeDocument.regular },
-          shorts: { ...youTubeDocument.shorts, ...newYouTubeDocument.shorts }
+          youtube_regular: { ...youTubeDocument.youtube_regular, ...newYouTubeDocument.youtube_regular },
+          youtube_shorts: { ...youTubeDocument.youtube_shorts, ...newYouTubeDocument.youtube_shorts }
         };
         await updateDoc(docRef, document);
       } else {
@@ -123,20 +122,23 @@ export const useYouTube = (documentId?: string) => {
     }
   };
 
-  const deleteVideo = async (v: string) => {
+  const deleteVideo = async (type: string, id: string) => {
     if (youTubeDocument && documentId) {
-      const document = { ...youTubeDocument.regular };
-      delete document[v];
-      const docRef = doc(db, collectionName, documentId);
-      if (Object.keys(document).length === 0) {
-        await deleteDoc(docRef);
-      } else {
-        await updateDoc(docRef, { [`regular.${v}`]: deleteField() });
+      const newYouTubeDocument: YouTubeDocument = { ...youTubeDocument };
+      if (type === "youtube_regular" || type === "youtube_shorts") {
+        delete newYouTubeDocument[type][id];
       }
-      setYouTubeDocument({
-        regular: document,
-        shorts: youTubeDocument.shorts
-      });
+      const isAllEmpty = Object.values(newYouTubeDocument).every(
+        (value) => typeof value === "object" && value !== null && Object.keys(value).length === 0
+      );
+      const docRef = doc(db, collectionName, documentId);
+      if (isAllEmpty) {
+        await deleteDoc(docRef);
+        setYouTubeDocument(undefined);
+      } else {
+        await updateDoc(docRef, { [`${type}.${id}`]: deleteField() });
+        setYouTubeDocument(newYouTubeDocument);
+      }
     }
   };
 
@@ -156,5 +158,5 @@ export const useYouTube = (documentId?: string) => {
     URL.revokeObjectURL(url);
   };
 
-  return { document: youTubeDocument?.regular, add, deleteVideo, exportUrls };
+  return { document: youTubeDocument?.youtube_regular, add, deleteVideo, exportUrls };
 };
