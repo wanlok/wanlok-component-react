@@ -7,6 +7,7 @@ import { LayoutPanel } from "../../components/LayoutPanel";
 import { Folder, getDocumentId, useFolder } from "./useFolder";
 import { WButton } from "../../components/WButton";
 import FolderIcon from "../../assets/images/icons/folder.png";
+import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import CrossIcon from "../../assets/images/icons/cross.png";
 import CrossWhiteIcon from "../../assets/images/icons/cross-white.png";
 
@@ -69,10 +70,15 @@ const YouTubeList = ({
   );
 };
 
-const FolderRow = ({ folder }: { folder: Folder }) => {
+const FolderRow = ({ folder, selectedFolder }: { folder: Folder; selectedFolder?: Folder }) => {
   return (
     <Stack sx={{ flexDirection: "row", p: 2, gap: 2, alignItems: "center" }}>
-      <Box component="img" src={FolderIcon} alt="" sx={{ width: "24px", height: "24px" }} />
+      <Box
+        component="img"
+        src={folder === selectedFolder ? FolderSelectedIcon : FolderIcon}
+        alt=""
+        sx={folder === selectedFolder ? { width: "24px", height: "24px" } : { width: "24px", height: "24px" }}
+      />
       <Typography sx={{ fontSize: 16 }}>{folder.name}</Typography>
     </Stack>
   );
@@ -102,7 +108,7 @@ export const Bookmarks = () => {
         <>
           <CardList
             items={folders}
-            renderContent={(folder) => <FolderRow folder={folder} />}
+            renderContent={(folder) => <FolderRow folder={folder} selectedFolder={selectedFolder} />}
             onContentClick={(folder) => {
               openFolder(folder);
               setPanelOpened(false);
@@ -122,7 +128,7 @@ export const Bookmarks = () => {
           />
         </>
       }
-      topChildren={selectedFolder ? <FolderRow folder={selectedFolder} /> : <></>}
+      topChildren={selectedFolder ? <FolderRow folder={selectedFolder} selectedFolder={selectedFolder} /> : <></>}
     >
       <YouTubeList document={document} onDeleteButtonClick={deleteVideo} />
       <TextInputForm

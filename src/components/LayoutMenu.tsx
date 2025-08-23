@@ -23,41 +23,51 @@ export const LayoutMenu = () => {
     <Stack sx={{ flexDirection: mobile ? "column" : "row", height }}>
       <LayoutDivider>
         <Stack sx={{ flexDirection: mobile ? "row" : "column", overflowX: "auto", alignItems: "center" }}>
-          {filteredRoutes.map((route, index) => (
-            <Fragment key={`menu-fragment-${index}`}>
-              {index > 1 && (
-                <Divider
-                  key={`menu-divider-${index}`}
-                  orientation={mobile ? "vertical" : "horizontal"}
-                  sx={[mobile ? { height: "80%" } : { width: "80%" }]}
-                />
-              )}
-              <Link to={route.path} key={`menu-link-${index}`}>
-                <WButton
-                  sx={{
-                    height: buttonHeight,
-                    aspectRatio: "1/1",
-                    flexDirection: "column",
-                    gap: "4px",
-                    fontSize: 14,
-                    p: 0,
-                    backgroundColor: matchPath({ path: route.path, end: route.path === "/" }, pathname)
-                      ? palette.primary.main
-                      : "transparent"
-                  }}
-                >
-                  {index === 0 ? (
-                    <img src={route.image} alt="" style={{ width: "100%", height: "100%" }} />
-                  ) : (
-                    <>
-                      <img src={route.image} alt="" style={{ width: 32, height: 32 }} />
-                      {route.name}
-                    </>
-                  )}
-                </WButton>
-              </Link>
-            </Fragment>
-          ))}
+          {filteredRoutes.map((route, index) => {
+            const selected = matchPath({ path: route.path, end: route.path === "/" }, pathname);
+            return (
+              <Fragment key={`menu-fragment-${index}`}>
+                {index > 1 && (
+                  <Divider
+                    key={`menu-divider-${index}`}
+                    orientation={mobile ? "vertical" : "horizontal"}
+                    sx={[mobile ? { height: "80%" } : { width: "80%" }]}
+                  />
+                )}
+                <Link to={route.path} key={`menu-link-${index}`}>
+                  <WButton
+                    sx={{
+                      height: buttonHeight,
+                      aspectRatio: "1/1",
+                      flexDirection: "column",
+                      gap: "4px",
+                      fontSize: 14,
+                      p: 0,
+                      // backgroundColor: selected ? palette.primary.main : "transparent"
+                      backgroundColor: "transparent"
+                    }}
+                  >
+                    {index === 0 ? (
+                      <img
+                        src={selected ? route.icon_selected : route.icon}
+                        alt=""
+                        style={{ width: "100%", height: "100%" }}
+                      />
+                    ) : (
+                      <>
+                        <img
+                          src={selected ? route.icon_selected : route.icon}
+                          alt=""
+                          style={{ width: 32, height: 32 }}
+                        />
+                        {route.name}
+                      </>
+                    )}
+                  </WButton>
+                </Link>
+              </Fragment>
+            );
+          })}
         </Stack>
       </LayoutDivider>
       <Stack sx={[{ flex: 1, height: contentHeight, overflow: "auto" }]}>

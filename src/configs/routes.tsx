@@ -8,11 +8,16 @@ import { PDFPage } from "../pages/pdf";
 import { Image } from "../pages/image";
 import { Bookmarks } from "../pages/bookmark";
 import WANLOKImage from "../assets/images/wanlok.png";
-import DiscussionImage from "../assets/images/icons/discussion.png";
-import MapImage from "../assets/images/icons/map.png";
-import SnapshotImage from "../assets/images/icons/snapshot.png";
-import ImageImage from "../assets/images/icons/image.png";
 import FolderIcon from "../assets/images/icons/folder.png";
+import FolderSelectedIcon from "../assets/images/icons/folder_selected.png";
+import DiscussionIcon from "../assets/images/icons/discussion.png";
+import DiscussionSelectedIcon from "../assets/images/icons/discussion_selected.png";
+import MapIcon from "../assets/images/icons/map.png";
+import MapSelectedIcon from "../assets/images/icons/map_selected.png";
+import SnapshotIcon from "../assets/images/icons/snapshot.png";
+import SnapshotSelectedIcon from "../assets/images/icons/snapshot_selected.png";
+import ImageIcon from "../assets/images/icons/image.png";
+import ImageSelectedIcon from "../assets/images/icons/image_selected.png";
 
 export const routes = [
   {
@@ -20,7 +25,8 @@ export const routes = [
     element: <LayoutMenu />,
     children: [
       {
-        image: WANLOKImage,
+        icon: WANLOKImage,
+        icon_selected: WANLOKImage,
         name: "Home",
         path: "/",
         element: <Landing />
@@ -32,39 +38,45 @@ export const routes = [
         // ],
       },
       {
-        image: FolderIcon,
+        icon: FolderIcon,
+        icon_selected: FolderSelectedIcon,
         name: "Bookmarks",
         path: "/bookmarks",
         element: <Bookmarks />,
         children: [{ path: ":id", element: <SnapshotPage /> }]
       },
       {
-        image: DiscussionImage,
+        icon: DiscussionIcon,
+        icon_selected: DiscussionSelectedIcon,
         name: "Discussion",
         path: "/discussion",
         element: <DiscussionPage />
       },
       {
-        image: MapImage,
+        icon: MapIcon,
+        icon_selected: MapSelectedIcon,
         name: "Maps",
         path: "/hong-kong-building-map",
         element: <HongKongBuildingMap />
       },
       {
-        image: FolderIcon,
+        icon: FolderIcon,
+        icon_selected: FolderSelectedIcon,
         name: "Chart",
         path: "/chart",
         element: <Chart />
       },
       {
-        image: SnapshotImage,
+        icon: SnapshotIcon,
+        icon_selected: SnapshotSelectedIcon,
         name: "Snapshot",
         path: "/snapshot",
         element: <SnapshotPage />,
         children: [{ path: ":id", element: <SnapshotPage /> }]
       },
       {
-        image: ImageImage,
+        icon: ImageIcon,
+        icon_selected: ImageSelectedIcon,
         name: "Image",
         path: "/image",
         element: <Image />
@@ -76,7 +88,8 @@ export const routes = [
     element: <PDFPage />,
     children: [
       {
-        image: FolderIcon,
+        icon: FolderIcon,
+        icon_selected: FolderSelectedIcon,
         name: "", // TODO: remove this name later
         path: ":id",
         element: <PDFPage />
