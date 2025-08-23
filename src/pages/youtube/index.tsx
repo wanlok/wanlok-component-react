@@ -5,6 +5,8 @@ import { CardList } from "../../components/CardList";
 import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { Folder, useFolder } from "./useFolder";
+import { WButton } from "../../components/WButton";
+import Cross from "../../assets/images/icons/cross.png";
 
 const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) => {
   const { breakpoints } = useTheme();
@@ -66,7 +68,7 @@ const FolderRow = ({ folder }: { folder: Folder }) => {
 };
 
 export const YouTube = () => {
-  const { folders, selectedFolder, setSelectedFolder, addFolder } = useFolder();
+  const { folders, selectedFolder, setSelectedFolder, addFolder, deleteFolder } = useFolder();
   const { document, add, exportUrls } = useYouTube(selectedFolder?.name);
   const [panelOpened, setPanelOpened] = useState(false);
 
@@ -78,12 +80,20 @@ export const YouTube = () => {
       panel={
         <>
           <CardList
-            rows={folders}
+            items={folders}
             renderContent={(folder) => <FolderRow folder={folder} />}
             onContentClick={(folder) => {
               folder && setSelectedFolder(folder);
               setPanelOpened(false);
             }}
+            renderRightContent={(folder) => (
+              <WButton
+                onClick={() => deleteFolder(folder)}
+                sx={{ height: "100%", aspectRatio: "1/1", p: 0, backgroundColor: "transparent" }}
+              >
+                <Box component="img" src={Cross} alt="" sx={{ width: "32px", height: "32px" }} />
+              </WButton>
+            )}
           />
           <TextInputForm
             placeholder="New Folder"

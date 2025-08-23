@@ -6,7 +6,6 @@ const collectionName = "folders";
 const documentId = "folders";
 
 export interface Folder {
-  id: string;
   name: string;
 }
 
@@ -23,7 +22,6 @@ export const useFolder = () => {
       const docRef = doc(db, collectionName, documentId);
       const document = (await getDoc(docRef)).data() as FolderDocument | undefined;
       if (document) {
-        document.folders.sort((a, b) => a.name.localeCompare(b.name));
         setFolderDocument(document);
         if (document.folders.length > 0) {
           setSelectedFolder(document.folders[0]);
@@ -35,19 +33,34 @@ export const useFolder = () => {
 
   const addFolder = async (name: string) => {
     if (name.length > 0) {
+      let folders: Folder[];
       const folder = { name };
       const docRef = doc(db, collectionName, documentId);
       if (folderDocument) {
-        await updateDoc(docRef, {
-          folders: [...folderDocument.folders, folder]
-        });
+        folders = [...folderDocument.folders, folder].sort((a, b) => a.name.localeCompare(b.name));
+        await updateDoc(docRef, { ...folderDocument, folders });
       } else {
-        await setDoc(docRef, {
-          folders: [folder]
-        });
+        folders = [folder];
+        await setDoc(docRef, { folders: [folder] });
       }
+      setFolderDocument((previous) => (previous ? { ...previous, folders } : undefined));
     }
   };
 
-  return { addFolder, folders: folderDocument ? folderDocument?.folders : [], selectedFolder, setSelectedFolder };
+  const deleteFolder = async (folder: Folder) => {
+    if (folderDocument) {
+      const folders = folderDocument.folders.filter((f) => f.name !== folder.name);
+      const docRef = doc(db, collectionName, documentId);
+      await updateDoc(docRef, { ...folderDocument, folders });
+      setFolderDocument((previous) => (previous ? { ...previous, folders } : undefined));
+    }
+  };
+
+  return {
+    folders: folderDocument ? folderDocument?.folders : [],
+    selectedFolder,
+    setSelectedFolder,
+    addFolder,
+    deleteFolder
+  };
 };

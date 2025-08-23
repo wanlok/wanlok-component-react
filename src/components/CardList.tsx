@@ -22,24 +22,26 @@ export const WCard = ({
 };
 
 export const CardList = ({
-  rows,
+  items,
   renderContent,
-  onContentClick
+  onContentClick,
+  renderRightContent
 }: {
-  rows: { [key: string]: any }[];
-  renderContent: (item: any, index: number) => ReactNode;
+  items: { [key: string]: any }[];
+  renderContent: (item: any) => ReactNode;
   onContentClick: (item?: any) => void;
+  renderRightContent: (item: any) => ReactNode;
 }) => {
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ gap: "1px" }}>
-        {rows.map((row, index) => (
+        {items.map((item, index) => (
           <Stack key={`card-list-${index}`} sx={{ flexDirection: "row" }}>
             {/* {index > 0 && <Divider sx={{ mx: 2 }} />} */}
-            <WCard item={row} onClick={onContentClick} sx={{ flex: 1 }}>
-              {renderContent(row, index)}
+            <WCard item={item} onClick={onContentClick} sx={{ flex: 1 }}>
+              {renderContent(item)}
             </WCard>
-            {/* <Button>Button</Button> */}
+            {renderRightContent(item)}
           </Stack>
         ))}
       </Stack>
