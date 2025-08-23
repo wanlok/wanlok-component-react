@@ -1,10 +1,10 @@
 import { Box, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useYouTube, YouTubeDocument, youTubeUrl } from "./useYouTube";
 import { TextInputForm } from "../../components/TextInputForm";
-import { CardItem, CardList, WCard } from "../../components/CardList";
+import { CardItem, CardList } from "../../components/CardList";
 import { useState } from "react";
 import CallOfDutyImage from "../../assets/images/call-of-duty.jpg";
-import { LayoutDivider } from "../../components/LayoutDivider";
+import { LayoutPanel } from "../../components/LayoutPanel";
 
 const YouTubeList = ({ document }: { document: YouTubeDocument | undefined }) => {
   const { breakpoints } = useTheme();
@@ -113,60 +113,41 @@ const CardContent = ({ item }: { item: CardItem }) => {
   );
 };
 
-const DummyList = ({ onItemClick }: { onItemClick: (item?: CardItem) => void }) => {
-  return (
-    <LayoutDivider>
-      <CardList
-        width={200}
-        items={categories}
-        renderItem={(item) => <CardContent item={item} />}
-        onItemClick={onItemClick}
-      />
-    </LayoutDivider>
-  );
-};
-
 export const YouTube = () => {
-  const { breakpoints } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("md"));
   const [category, setCategory] = useState(categories[0]);
   const { document, add, exportUrls } = useYouTube(category.id);
-  const [menuOpened, setMenuOpened] = useState(false);
+  const [panelOpened, setPanelOpened] = useState(false);
   return (
-    <Stack sx={{ height: "100%", flexDirection: "row" }}>
-      {(!mobile || menuOpened) && (
-        <DummyList
+    <LayoutPanel
+      panelOpened={panelOpened}
+      setPanelOpened={setPanelOpened}
+      width={240}
+      panel={
+        <CardList
+          items={categories}
+          renderItem={(item) => <CardContent item={item} />}
           onItemClick={(item) => {
             item && setCategory(item);
-            setMenuOpened(false);
+            setPanelOpened(false);
           }}
         />
-      )}
-      {!menuOpened && (
-        <Stack sx={{ flex: 1 }}>
-          {mobile && (
-            <LayoutDivider>
-              <WCard onItemClick={() => setMenuOpened(!menuOpened)}>
-                <CardContent item={category} />
-              </WCard>
-            </LayoutDivider>
-          )}
-          <YouTubeList document={document} />
-          <TextInputForm
-            placeholder="YouTube Links"
-            rightButtons={[
-              {
-                label: "Add",
-                onClickWithText: async (text) => await add(text)
-              },
-              {
-                label: "Export",
-                onClick: exportUrls
-              }
-            ]}
-          />
-        </Stack>
-      )}
-    </Stack>
+      }
+      mobilePanel={<CardContent item={category} />}
+    >
+      <YouTubeList document={document} />
+      <TextInputForm
+        placeholder="YouTube Links"
+        rightButtons={[
+          {
+            label: "Add",
+            onClickWithText: async (text) => await add(text)
+          },
+          {
+            label: "Export",
+            onClick: exportUrls
+          }
+        ]}
+      />
+    </LayoutPanel>
   );
 };
