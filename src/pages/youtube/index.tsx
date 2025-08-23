@@ -67,7 +67,7 @@ const FolderRow = ({ folder }: { folder: Folder }) => {
 
 export const YouTube = () => {
   const { folders, selectedFolder, setSelectedFolder, addFolder } = useFolder();
-  const { document, add, exportUrls } = useYouTube(selectedFolder?.id);
+  const { document, add, exportUrls } = useYouTube(selectedFolder?.name);
   const [panelOpened, setPanelOpened] = useState(false);
 
   return (

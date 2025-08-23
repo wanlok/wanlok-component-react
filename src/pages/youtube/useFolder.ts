@@ -34,7 +34,7 @@ export const useFolder = () => {
 
   const addFolder = async (name: string) => {
     if (name.length > 0) {
-      const folder = { id: name.toLowerCase().replace(/\s+/g, "-"), name };
+      const folder = { name };
       const docRef = doc(db, collectionName, documentId);
       if (folderDocument) {
         await updateDoc(docRef, {
