@@ -16,22 +16,18 @@ export const WCarousel = ({
 }) => {
   const refs = useRef<(HTMLDivElement | null)[]>([]);
   const [index, setIndex] = useState<number>();
-  const [count, setCount] = useState(0);
   const [height, setHeight] = useState<number>();
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver(([entry]) => {
-      const height = entry.contentRect.height;
-      setHeight(height);
-    });
+    const resizeObserver = new ResizeObserver(([entry]) => setHeight(entry.contentRect.height));
     const element = refs.current[index ?? 0];
     if (element) {
       resizeObserver.observe(element);
     }
     return () => resizeObserver.disconnect();
-  }, [index, count]);
+  }, [list, index]);
 
-  return (
+  return list.length > 0 ? (
     <Carousel
       animation="fade"
       autoPlay={false}
@@ -43,20 +39,21 @@ export const WCarousel = ({
       onChange={(i) => setIndex(i)}
       swipe={false}
     >
-      {groupList(list, numberOfComponentsPerSlide).map((group: any[], i: number) => (
-        <Stack
-          ref={(element) => {
-            refs.current[i] = element;
-            if (count < list.length) {
-              setCount(count + 1);
-            }
-          }}
-          key={slideKey(i)}
-          sx={{ flexDirection: "row", gap: "1px" }}
-        >
-          {group.map((item, j) => renderContent(item, i, j))}
-        </Stack>
-      ))}
+      {groupList(list, numberOfComponentsPerSlide).map((group: any[], i: number) => {
+        return (
+          <Stack
+            ref={(element) => {
+              refs.current[i] = element;
+            }}
+            key={slideKey(i)}
+            sx={{ flexDirection: "row", gap: "1px" }}
+          >
+            {group.map((item, j) => renderContent(item, i, j))}
+          </Stack>
+        );
+      })}
     </Carousel>
+  ) : (
+    <></>
   );
 };
