@@ -3,10 +3,11 @@ import { db } from "../../firebase";
 import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { getYouTubeDocument, regularUrl } from "../../common/YouTube";
 import { BookmarkDocument } from "../../common/Bookmark";
+import { isAllEmpty, toList } from "../../common/DictUtils";
 
 const collectionName = "bookmarks";
 
-export const useYouTube = (documentId?: string) => {
+export const useBookmark = (documentId?: string) => {
   const [youTubeDocument, setYouTubeDocument] = useState<BookmarkDocument>();
 
   useEffect(() => {
@@ -19,7 +20,7 @@ export const useYouTube = (documentId?: string) => {
     fetchBookmarkDocument();
   }, [documentId]);
 
-  const add = async (text: string) => {
+  const addBookmarks = async (text: string) => {
     if (documentId) {
       const newYouTubeDocument = await getYouTubeDocument(text);
       const docRef = doc(db, collectionName, documentId);
@@ -39,22 +40,19 @@ export const useYouTube = (documentId?: string) => {
     }
   };
 
-  const deleteVideo = async (type: string, id: string) => {
+  const deleteBookmark = async (type: string, id: string) => {
     if (youTubeDocument && documentId) {
-      const newYouTubeDocument: BookmarkDocument = { ...youTubeDocument };
+      const document: BookmarkDocument = { ...youTubeDocument };
       if (type === "youtube_regular" || type === "youtube_shorts") {
-        delete newYouTubeDocument[type][id];
+        delete document[type][id];
       }
-      const isAllEmpty = Object.values(newYouTubeDocument).every(
-        (value) => typeof value === "object" && value !== null && Object.keys(value).length === 0
-      );
       const docRef = doc(db, collectionName, documentId);
-      if (isAllEmpty) {
+      if (isAllEmpty(document)) {
         await deleteDoc(docRef);
         setYouTubeDocument(undefined);
       } else {
         await updateDoc(docRef, { [`${type}.${id}`]: deleteField() });
-        setYouTubeDocument(newYouTubeDocument);
+        setYouTubeDocument(document);
       }
     }
   };
@@ -75,5 +73,11 @@ export const useYouTube = (documentId?: string) => {
     URL.revokeObjectURL(url);
   };
 
-  return { document: youTubeDocument?.youtube_regular, add, deleteVideo, exportUrls };
+  return {
+    youTubeRegularVideos: toList(youTubeDocument?.youtube_regular),
+    youTubeShortVideos: toList(youTubeDocument?.youtube_shorts),
+    addBookmarks,
+    deleteBookmark,
+    exportUrls
+  };
 };

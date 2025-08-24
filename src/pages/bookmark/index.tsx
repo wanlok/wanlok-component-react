@@ -1,5 +1,5 @@
-import { Box, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { useYouTube } from "./useYouTube";
+import { Box, Stack, Typography } from "@mui/material";
+import { useBookmark } from "./useBookmark";
 import { TextInputForm } from "../../components/TextInputForm";
 import { CardList } from "../../components/CardList";
 import { useState } from "react";
@@ -11,68 +11,8 @@ import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import CrossIcon from "../../assets/images/icons/cross.png";
-import CrossWhiteIcon from "../../assets/images/icons/cross-white.png";
-import { regularUrl } from "../../common/YouTube";
-import { YouTubeOEmbed } from "../../common/Bookmark";
-
-const YouTubeList = ({
-  document,
-  onDeleteButtonClick
-}: {
-  document: { [key: string]: YouTubeOEmbed } | undefined;
-  onDeleteButtonClick: (type: string, id: string) => void;
-}) => {
-  const { breakpoints } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("md"));
-  return (
-    <Stack sx={{ flex: 1, overflowY: "auto" }}>
-      <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
-        {document &&
-          Object.entries(document).map(([v, youTubeOEmbed], index) => (
-            <Stack sx={{ position: "relative", width: mobile ? "100%" : "calc(25% - 1px)" }} key={`youtube-${index}`}>
-              <WButton
-                onClick={() => onDeleteButtonClick("youtube_regular", v)}
-                sx={{ position: "absolute", top: 0, right: 0, width: 48, height: 48, backgroundColor: "black" }}
-              >
-                <Box component="img" src={CrossWhiteIcon} alt="" sx={{ width: "16px", height: "16px" }} />
-              </WButton>
-              <Link href={`${regularUrl}${v}`} sx={{ flex: 1, backgroundColor: "#000000", textDecoration: "none" }}>
-                <Stack sx={{ aspectRatio: "16/9" }}>
-                  <Box
-                    component="img"
-                    src={youTubeOEmbed.thumbnail_url}
-                    alt=""
-                    sx={{
-                      display: "block",
-                      objectFit: "cover",
-                      width: "100%",
-                      height: "100%"
-                    }}
-                  />
-                </Stack>
-                <Stack sx={{ p: 2 }}>
-                  <Typography
-                    variant="body2"
-                    sx={{
-                      display: "-webkit-box",
-                      WebkitLineClamp: 2,
-                      WebkitBoxOrient: "vertical",
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                      color: "#FFFFFF",
-                      fontSize: 16
-                    }}
-                  >
-                    {youTubeOEmbed.title}
-                  </Typography>
-                </Stack>
-              </Link>
-            </Stack>
-          ))}
-      </Stack>
-    </Stack>
-  );
-};
+import { YouTubeRegularVideo } from "../../components/YouTubeRegularVideo";
+import { YouTubeShortVideo } from "../../components/YouTubeShortVideo";
 
 const FolderRow = ({
   folder,
@@ -109,11 +49,49 @@ const FolderRowButtons = ({ folder, onDeleteClick }: { folder: Folder; onDeleteC
   );
 };
 
+const BookmarkList = ({
+  youTubeRegularVideos,
+  youTubeShortVideos,
+  onDeleteButtonClick
+}: {
+  youTubeRegularVideos: [string, any][];
+  youTubeShortVideos: [string, any][];
+  onDeleteButtonClick: (type: string, id: string) => void;
+}) => {
+  return (
+    <Stack sx={{ flex: 1, overflowY: "auto" }}>
+      <Stack>
+        <Stack sx={{ flexDirection: "row", width: "500px", overflowX: "auto" }}>
+          {youTubeShortVideos.map(([id, youTubeOEmbed], index) => (
+            <YouTubeShortVideo
+              key={`youtube-shorts-${index}`}
+              id={id}
+              youTubeOEmbed={youTubeOEmbed}
+              onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
+            />
+          ))}
+        </Stack>
+        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
+          {youTubeRegularVideos.map(([id, youTubeOEmbed], index) => (
+            <YouTubeRegularVideo
+              key={`youtube-regular-${index}`}
+              id={id}
+              youTubeOEmbed={youTubeOEmbed}
+              onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}
+            />
+          ))}
+        </Stack>
+      </Stack>
+    </Stack>
+  );
+};
+
 export const Bookmarks = () => {
   const { folders, selectedFolder, addFolder, deleteFolder, openFolder } = useFolder();
-  const { document, add, deleteVideo, exportUrls } = useYouTube(getDocumentId(selectedFolder));
+  const { youTubeRegularVideos, youTubeShortVideos, addBookmarks, deleteBookmark, exportUrls } = useBookmark(
+    getDocumentId(selectedFolder)
+  );
   const [panelOpened, setPanelOpened] = useState(false);
-
   return (
     <LayoutPanel
       panelOpened={panelOpened}
@@ -151,13 +129,17 @@ export const Bookmarks = () => {
         )
       }
     >
-      <YouTubeList document={document} onDeleteButtonClick={deleteVideo} />
+      <BookmarkList
+        youTubeRegularVideos={youTubeRegularVideos}
+        youTubeShortVideos={youTubeShortVideos}
+        onDeleteButtonClick={deleteBookmark}
+      />
       <TextInputForm
-        placeholder="YouTube Links"
+        placeholder="Links"
         rightButtons={[
           {
             label: "Add",
-            onClickWithText: async (text) => await add(text)
+            onClickWithText: async (text) => await addBookmarks(text)
           },
           {
             label: "Export",
