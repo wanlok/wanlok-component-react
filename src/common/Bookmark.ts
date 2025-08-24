@@ -1,3 +1,9 @@
+export interface Counts {
+  steam: number;
+  youtube_regular: number;
+  youtube_shorts: number;
+}
+
 export interface SteamInfo {
   title: string;
   imageUrl: string;

@@ -44,13 +44,9 @@ export const getSteam = async (text: string) => {
     )
   ).filter(Boolean) as { appId: string; steamInfo: SteamInfo }[];
 
-  console.log(results);
-
   for (const { appId, steamInfo } of results) {
     steam[appId] = steamInfo;
   }
-
-  console.log(steam);
 
   return steam;
 };

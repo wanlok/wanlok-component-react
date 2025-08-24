@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Chip, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useBookmark } from "./useBookmark";
 import { TextInputForm } from "../../components/TextInputForm";
 import { CardList } from "../../components/CardList";
@@ -15,6 +15,8 @@ import { ImageTitleLink } from "../../components/ImageTitleLink";
 import { WCarousel } from "../../components/WCarousel";
 import { youTubeUrl } from "../../common/YouTube";
 import { steamUrl } from "../../common/Steam";
+import SteamIcon from "../../assets/images/icons/steam.png";
+import YouTubeIcon from "../../assets/images/icons/youtube.png";
 
 const FolderRow = ({
   folder,
@@ -25,15 +27,50 @@ const FolderRow = ({
   selectedFolder?: Folder;
   panelOpened?: boolean;
 }) => {
+  const { steam, youtube_regular, youtube_shorts } = folder.counts;
   return (
-    <Stack sx={{ flexDirection: "row", p: 2, gap: 2, alignItems: "center" }}>
+    <Stack sx={{ flexDirection: "row", p: 2, gap: 2, alignItems: "top" }}>
       <Box
         component="img"
         src={folder === selectedFolder ? FolderSelectedIcon : FolderIcon}
         alt=""
         sx={{ width: "24px", height: "24px" }}
       />
-      <Typography sx={{ flex: 1, fontSize: 16 }}>{folder.name}</Typography>
+      <Stack sx={{ flex: 1, gap: 1 }}>
+        <Typography sx={{ fontSize: 16 }}>{folder.name}</Typography>
+        {panelOpened === undefined && (steam > 0 || youtube_regular > 0 || youtube_shorts > 0) && (
+          <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+            {steam > 0 && (
+              <Chip
+                label={`${steam}`}
+                icon={<img src={SteamIcon} alt="icon" style={{ width: 16, height: 16 }} />}
+                sx={{ borderRadius: 0, gap: "4px", pl: "6px" }}
+              />
+            )}
+            {youtube_regular > 0 && youtube_shorts > 0 && (
+              <Chip
+                label={`${youtube_shorts} + ${youtube_regular}`}
+                icon={<img src={YouTubeIcon} alt="icon" style={{ width: 16, height: 16 }} />}
+                sx={{ borderRadius: 0, gap: "4px", pl: "6px" }}
+              />
+            )}
+            {youtube_regular === 0 && youtube_shorts > 0 && (
+              <Chip
+                label={`${youtube_shorts}`}
+                icon={<img src={YouTubeIcon} alt="icon" style={{ width: 16, height: 16 }} />}
+                sx={{ borderRadius: 0, gap: "4px", pl: "6px" }}
+              />
+            )}
+            {youtube_regular > 0 && youtube_shorts === 0 && (
+              <Chip
+                label={`${youtube_regular}`}
+                icon={<img src={YouTubeIcon} alt="icon" style={{ width: 16, height: 16 }} />}
+                sx={{ borderRadius: 0, gap: "4px", pl: "6px" }}
+              />
+            )}
+          </Stack>
+        )}
+      </Stack>
       {(panelOpened === true || panelOpened === false) && (
         <Box component="img" src={panelOpened ? UpIcon : DownIcon} alt="" sx={{ width: "16px", height: "16px" }} />
       )}
@@ -124,16 +161,17 @@ const BookmarkList = ({
 };
 
 export const Bookmarks = () => {
-  const { folders, selectedFolder, addFolder, deleteFolder, openFolder } = useFolder();
-  const { youTubeRegularVideos, youTubeShortVideos, steam, addBookmarks, deleteBookmark, exportUrls } = useBookmark(
+  const { folders, selectedFolder, addFolder, updateFolderCounts, deleteFolder, openFolder } = useFolder();
+  const { steam, youTubeRegularVideos, youTubeShortVideos, addBookmarks, deleteBookmark, exportUrls } = useBookmark(
     getDocumentId(selectedFolder)
   );
   const [panelOpened, setPanelOpened] = useState(false);
+
   return (
     <LayoutPanel
       panelOpened={panelOpened}
       setPanelOpened={setPanelOpened}
-      width={300}
+      width={320}
       panel={
         <>
           <CardList
@@ -170,14 +208,24 @@ export const Bookmarks = () => {
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
         steam={steam}
-        onDeleteButtonClick={deleteBookmark}
+        onDeleteButtonClick={async (type, id) => {
+          const counts = await deleteBookmark(type, id);
+          if (counts) {
+            await updateFolderCounts(counts);
+          }
+        }}
       />
       <TextInputForm
         placeholder="Links"
         rightButtons={[
           {
             label: "Add",
-            onClickWithText: async (text) => await addBookmarks(text)
+            onClickWithText: async (text) => {
+              const counts = await addBookmarks(text);
+              if (counts) {
+                await updateFolderCounts(counts);
+              }
+            }
           },
           {
             label: "Export",
