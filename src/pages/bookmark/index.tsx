@@ -65,14 +65,14 @@ const BookmarkList = ({
       <Stack sx={{ gap: "1px" }}>
         <WCarousel
           list={youTubeShortVideos}
-          numberOfComponentsPerSlide={mobile ? 1 : 4}
+          numberOfComponentsPerSlide={mobile ? 2 : 4}
           slideKey={(i) => `youtube-shorts-${i}`}
           renderContent={([id, youTubeOEmbed], i, j) => (
             <YouTubeVideo
               key={`youtube-shorts-${i}-${j}`}
               id={id}
               youTubeOEmbed={youTubeOEmbed}
-              width={mobile ? "100%" : "calc(25% - 1px)"}
+              width={mobile ? "50%" : "calc(25% - 1px)"}
               aspectRatio="9/16"
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
             />
