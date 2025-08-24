@@ -14,6 +14,7 @@ import CrossIcon from "../../assets/images/icons/cross.png";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
 import { WCarousel } from "../../components/WCarousel";
 import { youTubeUrl } from "../../common/YouTube";
+import { steamUrl } from "../../common/Steam";
 
 const FolderRow = ({
   folder,
@@ -73,7 +74,7 @@ const BookmarkList = ({
               key={`steam-${i}`}
               title={title}
               imageUrl={imageUrl}
-              href={`${youTubeUrl}${appId}`}
+              href={`${steamUrl}${appId}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
               aspectRatio="92:43"
               onDeleteButtonClick={() => onDeleteButtonClick("steam", appId)}

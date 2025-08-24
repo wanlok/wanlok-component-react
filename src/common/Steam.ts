@@ -1,5 +1,7 @@
 import { SteamInfo } from "./Bookmark";
 
+export const steamUrl = "https://store.steampowered.com/agecheck/app/";
+
 export const fetchSteamInfo = async (appId: string) => {
   let steamInfo: SteamInfo | undefined = undefined;
   try {
