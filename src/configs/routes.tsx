@@ -8,6 +8,7 @@ import { PDFPage } from "../pages/pdf";
 import { Image } from "../pages/image";
 import { Bookmarks } from "../pages/bookmark";
 import WANLOKImage from "../assets/images/wanlok.png";
+import WANLOKImage2 from "../assets/images/wanlok_2.png";
 import FolderIcon from "../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../assets/images/icons/folder_selected.png";
 import DiscussionIcon from "../assets/images/icons/discussion.png";
@@ -26,7 +27,7 @@ export const routes = [
     children: [
       {
         icon: WANLOKImage,
-        icon_selected: WANLOKImage,
+        icon_selected: WANLOKImage2,
         name: "Home",
         path: "/",
         element: <Landing />

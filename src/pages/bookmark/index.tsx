@@ -11,8 +11,9 @@ import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import CrossIcon from "../../assets/images/icons/cross.png";
-import { YouTubeVideo } from "../../components/YouTubeVideo";
+import { ImageTitleLink } from "../../components/ImageTitleLink";
 import { WCarousel } from "../../components/WCarousel";
+import { youTubeUrl } from "../../common/YouTube";
 
 const FolderRow = ({
   folder,
@@ -52,38 +53,56 @@ const FolderRowButtons = ({ folder, onDeleteClick }: { folder: Folder; onDeleteC
 const BookmarkList = ({
   youTubeRegularVideos,
   youTubeShortVideos,
+  steam,
   onDeleteButtonClick
 }: {
   youTubeRegularVideos: [string, any][];
   youTubeShortVideos: [string, any][];
+  steam: [string, any][];
   onDeleteButtonClick: (type: string, id: string) => void;
 }) => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
+  const numberOfComponentsPerSlide = 4;
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ gap: "1px" }}>
+        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
+          {steam.map(([appId, { title, imageUrl }], i) => (
+            <ImageTitleLink
+              key={`steam-${i}`}
+              title={title}
+              imageUrl={imageUrl}
+              href={`${youTubeUrl}${appId}`}
+              width={mobile ? "100%" : "calc(25% - 1px)"}
+              aspectRatio="92:43"
+              onDeleteButtonClick={() => onDeleteButtonClick("steam", appId)}
+            />
+          ))}
+        </Stack>
         <WCarousel
           list={youTubeShortVideos}
-          numberOfComponentsPerSlide={mobile ? 2 : 4}
+          numberOfComponentsPerSlide={mobile ? 2 : numberOfComponentsPerSlide}
           slideKey={(i) => `youtube-shorts-${i}`}
-          renderContent={([id, youTubeOEmbed], i, j) => (
-            <YouTubeVideo
+          renderContent={([id, { title, thumbnail_url }], i, j) => (
+            <ImageTitleLink
               key={`youtube-shorts-${i}-${j}`}
-              id={id}
-              youTubeOEmbed={youTubeOEmbed}
-              width={mobile ? "50%" : "calc(25% - 1px)"}
+              title={title}
+              imageUrl={thumbnail_url}
+              href={`${youTubeUrl}${id}`}
+              width={mobile ? "50%" : `calc(${100 / numberOfComponentsPerSlide}% - 1px)`}
               aspectRatio="9/16"
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
             />
           )}
         />
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
-          {youTubeRegularVideos.map(([id, youTubeOEmbed], i) => (
-            <YouTubeVideo
+          {youTubeRegularVideos.map(([id, { title, thumbnail_url }], i) => (
+            <ImageTitleLink
               key={`youtube-regular-${i}`}
-              id={id}
-              youTubeOEmbed={youTubeOEmbed}
+              title={title}
+              imageUrl={thumbnail_url}
+              href={`${youTubeUrl}${id}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
               aspectRatio="16/9"
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}
@@ -97,7 +116,7 @@ const BookmarkList = ({
 
 export const Bookmarks = () => {
   const { folders, selectedFolder, addFolder, deleteFolder, openFolder } = useFolder();
-  const { youTubeRegularVideos, youTubeShortVideos, addBookmarks, deleteBookmark, exportUrls } = useBookmark(
+  const { youTubeRegularVideos, youTubeShortVideos, steam, addBookmarks, deleteBookmark, exportUrls } = useBookmark(
     getDocumentId(selectedFolder)
   );
   const [panelOpened, setPanelOpened] = useState(false);
@@ -141,6 +160,7 @@ export const Bookmarks = () => {
       <BookmarkList
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
+        steam={steam}
         onDeleteButtonClick={deleteBookmark}
       />
       <TextInputForm

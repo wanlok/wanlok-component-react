@@ -1,18 +1,18 @@
 import { Box, Link, Stack, Typography } from "@mui/material";
 import { WButton } from "./WButton";
-import { regularUrl } from "../common/YouTube";
-import { YouTubeOEmbed } from "../common/Bookmark";
 import CrossWhiteIcon from "../assets/images/icons/cross-white.png";
 
-export const YouTubeVideo = ({
-  id,
-  youTubeOEmbed,
+export const ImageTitleLink = ({
+  title,
+  imageUrl,
+  href,
   width,
   aspectRatio,
   onDeleteButtonClick
 }: {
-  id: string;
-  youTubeOEmbed: YouTubeOEmbed;
+  title: string;
+  imageUrl: string;
+  href: string;
   width: string;
   aspectRatio: string;
   onDeleteButtonClick: () => void;
@@ -25,11 +25,11 @@ export const YouTubeVideo = ({
       >
         <Box component="img" src={CrossWhiteIcon} alt="" sx={{ width: "16px", height: "16px" }} />
       </WButton>
-      <Link href={`${regularUrl}${id}`} sx={{ flex: 1, backgroundColor: "#000000", textDecoration: "none" }}>
+      <Link href={href} sx={{ flex: 1, backgroundColor: "#000000", textDecoration: "none" }}>
         <Stack sx={{ aspectRatio }}>
           <Box
             component="img"
-            src={youTubeOEmbed.thumbnail_url}
+            src={imageUrl}
             alt=""
             sx={{
               display: "block",
@@ -52,7 +52,7 @@ export const YouTubeVideo = ({
               fontSize: 16
             }}
           >
-            {youTubeOEmbed.title}
+            {title}
           </Typography>
         </Stack>
       </Link>

@@ -1,6 +1,6 @@
-import { BookmarkDocument, YouTubeOEmbed } from "./Bookmark";
+import { YouTubeOEmbed } from "./Bookmark";
 
-export const regularUrl = "https://www.youtube.com/watch?v=";
+export const youTubeUrl = "https://www.youtube.com/watch?v=";
 
 export const fetchYouTubeOEmbed = async (urlString: string) => {
   let youTubeOEmbed: YouTubeOEmbed | undefined = undefined;
@@ -42,7 +42,10 @@ const extractYouTubeInfo = (text: string): { urlString: string; id: string; type
   return matches;
 };
 
-export const getYouTubeDocument = async (text: string) => {
+export const getYouTubeRegularAndShorts = async (text: string) => {
+  const youtube_regular: { [key: string]: YouTubeOEmbed } = {};
+  const youtube_shorts: { [key: string]: YouTubeOEmbed } = {};
+
   const list = extractYouTubeInfo(text);
 
   const results = (
@@ -54,16 +57,13 @@ export const getYouTubeDocument = async (text: string) => {
     )
   ).filter(Boolean) as { id: string; type: string; value: YouTubeOEmbed }[];
 
-  const youTubeDocument: BookmarkDocument = {
-    youtube_regular: {},
-    youtube_shorts: {}
-  };
-
   for (const { id, type, value } of results) {
-    if (type === "youtube_regular" || type === "youtube_shorts") {
-      youTubeDocument[type][id] = value;
+    if (type === "youtube_regular") {
+      youtube_regular[id] = value;
+    } else if (type === "youtube_shorts") {
+      youtube_shorts[id] = value;
     }
   }
 
-  return youTubeDocument;
+  return { youtube_regular, youtube_shorts };
 };

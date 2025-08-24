@@ -1,3 +1,8 @@
+export interface SteamInfo {
+  title: string;
+  imageUrl: string;
+}
+
 export interface YouTubeOEmbed {
   title: string;
   author_name: string;
@@ -11,6 +16,7 @@ export interface YouTubeOEmbed {
 }
 
 export interface BookmarkDocument {
+  steam: { [key: string]: SteamInfo };
   youtube_regular: { [key: string]: YouTubeOEmbed };
   youtube_shorts: { [key: string]: YouTubeOEmbed };
 }

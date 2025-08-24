@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { getYouTubeDocument, regularUrl } from "../../common/YouTube";
+import { getSteam } from "../../common/Steam";
+import { getYouTubeRegularAndShorts, youTubeUrl } from "../../common/YouTube";
 import { BookmarkDocument } from "../../common/Bookmark";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
 
 const collectionName = "bookmarks";
 
 export const useBookmark = (documentId?: string) => {
-  const [youTubeDocument, setYouTubeDocument] = useState<BookmarkDocument>();
+  const [bookmarkDocument, setBookmarkDocument] = useState<BookmarkDocument>();
 
   useEffect(() => {
     const fetchBookmarkDocument = async () => {
       if (documentId) {
         const docRef = doc(db, collectionName, documentId);
-        setYouTubeDocument((await getDoc(docRef)).data() as BookmarkDocument | undefined);
+        setBookmarkDocument((await getDoc(docRef)).data() as BookmarkDocument | undefined);
       }
     };
     fetchBookmarkDocument();
@@ -22,46 +23,48 @@ export const useBookmark = (documentId?: string) => {
 
   const addBookmarks = async (text: string) => {
     if (documentId) {
-      const newYouTubeDocument = await getYouTubeDocument(text);
+      const steam = await getSteam(text);
+      const { youtube_regular, youtube_shorts } = await getYouTubeRegularAndShorts(text);
       const docRef = doc(db, collectionName, documentId);
       let document;
-      if (youTubeDocument) {
+      if (bookmarkDocument) {
         document = {
-          ...youTubeDocument,
-          youtube_regular: { ...youTubeDocument.youtube_regular, ...newYouTubeDocument.youtube_regular },
-          youtube_shorts: { ...youTubeDocument.youtube_shorts, ...newYouTubeDocument.youtube_shorts }
+          ...bookmarkDocument,
+          steam: { ...bookmarkDocument.steam, ...steam },
+          youtube_regular: { ...bookmarkDocument.youtube_regular, ...youtube_regular },
+          youtube_shorts: { ...bookmarkDocument.youtube_shorts, ...youtube_shorts }
         };
         await updateDoc(docRef, document);
       } else {
-        document = newYouTubeDocument;
+        document = { steam, youtube_regular, youtube_shorts };
         await setDoc(docRef, document);
       }
-      setYouTubeDocument(document);
+      setBookmarkDocument(document);
     }
   };
 
   const deleteBookmark = async (type: string, id: string) => {
-    if (youTubeDocument && documentId) {
-      const document: BookmarkDocument = { ...youTubeDocument };
-      if (type === "youtube_regular" || type === "youtube_shorts") {
+    if (bookmarkDocument && documentId) {
+      const document: BookmarkDocument = { ...bookmarkDocument };
+      if (type === "steam" || type === "youtube_regular" || type === "youtube_shorts") {
         delete document[type][id];
       }
       const docRef = doc(db, collectionName, documentId);
       if (isAllEmpty(document)) {
         await deleteDoc(docRef);
-        setYouTubeDocument(undefined);
+        setBookmarkDocument(undefined);
       } else {
         await updateDoc(docRef, { [`${type}.${id}`]: deleteField() });
-        setYouTubeDocument(document);
+        setBookmarkDocument(document);
       }
     }
   };
 
   const exportUrls = () => {
     const urls = [];
-    if (youTubeDocument) {
-      for (const [v] of Object.entries(youTubeDocument)) {
-        urls.push(`${regularUrl}${v}`);
+    if (bookmarkDocument) {
+      for (const [v] of Object.entries(bookmarkDocument)) {
+        urls.push(`${youTubeUrl}${v}`);
       }
     }
     const blob = new Blob([urls.join("\n")], { type: "text/plain" });
@@ -74,8 +77,9 @@ export const useBookmark = (documentId?: string) => {
   };
 
   return {
-    youTubeRegularVideos: toList(youTubeDocument?.youtube_regular),
-    youTubeShortVideos: toList(youTubeDocument?.youtube_shorts),
+    youTubeRegularVideos: toList(bookmarkDocument?.youtube_regular),
+    youTubeShortVideos: toList(bookmarkDocument?.youtube_shorts),
+    steam: toList(bookmarkDocument?.steam),
     addBookmarks,
     deleteBookmark,
     exportUrls
