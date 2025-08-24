@@ -1,22 +1,22 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Stack } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { groupList } from "../common/ListDictUtils";
 
 export const WCarousel = ({
   list,
+  numberOfComponentsPerSlide,
   slideKey,
   renderContent
 }: {
-  list: [string, any][];
+  list: any[];
+  numberOfComponentsPerSlide: number;
   slideKey: (i: number) => string;
   renderContent: (item: any, i: number, j: number) => ReactNode;
 }) => {
-  const { breakpoints } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("md"));
   const refs = useRef<(HTMLDivElement | null)[]>([]);
   const [index, setIndex] = useState<number>();
-  const [dummy, setDummy] = useState(0);
+  const [count, setCount] = useState(0);
   const [height, setHeight] = useState<number>();
 
   useEffect(() => {
@@ -29,7 +29,7 @@ export const WCarousel = ({
       resizeObserver.observe(element);
     }
     return () => resizeObserver.disconnect();
-  }, [index, dummy]);
+  }, [index, count]);
 
   return (
     <Carousel
@@ -43,12 +43,12 @@ export const WCarousel = ({
       onChange={(i) => setIndex(i)}
       swipe={false}
     >
-      {groupList(list, mobile ? 1 : 4).map((group: [string, any][], i: number) => (
+      {groupList(list, numberOfComponentsPerSlide).map((group: any[], i: number) => (
         <Stack
           ref={(element) => {
             refs.current[i] = element;
-            if (dummy < list.length) {
-              setDummy(dummy + 1);
+            if (count < list.length) {
+              setCount(count + 1);
             }
           }}
           key={slideKey(i)}

@@ -64,8 +64,9 @@ const BookmarkList = ({
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ gap: "1px" }}>
         <WCarousel
-          slideKey={(i) => `youtube-shorts-${i}`}
           list={youTubeShortVideos}
+          numberOfComponentsPerSlide={mobile ? 1 : 4}
+          slideKey={(i) => `youtube-shorts-${i}`}
           renderContent={([id, youTubeOEmbed], i, j) => (
             <YouTubeVideo
               key={`youtube-shorts-${i}-${j}`}
