@@ -29,6 +29,7 @@
     "react-apexcharts": "^1.4.1",
     "react-dom": "^18.3.1",
     "react-loading-skeleton": "^3.4.0",
+    "react-material-ui-carousel": "^3.4.2",
     "react-pdf-charts": "^0.4.2",
     "react-pdf-html": "^2.1.3",
     "react-router-dom": "^6.24.0",

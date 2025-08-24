@@ -11,8 +11,9 @@ import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import CrossIcon from "../../assets/images/icons/cross.png";
-import { YouTubeRegularVideo } from "../../components/YouTubeRegularVideo";
-import { YouTubeShortVideo } from "../../components/YouTubeShortVideo";
+import Carousel from "react-material-ui-carousel";
+import { groupList } from "../../common/ListDictUtils";
+import { YouTubeVideo } from "../../components/YouTubeVideo";
 
 const FolderRow = ({
   folder,
@@ -60,23 +61,36 @@ const BookmarkList = ({
 }) => {
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
-      <Stack>
-        <Stack sx={{ flexDirection: "row", width: "500px", overflowX: "auto" }}>
-          {youTubeShortVideos.map(([id, youTubeOEmbed], index) => (
-            <YouTubeShortVideo
-              key={`youtube-shorts-${index}`}
-              id={id}
-              youTubeOEmbed={youTubeOEmbed}
-              onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
-            />
+      <Stack sx={{ gap: "1px" }}>
+        <Carousel
+          indicators={false}
+          autoPlay={false}
+          navButtonsAlwaysVisible={true}
+          cycleNavigation={true}
+          animation="fade"
+          duration={0}
+        >
+          {groupList(youTubeShortVideos, 4).map((group: [string, any][], i: number) => (
+            <Stack key={`youtube-shorts-${i}`} sx={{ flexDirection: "row", gap: "1px" }}>
+              {group.map(([id, youTubeOEmbed], j) => (
+                <YouTubeVideo
+                  key={`youtube-shorts-${i}-${j}`}
+                  id={id}
+                  youTubeOEmbed={youTubeOEmbed}
+                  aspectRatio="9/16"
+                  onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
+                />
+              ))}
+            </Stack>
           ))}
-        </Stack>
+        </Carousel>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
-          {youTubeRegularVideos.map(([id, youTubeOEmbed], index) => (
-            <YouTubeRegularVideo
-              key={`youtube-regular-${index}`}
+          {youTubeRegularVideos.map(([id, youTubeOEmbed], i) => (
+            <YouTubeVideo
+              key={`youtube-regular-${i}`}
               id={id}
               youTubeOEmbed={youTubeOEmbed}
+              aspectRatio="16/9"
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}
             />
           ))}

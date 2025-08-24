@@ -1,21 +1,32 @@
 import { Box, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { WButton } from "./WButton";
+import { regularUrl } from "../common/YouTube";
 import { YouTubeOEmbed } from "../common/Bookmark";
+import CrossWhiteIcon from "../assets/images/icons/cross-white.png";
 
-export const YouTubeShortVideo = ({
+export const YouTubeVideo = ({
   id,
   youTubeOEmbed,
+  aspectRatio,
   onDeleteButtonClick
 }: {
   id: string;
   youTubeOEmbed: YouTubeOEmbed;
+  aspectRatio: string;
   onDeleteButtonClick: () => void;
 }) => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   return (
-    <Stack sx={{ position: "relative", width: mobile ? "100%" : "200px", whiteSpace: "nowrap" }}>
-      <Link href={``} sx={{ flex: 1, backgroundColor: "#000000", textDecoration: "none" }}>
-        <Stack sx={{ aspectRatio: "9/16" }}>
+    <Stack sx={{ position: "relative", width: mobile ? "100%" : "calc(25% - 1px)" }}>
+      <WButton
+        onClick={onDeleteButtonClick}
+        sx={{ position: "absolute", top: 0, right: 0, width: 48, height: 48, backgroundColor: "black" }}
+      >
+        <Box component="img" src={CrossWhiteIcon} alt="" sx={{ width: "16px", height: "16px" }} />
+      </WButton>
+      <Link href={`${regularUrl}${id}`} sx={{ flex: 1, backgroundColor: "#000000", textDecoration: "none" }}>
+        <Stack sx={{ aspectRatio }}>
           <Box
             component="img"
             src={youTubeOEmbed.thumbnail_url}

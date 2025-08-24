@@ -3,7 +3,7 @@ import { db } from "../../firebase";
 import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { getYouTubeDocument, regularUrl } from "../../common/YouTube";
 import { BookmarkDocument } from "../../common/Bookmark";
-import { isAllEmpty, toList } from "../../common/DictUtils";
+import { isAllEmpty, toList } from "../../common/ListDictUtils";
 
 const collectionName = "bookmarks";
 
