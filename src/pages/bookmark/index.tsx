@@ -29,7 +29,7 @@ const FolderRow = ({
 }) => {
   const { steam, youtube_regular, youtube_shorts } = folder.counts;
   return (
-    <Stack sx={{ flexDirection: "row", p: 2, gap: 2, alignItems: "top" }}>
+    <Stack sx={{ flexDirection: "row", p: 2, gap: 2, alignItems: "center" }}>
       <Box
         component="img"
         src={folder === selectedFolder ? FolderSelectedIcon : FolderIcon}
