@@ -11,9 +11,8 @@ import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import CrossIcon from "../../assets/images/icons/cross.png";
-import Carousel from "react-material-ui-carousel";
-import { groupList } from "../../common/ListDictUtils";
 import { YouTubeVideo } from "../../components/YouTubeVideo";
+import { WCarousel } from "../../components/WCarousel";
 
 const FolderRow = ({
   folder,
@@ -64,31 +63,20 @@ const BookmarkList = ({
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ gap: "1px" }}>
-        <Carousel
-          indicators={false}
-          autoPlay={false}
-          navButtonsAlwaysVisible={true}
-          cycleNavigation={true}
-          animation="fade"
-          duration={0}
-          swipe={false}
-          sx={{ backgroundColor: "blue", height: 1 }}
-        >
-          {groupList(youTubeShortVideos, mobile ? 1 : 4).map((group: [string, any][], i: number) => (
-            <Stack key={`youtube-shorts-${i}`} sx={{ flexDirection: "row", gap: "1px" }}>
-              {group.map(([id, youTubeOEmbed], j) => (
-                <YouTubeVideo
-                  key={`youtube-shorts-${i}-${j}`}
-                  id={id}
-                  youTubeOEmbed={youTubeOEmbed}
-                  width={mobile ? "100%%" : "calc(25% - 1px)"}
-                  aspectRatio="9/16"
-                  onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
-                />
-              ))}
-            </Stack>
-          ))}
-        </Carousel>
+        <WCarousel
+          slideKey={(i) => `youtube-shorts-${i}`}
+          list={youTubeShortVideos}
+          renderContent={([id, youTubeOEmbed], i, j) => (
+            <YouTubeVideo
+              key={`youtube-shorts-${i}-${j}`}
+              id={id}
+              youTubeOEmbed={youTubeOEmbed}
+              width={mobile ? "100%" : "calc(25% - 1px)"}
+              aspectRatio="9/16"
+              onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
+            />
+          )}
+        />
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
           {youTubeRegularVideos.map(([id, youTubeOEmbed], i) => (
             <YouTubeVideo

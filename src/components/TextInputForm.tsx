@@ -18,24 +18,22 @@ export const TextInputForm = ({ placeholder, rightButtons }: { placeholder: stri
   const stackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const resizeObserver = new ResizeObserver((entries) => {
-      if (entries.length > 0) {
-        const height = entries[0].contentRect.height;
-        if (buttonHeight) {
-          if (height >= buttonHeight * rightButtons.length) {
-            if (sufficientSpacesHeightRef.current === undefined) {
-              setSufficientSpaces(true);
-              sufficientSpacesHeightRef.current = height;
-            } else if (height < sufficientSpacesHeightRef.current) {
-              setSufficientSpaces(false);
-              sufficientSpacesHeightRef.current = undefined;
-            }
-          } else {
+    const resizeObserver = new ResizeObserver(([entry]) => {
+      const height = entry.contentRect.height;
+      if (buttonHeight) {
+        if (height >= buttonHeight * rightButtons.length) {
+          if (sufficientSpacesHeightRef.current === undefined) {
+            setSufficientSpaces(true);
+            sufficientSpacesHeightRef.current = height;
+          } else if (height < sufficientSpacesHeightRef.current) {
             setSufficientSpaces(false);
+            sufficientSpacesHeightRef.current = undefined;
           }
         } else {
-          setButtonHeight(height);
+          setSufficientSpaces(false);
         }
+      } else {
+        setButtonHeight(height);
       }
     });
     if (stackRef.current) {
