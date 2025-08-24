@@ -171,7 +171,7 @@ export const Bookmarks = () => {
     <LayoutPanel
       panelOpened={panelOpened}
       setPanelOpened={setPanelOpened}
-      width={320}
+      width={300}
       panel={
         <>
           <CardList
