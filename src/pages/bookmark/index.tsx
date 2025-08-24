@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useBookmark } from "./useBookmark";
 import { TextInputForm } from "../../components/TextInputForm";
 import { CardList } from "../../components/CardList";
@@ -59,6 +59,8 @@ const BookmarkList = ({
   youTubeShortVideos: [string, any][];
   onDeleteButtonClick: (type: string, id: string) => void;
 }) => {
+  const { breakpoints } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ gap: "1px" }}>
@@ -69,14 +71,17 @@ const BookmarkList = ({
           cycleNavigation={true}
           animation="fade"
           duration={0}
+          swipe={false}
+          sx={{ backgroundColor: "blue", height: 1 }}
         >
-          {groupList(youTubeShortVideos, 4).map((group: [string, any][], i: number) => (
+          {groupList(youTubeShortVideos, mobile ? 1 : 4).map((group: [string, any][], i: number) => (
             <Stack key={`youtube-shorts-${i}`} sx={{ flexDirection: "row", gap: "1px" }}>
               {group.map(([id, youTubeOEmbed], j) => (
                 <YouTubeVideo
                   key={`youtube-shorts-${i}-${j}`}
                   id={id}
                   youTubeOEmbed={youTubeOEmbed}
+                  width={mobile ? "100%%" : "calc(25% - 1px)"}
                   aspectRatio="9/16"
                   onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
                 />
@@ -90,6 +95,7 @@ const BookmarkList = ({
               key={`youtube-regular-${i}`}
               id={id}
               youTubeOEmbed={youTubeOEmbed}
+              width={mobile ? "100%" : "calc(25% - 1px)"}
               aspectRatio="16/9"
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}
             />

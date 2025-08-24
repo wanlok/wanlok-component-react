@@ -1,4 +1,4 @@
-import { Box, Link, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Link, Stack, Typography } from "@mui/material";
 import { WButton } from "./WButton";
 import { regularUrl } from "../common/YouTube";
 import { YouTubeOEmbed } from "../common/Bookmark";
@@ -7,18 +7,18 @@ import CrossWhiteIcon from "../assets/images/icons/cross-white.png";
 export const YouTubeVideo = ({
   id,
   youTubeOEmbed,
+  width,
   aspectRatio,
   onDeleteButtonClick
 }: {
   id: string;
   youTubeOEmbed: YouTubeOEmbed;
+  width: string;
   aspectRatio: string;
   onDeleteButtonClick: () => void;
 }) => {
-  const { breakpoints } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("md"));
   return (
-    <Stack sx={{ position: "relative", width: mobile ? "100%" : "calc(25% - 1px)" }}>
+    <Stack sx={{ position: "relative", width }}>
       <WButton
         onClick={onDeleteButtonClick}
         sx={{ position: "absolute", top: 0, right: 0, width: 48, height: 48, backgroundColor: "black" }}
