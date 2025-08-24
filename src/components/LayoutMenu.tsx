@@ -31,7 +31,7 @@ export const LayoutMenu = () => {
                   <Divider
                     key={`menu-divider-${index}`}
                     orientation={mobile ? "vertical" : "horizontal"}
-                    sx={[mobile ? { height: "80%" } : { width: "80%" }]}
+                    sx={[mobile ? { height: "70%" } : { width: "70%" }]}
                   />
                 )}
                 <Link to={route.path} key={`menu-link-${index}`}>

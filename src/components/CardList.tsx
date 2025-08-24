@@ -1,5 +1,5 @@
-import { ReactNode } from "react";
-import { Card, CardActionArea, CardContent, Stack, SxProps, Theme } from "@mui/material";
+import { Fragment, ReactNode } from "react";
+import { Card, CardActionArea, CardContent, Divider, Stack, SxProps, Theme } from "@mui/material";
 
 export const WCard = ({
   item,
@@ -34,15 +34,17 @@ export const CardList = ({
 }) => {
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
-      <Stack sx={{ gap: "1px" }}>
+      <Stack sx={{ gap: "0px" }}>
         {items.map((item, index) => (
-          <Stack key={`card-list-${index}`} sx={{ flexDirection: "row" }}>
-            {/* {index > 0 && <Divider sx={{ mx: 2 }} />} */}
-            <WCard item={item} onClick={onContentClick} sx={{ flex: 1 }}>
-              {renderContent(item)}
-            </WCard>
-            {renderRightContent(item)}
-          </Stack>
+          <Fragment key={`card-list-${index}`}>
+            {index > 0 && <Divider sx={{ ml: 7, mr: 0 }} />}
+            <Stack sx={{ flexDirection: "row" }}>
+              <WCard item={item} onClick={onContentClick} sx={{ flex: 1 }}>
+                {renderContent(item)}
+              </WCard>
+              {renderRightContent(item)}
+            </Stack>
+          </Fragment>
         ))}
       </Stack>
     </Stack>
