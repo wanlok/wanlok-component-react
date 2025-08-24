@@ -67,7 +67,7 @@ const BookmarkList = ({
   const numberOfComponentsPerSlide = 4;
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
-      <Stack sx={{ gap: "1px" }}>
+      <Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
           {steam.map(([appId, { title, imageUrl }], i) => (
             <ImageTitleLink
@@ -96,8 +96,16 @@ const BookmarkList = ({
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
             />
           )}
+          sx={{ mt: steam.length > 0 ? "1px" : 0 }}
         />
-        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
+        <Stack
+          sx={{
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: "1px",
+            mt: steam.length > 0 || youTubeShortVideos.length > 0 ? "1px" : 0
+          }}
+        >
           {youTubeRegularVideos.map(([id, { title, thumbnail_url }], i) => (
             <ImageTitleLink
               key={`youtube-regular-${i}`}

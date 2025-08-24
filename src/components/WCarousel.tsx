@@ -1,5 +1,5 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { Stack } from "@mui/material";
+import { Stack, SxProps, Theme } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { groupList } from "../common/ListDictUtils";
 
@@ -7,12 +7,14 @@ export const WCarousel = ({
   list,
   numberOfComponentsPerSlide,
   slideKey,
-  renderContent
+  renderContent,
+  sx
 }: {
   list: any[];
   numberOfComponentsPerSlide: number;
   slideKey: (i: number) => string;
   renderContent: (item: any, i: number, j: number) => ReactNode;
+  sx?: SxProps<Theme>;
 }) => {
   const refs = useRef<(HTMLDivElement | null)[]>([]);
   const [index, setIndex] = useState<number>();
@@ -38,6 +40,7 @@ export const WCarousel = ({
       navButtonsAlwaysVisible={true}
       onChange={(i) => setIndex(i)}
       swipe={false}
+      sx={{ ...sx }}
     >
       {groupList(list, numberOfComponentsPerSlide).map((group: any[], i: number) => {
         return (
