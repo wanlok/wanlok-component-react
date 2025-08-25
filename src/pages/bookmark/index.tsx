@@ -17,6 +17,7 @@ import { youTubeUrl } from "../../common/YouTube";
 import { steamUrl } from "../../common/Steam";
 import SteamIcon from "../../assets/images/icons/steam.png";
 import YouTubeIcon from "../../assets/images/icons/youtube.png";
+import { WChip } from "../../components/WChip";
 
 const FolderRow = ({
   folder,
@@ -39,35 +40,13 @@ const FolderRow = ({
       <Stack sx={{ flex: 1, gap: 1 }}>
         <Typography sx={{ fontSize: 16 }}>{folder.name}</Typography>
         {panelOpened === undefined && (steam > 0 || youtube_regular > 0 || youtube_shorts > 0) && (
-          <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-            {steam > 0 && (
-              <Chip
-                label={`${steam}`}
-                icon={<img src={SteamIcon} alt="icon" style={{ width: 16, height: 16 }} />}
-                sx={{ borderRadius: 0, gap: "4px", pl: "6px" }}
-              />
-            )}
+          <Stack sx={{ flexDirection: "row", gap: 1 }}>
+            {steam > 0 && <WChip icon={SteamIcon} label={`${steam}`} />}
             {youtube_regular > 0 && youtube_shorts > 0 && (
-              <Chip
-                label={`${youtube_shorts} + ${youtube_regular}`}
-                icon={<img src={YouTubeIcon} alt="icon" style={{ width: 16, height: 16 }} />}
-                sx={{ borderRadius: 0, gap: "4px", pl: "6px" }}
-              />
+              <WChip icon={YouTubeIcon} label={`${youtube_shorts} + ${youtube_regular}`} />
             )}
-            {youtube_regular === 0 && youtube_shorts > 0 && (
-              <Chip
-                label={`${youtube_shorts}`}
-                icon={<img src={YouTubeIcon} alt="icon" style={{ width: 16, height: 16 }} />}
-                sx={{ borderRadius: 0, gap: "4px", pl: "6px" }}
-              />
-            )}
-            {youtube_regular > 0 && youtube_shorts === 0 && (
-              <Chip
-                label={`${youtube_regular}`}
-                icon={<img src={YouTubeIcon} alt="icon" style={{ width: 16, height: 16 }} />}
-                sx={{ borderRadius: 0, gap: "4px", pl: "6px" }}
-              />
-            )}
+            {youtube_regular === 0 && youtube_shorts > 0 && <WChip icon={YouTubeIcon} label={`${youtube_shorts}`} />}
+            {youtube_regular > 0 && youtube_shorts === 0 && <WChip icon={YouTubeIcon} label={`${youtube_regular}`} />}
           </Stack>
         )}
       </Stack>
