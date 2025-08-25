@@ -13,9 +13,9 @@ const Top = ({
   children?: ReactNode;
 }) => {
   return (
-    <LayoutDivider>
-      <WCard onClick={() => setOpened(!opened)}>{children}</WCard>
-    </LayoutDivider>
+    // <LayoutDivider>
+    <WCard onClick={() => setOpened(!opened)}>{children}</WCard>
+    // </LayoutDivider>
   );
 };
 

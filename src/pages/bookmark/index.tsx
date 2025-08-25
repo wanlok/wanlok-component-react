@@ -5,7 +5,7 @@ import { CardList } from "../../components/CardList";
 import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { Folder, getDocumentId, useFolder } from "./useFolder";
-import { WIconButton } from "../../components/WButton";
+import { WButton, WIconButton } from "../../components/WButton";
 import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
@@ -39,7 +39,8 @@ const FolderRow = ({
         pl: 2,
         pr: mobileRow ? 2 : 0,
         gap: 2,
-        boxSizing: "border-box"
+        boxSizing: "border-box",
+        backgroundColor: mobileRow ? "background.default" : "transparent"
       }}
     >
       <Box
@@ -66,7 +67,7 @@ const FolderRow = ({
           component="img"
           src={panelOpened ? UpIcon : DownIcon}
           alt=""
-          sx={{ width: "16px", height: "16px", mt: "2px" }}
+          sx={{ width: "16px", height: "16px", mt: "4px" }}
         />
       )}
     </Stack>
@@ -146,13 +147,22 @@ const BookmarkList = ({
 };
 
 export const Bookmarks = () => {
-  const { folders, selectedFolder, addFolder, updateFolderCounts, deleteFolder, openFolder, exportFolder } =
-    useFolder();
+  const {
+    folders,
+    selectedFolder,
+    addFolder,
+    updateFolderCounts,
+    deleteFolder,
+    openFolder,
+    exportFolder,
+    exportFolders
+  } = useFolder();
   const { steam, youTubeRegularVideos, youTubeShortVideos, addBookmarks, deleteBookmark } = useBookmark(
     getDocumentId(selectedFolder)
   );
   const [panelOpened, setPanelOpened] = useState(false);
-
+  const { breakpoints } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
   return (
     <LayoutPanel
       panelOpened={panelOpened}
@@ -160,6 +170,27 @@ export const Bookmarks = () => {
       width={300}
       panel={
         <>
+          <Stack sx={mobile ? {} : { height: 100 }}>
+            {!mobile && (
+              <Stack
+                sx={{
+                  flex: 1,
+                  justifyContent: "center",
+                  boxSizing: "border-box",
+                  px: 2,
+                  backgroundColor: "background.default"
+                }}
+              >
+                <Typography sx={{ fontWeight: "bold", fontSize: 16 }}>{folders.length} Folders</Typography>
+              </Stack>
+            )}
+            <Stack sx={{ flexDirection: "row", gap: "1px", backgroundColor: "background.default" }}>
+              <WButton sx={{ flex: 1, height: 48 }}>Import</WButton>
+              <WButton sx={{ flex: 1, height: 48 }} onClick={exportFolders}>
+                Export
+              </WButton>
+            </Stack>
+          </Stack>
           <CardList
             items={folders}
             renderContent={(folder) => <FolderRow folder={folder} selectedFolder={selectedFolder} />}
