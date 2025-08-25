@@ -173,16 +173,11 @@ export const Bookmarks = () => {
         <>
           <Stack sx={mobile ? {} : { height: 100 }}>
             {!mobile && (
-              <Stack
-                sx={{
-                  flex: 1,
-                  justifyContent: "center",
-                  boxSizing: "border-box",
-                  px: 2,
-                  backgroundColor: "background.default"
-                }}
-              >
-                <Typography sx={{ fontWeight: "bold", fontSize: 16 }}>{folders.length} Folders</Typography>
+              <Stack sx={{ flex: 1, justifyContent: "center", px: 2, backgroundColor: "background.default" }}>
+                <Stack sx={{ flexDirection: "row" }}>
+                  <Typography sx={{ flex: 1, fontSize: 16 }}>Folders</Typography>
+                  {folders.length > 0 && <Typography sx={{ fontSize: 16 }}>{folders.length}</Typography>}
+                </Stack>
               </Stack>
             )}
             <Stack sx={{ flexDirection: "row", gap: "1px", backgroundColor: "background.default" }}>
