@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useBookmark } from "./useBookmark";
 import { TextInputForm } from "../../components/TextInputForm";
 import { CardList } from "../../components/CardList";
@@ -17,6 +17,7 @@ import { youTubeUrl } from "../../common/YouTube";
 import { steamUrl } from "../../common/Steam";
 import SteamIcon from "../../assets/images/icons/steam.png";
 import YouTubeIcon from "../../assets/images/icons/youtube.png";
+import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
 
 const FolderRow = ({
@@ -34,12 +35,11 @@ const FolderRow = ({
     <Stack
       sx={{
         flexDirection: "row",
-        height: (mobileRow ? 48 : 48 + 48 + 1) + "px",
-        pt: mobileRow ? 0 : 16 - 1 + "px",
+        minHeight: (mobileRow ? 48 : 48 + 48 + 1) + "px",
+        py: 2,
         pl: 2,
         pr: mobileRow ? 2 : 0,
         gap: 2,
-        alignItems: mobileRow ? "center" : "top",
         boxSizing: "border-box"
       }}
     >
@@ -49,7 +49,7 @@ const FolderRow = ({
         alt=""
         sx={{ width: "24px", height: "24px" }}
       />
-      <Stack sx={{ flex: 1, gap: 1 }}>
+      <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
         <Typography sx={{ fontSize: 16 }}>{folder.name}</Typography>
         {panelOpened === undefined && (steam > 0 || youtube_regular > 0 || youtube_shorts > 0) && (
           <Stack sx={{ flexDirection: "row", gap: 1 }}>
@@ -63,7 +63,12 @@ const FolderRow = ({
         )}
       </Stack>
       {mobileRow && (
-        <Box component="img" src={panelOpened ? UpIcon : DownIcon} alt="" sx={{ width: "16px", height: "16px" }} />
+        <Box
+          component="img"
+          src={panelOpened ? UpIcon : DownIcon}
+          alt=""
+          sx={{ width: "16px", height: "16px", mt: "2px" }}
+        />
       )}
     </Stack>
   );
@@ -71,12 +76,16 @@ const FolderRow = ({
 
 const FolderRowButtons = ({ folder, onDeleteClick }: { folder: Folder; onDeleteClick: (folder: Folder) => void }) => {
   return (
-    <Stack sx={{ gap: "1px" }}>
-      <WButton onClick={() => onDeleteClick(folder)} sx={{ backgroundColor: "#EEEEEE", width: 48, height: 48 }}>
+    <Stack sx={{}}>
+      <WButton
+        onClick={() => onDeleteClick(folder)}
+        sx={{ backgroundColor: "transparent", p: 0, width: 48, height: 48 }}
+      >
         <Box component="img" src={CrossIcon} alt="" sx={{ width: "16px", height: "16px" }} />
       </WButton>
-      <WButton onClick={() => {}} sx={{ backgroundColor: "#EEEEEE", width: 48, height: 48 }}>
-        <Box component="img" alt="" sx={{ width: "16px", height: "16px" }} />
+      <Divider />
+      <WButton onClick={() => {}} sx={{ backgroundColor: "transparent", p: 0, width: 48, height: 48 }}>
+        <Box component="img" src={DownloadIcon} alt="" sx={{ width: "20px", height: "20px" }} />
       </WButton>
     </Stack>
   );

@@ -1,20 +1,22 @@
-import { Button, SxProps, Theme } from "@mui/material";
+import { Button, ButtonOwnProps, SxProps, Theme } from "@mui/material";
 import { ReactNode } from "react";
 
 export const height = 40;
 
 export const WButton = ({
   children,
+  color = "primary",
   sx,
   onClick
 }: {
   children?: ReactNode;
+  color?: ButtonOwnProps["color"];
   sx?: SxProps<Theme>;
   onClick?: () => void;
 }) => {
   return (
     <Button
-      color="primary"
+      color={color}
       variant="contained"
       disableElevation
       fullWidth={false}

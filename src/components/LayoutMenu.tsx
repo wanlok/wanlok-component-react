@@ -43,7 +43,6 @@ export const LayoutMenu = () => {
                       gap: "4px",
                       fontSize: 14,
                       p: 0,
-                      // backgroundColor: selected ? palette.primary.main : "transparent"
                       backgroundColor: "transparent"
                     }}
                   >
