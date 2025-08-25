@@ -3,7 +3,7 @@ import { db } from "../../firebase";
 import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { getSteam } from "../../common/Steam";
 import { getYouTubeRegularAndShorts } from "../../common/YouTube";
-import { BookmarkDocument, Counts } from "../../common/Bookmark";
+import { BookmarkDocument, Counts, viewUrls } from "../../common/Bookmark";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
 
 const collectionName = "bookmarks";
@@ -74,11 +74,31 @@ export const useBookmark = (documentId?: string) => {
     return counts;
   };
 
+  const getBookmarkUrls = async (id?: string) => {
+    const urls: string[] = [];
+    if (id) {
+      const docRef = doc(db, collectionName, id);
+      const bookmarkDocument = (await getDoc(docRef)).data() as BookmarkDocument | undefined;
+      if (bookmarkDocument) {
+        for (const [key, dict] of Object.entries(bookmarkDocument)) {
+          const viewUrl = viewUrls[key as keyof typeof viewUrls] ?? "";
+          if (viewUrl.length > 0) {
+            for (const id of Object.keys(dict)) {
+              urls.push(`${viewUrl}${id}`);
+            }
+          }
+        }
+      }
+    }
+    return urls;
+  };
+
   return {
     steam: toList(bookmarkDocument?.steam),
     youTubeRegularVideos: toList(bookmarkDocument?.youtube_regular),
     youTubeShortVideos: toList(bookmarkDocument?.youtube_shorts),
     addBookmarks,
-    deleteBookmark
+    deleteBookmark,
+    getBookmarkUrls
   };
 };
