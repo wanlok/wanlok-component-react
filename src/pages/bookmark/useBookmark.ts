@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { getSteam } from "../../common/Steam";
-import { getYouTubeRegularAndShorts, youTubeUrl } from "../../common/YouTube";
+import { getYouTubeRegularAndShorts } from "../../common/YouTube";
 import { BookmarkDocument, Counts } from "../../common/Bookmark";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
 
@@ -74,28 +74,11 @@ export const useBookmark = (documentId?: string) => {
     return counts;
   };
 
-  const exportUrls = () => {
-    const urls = [];
-    if (bookmarkDocument) {
-      for (const [v] of Object.entries(bookmarkDocument)) {
-        urls.push(`${youTubeUrl}${v}`);
-      }
-    }
-    const blob = new Blob([urls.join("\n")], { type: "text/plain" });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${documentId}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-  };
-
   return {
     steam: toList(bookmarkDocument?.steam),
     youTubeRegularVideos: toList(bookmarkDocument?.youtube_regular),
     youTubeShortVideos: toList(bookmarkDocument?.youtube_shorts),
     addBookmarks,
-    deleteBookmark,
-    exportUrls
+    deleteBookmark
   };
 };

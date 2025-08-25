@@ -1,7 +1,5 @@
 import { YouTubeOEmbed } from "./Bookmark";
 
-export const youTubeUrl = "https://www.youtube.com/watch?v=";
-
 export const fetchYouTubeOEmbed = async (urlString: string) => {
   let youTubeOEmbed: YouTubeOEmbed | undefined = undefined;
   try {

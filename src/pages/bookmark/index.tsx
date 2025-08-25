@@ -13,12 +13,11 @@ import DownIcon from "../../assets/images/icons/down.png";
 import CrossIcon from "../../assets/images/icons/cross.png";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
 import { WCarousel } from "../../components/WCarousel";
-import { youTubeUrl } from "../../common/YouTube";
-import { steamUrl } from "../../common/Steam";
 import SteamIcon from "../../assets/images/icons/steam.png";
 import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
+import { viewUrls } from "../../common/Bookmark";
 
 const FolderRow = ({
   folder,
@@ -74,16 +73,6 @@ const FolderRow = ({
   );
 };
 
-const FolderRowButtons = ({ folder, onDeleteClick }: { folder: Folder; onDeleteClick: (folder: Folder) => void }) => {
-  return (
-    <Stack sx={{}}>
-      <WIconButton icon={CrossIcon} iconSize={16} onClick={() => onDeleteClick(folder)} />
-      <Divider />
-      <WIconButton icon={DownloadIcon} iconSize={20} onClick={() => {}} />
-    </Stack>
-  );
-};
-
 const BookmarkList = ({
   youTubeRegularVideos,
   youTubeShortVideos,
@@ -107,7 +96,7 @@ const BookmarkList = ({
               key={`steam-${i}`}
               title={title}
               imageUrl={imageUrl}
-              href={`${steamUrl}${appId}`}
+              href={`${viewUrls.steam}${appId}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
               aspectRatio="92:43"
               onDeleteButtonClick={() => onDeleteButtonClick("steam", appId)}
@@ -123,7 +112,7 @@ const BookmarkList = ({
               key={`youtube-shorts-${i}-${j}`}
               title={title}
               imageUrl={thumbnail_url}
-              href={`${youTubeUrl}${id}`}
+              href={`${viewUrls.youtube_shorts}${id}`}
               width={mobile ? "50%" : `calc(${100 / numberOfComponentsPerSlide}% - 1px)`}
               aspectRatio="9/16"
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
@@ -144,7 +133,7 @@ const BookmarkList = ({
               key={`youtube-regular-${i}`}
               title={title}
               imageUrl={thumbnail_url}
-              href={`${youTubeUrl}${id}`}
+              href={`${viewUrls.youtube_regular}${id}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
               aspectRatio="16/9"
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}
@@ -157,8 +146,9 @@ const BookmarkList = ({
 };
 
 export const Bookmarks = () => {
-  const { folders, selectedFolder, addFolder, updateFolderCounts, deleteFolder, openFolder } = useFolder();
-  const { steam, youTubeRegularVideos, youTubeShortVideos, addBookmarks, deleteBookmark, exportUrls } = useBookmark(
+  const { folders, selectedFolder, addFolder, updateFolderCounts, deleteFolder, openFolder, exportFolder } =
+    useFolder();
+  const { steam, youTubeRegularVideos, youTubeShortVideos, addBookmarks, deleteBookmark } = useBookmark(
     getDocumentId(selectedFolder)
   );
   const [panelOpened, setPanelOpened] = useState(false);
@@ -178,7 +168,11 @@ export const Bookmarks = () => {
               setPanelOpened(false);
             }}
             renderRightContent={(folder) => (
-              <FolderRowButtons folder={folder} onDeleteClick={(folder) => deleteFolder(folder)} />
+              <Stack sx={{}}>
+                <WIconButton icon={CrossIcon} iconSize={16} onClick={() => deleteFolder(folder)} />
+                <Divider />
+                <WIconButton icon={DownloadIcon} iconSize={20} onClick={() => exportFolder(folder)} />
+              </Stack>
             )}
           />
           <TextInputForm
@@ -222,10 +216,6 @@ export const Bookmarks = () => {
                 await updateFolderCounts(counts);
               }
             }
-          },
-          {
-            label: "Export",
-            onClick: exportUrls
           }
         ]}
       />

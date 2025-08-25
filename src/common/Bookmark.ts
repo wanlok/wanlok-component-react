@@ -26,3 +26,9 @@ export interface BookmarkDocument {
   youtube_regular: { [key: string]: YouTubeOEmbed };
   youtube_shorts: { [key: string]: YouTubeOEmbed };
 }
+
+export const viewUrls = {
+  steam: "https://store.steampowered.com/agecheck/app/",
+  youtube_regular: "https://www.youtube.com/watch?v=",
+  youtube_shorts: "https://www.youtube.com/shorts/"
+};

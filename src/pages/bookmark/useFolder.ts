@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
-import { Counts } from "../../common/Bookmark";
+import { BookmarkDocument, Counts, viewUrls } from "../../common/Bookmark";
 
 const collectionName = "folders";
 const documentId = "folders";
@@ -105,12 +105,39 @@ export const useFolder = () => {
     }
   };
 
+  const exportFolder = async (folder: Folder) => {
+    const bookmarkId = getDocumentId(folder);
+    if (bookmarkId) {
+      const urls = [];
+      const docRef = doc(db, "bookmarks", bookmarkId);
+      const bookmarkDocument = (await getDoc(docRef)).data() as BookmarkDocument | undefined;
+      if (bookmarkDocument) {
+        for (const [key, dict] of Object.entries(bookmarkDocument)) {
+          const viewUrl = viewUrls[key as keyof typeof viewUrls] ?? "";
+          if (viewUrl.length > 0) {
+            for (const id of Object.keys(dict)) {
+              urls.push(`${viewUrl}${id}`);
+            }
+          }
+        }
+      }
+      const blob = new Blob([urls.join("\n")], { type: "text/plain" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `${bookmarkId}.txt`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+  };
+
   return {
     folders: folderDocument ? folderDocument?.folders : [],
     selectedFolder,
     addFolder,
     updateFolderCounts,
     deleteFolder,
-    openFolder
+    openFolder,
+    exportFolder
   };
 };
