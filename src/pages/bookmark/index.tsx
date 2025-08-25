@@ -29,8 +29,20 @@ const FolderRow = ({
   panelOpened?: boolean;
 }) => {
   const { steam, youtube_regular, youtube_shorts } = folder.counts;
+  const mobileRow = panelOpened === true || panelOpened === false;
   return (
-    <Stack sx={{ flexDirection: "row", p: 2, gap: 2, alignItems: "center" }}>
+    <Stack
+      sx={{
+        flexDirection: "row",
+        height: (mobileRow ? 48 : 48 + 48 + 1) + "px",
+        pt: mobileRow ? 0 : 16 - 1 + "px",
+        pl: 2,
+        pr: mobileRow ? 2 : 0,
+        gap: 2,
+        alignItems: mobileRow ? "center" : "top",
+        boxSizing: "border-box"
+      }}
+    >
       <Box
         component="img"
         src={folder === selectedFolder ? FolderSelectedIcon : FolderIcon}
@@ -50,7 +62,7 @@ const FolderRow = ({
           </Stack>
         )}
       </Stack>
-      {(panelOpened === true || panelOpened === false) && (
+      {mobileRow && (
         <Box component="img" src={panelOpened ? UpIcon : DownIcon} alt="" sx={{ width: "16px", height: "16px" }} />
       )}
     </Stack>
@@ -59,9 +71,12 @@ const FolderRow = ({
 
 const FolderRowButtons = ({ folder, onDeleteClick }: { folder: Folder; onDeleteClick: (folder: Folder) => void }) => {
   return (
-    <Stack>
-      <WButton onClick={() => onDeleteClick(folder)} sx={{ flex: 1, p: 2, backgroundColor: "transparent" }}>
+    <Stack sx={{ gap: "1px" }}>
+      <WButton onClick={() => onDeleteClick(folder)} sx={{ backgroundColor: "#EEEEEE", width: 48, height: 48 }}>
         <Box component="img" src={CrossIcon} alt="" sx={{ width: "16px", height: "16px" }} />
+      </WButton>
+      <WButton onClick={() => {}} sx={{ backgroundColor: "#EEEEEE", width: 48, height: 48 }}>
+        <Box component="img" alt="" sx={{ width: "16px", height: "16px" }} />
       </WButton>
     </Stack>
   );
