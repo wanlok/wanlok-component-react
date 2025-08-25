@@ -187,13 +187,13 @@ export const Bookmarks = () => {
             )}
             <Stack sx={{ flexDirection: "row", gap: "1px", backgroundColor: "background.default" }}>
               <WButton
-                sx={{ flex: 1, height: 48 }}
+                sx={{ flex: 1, height: 50 }}
                 rightIcon={<img src={UploadIcon} alt="icon" style={{ width: 18, height: 18 }} />}
               >
                 Upload
               </WButton>
               <WButton
-                sx={{ flex: 1, height: 48, gap: "4px" }}
+                sx={{ flex: 1, height: 50, gap: "4px" }}
                 rightIcon={<img src={DownloadIcon} alt="icon" style={{ width: 18, height: 18 }} />}
                 onClick={downloadFolders}
               >
