@@ -1,4 +1,4 @@
-import { Button, ButtonOwnProps, SxProps, Theme } from "@mui/material";
+import { Box, Button, ButtonOwnProps, SxProps, Theme } from "@mui/material";
 import { ReactNode } from "react";
 
 export const height = 40;
@@ -35,5 +35,28 @@ export const WButton = ({
     >
       {children}
     </Button>
+  );
+};
+
+export const WIconButton = ({
+  icon,
+  iconSize = 16,
+  buttonSize = 48,
+  onClick,
+  sx
+}: {
+  icon: string;
+  iconSize?: number;
+  buttonSize?: number;
+  onClick: () => void;
+  sx?: SxProps<Theme>;
+}) => {
+  return (
+    <WButton
+      onClick={onClick}
+      sx={{ backgroundColor: "transparent", p: 0, width: buttonSize, height: buttonSize, ...sx }}
+    >
+      <Box component="img" src={icon} alt="" sx={{ width: iconSize, height: iconSize }} />
+    </WButton>
   );
 };

@@ -5,7 +5,7 @@ import { CardList } from "../../components/CardList";
 import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { Folder, getDocumentId, useFolder } from "./useFolder";
-import { WButton } from "../../components/WButton";
+import { WIconButton } from "../../components/WButton";
 import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
@@ -77,16 +77,9 @@ const FolderRow = ({
 const FolderRowButtons = ({ folder, onDeleteClick }: { folder: Folder; onDeleteClick: (folder: Folder) => void }) => {
   return (
     <Stack sx={{}}>
-      <WButton
-        onClick={() => onDeleteClick(folder)}
-        sx={{ backgroundColor: "transparent", p: 0, width: 48, height: 48 }}
-      >
-        <Box component="img" src={CrossIcon} alt="" sx={{ width: "16px", height: "16px" }} />
-      </WButton>
+      <WIconButton icon={CrossIcon} iconSize={16} onClick={() => onDeleteClick(folder)} />
       <Divider />
-      <WButton onClick={() => {}} sx={{ backgroundColor: "transparent", p: 0, width: 48, height: 48 }}>
-        <Box component="img" src={DownloadIcon} alt="" sx={{ width: "20px", height: "20px" }} />
-      </WButton>
+      <WIconButton icon={DownloadIcon} iconSize={20} onClick={() => {}} />
     </Stack>
   );
 };

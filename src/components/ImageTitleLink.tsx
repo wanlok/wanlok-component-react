@@ -1,5 +1,5 @@
 import { Box, Link, Stack, Typography } from "@mui/material";
-import { WButton } from "./WButton";
+import { WIconButton } from "./WButton";
 import CrossWhiteIcon from "../assets/images/icons/cross-white.png";
 
 export const ImageTitleLink = ({
@@ -19,13 +19,18 @@ export const ImageTitleLink = ({
 }) => {
   return (
     <Stack sx={{ position: "relative", width }}>
-      <WButton
+      <WIconButton
+        icon={CrossWhiteIcon}
+        iconSize={16}
         onClick={onDeleteButtonClick}
-        sx={{ position: "absolute", top: 0, right: 0, width: 48, height: 48, backgroundColor: "black" }}
+        sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "common.black" }}
+      />
+      <Link
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        sx={{ flex: 1, backgroundColor: "common.black", textDecoration: "none" }}
       >
-        <Box component="img" src={CrossWhiteIcon} alt="" sx={{ width: "16px", height: "16px" }} />
-      </WButton>
-      <Link href={href} sx={{ flex: 1, backgroundColor: "#000000", textDecoration: "none" }}>
         <Stack sx={{ aspectRatio }}>
           <Box
             component="img"
@@ -48,7 +53,7 @@ export const ImageTitleLink = ({
               WebkitBoxOrient: "vertical",
               overflow: "hidden",
               textOverflow: "ellipsis",
-              color: "#FFFFFF",
+              color: "common.white",
               fontSize: 16
             }}
           >

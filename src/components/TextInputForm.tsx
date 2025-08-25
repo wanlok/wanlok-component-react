@@ -50,7 +50,7 @@ export const TextInputForm = ({ placeholder, rightButtons }: { placeholder: stri
   };
 
   return (
-    <Stack ref={stackRef} sx={{ flexDirection: "row", backgroundColor: "#EEEEEE" }}>
+    <Stack ref={stackRef} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
       <Stack sx={{ flex: 1, p: 1 }}>
         <TextInput placeholder={placeholder} value={text} onChange={(value) => setText(value)} hideHelperText={true} />
       </Stack>
