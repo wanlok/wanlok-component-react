@@ -120,13 +120,13 @@ export const useFolder = () => {
     }
   };
 
-  const exportFolder = async (folder: Folder) => {
+  const downloadFolder = async (folder: Folder) => {
     const id = getDocumentId(folder);
     const urls = await getBookmarkUrls(id);
     download(urls.join("\n"), id);
   };
 
-  const exportFolders = async () => {
+  const downloadFolders = async () => {
     const folders = folderDocument?.folders;
     if (folders) {
       let map: { [name: string]: string[] } = await Promise.all(
@@ -147,7 +147,7 @@ export const useFolder = () => {
     updateFolderCounts,
     deleteFolder,
     openFolder,
-    exportFolder,
-    exportFolders
+    downloadFolder,
+    downloadFolders
   };
 };

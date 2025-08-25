@@ -7,12 +7,14 @@ export const WButton = ({
   children,
   color = "primary",
   sx,
-  onClick
+  onClick,
+  rightIcon
 }: {
   children?: ReactNode;
   color?: ButtonOwnProps["color"];
   sx?: SxProps<Theme>;
   onClick?: () => void;
+  rightIcon?: ReactNode;
 }) => {
   return (
     <Button
@@ -32,6 +34,7 @@ export const WButton = ({
         ...sx
       }}
       onClick={onClick}
+      endIcon={rightIcon}
     >
       {children}
     </Button>

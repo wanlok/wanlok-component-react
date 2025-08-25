@@ -15,6 +15,7 @@ import { ImageTitleLink } from "../../components/ImageTitleLink";
 import { WCarousel } from "../../components/WCarousel";
 import SteamIcon from "../../assets/images/icons/steam.png";
 import YouTubeIcon from "../../assets/images/icons/youtube.png";
+import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
 import { viewUrls } from "../../common/Bookmark";
@@ -154,8 +155,8 @@ export const Bookmarks = () => {
     updateFolderCounts,
     deleteFolder,
     openFolder,
-    exportFolder,
-    exportFolders
+    downloadFolder,
+    downloadFolders
   } = useFolder();
   const { steam, youTubeRegularVideos, youTubeShortVideos, addBookmarks, deleteBookmark } = useBookmark(
     getDocumentId(selectedFolder)
@@ -185,9 +186,18 @@ export const Bookmarks = () => {
               </Stack>
             )}
             <Stack sx={{ flexDirection: "row", gap: "1px", backgroundColor: "background.default" }}>
-              <WButton sx={{ flex: 1, height: 48 }}>Import</WButton>
-              <WButton sx={{ flex: 1, height: 48 }} onClick={exportFolders}>
-                Export
+              <WButton
+                sx={{ flex: 1, height: 48 }}
+                rightIcon={<img src={UploadIcon} alt="icon" style={{ width: 18, height: 18 }} />}
+              >
+                Upload
+              </WButton>
+              <WButton
+                sx={{ flex: 1, height: 48, gap: "4px" }}
+                rightIcon={<img src={DownloadIcon} alt="icon" style={{ width: 18, height: 18 }} />}
+                onClick={downloadFolders}
+              >
+                Download
               </WButton>
             </Stack>
           </Stack>
@@ -202,7 +212,7 @@ export const Bookmarks = () => {
               <Stack sx={{}}>
                 <WIconButton icon={CrossIcon} iconSize={16} onClick={() => deleteFolder(folder)} />
                 <Divider />
-                <WIconButton icon={DownloadIcon} iconSize={20} onClick={() => exportFolder(folder)} />
+                <WIconButton icon={DownloadIcon} iconSize={18} onClick={() => downloadFolder(folder)} />
               </Stack>
             )}
           />
