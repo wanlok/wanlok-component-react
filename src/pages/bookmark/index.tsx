@@ -1,4 +1,4 @@
-import { Box, Chip, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useBookmark } from "./useBookmark";
 import { TextInputForm } from "../../components/TextInputForm";
 import { CardList } from "../../components/CardList";
