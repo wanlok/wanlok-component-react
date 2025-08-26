@@ -20,21 +20,22 @@ export const useBookmark = (documentId?: string) => {
   const [bookmarkDocument, setBookmarkDocument] = useState<BookmarkDocument>();
 
   useEffect(() => {
-    const fetchBookmarkDocument = async () => {
-      if (documentId) {
-        const docRef = doc(db, collectionName, documentId);
-        setBookmarkDocument((await getDoc(docRef)).data() as BookmarkDocument | undefined);
-      }
-    };
-    fetchBookmarkDocument();
+    fetchBookmarkDocument(documentId);
   }, [documentId]);
 
-  const addBookmarks = async (text: string) => {
+  const fetchBookmarkDocument = async (id?: string) => {
+    if (id) {
+      const docRef = doc(db, collectionName, id);
+      setBookmarkDocument((await getDoc(docRef)).data() as BookmarkDocument | undefined);
+    }
+  };
+
+  const addBookmarks = async (bookmarkId: string, text: string) => {
     let counts: Counts | undefined = undefined;
-    if (documentId) {
+    if (bookmarkId && text) {
       const steam = await getSteam(text);
       const { youtube_regular, youtube_shorts } = await getYouTubeRegularAndShorts(text);
-      const docRef = doc(db, collectionName, documentId);
+      const docRef = doc(db, collectionName, bookmarkId);
       let document;
       if (bookmarkDocument) {
         document = {
@@ -97,6 +98,7 @@ export const useBookmark = (documentId?: string) => {
     steam: toList(bookmarkDocument?.steam),
     youTubeRegularVideos: toList(bookmarkDocument?.youtube_regular),
     youTubeShortVideos: toList(bookmarkDocument?.youtube_shorts),
+    fetchBookmarkDocument,
     addBookmarks,
     deleteBookmark,
     getBookmarkUrls

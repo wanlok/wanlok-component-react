@@ -2,7 +2,7 @@ import { Box, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/m
 import { useBookmark } from "./useBookmark";
 import { TextInputForm } from "../../components/TextInputForm";
 import { CardList } from "../../components/CardList";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { Folder, getDocumentId, useFolder } from "./useFolder";
 import { WButton, WIconButton } from "../../components/WButton";
@@ -160,7 +160,7 @@ export const Bookmarks = () => {
     downloadFolders
   } = useFolder();
   const { steam, youTubeRegularVideos, youTubeShortVideos, addBookmarks, deleteBookmark } = useBookmark(
-    getDocumentId(selectedFolder)
+    getDocumentId(selectedFolder?.name)
   );
   const [panelOpened, setPanelOpened] = useState(false);
   const { breakpoints } = useTheme();
@@ -249,9 +249,12 @@ export const Bookmarks = () => {
           {
             label: "Add",
             onClickWithText: async (text) => {
-              const counts = await addBookmarks(text);
-              if (counts) {
-                await updateFolderCounts(counts);
+              const bookmarkId = getDocumentId(selectedFolder?.name);
+              if (bookmarkId) {
+                const counts = await addBookmarks(bookmarkId, text);
+                if (counts) {
+                  await updateFolderCounts(counts);
+                }
               }
             }
           }

@@ -18,9 +18,9 @@ interface FolderDocument {
   folders: Folder[];
 }
 
-export const getDocumentId = (folder?: Folder) => {
-  return folder
-    ? folder.name
+export const getDocumentId = (folderName?: string) => {
+  return folderName
+    ? folderName
         .toLowerCase()
         .replace(/\s+/g, "-")
         .replace(/[^a-z0-9-]/g, "")
@@ -44,7 +44,7 @@ export const useFolder = () => {
   const navigate = useNavigate();
   const [folderDocument, setFolderDocument] = useState<FolderDocument>();
   const [selectedFolder, setSelectedFolder] = useState<Folder>();
-  const { getBookmarkUrls } = useBookmark();
+  const { addBookmarks, getBookmarkUrls } = useBookmark();
 
   useEffect(() => {
     const fetchFolderDocument = async () => {
@@ -56,7 +56,7 @@ export const useFolder = () => {
 
   const openFolder = useCallback(
     (folder: Folder) => {
-      navigate(`/bookmarks/${getDocumentId(folder)}`);
+      navigate(`/bookmarks/${getDocumentId(folder.name)}`);
     },
     [navigate]
   );
@@ -67,7 +67,7 @@ export const useFolder = () => {
       if (folders.length > 0) {
         let folder: Folder | undefined = undefined;
         if (id) {
-          folder = folders.find((f) => getDocumentId(f) === id);
+          folder = folders.find((f) => getDocumentId(f.name) === id);
         }
         if (folder) {
           setSelectedFolder(folder);
@@ -120,8 +120,37 @@ export const useFolder = () => {
     }
   };
 
-  const upload = (json: { [folderName: string]: string[] }) => {
-    console.log(json);
+  const upload = async (json: { [folderName: string]: string[] }) => {
+    let newFolderDocument;
+    if (folderDocument) {
+      const newFolders = [];
+      const names = folderDocument.folders.map((folder) => folder.name);
+      for (const [name] of Object.entries(json)) {
+        if (!names?.includes(name)) {
+          const folder = { name, counts: { steam: 0, youtube_regular: 0, youtube_shorts: 0 } };
+          newFolders.push(folder);
+        }
+      }
+      const folders = [...folderDocument.folders, ...newFolders].sort((a, b) => a.name.localeCompare(b.name));
+      newFolderDocument = { ...folderDocument, folders };
+      const docRef = doc(db, collectionName, documentId);
+      await updateDoc(docRef, newFolderDocument);
+    } else {
+      newFolderDocument = {
+        folders: Object.entries(json).map((f) => {
+          return { name: f[0], counts: { steam: 0, youtube_regular: 0, youtube_shorts: 0 } };
+        })
+      };
+      const docRef = doc(db, collectionName, documentId);
+      await setDoc(docRef, newFolderDocument);
+    }
+    setFolderDocument(newFolderDocument);
+    for (const [name, list] of Object.entries(json)) {
+      const bookmarkId = getDocumentId(name);
+      if (bookmarkId) {
+        addBookmarks(bookmarkId, list.join("\n"));
+      }
+    }
   };
 
   const uploadFolders = async () => {
@@ -155,7 +184,7 @@ export const useFolder = () => {
   };
 
   const downloadFolder = async (folder: Folder) => {
-    const id = getDocumentId(folder);
+    const id = getDocumentId(folder.name);
     const urls = await getBookmarkUrls(id);
     download(urls.join("\n"), id);
   };
@@ -165,7 +194,7 @@ export const useFolder = () => {
     if (folders) {
       let map: { [name: string]: string[] } = await Promise.all(
         folderDocument?.folders.map(async (folder) => {
-          const id = getDocumentId(folder);
+          const id = getDocumentId(folder.name);
           const urls = await getBookmarkUrls(id);
           return [folder.name, urls];
         })
