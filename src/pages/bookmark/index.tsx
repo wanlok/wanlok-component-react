@@ -2,7 +2,7 @@ import { Box, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/m
 import { useBookmark } from "./useBookmark";
 import { TextInputForm } from "../../components/TextInputForm";
 import { CardList } from "../../components/CardList";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { Folder, getDocumentId, useFolder } from "./useFolder";
 import { WButton, WIconButton } from "../../components/WButton";
@@ -155,6 +155,7 @@ export const Bookmarks = () => {
     updateFolderCounts,
     deleteFolder,
     openFolder,
+    uploadFolders,
     downloadFolder,
     downloadFolders
   } = useFolder();
@@ -184,6 +185,7 @@ export const Bookmarks = () => {
               <WButton
                 sx={{ flex: 1, height: 50 }}
                 rightIcon={<img src={UploadIcon} alt="icon" style={{ width: 18, height: 18 }} />}
+                onClick={uploadFolders}
               >
                 Upload
               </WButton>

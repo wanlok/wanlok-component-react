@@ -120,6 +120,40 @@ export const useFolder = () => {
     }
   };
 
+  const upload = (json: { [folderName: string]: string[] }) => {
+    console.log(json);
+  };
+
+  const uploadFolders = async () => {
+    const input = document.createElement("input");
+    input.type = "file";
+    input.onchange = () => {
+      const files = input.files;
+      if (files) {
+        for (let i = 0; i < files.length; i++) {
+          const fileReader = new FileReader();
+          fileReader.onload = () => {
+            let jsonObject;
+            try {
+              jsonObject = JSON.parse(fileReader.result as string);
+            } catch (e) {}
+            if (
+              jsonObject !== null &&
+              typeof jsonObject === "object" &&
+              Object.values(jsonObject).every((i) => Array.isArray(i) && i.every((j) => typeof j === "string"))
+            ) {
+              upload(jsonObject as { [folderName: string]: string[] });
+            } else {
+            }
+          };
+          fileReader.onerror = () => {};
+          fileReader.readAsText(files[i]);
+        }
+      }
+    };
+    input.click();
+  };
+
   const downloadFolder = async (folder: Folder) => {
     const id = getDocumentId(folder);
     const urls = await getBookmarkUrls(id);
@@ -147,6 +181,7 @@ export const useFolder = () => {
     updateFolderCounts,
     deleteFolder,
     openFolder,
+    uploadFolders,
     downloadFolder,
     downloadFolders
   };
