@@ -1,4 +1,4 @@
-import { SteamInfo } from "./Bookmark";
+import { SteamInfo } from "../Bookmark";
 
 export const fetchSteamInfo = async (appId: string) => {
   let steamInfo: SteamInfo | undefined = undefined;
@@ -28,7 +28,7 @@ export const extractAppIds = (text: string): string[] => {
     .filter(Boolean);
 };
 
-export const getSteam = async (text: string) => {
+export const extractSteamInfos = async (text: string) => {
   const steam: { [key: string]: SteamInfo } = {};
 
   const appIds = extractAppIds(text);
@@ -46,5 +46,5 @@ export const getSteam = async (text: string) => {
     steam[appId] = steamInfo;
   }
 
-  return steam;
+  return { steam };
 };

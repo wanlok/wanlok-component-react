@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { getSteam } from "../../common/Steam";
-import { getYouTubeRegularAndShorts } from "../../common/YouTube";
+import { extractChartItems } from "../../common/extractor/ChartExtractor";
+import { extractSteamInfos } from "../../common/extractor/SteamInfoExtractor";
+import { extractYouTubeRegularAndShortInfos } from "../../common/extractor/YouTubeInfoExtractor";
 import { BookmarkDocument, Counts, viewUrls } from "../../common/Bookmark";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
 
@@ -33,20 +34,22 @@ export const useBookmark = (documentId?: string) => {
   const addBookmarks = async (bookmarkId: string, text: string) => {
     let counts: Counts | undefined = undefined;
     if (bookmarkId && text) {
-      const steam = await getSteam(text);
-      const { youtube_regular, youtube_shorts } = await getYouTubeRegularAndShorts(text);
+      const { charts } = extractChartItems(text);
+      const { steam } = await extractSteamInfos(text);
+      const { youtube_regular, youtube_shorts } = await extractYouTubeRegularAndShortInfos(text);
       const docRef = doc(db, collectionName, bookmarkId);
       let document;
       if (bookmarkDocument) {
         document = {
           ...bookmarkDocument,
+          charts: { ...bookmarkDocument.charts, ...charts },
           steam: { ...bookmarkDocument.steam, ...steam },
           youtube_regular: { ...bookmarkDocument.youtube_regular, ...youtube_regular },
           youtube_shorts: { ...bookmarkDocument.youtube_shorts, ...youtube_shorts }
         };
         await updateDoc(docRef, document);
       } else {
-        document = { steam, youtube_regular, youtube_shorts };
+        document = { charts, steam, youtube_regular, youtube_shorts };
         await setDoc(docRef, document);
       }
       setBookmarkDocument(document);
