@@ -19,8 +19,7 @@ import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
 import { viewUrls } from "../../common/Bookmark";
-import { LineChart } from "@mui/x-charts";
-import CrossWhiteIcon from "../../assets/images/icons/cross-white.png";
+import { WChart } from "../../components/WChart";
 
 const FolderRow = ({
   folder,
@@ -38,8 +37,7 @@ const FolderRow = ({
       sx={{
         flexDirection: "row",
         minHeight: (mobileRow ? 48 : 48 + 48 + 1) + "px",
-        pt: mobileRow ? 2 : "14px",
-        pb: 2,
+        py: 2,
         pl: 2,
         pr: mobileRow ? 2 : 0,
         gap: 2,
@@ -98,19 +96,13 @@ const BookmarkList = ({
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
-          {charts.map(([uuid, { x, y }], i) => (
-            <Stack
+          {charts.map(([uuid, chartItem], i) => (
+            <WChart
               key={`chart-${i}`}
-              sx={{ position: "relative", width: mobile ? "100%" : "calc(25% - 1px)", backgroundColor: "#EEEEEE" }}
-            >
-              <WIconButton
-                icon={CrossWhiteIcon}
-                iconSize={16}
-                onClick={() => onDeleteButtonClick("charts", uuid)}
-                sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "common.black", zIndex: 999 }}
-              />
-              <LineChart xAxis={[{ data: x }]} series={[{ data: y }]} height={300} />
-            </Stack>
+              chartItem={chartItem}
+              width={mobile ? "100%" : "calc(50% - 1px)"}
+              onDeleteButtonClick={() => onDeleteButtonClick("charts", uuid)}
+            />
           ))}
         </Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
