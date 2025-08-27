@@ -183,20 +183,20 @@ export const Bookmarks = () => {
               </Stack>
             )}
             <Stack sx={{ flexDirection: "row", gap: "1px", backgroundColor: "background.default" }}>
-              <WButton
-                sx={{ flex: 1, height: 50 }}
-                rightIcon={<img src={UploadIcon} alt="icon" style={{ width: 18, height: 18 }} />}
+              <WIconButton
+                icon={UploadIcon}
+                buttonSize={50}
+                iconSize={18}
                 onClick={uploadFolders}
-              >
-                Upload
-              </WButton>
-              <WButton
-                sx={{ flex: 1, height: 50, gap: "4px" }}
-                rightIcon={<img src={DownloadIcon} alt="icon" style={{ width: 18, height: 18 }} />}
+                sx={{ backgroundColor: "primray.main" }}
+              />
+              <WIconButton
+                icon={DownloadIcon}
+                buttonSize={50}
+                iconSize={18}
                 onClick={downloadFolders}
-              >
-                Download
-              </WButton>
+                sx={{ backgroundColor: "primray.main" }}
+              />
             </Stack>
           </Stack>
           <CardList
