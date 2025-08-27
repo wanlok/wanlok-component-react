@@ -5,7 +5,7 @@ import { CardList } from "../../components/CardList";
 import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { Folder, getDocumentId, useFolder } from "./useFolder";
-import { WButton, WIconButton } from "../../components/WButton";
+import { WIconButton } from "../../components/WButton";
 import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
