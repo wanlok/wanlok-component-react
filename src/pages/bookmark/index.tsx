@@ -36,7 +36,8 @@ const FolderRow = ({
       sx={{
         flexDirection: "row",
         minHeight: (mobileRow ? 48 : 48 + 48 + 1) + "px",
-        py: 2,
+        pt: mobileRow ? 2 : "14px",
+        pb: 2,
         pl: 2,
         pr: mobileRow ? 2 : 0,
         gap: 2,
@@ -174,10 +175,10 @@ export const Bookmarks = () => {
         <>
           <Stack sx={mobile ? {} : { height: 100 }}>
             {!mobile && (
-              <Stack sx={{ flex: 1, justifyContent: "center", px: 2, backgroundColor: "background.default" }}>
-                <Stack sx={{ flexDirection: "row" }}>
-                  <Typography sx={{ flex: 1, fontSize: 16 }}>Folders</Typography>
-                  {folders.length > 0 && <Typography sx={{ fontSize: 16 }}>{folders.length}</Typography>}
+              <Stack sx={{ flex: 1, justifyContent: "center", px: 1, backgroundColor: "background.default" }}>
+                <Stack sx={{ flexDirection: "row", alignItems: "center" }}>
+                  <Typography sx={{ flex: 1, fontSize: 16, p: 1 }}>Bookmarks</Typography>
+                  <WChip icon={FolderSelectedIcon} label={`${folders.length}`} />
                 </Stack>
               </Stack>
             )}
