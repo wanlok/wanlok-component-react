@@ -62,7 +62,7 @@ export const useBookmark = (documentId?: string) => {
     let counts: Counts | undefined = undefined;
     if (bookmarkDocument && documentId) {
       const document: BookmarkDocument = { ...bookmarkDocument };
-      if (type === "steam" || type === "youtube_regular" || type === "youtube_shorts") {
+      if (type === "charts" || type === "steam" || type === "youtube_regular" || type === "youtube_shorts") {
         delete document[type][id];
       }
       const docRef = doc(db, collectionName, documentId);
@@ -98,6 +98,7 @@ export const useBookmark = (documentId?: string) => {
   };
 
   return {
+    charts: toList(bookmarkDocument?.charts),
     steam: toList(bookmarkDocument?.steam),
     youTubeRegularVideos: toList(bookmarkDocument?.youtube_regular),
     youTubeShortVideos: toList(bookmarkDocument?.youtube_shorts),

@@ -19,6 +19,8 @@ import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
 import { viewUrls } from "../../common/Bookmark";
+import { LineChart } from "@mui/x-charts";
+import CrossWhiteIcon from "../../assets/images/icons/cross-white.png";
 
 const FolderRow = ({
   folder,
@@ -77,14 +79,16 @@ const FolderRow = ({
 };
 
 const BookmarkList = ({
+  charts,
+  steam,
   youTubeRegularVideos,
   youTubeShortVideos,
-  steam,
   onDeleteButtonClick
 }: {
+  charts: [string, any][];
+  steam: [string, any][];
   youTubeRegularVideos: [string, any][];
   youTubeShortVideos: [string, any][];
-  steam: [string, any][];
   onDeleteButtonClick: (type: string, id: string) => void;
 }) => {
   const { breakpoints } = useTheme();
@@ -93,6 +97,22 @@ const BookmarkList = ({
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack>
+        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
+          {charts.map(([uuid, { x, y }], i) => (
+            <Stack
+              key={`chart-${i}`}
+              sx={{ position: "relative", width: mobile ? "100%" : "calc(25% - 1px)", backgroundColor: "#EEEEEE" }}
+            >
+              <WIconButton
+                icon={CrossWhiteIcon}
+                iconSize={16}
+                onClick={() => onDeleteButtonClick("charts", uuid)}
+                sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "common.black", zIndex: 999 }}
+              />
+              <LineChart xAxis={[{ data: x }]} series={[{ data: y }]} height={300} />
+            </Stack>
+          ))}
+        </Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
           {steam.map(([appId, { title, imageUrl }], i) => (
             <ImageTitleLink
@@ -160,7 +180,7 @@ export const Bookmarks = () => {
     downloadFolder,
     downloadFolders
   } = useFolder();
-  const { steam, youTubeRegularVideos, youTubeShortVideos, addBookmarks, deleteBookmark } = useBookmark(
+  const { charts, steam, youTubeRegularVideos, youTubeShortVideos, addBookmarks, deleteBookmark } = useBookmark(
     getDocumentId(selectedFolder?.name)
   );
   const [panelOpened, setPanelOpened] = useState(false);
@@ -234,9 +254,10 @@ export const Bookmarks = () => {
       }
     >
       <BookmarkList
+        charts={charts}
+        steam={steam}
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
-        steam={steam}
         onDeleteButtonClick={async (type, id) => {
           const counts = await deleteBookmark(type, id);
           if (counts) {

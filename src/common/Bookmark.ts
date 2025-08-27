@@ -4,6 +4,12 @@ export interface Counts {
   youtube_shorts: number;
 }
 
+export interface ChartItem {
+  chart: string;
+  x: number[];
+  y: number[];
+}
+
 export interface SteamInfo {
   title: string;
   imageUrl: string;
@@ -19,12 +25,6 @@ export interface YouTubeOEmbed {
   html: string;
   width: number;
   height: number;
-}
-
-export interface ChartItem {
-  chart: string;
-  x: number[];
-  y: number[];
 }
 
 export interface BookmarkDocument {
