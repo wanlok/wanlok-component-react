@@ -4,7 +4,15 @@ import LeftWhiteIcon from "../assets/images/icons/left_white.png";
 import RightWhiteIcon from "../assets/images/icons/right_white.png";
 import CrossWhiteIcon from "../assets/images/icons/cross_white.png";
 
-export const ControlGroup = ({ onDeleteButtonClick }: { onDeleteButtonClick: () => void }) => {
+export const ControlGroup = ({
+  onLeftButtonClick,
+  onRightButtonClick,
+  onDeleteButtonClick
+}: {
+  onLeftButtonClick: () => void;
+  onRightButtonClick: () => void;
+  onDeleteButtonClick: () => void;
+}) => {
   return (
     <Stack sx={{ flexDirection: "column", gap: "1px", position: "absolute", top: 0, right: 0 }}>
       <WIconButton
@@ -13,8 +21,18 @@ export const ControlGroup = ({ onDeleteButtonClick }: { onDeleteButtonClick: () 
         onClick={onDeleteButtonClick}
         sx={{ backgroundColor: "common.black" }}
       />
-      <WIconButton icon={RightWhiteIcon} iconSize={16} onClick={() => {}} sx={{ backgroundColor: "common.black" }} />
-      <WIconButton icon={LeftWhiteIcon} iconSize={16} onClick={() => {}} sx={{ backgroundColor: "common.black" }} />
+      <WIconButton
+        icon={RightWhiteIcon}
+        iconSize={16}
+        onClick={onLeftButtonClick}
+        sx={{ backgroundColor: "common.black" }}
+      />
+      <WIconButton
+        icon={LeftWhiteIcon}
+        iconSize={16}
+        onClick={onRightButtonClick}
+        sx={{ backgroundColor: "common.black" }}
+      />
     </Stack>
   );
 };

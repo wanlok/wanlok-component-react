@@ -7,6 +7,8 @@ export const ImageTitleLink = ({
   href,
   width,
   aspectRatio,
+  onLeftButtonClick,
+  onRightButtonClick,
   onDeleteButtonClick
 }: {
   title: string;
@@ -14,6 +16,8 @@ export const ImageTitleLink = ({
   href: string;
   width: string;
   aspectRatio: string;
+  onLeftButtonClick: () => void;
+  onRightButtonClick: () => void;
   onDeleteButtonClick: () => void;
 }) => {
   return (
@@ -54,7 +58,11 @@ export const ImageTitleLink = ({
           </Typography>
         </Stack>
       </Link>
-      <ControlGroup onDeleteButtonClick={onDeleteButtonClick} />
+      <ControlGroup
+        onLeftButtonClick={onLeftButtonClick}
+        onRightButtonClick={onRightButtonClick}
+        onDeleteButtonClick={onDeleteButtonClick}
+      />
     </Stack>
   );
 };

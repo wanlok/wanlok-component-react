@@ -27,6 +27,10 @@ export interface YouTubeOEmbed {
   height: number;
 }
 
+export const isCollectionDocumentKey = (key: string): key is keyof CollectionDocument => {
+  return ["charts", "steam", "youtube_regular", "youtube_shorts"].includes(key);
+};
+
 export interface CollectionDocument {
   charts: { [key: string]: ChartItem };
   steam: { [key: string]: SteamInfo };

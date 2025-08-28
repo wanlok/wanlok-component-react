@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { extractChartItems } from "../../common/extractor/ChartExtractor";
 import { extractSteamInfos } from "../../common/extractor/SteamInfoExtractor";
 import { extractYouTubeRegularAndShortInfos } from "../../common/extractor/YouTubeInfoExtractor";
-import { CollectionDocument, Counts, viewUrls } from "../../common/Collection";
+import { CollectionDocument, Counts, isCollectionDocumentKey, viewUrls } from "../../common/Collection";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
 
 const collectionName = "collections";
@@ -21,15 +21,14 @@ export const useCollection = (documentId?: string) => {
   const [collectionDocument, setCollectionDocument] = useState<CollectionDocument>();
 
   useEffect(() => {
+    const fetchCollectionDocument = async (id?: string) => {
+      if (id) {
+        const docRef = doc(db, collectionName, id);
+        setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | undefined);
+      }
+    };
     fetchCollectionDocument(documentId);
   }, [documentId]);
-
-  const fetchCollectionDocument = async (id?: string) => {
-    if (id) {
-      const docRef = doc(db, collectionName, id);
-      setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | undefined);
-    }
-  };
 
   const addCollections = async (collectionId: string, text: string) => {
     let counts: Counts | undefined = undefined;
@@ -58,11 +57,18 @@ export const useCollection = (documentId?: string) => {
     return counts;
   };
 
+  const updateCollection = async (type: string, id: string, direction: string) => {
+    console.log("update collection", type, id, direction);
+    if (collectionDocument && isCollectionDocumentKey(type)) {
+      console.log(collectionDocument[type]);
+    }
+  };
+
   const deleteCollection = async (type: string, id: string) => {
     let counts: Counts | undefined = undefined;
     if (collectionDocument && documentId) {
       const document: CollectionDocument = { ...collectionDocument };
-      if (type === "charts" || type === "steam" || type === "youtube_regular" || type === "youtube_shorts") {
+      if (isCollectionDocumentKey(type)) {
         delete document[type][id];
       }
       const docRef = doc(db, collectionName, documentId);
@@ -103,6 +109,7 @@ export const useCollection = (documentId?: string) => {
     youTubeRegularVideos: toList(collectionDocument?.youtube_regular),
     youTubeShortVideos: toList(collectionDocument?.youtube_shorts),
     addCollections,
+    updateCollection,
     deleteCollection,
     getCollectionUrls
   };
