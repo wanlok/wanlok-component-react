@@ -1,4 +1,4 @@
-import { SteamInfo } from "../Bookmark";
+import { SteamInfo } from "../Collection";
 
 export const fetchSteamInfo = async (appId: string) => {
   let steamInfo: SteamInfo | undefined = undefined;

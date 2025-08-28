@@ -27,7 +27,7 @@ export interface YouTubeOEmbed {
   height: number;
 }
 
-export interface BookmarkDocument {
+export interface CollectionDocument {
   charts: { [key: string]: ChartItem };
   steam: { [key: string]: SteamInfo };
   youtube_regular: { [key: string]: YouTubeOEmbed };

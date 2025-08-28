@@ -6,7 +6,7 @@ import { Chart } from "../pages/chart";
 import { SnapshotPage } from "../pages/snapshot";
 import { PDFPage } from "../pages/pdf";
 import { Image } from "../pages/image";
-import { Bookmarks } from "../pages/bookmark";
+import { CollectionPage } from "../pages/collection";
 import WANLOKImage from "../assets/images/wanlok.png";
 import WANLOKImage2 from "../assets/images/wanlok_2.png";
 import FolderIcon from "../assets/images/icons/folder.png";
@@ -41,9 +41,9 @@ export const routes = [
       {
         icon: FolderIcon,
         icon_selected: FolderSelectedIcon,
-        name: "Bookmarks",
-        path: "/bookmarks",
-        element: <Bookmarks />,
+        name: "Collections",
+        path: "/collections",
+        element: <CollectionPage />,
         children: [{ path: ":id", element: <SnapshotPage /> }]
       },
       {

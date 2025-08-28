@@ -1,5 +1,5 @@
 import { Box, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { useBookmark } from "./useBookmark";
+import { useCollection } from "./useCollection";
 import { TextInputForm } from "../../components/TextInputForm";
 import { WCardList } from "../../components/WCardList";
 import { useState } from "react";
@@ -18,7 +18,7 @@ import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
-import { viewUrls } from "../../common/Bookmark";
+import { viewUrls } from "../../common/Collection";
 import { WChart } from "../../components/WChart";
 
 const FolderRow = ({
@@ -76,7 +76,7 @@ const FolderRow = ({
   );
 };
 
-const BookmarkList = ({
+const CollectionList = ({
   charts,
   steam,
   youTubeRegularVideos,
@@ -160,7 +160,7 @@ const BookmarkList = ({
   );
 };
 
-export const Bookmarks = () => {
+export const CollectionPage = () => {
   const {
     folders,
     selectedFolder,
@@ -172,7 +172,7 @@ export const Bookmarks = () => {
     downloadFolder,
     downloadFolders
   } = useFolder();
-  const { charts, steam, youTubeRegularVideos, youTubeShortVideos, addBookmarks, deleteBookmark } = useBookmark(
+  const { charts, steam, youTubeRegularVideos, youTubeShortVideos, addCollections, deleteCollection } = useCollection(
     getDocumentId(selectedFolder?.name)
   );
   const [panelOpened, setPanelOpened] = useState(false);
@@ -189,7 +189,7 @@ export const Bookmarks = () => {
             {!mobile && (
               <Stack sx={{ flex: 1, justifyContent: "center", px: 1, backgroundColor: "background.default" }}>
                 <Stack sx={{ flexDirection: "row", alignItems: "center" }}>
-                  <Typography sx={{ flex: 1, fontSize: 16, p: 1 }}>Bookmarks</Typography>
+                  <Typography sx={{ flex: 1, fontSize: 16, p: 1 }}>Collections</Typography>
                   <WChip icon={FolderSelectedIcon} label={`${folders.length}`} />
                 </Stack>
               </Stack>
@@ -245,13 +245,13 @@ export const Bookmarks = () => {
         )
       }
     >
-      <BookmarkList
+      <CollectionList
         charts={charts}
         steam={steam}
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
         onDeleteButtonClick={async (type, id) => {
-          const counts = await deleteBookmark(type, id);
+          const counts = await deleteCollection(type, id);
           if (counts) {
             await updateFolderCounts(counts);
           }
@@ -263,9 +263,9 @@ export const Bookmarks = () => {
           {
             label: "Add",
             onClickWithText: async (text) => {
-              const bookmarkId = getDocumentId(selectedFolder?.name);
-              if (bookmarkId) {
-                const counts = await addBookmarks(bookmarkId, text);
+              const collectionId = getDocumentId(selectedFolder?.name);
+              if (collectionId) {
+                const counts = await addCollections(collectionId, text);
                 if (counts) {
                   await updateFolderCounts(counts);
                 }

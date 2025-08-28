@@ -2,11 +2,11 @@ import { useCallback, useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
-import { Counts } from "../../common/Bookmark";
-import { useBookmark } from "./useBookmark";
+import { Counts } from "../../common/Collection";
+import { useCollection } from "./useCollection";
 import { getDateTimeString } from "../../common/DateUtils";
 
-const collectionName = "folders";
+const collectionName = "configs";
 const documentId = "folders";
 
 export interface Folder {
@@ -44,7 +44,7 @@ export const useFolder = () => {
   const navigate = useNavigate();
   const [folderDocument, setFolderDocument] = useState<FolderDocument>();
   const [selectedFolder, setSelectedFolder] = useState<Folder>();
-  const { addBookmarks, getBookmarkUrls } = useBookmark();
+  const { addCollections, getCollectionUrls } = useCollection();
 
   useEffect(() => {
     const fetchFolderDocument = async () => {
@@ -56,7 +56,7 @@ export const useFolder = () => {
 
   const openFolder = useCallback(
     (folder: Folder) => {
-      navigate(`/bookmarks/${getDocumentId(folder.name)}`);
+      navigate(`/collections/${getDocumentId(folder.name)}`);
     },
     [navigate]
   );
@@ -146,9 +146,9 @@ export const useFolder = () => {
     }
     setFolderDocument(newFolderDocument);
     for (const [name, list] of Object.entries(json)) {
-      const bookmarkId = getDocumentId(name);
-      if (bookmarkId) {
-        addBookmarks(bookmarkId, list.join("\n"));
+      const collectionId = getDocumentId(name);
+      if (collectionId) {
+        addCollections(collectionId, list.join("\n"));
       }
     }
   };
@@ -185,7 +185,7 @@ export const useFolder = () => {
 
   const downloadFolder = async (folder: Folder) => {
     const id = getDocumentId(folder.name);
-    const urls = await getBookmarkUrls(id);
+    const urls = await getCollectionUrls(id);
     download(urls.join("\n"), id);
   };
 
@@ -195,7 +195,7 @@ export const useFolder = () => {
       let map: { [name: string]: string[] } = await Promise.all(
         folderDocument?.folders.map(async (folder) => {
           const id = getDocumentId(folder.name);
-          const urls = await getBookmarkUrls(id);
+          const urls = await getCollectionUrls(id);
           return [folder.name, urls];
         })
       ).then((entries) => Object.fromEntries(entries));

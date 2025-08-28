@@ -1,5 +1,5 @@
 import { v4 } from "uuid";
-import { ChartItem } from "../Bookmark";
+import { ChartItem } from "../Collection";
 
 const isChartItem = (jsonObject: any): boolean => {
   return (
