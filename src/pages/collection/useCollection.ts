@@ -26,7 +26,7 @@ const getCounts = (collectionDocument: CollectionDocument): CollectionCounts => 
 
 export const useCollection = (
   documentId?: string,
-  folderSequences?: CollectionSequences,
+  collectionSequences?: CollectionSequences,
   updateFolderSequences?: (type: string, sequences: string[]) => void
 ) => {
   const [collectionDocument, setCollectionDocument] = useState<CollectionDocument>();
@@ -70,9 +70,11 @@ export const useCollection = (
 
   const updateCollection = async (type: string, id: string, direction: string) => {
     if (collectionDocument && isCollectionKey(type)) {
-      let sequences = folderSequences
-        ? folderSequences[type]
-        : Object.entries(collectionDocument[type]).map(([key]) => key);
+      const typeSequences = collectionSequences?.[type];
+      const sequences =
+        typeSequences && typeSequences.length > 0
+          ? typeSequences
+          : Object.entries(collectionDocument[type]).map(([key]) => key);
       const index = sequences.findIndex((item) => item === id);
       if (direction === "left" && index < sequences.length - 1) {
         const temp = sequences[index];
@@ -128,10 +130,10 @@ export const useCollection = (
   };
 
   return {
-    charts: toList(collectionDocument?.charts, folderSequences?.charts),
-    steam: toList(collectionDocument?.steam, folderSequences?.steam),
-    youTubeRegularVideos: toList(collectionDocument?.youtube_regular, folderSequences?.youtube_regular),
-    youTubeShortVideos: toList(collectionDocument?.youtube_shorts, folderSequences?.youtube_shorts),
+    charts: toList(collectionDocument?.charts, collectionSequences?.charts),
+    steam: toList(collectionDocument?.steam, collectionSequences?.steam),
+    youTubeRegularVideos: toList(collectionDocument?.youtube_regular, collectionSequences?.youtube_regular),
+    youTubeShortVideos: toList(collectionDocument?.youtube_shorts, collectionSequences?.youtube_shorts),
     addCollections,
     updateCollection,
     deleteCollection,
