@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
-import { Counts } from "../../common/Collection";
+import { Counts } from "../../common/WCollection";
 import { useCollection } from "./useCollection";
 import { getDateTimeString } from "../../common/DateUtils";
 

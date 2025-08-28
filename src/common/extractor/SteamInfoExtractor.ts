@@ -1,4 +1,4 @@
-import { SteamInfo } from "../Collection";
+import { SteamInfo } from "../WCollection";
 
 export const fetchSteamInfo = async (appId: string) => {
   let steamInfo: SteamInfo | undefined = undefined;

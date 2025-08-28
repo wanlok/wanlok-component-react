@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { collection, deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { extractChartItems } from "../../common/extractor/ChartExtractor";
 import { extractSteamInfos } from "../../common/extractor/SteamInfoExtractor";
 import { extractYouTubeRegularAndShortInfos } from "../../common/extractor/YouTubeInfoExtractor";
-import { CollectionDocument, Counts, isCollectionDocumentKey, viewUrls } from "../../common/Collection";
+import { CollectionDocument, Counts, isCollectionDocumentKey, viewUrls } from "../../common/WCollection";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
 
 const collectionName = "collections";
