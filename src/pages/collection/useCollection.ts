@@ -70,18 +70,21 @@ export const useCollection = (
 
   const updateCollection = async (type: string, id: string, direction: string) => {
     if (collectionDocument && isCollectionKey(type)) {
-      const sequences = Object.entries(collectionDocument[type]).map(([key]) => key);
+      let sequences = folderSequences
+        ? folderSequences[type]
+        : Object.entries(collectionDocument[type]).map(([key]) => key);
       const index = sequences.findIndex((item) => item === id);
       if (direction === "left" && index < sequences.length - 1) {
         const temp = sequences[index];
         sequences[index] = sequences[index + 1];
         sequences[index + 1] = temp;
+        updateFolderSequences?.(type, sequences);
       } else if (direction === "right" && index > 0) {
         const temp = sequences[index];
         sequences[index] = sequences[index - 1];
         sequences[index - 1] = temp;
+        updateFolderSequences?.(type, sequences);
       }
-      updateFolderSequences?.(type, sequences);
     }
   };
 
