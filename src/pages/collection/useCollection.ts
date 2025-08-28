@@ -4,20 +4,25 @@ import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase
 import { extractChartItems } from "../../common/extractor/ChartExtractor";
 import { extractSteamInfos } from "../../common/extractor/SteamInfoExtractor";
 import { extractYouTubeRegularAndShortInfos } from "../../common/extractor/YouTubeInfoExtractor";
-import { CollectionDocument, Counts, isCollectionDocumentKey, viewUrls } from "../../common/WCollection";
+import { CollectionDocument, CollectionCounts, isCollectionKey, viewUrls } from "../../common/WCollection";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
 
 const collectionName = "collections";
 
-const getCounts = (collectionDocument: CollectionDocument): Counts => {
+const getCounts = (collectionDocument: CollectionDocument): CollectionCounts => {
   return {
+    charts: toList(collectionDocument?.charts).length,
     steam: toList(collectionDocument?.steam).length,
     youtube_regular: toList(collectionDocument?.youtube_regular).length,
     youtube_shorts: toList(collectionDocument?.youtube_shorts).length
   };
 };
 
-export const useCollection = (documentId?: string) => {
+export const useCollection = (
+  documentId?: string,
+  folderSequences?: string[],
+  updateFolderSequences?: (sequences: string[]) => void
+) => {
   const [collectionDocument, setCollectionDocument] = useState<CollectionDocument>();
 
   useEffect(() => {
@@ -31,7 +36,7 @@ export const useCollection = (documentId?: string) => {
   }, [documentId]);
 
   const addCollections = async (collectionId: string, text: string) => {
-    let counts: Counts | undefined = undefined;
+    let counts: CollectionCounts | undefined = undefined;
     if (collectionId && text) {
       const { charts } = extractChartItems(text);
       const { steam } = await extractSteamInfos(text);
@@ -58,17 +63,17 @@ export const useCollection = (documentId?: string) => {
   };
 
   const updateCollection = async (type: string, id: string, direction: string) => {
-    console.log("update collection", type, id, direction);
-    if (collectionDocument && isCollectionDocumentKey(type)) {
-      console.log(collectionDocument[type]);
-    }
+    // if (collectionDocument && isCollectionKey(type)) {
+    //   const list = Object.entries(collectionDocument[type]).map(([key]) => key);
+    //   // updateFolderSequences?.();
+    // }
   };
 
   const deleteCollection = async (type: string, id: string) => {
-    let counts: Counts | undefined = undefined;
+    let counts: CollectionCounts | undefined = undefined;
     if (collectionDocument && documentId) {
       const document: CollectionDocument = { ...collectionDocument };
-      if (isCollectionDocumentKey(type)) {
+      if (isCollectionKey(type)) {
         delete document[type][id];
       }
       const docRef = doc(db, collectionName, documentId);

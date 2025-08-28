@@ -2,21 +2,18 @@ import { useCallback, useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
-import { Counts } from "../../common/WCollection";
+import {
+  CollectionCounts,
+  emptyCollectionCounts,
+  emptyCollectionSequences,
+  Folder,
+  FolderDocument
+} from "../../common/WCollection";
 import { useCollection } from "./useCollection";
 import { getDateTimeString } from "../../common/DateUtils";
 
 const collectionName = "configs";
 const documentId = "folders";
-
-export interface Folder {
-  name: string;
-  counts: Counts;
-}
-
-interface FolderDocument {
-  folders: Folder[];
-}
 
 export const getDocumentId = (folderName?: string) => {
   return folderName
@@ -81,7 +78,7 @@ export const useFolder = () => {
   const addFolder = async (name: string) => {
     if (name.length > 0) {
       let folders: Folder[];
-      const folder = { name, counts: { steam: 0, youtube_regular: 0, youtube_shorts: 0 } };
+      const folder = { name, counts: emptyCollectionCounts, sequences: emptyCollectionSequences };
       const docRef = doc(db, collectionName, documentId);
       if (folderDocument) {
         const duplicated = folderDocument.folders.some((f) => f.name === folder.name);
@@ -99,10 +96,10 @@ export const useFolder = () => {
     }
   };
 
-  const updateFolderCounts = async (counts: Counts) => {
+  const updateFolderCounts = async (counts: CollectionCounts) => {
     if (folderDocument && selectedFolder) {
       let folders = folderDocument.folders.filter((f) => f.name !== selectedFolder.name);
-      const folder: Folder = { name: selectedFolder.name, counts };
+      const folder: Folder = { name: selectedFolder.name, counts, sequences: selectedFolder.sequences };
       folders = [...folders, folder].sort((a, b) => a.name.localeCompare(b.name));
       const newFolderDocument = { ...folderDocument, folders };
       const docRef = doc(db, collectionName, documentId);
@@ -110,6 +107,8 @@ export const useFolder = () => {
       setFolderDocument(newFolderDocument);
     }
   };
+
+  const updateFolderSequences = () => {};
 
   const deleteFolder = async (folder: Folder) => {
     if (folderDocument) {
@@ -127,7 +126,7 @@ export const useFolder = () => {
       const names = folderDocument.folders.map((folder) => folder.name);
       for (const [name] of Object.entries(json)) {
         if (!names?.includes(name)) {
-          const folder = { name, counts: { steam: 0, youtube_regular: 0, youtube_shorts: 0 } };
+          const folder = { name, counts: emptyCollectionCounts, sequences: emptyCollectionSequences };
           newFolders.push(folder);
         }
       }
@@ -138,7 +137,7 @@ export const useFolder = () => {
     } else {
       newFolderDocument = {
         folders: Object.entries(json).map((f) => {
-          return { name: f[0], counts: { steam: 0, youtube_regular: 0, youtube_shorts: 0 } };
+          return { name: f[0], counts: emptyCollectionCounts, sequences: emptyCollectionSequences };
         })
       };
       const docRef = doc(db, collectionName, documentId);
@@ -208,6 +207,7 @@ export const useFolder = () => {
     selectedFolder,
     addFolder,
     updateFolderCounts,
+    updateFolderSequences,
     deleteFolder,
     openFolder,
     uploadFolders,

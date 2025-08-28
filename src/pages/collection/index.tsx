@@ -4,7 +4,7 @@ import { TextInputForm } from "../../components/TextInputForm";
 import { WCardList } from "../../components/WCardList";
 import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
-import { Folder, getDocumentId, useFolder } from "./useFolder";
+import { getDocumentId, useFolder } from "./useFolder";
 import { WIconButton } from "../../components/WButton";
 import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
@@ -18,7 +18,7 @@ import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
-import { viewUrls } from "../../common/WCollection";
+import { Folder, viewUrls } from "../../common/WCollection";
 import { WChart } from "../../components/WChart";
 
 const FolderRow = ({
@@ -178,6 +178,7 @@ export const CollectionPage = () => {
     selectedFolder,
     addFolder,
     updateFolderCounts,
+    updateFolderSequences,
     deleteFolder,
     openFolder,
     uploadFolders,
@@ -192,7 +193,7 @@ export const CollectionPage = () => {
     addCollections,
     updateCollection,
     deleteCollection
-  } = useCollection(getDocumentId(selectedFolder?.name));
+  } = useCollection(getDocumentId(selectedFolder?.name), [], updateFolderSequences);
   const [panelOpened, setPanelOpened] = useState(false);
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
