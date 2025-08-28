@@ -1,7 +1,7 @@
 import { Dispatch, ReactNode } from "react";
 import { Stack, useMediaQuery, useTheme } from "@mui/material";
 import { LayoutDivider } from "./LayoutDivider";
-import { WCard } from "./CardList";
+import { WCard } from "./WCardList";
 
 const Top = ({
   opened,

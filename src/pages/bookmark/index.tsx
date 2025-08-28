@@ -1,7 +1,7 @@
 import { Box, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useBookmark } from "./useBookmark";
 import { TextInputForm } from "../../components/TextInputForm";
-import { CardList } from "../../components/CardList";
+import { WCardList } from "../../components/WCardList";
 import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { Folder, getDocumentId, useFolder } from "./useFolder";
@@ -211,7 +211,7 @@ export const Bookmarks = () => {
               />
             </Stack>
           </Stack>
-          <CardList
+          <WCardList
             items={folders}
             renderContent={(folder) => <FolderRow folder={folder} selectedFolder={selectedFolder} />}
             onContentClick={(folder) => {

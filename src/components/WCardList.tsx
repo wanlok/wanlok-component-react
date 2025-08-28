@@ -21,7 +21,7 @@ export const WCard = ({
   );
 };
 
-export const CardList = ({
+export const WCardList = ({
   items,
   renderContent,
   onContentClick,
