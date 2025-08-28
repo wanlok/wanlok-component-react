@@ -1,6 +1,5 @@
 import { Box, Link, Stack, Typography } from "@mui/material";
-import { WIconButton } from "./WButton";
-import CrossWhiteIcon from "../assets/images/icons/cross-white.png";
+import { ControlGroup } from "./ControlGroup";
 
 export const ImageTitleLink = ({
   title,
@@ -19,12 +18,6 @@ export const ImageTitleLink = ({
 }) => {
   return (
     <Stack sx={{ position: "relative", width }}>
-      <WIconButton
-        icon={CrossWhiteIcon}
-        iconSize={16}
-        onClick={onDeleteButtonClick}
-        sx={{ position: "absolute", top: 0, right: 0, backgroundColor: "common.black" }}
-      />
       <Link
         href={href}
         target="_blank"
@@ -61,6 +54,7 @@ export const ImageTitleLink = ({
           </Typography>
         </Stack>
       </Link>
+      <ControlGroup onDeleteButtonClick={onDeleteButtonClick} />
     </Stack>
   );
 };
