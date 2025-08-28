@@ -193,7 +193,7 @@ export const CollectionPage = () => {
     addCollections,
     updateCollection,
     deleteCollection
-  } = useCollection(getDocumentId(selectedFolder?.name), updateFolderSequences);
+  } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolderSequences);
   const [panelOpened, setPanelOpened] = useState(false);
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));

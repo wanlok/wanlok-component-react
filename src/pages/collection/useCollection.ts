@@ -4,7 +4,13 @@ import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase
 import { extractChartItems } from "../../common/extractor/ChartExtractor";
 import { extractSteamInfos } from "../../common/extractor/SteamInfoExtractor";
 import { extractYouTubeRegularAndShortInfos } from "../../common/extractor/YouTubeInfoExtractor";
-import { CollectionDocument, CollectionCounts, isCollectionKey, viewUrls } from "../../common/WCollection";
+import {
+  CollectionDocument,
+  CollectionCounts,
+  isCollectionKey,
+  viewUrls,
+  CollectionSequences
+} from "../../common/WCollection";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
 
 const collectionName = "collections";
@@ -20,6 +26,7 @@ const getCounts = (collectionDocument: CollectionDocument): CollectionCounts => 
 
 export const useCollection = (
   documentId?: string,
+  folderSequences?: CollectionSequences,
   updateFolderSequences?: (type: string, sequences: string[]) => void
 ) => {
   const [collectionDocument, setCollectionDocument] = useState<CollectionDocument>();
@@ -118,10 +125,10 @@ export const useCollection = (
   };
 
   return {
-    charts: toList(collectionDocument?.charts),
-    steam: toList(collectionDocument?.steam),
-    youTubeRegularVideos: toList(collectionDocument?.youtube_regular),
-    youTubeShortVideos: toList(collectionDocument?.youtube_shorts),
+    charts: toList(collectionDocument?.charts, folderSequences?.charts),
+    steam: toList(collectionDocument?.steam, folderSequences?.steam),
+    youTubeRegularVideos: toList(collectionDocument?.youtube_regular, folderSequences?.youtube_regular),
+    youTubeShortVideos: toList(collectionDocument?.youtube_shorts, folderSequences?.youtube_shorts),
     addCollections,
     updateCollection,
     deleteCollection,
