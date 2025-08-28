@@ -177,8 +177,8 @@ export const CollectionPage = () => {
     folders,
     selectedFolder,
     addFolder,
-    updateFolderCounts,
     updateFolderSequences,
+    updateFolderCounts,
     deleteFolder,
     openFolder,
     uploadFolders,
@@ -193,7 +193,7 @@ export const CollectionPage = () => {
     addCollections,
     updateCollection,
     deleteCollection
-  } = useCollection(getDocumentId(selectedFolder?.name), [], updateFolderSequences);
+  } = useCollection(getDocumentId(selectedFolder?.name), updateFolderSequences);
   const [panelOpened, setPanelOpened] = useState(false);
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));

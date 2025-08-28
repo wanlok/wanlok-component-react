@@ -20,8 +20,7 @@ const getCounts = (collectionDocument: CollectionDocument): CollectionCounts => 
 
 export const useCollection = (
   documentId?: string,
-  folderSequences?: string[],
-  updateFolderSequences?: (sequences: string[]) => void
+  updateFolderSequences?: (type: string, sequences: string[]) => void
 ) => {
   const [collectionDocument, setCollectionDocument] = useState<CollectionDocument>();
 
@@ -63,10 +62,20 @@ export const useCollection = (
   };
 
   const updateCollection = async (type: string, id: string, direction: string) => {
-    // if (collectionDocument && isCollectionKey(type)) {
-    //   const list = Object.entries(collectionDocument[type]).map(([key]) => key);
-    //   // updateFolderSequences?.();
-    // }
+    if (collectionDocument && isCollectionKey(type)) {
+      const sequences = Object.entries(collectionDocument[type]).map(([key]) => key);
+      const index = sequences.findIndex((item) => item === id);
+      if (direction === "left" && index < sequences.length - 1) {
+        const temp = sequences[index];
+        sequences[index] = sequences[index + 1];
+        sequences[index + 1] = temp;
+      } else if (direction === "right" && index > 0) {
+        const temp = sequences[index];
+        sequences[index] = sequences[index - 1];
+        sequences[index - 1] = temp;
+      }
+      updateFolderSequences?.(type, sequences);
+    }
   };
 
   const deleteCollection = async (type: string, id: string) => {

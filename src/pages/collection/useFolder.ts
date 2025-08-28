@@ -7,7 +7,8 @@ import {
   emptyCollectionCounts,
   emptyCollectionSequences,
   Folder,
-  FolderDocument
+  FolderDocument,
+  isCollectionKey
 } from "../../common/WCollection";
 import { useCollection } from "./useCollection";
 import { getDateTimeString } from "../../common/DateUtils";
@@ -96,10 +97,9 @@ export const useFolder = () => {
     }
   };
 
-  const updateFolderCounts = async (counts: CollectionCounts) => {
+  const updateFolderDocument = async (folder: Folder) => {
     if (folderDocument && selectedFolder) {
       let folders = folderDocument.folders.filter((f) => f.name !== selectedFolder.name);
-      const folder: Folder = { name: selectedFolder.name, counts, sequences: selectedFolder.sequences };
       folders = [...folders, folder].sort((a, b) => a.name.localeCompare(b.name));
       const newFolderDocument = { ...folderDocument, folders };
       const docRef = doc(db, collectionName, documentId);
@@ -108,7 +108,21 @@ export const useFolder = () => {
     }
   };
 
-  const updateFolderSequences = () => {};
+  const updateFolderCounts = async (counts: CollectionCounts) => {
+    if (selectedFolder) {
+      await updateFolderDocument({ name: selectedFolder.name, counts, sequences: selectedFolder.sequences });
+    }
+  };
+
+  const updateFolderSequences = async (type: string, sequences: string[]) => {
+    if (selectedFolder) {
+      const newSequences = { ...selectedFolder.sequences };
+      if (isCollectionKey(type)) {
+        newSequences[type] = sequences;
+      }
+      await updateFolderDocument({ name: selectedFolder.name, counts: selectedFolder.counts, sequences: newSequences });
+    }
+  };
 
   const deleteFolder = async (folder: Folder) => {
     if (folderDocument) {
