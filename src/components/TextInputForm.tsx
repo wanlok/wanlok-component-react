@@ -1,15 +1,28 @@
 import { Stack } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { TextInput } from "./TextInput";
-import { WButton } from "./WButton";
+import { WButton, WIconButton } from "./WButton";
 
-interface RightButton {
+interface LabelButtonContent {
   label: string;
   onClickWithText?: (text: string) => void;
   onClick?: () => void;
 }
 
-export const TextInputForm = ({ placeholder, rightButtons }: { placeholder: string; rightButtons: RightButton[] }) => {
+interface IconButtonContent {
+  icon: string;
+  size: number;
+  onClickWithText?: (text: string) => void;
+  onClick?: () => void;
+}
+
+export const TextInputForm = ({
+  placeholder,
+  rightButtons
+}: {
+  placeholder: string;
+  rightButtons: (LabelButtonContent | IconButtonContent)[];
+}) => {
   const [text, setText] = useState<string>("");
   const [buttonHeight, setButtonHeight] = useState<number>();
   const [sufficientSpaces, setSufficientSpaces] = useState<boolean>(false);
@@ -55,18 +68,37 @@ export const TextInputForm = ({ placeholder, rightButtons }: { placeholder: stri
         <TextInput placeholder={placeholder} value={text} onChange={(value) => setText(value)} hideHelperText={true} />
       </Stack>
       <Stack sx={{ flexDirection: sufficientSpaces ? "column" : "row", gap: "1px" }}>
-        {rightButtons.map(({ label, onClick, onClickWithText }, index) => (
-          <WButton
-            onClick={() => {
-              onClick && onClick();
-              onClickWithText && getText(onClickWithText);
-            }}
-            sx={{ height: buttonHeight }}
-            key={`right-button-${index}`}
-          >
-            {label}
-          </WButton>
-        ))}
+        {rightButtons.map((buttonContent, index) => {
+          if ("label" in buttonContent) {
+            const { label, onClick, onClickWithText } = buttonContent;
+            return (
+              <WButton
+                sx={{ height: buttonHeight }}
+                key={`right-button-${index}`}
+                onClick={() => {
+                  onClick && onClick();
+                  onClickWithText && getText(onClickWithText);
+                }}
+              >
+                {label}
+              </WButton>
+            );
+          } else if ("icon" in buttonContent) {
+            const { icon, size, onClick, onClickWithText } = buttonContent;
+            return (
+              <WIconButton
+                sx={{ height: buttonHeight }}
+                key={`right-button-${index}`}
+                icon={icon}
+                iconSize={size}
+                onClick={() => {
+                  onClick && onClick();
+                  onClickWithText && getText(onClickWithText);
+                }}
+              />
+            );
+          }
+        })}
       </Stack>
     </Stack>
   );

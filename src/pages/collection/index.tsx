@@ -299,6 +299,11 @@ export const CollectionPage = () => {
                 }
               }
             }
+          },
+          {
+            icon: UploadIcon,
+            size: 16,
+            onClick: async () => {}
           }
         ]}
       />
