@@ -105,6 +105,8 @@ const CollectionList = ({
               key={`chart-${i}`}
               chartItem={chartItem}
               width={mobile ? "100%" : "calc(50% - 1px)"}
+              leftMost={i === 0}
+              rightMost={i === charts.length - 1}
               onLeftButtonClick={() => onLeftButtonClick("charts", uuid)}
               onRightButtonClick={() => onRightButtonClick("charts", uuid)}
               onDeleteButtonClick={() => onDeleteButtonClick("charts", uuid)}
@@ -120,6 +122,8 @@ const CollectionList = ({
               href={`${viewUrls.steam}${appId}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
               aspectRatio="92:43"
+              leftMost={i === 0}
+              rightMost={i === steam.length - 1}
               onLeftButtonClick={() => onLeftButtonClick("steam", appId)}
               onRightButtonClick={() => onRightButtonClick("steam", appId)}
               onDeleteButtonClick={() => onDeleteButtonClick("steam", appId)}
@@ -138,6 +142,8 @@ const CollectionList = ({
               href={`${viewUrls.youtube_shorts}${id}`}
               width={mobile ? "50%" : `calc(${100 / numberOfComponentsPerSlide}% - 1px)`}
               aspectRatio="9/16"
+              leftMost={i === 0 && j == 0}
+              rightMost={i * numberOfComponentsPerSlide + j === youTubeShortVideos.length - 1}
               onLeftButtonClick={() => onLeftButtonClick("youtube_shorts", id)}
               onRightButtonClick={() => onRightButtonClick("youtube_shorts", id)}
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
@@ -161,6 +167,8 @@ const CollectionList = ({
               href={`${viewUrls.youtube_regular}${id}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
               aspectRatio="16/9"
+              leftMost={i === 0}
+              rightMost={i === youTubeRegularVideos.length - 1}
               onLeftButtonClick={() => onLeftButtonClick("youtube_regular", id)}
               onRightButtonClick={() => onRightButtonClick("youtube_regular", id)}
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}

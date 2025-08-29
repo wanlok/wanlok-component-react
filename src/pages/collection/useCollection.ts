@@ -77,15 +77,15 @@ export const useCollection = (
           ? typeSequences
           : Object.entries(collectionDocument[type]).map(([key]) => key);
       const index = sequences.findIndex((item) => item === id);
-      if (direction === Direction.left && index < sequences.length - 1) {
-        const temp = sequences[index];
-        sequences[index] = sequences[index + 1];
-        sequences[index + 1] = temp;
-        updateFolderSequences?.(type, sequences);
-      } else if (direction === Direction.right && index > 0) {
+      if (direction === Direction.left && index > 0) {
         const temp = sequences[index];
         sequences[index] = sequences[index - 1];
         sequences[index - 1] = temp;
+        updateFolderSequences?.(type, sequences);
+      } else if (direction === Direction.right && index < sequences.length - 1) {
+        const temp = sequences[index];
+        sequences[index] = sequences[index + 1];
+        sequences[index + 1] = temp;
         updateFolderSequences?.(type, sequences);
       }
     }

@@ -8,6 +8,8 @@ export const ImageTitleLink = ({
   href,
   width,
   aspectRatio,
+  leftMost = false,
+  rightMost = false,
   onLeftButtonClick,
   onRightButtonClick,
   onDeleteButtonClick
@@ -17,6 +19,8 @@ export const ImageTitleLink = ({
   href: string;
   width: string;
   aspectRatio: string;
+  leftMost?: boolean;
+  rightMost?: boolean;
   onLeftButtonClick: () => void;
   onRightButtonClick: () => void;
   onDeleteButtonClick: () => void;
@@ -62,8 +66,8 @@ export const ImageTitleLink = ({
       <ControlGroup direction={Direction.left} onDeleteButtonClick={onDeleteButtonClick} />
       <ControlGroup
         direction={Direction.right}
-        onLeftButtonClick={onLeftButtonClick}
-        onRightButtonClick={onRightButtonClick}
+        onLeftButtonClick={leftMost ? undefined : onLeftButtonClick}
+        onRightButtonClick={rightMost ? undefined : onRightButtonClick}
       />
     </Stack>
   );

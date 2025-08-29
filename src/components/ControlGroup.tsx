@@ -35,27 +35,19 @@ export const ControlGroup = ({
           sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
         />
       )}
-      {mobile && onRightButtonClick && (
+      {mobile && onLeftButtonClick && (
         <WIconButton
           icon={UpWhiteIcon}
           iconSize={16}
-          onClick={onRightButtonClick}
+          onClick={onLeftButtonClick}
           sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
         />
       )}
-      {mobile && onLeftButtonClick && (
+      {mobile && onRightButtonClick && (
         <WIconButton
           icon={DownWhiteIcon}
           iconSize={16}
-          onClick={onLeftButtonClick}
-          sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
-        />
-      )}
-      {!mobile && onLeftButtonClick && (
-        <WIconButton
-          icon={LeftWhiteIcon}
-          iconSize={16}
-          onClick={onLeftButtonClick}
+          onClick={onRightButtonClick}
           sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
         />
       )}
@@ -64,6 +56,14 @@ export const ControlGroup = ({
           icon={RightWhiteIcon}
           iconSize={16}
           onClick={onRightButtonClick}
+          sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
+        />
+      )}
+      {!mobile && onLeftButtonClick && (
+        <WIconButton
+          icon={LeftWhiteIcon}
+          iconSize={16}
+          onClick={onLeftButtonClick}
           sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
         />
       )}

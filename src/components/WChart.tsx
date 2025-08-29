@@ -6,12 +6,16 @@ import { ControlGroup } from "./ControlGroup";
 export const WChart = ({
   chartItem,
   width,
+  leftMost = false,
+  rightMost = false,
   onLeftButtonClick,
   onRightButtonClick,
   onDeleteButtonClick
 }: {
   chartItem: ChartItem;
   width: string;
+  leftMost?: boolean;
+  rightMost?: boolean;
   onLeftButtonClick: () => void;
   onRightButtonClick: () => void;
   onDeleteButtonClick: () => void;
@@ -22,8 +26,8 @@ export const WChart = ({
       <ControlGroup direction={Direction.left} onDeleteButtonClick={onDeleteButtonClick} />
       <ControlGroup
         direction={Direction.right}
-        onLeftButtonClick={onLeftButtonClick}
-        onRightButtonClick={onRightButtonClick}
+        onLeftButtonClick={leftMost ? undefined : onLeftButtonClick}
+        onRightButtonClick={rightMost ? undefined : onRightButtonClick}
       />
     </Stack>
   );
