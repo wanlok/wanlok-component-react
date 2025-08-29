@@ -71,11 +71,12 @@ export const useCollection = (
 
   const updateCollection = async (type: string, id: string, direction: Direction) => {
     if (collectionDocument && isCollectionKey(type)) {
+      const keys = Object.keys(collectionDocument[type]);
       const typeSequences = collectionSequences?.[type];
       const sequences =
         typeSequences && typeSequences.length > 0
-          ? typeSequences
-          : Object.entries(collectionDocument[type]).map(([key]) => key);
+          ? [...typeSequences, ...keys.filter((key) => !typeSequences.includes(key))]
+          : keys;
       const index = sequences.findIndex((item) => item === id);
       if (direction === Direction.left && index > 0) {
         const temp = sequences[index];
