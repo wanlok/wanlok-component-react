@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
-import { ChartItem } from "../common/WTypes";
+import { ChartItem, Direction } from "../common/WTypes";
 import { ControlGroup } from "./ControlGroup";
 
 export const WChart = ({
@@ -19,10 +19,11 @@ export const WChart = ({
   return (
     <Stack sx={{ position: "relative", width, backgroundColor: "#EEEEEE" }}>
       <LineChart xAxis={[{ data: chartItem.x }]} series={[{ data: chartItem.y }]} height={300} />
+      <ControlGroup direction={Direction.left} onDeleteButtonClick={onDeleteButtonClick} />
       <ControlGroup
+        direction={Direction.right}
         onLeftButtonClick={onLeftButtonClick}
         onRightButtonClick={onRightButtonClick}
-        onDeleteButtonClick={onDeleteButtonClick}
       />
     </Stack>
   );

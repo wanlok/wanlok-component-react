@@ -18,7 +18,7 @@ import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
-import { Folder, viewUrls } from "../../common/WTypes";
+import { Direction, Folder, viewUrls } from "../../common/WTypes";
 import { WChart } from "../../components/WChart";
 
 const FolderRow = ({
@@ -269,8 +269,8 @@ export const CollectionPage = () => {
         steam={steam}
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
-        onLeftButtonClick={(type, id) => updateCollection(type, id, "left")}
-        onRightButtonClick={(type, id) => updateCollection(type, id, "right")}
+        onLeftButtonClick={(type, id) => updateCollection(type, id, Direction.left)}
+        onRightButtonClick={(type, id) => updateCollection(type, id, Direction.right)}
         onDeleteButtonClick={async (type, id) => {
           const counts = await deleteCollection(type, id);
           if (counts) {

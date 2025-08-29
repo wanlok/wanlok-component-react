@@ -1,3 +1,8 @@
+export enum Direction {
+  left = "left",
+  right = "right"
+}
+
 export interface ChartItem {
   chart: string;
   x: number[];

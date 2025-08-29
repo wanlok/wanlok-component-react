@@ -1,5 +1,6 @@
 import { Box, Link, Stack, Typography } from "@mui/material";
 import { ControlGroup } from "./ControlGroup";
+import { Direction } from "../common/WTypes";
 
 export const ImageTitleLink = ({
   title,
@@ -58,10 +59,11 @@ export const ImageTitleLink = ({
           </Typography>
         </Stack>
       </Link>
+      <ControlGroup direction={Direction.left} onDeleteButtonClick={onDeleteButtonClick} />
       <ControlGroup
+        direction={Direction.right}
         onLeftButtonClick={onLeftButtonClick}
         onRightButtonClick={onRightButtonClick}
-        onDeleteButtonClick={onDeleteButtonClick}
       />
     </Stack>
   );
