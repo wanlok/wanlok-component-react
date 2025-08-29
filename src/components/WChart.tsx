@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
-import { ChartItem } from "../common/WCollection";
+import { ChartItem } from "../common/WTypes";
 import { ControlGroup } from "./ControlGroup";
 
 export const WChart = ({

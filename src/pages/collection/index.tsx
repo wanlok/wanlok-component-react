@@ -18,7 +18,7 @@ import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
-import { Folder, viewUrls } from "../../common/WCollection";
+import { Folder, viewUrls } from "../../common/WTypes";
 import { WChart } from "../../components/WChart";
 
 const FolderRow = ({

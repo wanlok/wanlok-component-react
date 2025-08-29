@@ -10,7 +10,7 @@ import {
   isCollectionKey,
   viewUrls,
   CollectionSequences
-} from "../../common/WCollection";
+} from "../../common/WTypes";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
 
 const collectionName = "collections";

@@ -1,4 +1,4 @@
-import { YouTubeOEmbed } from "../WCollection";
+import { YouTubeOEmbed } from "../WTypes";
 
 export const fetchYouTubeOEmbed = async (urlString: string) => {
   let youTubeOEmbed: YouTubeOEmbed | undefined = undefined;
