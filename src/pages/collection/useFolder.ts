@@ -77,7 +77,7 @@ export const useFolder = () => {
   }, [folderDocument, id, openFolder]);
 
   const addFolder = async (name: string) => {
-    if (name.length > 0) {
+    if (name.length > 0 && /^[a-zA-Z0-9 ]+$/.test(name)) {
       let folders: Folder[];
       const folder = { name, counts: emptyCollectionCounts, sequences: emptyCollectionSequences };
       const docRef = doc(db, collectionName, documentId);

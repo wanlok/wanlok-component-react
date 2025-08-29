@@ -142,7 +142,7 @@ const CollectionList = ({
               href={`${viewUrls.youtube_shorts}${id}`}
               width={mobile ? "50%" : `calc(${100 / numberOfComponentsPerSlide}% - 1px)`}
               aspectRatio="9/16"
-              leftMost={i === 0 && j == 0}
+              leftMost={i === 0 && j === 0}
               rightMost={i * numberOfComponentsPerSlide + j === youTubeShortVideos.length - 1}
               onLeftButtonClick={() => onLeftButtonClick("youtube_shorts", id)}
               onRightButtonClick={() => onRightButtonClick("youtube_shorts", id)}
@@ -255,12 +255,7 @@ export const CollectionPage = () => {
           />
           <TextInputForm
             placeholder="New Folder"
-            rightButtons={[
-              {
-                label: "Add",
-                onClickWithText: (text) => addFolder(text)
-              }
-            ]}
+            rightButtons={[{ label: "Add", onClickWithText: (text) => addFolder(text) }]}
           />
         </>
       }
