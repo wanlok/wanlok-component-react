@@ -107,6 +107,7 @@ const CollectionList = ({
               width={mobile ? "100%" : "calc(50% - 1px)"}
               leftMost={i === 0}
               rightMost={i === charts.length - 1}
+              scrollHorizontally={false}
               onLeftButtonClick={() => onLeftButtonClick("charts", uuid)}
               onRightButtonClick={() => onRightButtonClick("charts", uuid)}
               onDeleteButtonClick={() => onDeleteButtonClick("charts", uuid)}
@@ -124,6 +125,7 @@ const CollectionList = ({
               aspectRatio="92:43"
               leftMost={i === 0}
               rightMost={i === steam.length - 1}
+              scrollHorizontally={false}
               onLeftButtonClick={() => onLeftButtonClick("steam", appId)}
               onRightButtonClick={() => onRightButtonClick("steam", appId)}
               onDeleteButtonClick={() => onDeleteButtonClick("steam", appId)}
@@ -143,6 +145,7 @@ const CollectionList = ({
               width={mobile ? "50%" : `calc(${100 / numberOfComponentsPerSlide}% - 1px)`}
               aspectRatio="9/16"
               leftMost={i === 0 && j === 0}
+              scrollHorizontally={true}
               rightMost={i * numberOfComponentsPerSlide + j === youTubeShortVideos.length - 1}
               onLeftButtonClick={() => onLeftButtonClick("youtube_shorts", id)}
               onRightButtonClick={() => onRightButtonClick("youtube_shorts", id)}
@@ -169,6 +172,7 @@ const CollectionList = ({
               aspectRatio="16/9"
               leftMost={i === 0}
               rightMost={i === youTubeRegularVideos.length - 1}
+              scrollHorizontally={false}
               onLeftButtonClick={() => onLeftButtonClick("youtube_regular", id)}
               onRightButtonClick={() => onRightButtonClick("youtube_regular", id)}
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}

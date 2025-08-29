@@ -9,11 +9,13 @@ import { Direction } from "../common/WTypes";
 
 export const ControlGroup = ({
   direction,
+  scrollHorizontally = false,
   onLeftButtonClick,
   onRightButtonClick,
   onDeleteButtonClick
 }: {
   direction: Direction;
+  scrollHorizontally?: boolean;
   onLeftButtonClick?: () => void;
   onRightButtonClick?: () => void;
   onDeleteButtonClick?: () => void;
@@ -35,7 +37,7 @@ export const ControlGroup = ({
           sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
         />
       )}
-      {mobile && onLeftButtonClick && (
+      {!scrollHorizontally && mobile && onLeftButtonClick && (
         <WIconButton
           icon={UpWhiteIcon}
           iconSize={16}
@@ -43,7 +45,7 @@ export const ControlGroup = ({
           sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
         />
       )}
-      {mobile && onRightButtonClick && (
+      {!scrollHorizontally && mobile && onRightButtonClick && (
         <WIconButton
           icon={DownWhiteIcon}
           iconSize={16}
@@ -51,7 +53,7 @@ export const ControlGroup = ({
           sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
         />
       )}
-      {!mobile && onRightButtonClick && (
+      {(scrollHorizontally || !mobile) && onRightButtonClick && (
         <WIconButton
           icon={RightWhiteIcon}
           iconSize={16}
@@ -59,7 +61,7 @@ export const ControlGroup = ({
           sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
         />
       )}
-      {!mobile && onLeftButtonClick && (
+      {(scrollHorizontally || !mobile) && onLeftButtonClick && (
         <WIconButton
           icon={LeftWhiteIcon}
           iconSize={16}

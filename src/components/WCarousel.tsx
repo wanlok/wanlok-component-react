@@ -1,7 +1,9 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { Stack, SxProps, Theme } from "@mui/material";
+import { alpha, Box, Stack, SxProps, Theme, useTheme } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { groupList } from "../common/ListDictUtils";
+import LeftWhiteIcon from "../assets/images/icons/left_white.png";
+import RightWhiteIcon from "../assets/images/icons/right_white.png";
 
 export const WCarousel = ({
   list,
@@ -19,6 +21,7 @@ export const WCarousel = ({
   const refs = useRef<(HTMLDivElement | null)[]>([]);
   const [index, setIndex] = useState<number>();
   const [height, setHeight] = useState<number>();
+  const { palette } = useTheme();
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver(([entry]) => setHeight(entry.contentRect.height));
@@ -37,6 +40,28 @@ export const WCarousel = ({
       duration={0}
       height={height}
       indicators={false}
+      PrevIcon={<Box component="img" src={LeftWhiteIcon} alt="" sx={{ width: 16, height: 16 }} />}
+      NextIcon={<Box component="img" src={RightWhiteIcon} alt="" sx={{ width: 16, height: 16 }} />}
+      navButtonsProps={{
+        style: {
+          backgroundColor: alpha(palette.common.black, 0.6),
+          borderRadius: 0,
+          width: 48,
+          height: 48,
+          marginTop: -4,
+          marginLeft: 0,
+          marginRight: 0
+        }
+      }}
+      navButtonsWrapperProps={{
+        style: {
+          top: "50%",
+          transform: "translateY(-50%)",
+          right: 1,
+          width: 48,
+          height: 48
+        }
+      }}
       navButtonsAlwaysVisible={true}
       onChange={(i) => setIndex(i)}
       swipe={false}
