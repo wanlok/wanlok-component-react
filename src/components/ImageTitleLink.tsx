@@ -60,7 +60,8 @@ export const ImageTitleLink = ({
               overflow: "hidden",
               textOverflow: "ellipsis",
               color: "common.white",
-              fontSize: 16
+              fontSize: 16,
+              wordBreak: title.indexOf(" ") > 0 ? undefined : "break-all"
             }}
           >
             {title}
