@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { deleteDoc, deleteField, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { extractChartItems } from "../../common/extractor/ChartExtractor";
-import { extractSteamInfos } from "../../common/extractor/SteamInfoExtractor";
-import { extractYouTubeRegularAndShortInfos } from "../../common/extractor/YouTubeInfoExtractor";
+import { deleteDoc, deleteField, doc, FieldPath, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import {
   CollectionDocument,
   CollectionCounts,
@@ -15,7 +12,10 @@ import {
 } from "../../common/WTypes";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
 import { getFiles } from "../../common/FileUtils";
-import { uploadAndGetFileInfos } from "../../common/extractor/ImageService";
+import { extractChartItems } from "../../services/ChartService";
+import { extractSteamInfos } from "../../services/SteamInfoExtractor";
+import { extractYouTubeRegularAndShortInfos } from "../../services/YouTubeInfoExtractor";
+import { uploadAndGetFileInfos } from "../../services/ImageService";
 
 const collectionName = "collections";
 
@@ -121,7 +121,7 @@ export const useCollection = (
         await deleteDoc(docRef);
         setCollectionDocument(undefined);
       } else {
-        await updateDoc(docRef, { [`${type}.${id}`]: deleteField() });
+        await updateDoc(docRef, new FieldPath(type, id), deleteField());
         setCollectionDocument(document);
       }
       counts = getCounts(document);

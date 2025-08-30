@@ -1,5 +1,5 @@
 import { v4 } from "uuid";
-import { ChartItem } from "../WTypes";
+import { ChartItem } from "../common/WTypes";
 
 const isChartItem = (jsonObject: any): boolean => {
   return (

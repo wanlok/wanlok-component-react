@@ -20,7 +20,7 @@ import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
 import { Direction, FileInfo, Folder, viewUrls } from "../../common/WTypes";
 import { WChart } from "../../components/WChart";
-import { fileServerAddress } from "../../common/extractor/ImageService";
+import { fileServerAddress } from "../../services/ImageService";
 
 const FolderRow = ({
   folder,
@@ -327,7 +327,7 @@ export const CollectionPage = () => {
           },
           {
             icon: UploadIcon,
-            size: 16,
+            size: 18,
             onClick: async () => {
               const collectionId = getDocumentId(selectedFolder?.name);
               if (collectionId) {
