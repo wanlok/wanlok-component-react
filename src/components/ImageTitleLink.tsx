@@ -3,8 +3,8 @@ import { ControlGroup } from "./ControlGroup";
 import { Direction } from "../services/Types";
 
 export const ImageTitleLink = ({
-  title,
   imageUrl,
+  title,
   href,
   width,
   height,
@@ -16,8 +16,8 @@ export const ImageTitleLink = ({
   onRightButtonClick,
   onDeleteButtonClick
 }: {
-  title: string;
   imageUrl: string;
+  title?: string;
   href: string;
   width: string;
   height?: string;
@@ -50,23 +50,25 @@ export const ImageTitleLink = ({
             }}
           />
         </Stack>
-        <Stack sx={{ p: 2 }}>
-          <Typography
-            variant="body2"
-            sx={{
-              display: "-webkit-box",
-              WebkitLineClamp: 2,
-              WebkitBoxOrient: "vertical",
-              overflow: "hidden",
-              textOverflow: "ellipsis",
-              color: "common.white",
-              fontSize: 16,
-              wordBreak: title.indexOf(" ") > 0 ? undefined : "break-all"
-            }}
-          >
-            {title}
-          </Typography>
-        </Stack>
+        {title && (
+          <Stack sx={{ p: 2 }}>
+            <Typography
+              variant="body2"
+              sx={{
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                color: "common.white",
+                fontSize: 16,
+                wordBreak: title.indexOf(" ") > 0 ? undefined : "break-all"
+              }}
+            >
+              {title}
+            </Typography>
+          </Stack>
+        )}
       </Link>
       <ControlGroup
         direction={Direction.left}

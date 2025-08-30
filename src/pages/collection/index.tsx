@@ -21,6 +21,7 @@ import { WChip } from "../../components/WChip";
 import { Direction, FileInfo, Folder, viewUrls } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { fileServerAddress } from "../../services/ImageService";
+import { seperate } from "../../common/LayoutUtils";
 
 const FolderRow = ({
   folder,
@@ -99,10 +100,11 @@ const CollectionList = ({
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const numberOfComponentsPerSlide = 4;
+  const list = [charts, files, steam, youTubeShortVideos, youTubeRegularVideos];
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack>
-        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
+        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, charts) }}>
           {charts.map(([uuid, chartItem], i) => (
             <WChart
               key={`chart-${i}`}
@@ -117,16 +119,14 @@ const CollectionList = ({
             />
           ))}
         </Stack>
-        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
-          {files.map(([id, fileInfo], i) => (
+        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, files) }}>
+          {files.map(([id], i) => (
             <ImageTitleLink
               key={`files-${i}`}
-              title={fileInfo.name ?? ""}
               imageUrl={`${fileServerAddress}/f/${id}`}
               href={`${fileServerAddress}/f/${id}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
-              height={mobile ? undefined : "320px"}
-              aspectRatio={mobile ? "16:9" : undefined}
+              aspectRatio={"1/1"}
               leftMost={i === 0}
               rightMost={i === files.length - 1}
               scrollHorizontally={false}
@@ -136,15 +136,15 @@ const CollectionList = ({
             />
           ))}
         </Stack>
-        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
+        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, steam) }}>
           {steam.map(([appId, { title, imageUrl }], i) => (
             <ImageTitleLink
               key={`steam-${i}`}
-              title={title}
               imageUrl={imageUrl}
+              title={title}
               href={`${viewUrls.steam}${appId}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
-              aspectRatio="92:43"
+              aspectRatio="92/43"
               leftMost={i === 0}
               rightMost={i === steam.length - 1}
               scrollHorizontally={false}
@@ -161,8 +161,8 @@ const CollectionList = ({
           renderContent={([id, { title, thumbnail_url }], i, j) => (
             <ImageTitleLink
               key={`youtube-shorts-${i}-${j}`}
-              title={title}
               imageUrl={thumbnail_url}
+              title={title}
               href={`${viewUrls.youtube_shorts}${id}`}
               width={mobile ? "50%" : `calc(${100 / numberOfComponentsPerSlide}% - 1px)`}
               aspectRatio="9/16"
@@ -174,21 +174,14 @@ const CollectionList = ({
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
             />
           )}
-          sx={{ mt: steam.length > 0 ? "1px" : 0 }}
+          sx={{ mt: seperate(list, youTubeShortVideos) }}
         />
-        <Stack
-          sx={{
-            flexDirection: "row",
-            flexWrap: "wrap",
-            gap: "1px",
-            mt: steam.length > 0 || youTubeShortVideos.length > 0 ? "1px" : 0
-          }}
-        >
+        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, youTubeRegularVideos) }}>
           {youTubeRegularVideos.map(([id, { title, thumbnail_url }], i) => (
             <ImageTitleLink
               key={`youtube-regular-${i}`}
-              title={title}
               imageUrl={thumbnail_url}
+              title={title}
               href={`${viewUrls.youtube_regular}${id}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
               aspectRatio="16/9"
