@@ -20,6 +20,7 @@ import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
 import { Direction, FileInfo, Folder, viewUrls } from "../../common/WTypes";
 import { WChart } from "../../components/WChart";
+import { fileServerAddress } from "../../common/extractor/ImageService";
 
 const FolderRow = ({
   folder,
@@ -121,10 +122,11 @@ const CollectionList = ({
             <ImageTitleLink
               key={`files-${i}`}
               title={fileInfo.name ?? ""}
-              imageUrl={`https://wanlok.ddns.net/f/${id}`}
-              href={`https://wanlok.ddns.net/f/${id}`}
+              imageUrl={`${fileServerAddress}/f/${id}`}
+              href={`${fileServerAddress}/f/${id}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
-              height={"240px"}
+              height={mobile ? undefined : "240px"}
+              aspectRatio={mobile ? "16:9" : undefined}
               leftMost={i === 0}
               rightMost={i === files.length - 1}
               scrollHorizontally={false}
