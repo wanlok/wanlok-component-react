@@ -123,8 +123,8 @@ const CollectionList = ({
           {files.map(([id], i) => (
             <ImageTitleLink
               key={`files-${i}`}
-              imageUrl={`${fileServerAddress}/f/${id}`}
-              href={`${fileServerAddress}/f/${id}`}
+              imageUrl={`${viewUrls.files}${id}`}
+              href={`${viewUrls.files}${id}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
               aspectRatio={"1/1"}
               leftMost={i === 0}
