@@ -117,20 +117,20 @@ const CollectionList = ({
           ))}
         </Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
-          {files.map(([uuid, fileInfo], i) => (
+          {files.map(([id, fileInfo], i) => (
             <ImageTitleLink
               key={`files-${i}`}
               title={fileInfo.name ?? ""}
-              imageUrl={`https://wanlok.ddns.net/f/${uuid}`}
-              href={`${viewUrls.steam}${uuid}`}
+              imageUrl={`https://wanlok.ddns.net/f/${id}`}
+              href={`https://wanlok.ddns.net/f/${id}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
-              aspectRatio="16:9"
+              height={"240px"}
               leftMost={i === 0}
               rightMost={i === files.length - 1}
               scrollHorizontally={false}
-              onLeftButtonClick={() => onLeftButtonClick("files", uuid)}
-              onRightButtonClick={() => onRightButtonClick("files", uuid)}
-              onDeleteButtonClick={() => onDeleteButtonClick("files", uuid)}
+              onLeftButtonClick={() => onLeftButtonClick("files", id)}
+              onRightButtonClick={() => onRightButtonClick("files", id)}
+              onDeleteButtonClick={() => onDeleteButtonClick("files", id)}
             />
           ))}
         </Stack>

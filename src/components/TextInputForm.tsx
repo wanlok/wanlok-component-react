@@ -69,9 +69,10 @@ export const TextInputForm = ({
       </Stack>
       <Stack sx={{ flexDirection: sufficientSpaces ? "column" : "row", gap: "1px" }}>
         {rightButtons.map((buttonContent, index) => {
+          let children;
           if ("label" in buttonContent) {
             const { label, onClick, onClickWithText } = buttonContent;
-            return (
+            children = (
               <WButton
                 sx={{ height: buttonHeight }}
                 key={`right-button-${index}`}
@@ -83,9 +84,9 @@ export const TextInputForm = ({
                 {label}
               </WButton>
             );
-          } else if ("icon" in buttonContent) {
+          } else {
             const { icon, size, onClick, onClickWithText } = buttonContent;
-            return (
+            children = (
               <WIconButton
                 sx={{ height: buttonHeight }}
                 key={`right-button-${index}`}
@@ -98,6 +99,7 @@ export const TextInputForm = ({
               />
             );
           }
+          return children;
         })}
       </Stack>
     </Stack>

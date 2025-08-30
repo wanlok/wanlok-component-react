@@ -7,6 +7,7 @@ export const ImageTitleLink = ({
   imageUrl,
   href,
   width,
+  height,
   aspectRatio,
   leftMost = false,
   rightMost = false,
@@ -19,7 +20,8 @@ export const ImageTitleLink = ({
   imageUrl: string;
   href: string;
   width: string;
-  aspectRatio: string;
+  height?: string;
+  aspectRatio?: string;
   leftMost?: boolean;
   rightMost?: boolean;
   scrollHorizontally?: boolean;
@@ -35,14 +37,14 @@ export const ImageTitleLink = ({
         rel="noopener noreferrer"
         sx={{ flex: 1, backgroundColor: "common.black", textDecoration: "none" }}
       >
-        <Stack sx={{ aspectRatio }}>
+        <Stack sx={{ aspectRatio, height }}>
           <Box
             component="img"
             src={imageUrl}
             alt=""
             sx={{
               display: "block",
-              objectFit: "cover",
+              objectFit: height ? "contain" : "cover",
               width: "100%",
               height: "100%"
             }}
