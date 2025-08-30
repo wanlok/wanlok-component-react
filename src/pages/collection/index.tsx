@@ -18,7 +18,7 @@ import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
-import { Direction, Folder, viewUrls } from "../../common/WTypes";
+import { Direction, FileInfo, Folder, viewUrls } from "../../common/WTypes";
 import { WChart } from "../../components/WChart";
 
 const FolderRow = ({
@@ -78,6 +78,7 @@ const FolderRow = ({
 
 const CollectionList = ({
   charts,
+  files,
   steam,
   youTubeRegularVideos,
   youTubeShortVideos,
@@ -86,6 +87,7 @@ const CollectionList = ({
   onDeleteButtonClick
 }: {
   charts: [string, any][];
+  files: [string, FileInfo][];
   steam: [string, any][];
   youTubeRegularVideos: [string, any][];
   youTubeShortVideos: [string, any][];
@@ -111,6 +113,24 @@ const CollectionList = ({
               onLeftButtonClick={() => onLeftButtonClick("charts", uuid)}
               onRightButtonClick={() => onRightButtonClick("charts", uuid)}
               onDeleteButtonClick={() => onDeleteButtonClick("charts", uuid)}
+            />
+          ))}
+        </Stack>
+        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
+          {files.map(([uuid, fileInfo], i) => (
+            <ImageTitleLink
+              key={`files-${i}`}
+              title={fileInfo.name ?? ""}
+              imageUrl={`https://wanlok.ddns.net/f/${uuid}`}
+              href={`${viewUrls.steam}${uuid}`}
+              width={mobile ? "100%" : "calc(25% - 1px)"}
+              aspectRatio="16:9"
+              leftMost={i === 0}
+              rightMost={i === files.length - 1}
+              scrollHorizontally={false}
+              onLeftButtonClick={() => onLeftButtonClick("files", uuid)}
+              onRightButtonClick={() => onRightButtonClick("files", uuid)}
+              onDeleteButtonClick={() => onDeleteButtonClick("files", uuid)}
             />
           ))}
         </Stack>
@@ -199,10 +219,12 @@ export const CollectionPage = () => {
   } = useFolder();
   const {
     charts,
+    files,
     steam,
     youTubeRegularVideos,
     youTubeShortVideos,
     addCollections,
+    addCollectionFiles,
     updateCollection,
     deleteCollection
   } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolderSequences);
@@ -273,6 +295,7 @@ export const CollectionPage = () => {
     >
       <CollectionList
         charts={charts}
+        files={files}
         steam={steam}
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
@@ -303,7 +326,12 @@ export const CollectionPage = () => {
           {
             icon: UploadIcon,
             size: 16,
-            onClick: async () => {}
+            onClick: async () => {
+              const collectionId = getDocumentId(selectedFolder?.name);
+              if (collectionId) {
+                addCollectionFiles(collectionId);
+              }
+            }
           }
         ]}
       />

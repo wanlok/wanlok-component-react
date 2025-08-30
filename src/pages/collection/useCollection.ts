@@ -10,20 +10,14 @@ import {
   isCollectionKey,
   viewUrls,
   CollectionSequences,
-  Direction
+  Direction,
+  getCounts
 } from "../../common/WTypes";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
+import { getFiles } from "../../common/FileUtils";
+import { uploadAndGetFileInfos } from "../../common/extractor/ImageService";
 
 const collectionName = "collections";
-
-const getCounts = (collectionDocument: CollectionDocument): CollectionCounts => {
-  return {
-    charts: toList(collectionDocument?.charts).length,
-    steam: toList(collectionDocument?.steam).length,
-    youtube_regular: toList(collectionDocument?.youtube_regular).length,
-    youtube_shorts: toList(collectionDocument?.youtube_shorts).length
-  };
-};
 
 export const useCollection = (
   documentId?: string,
@@ -54,18 +48,41 @@ export const useCollection = (
         document = {
           ...collectionDocument,
           charts: { ...collectionDocument.charts, ...charts },
+          files: { ...collectionDocument.files },
           steam: { ...collectionDocument.steam, ...steam },
           youtube_regular: { ...collectionDocument.youtube_regular, ...youtube_regular },
           youtube_shorts: { ...collectionDocument.youtube_shorts, ...youtube_shorts }
         };
         await updateDoc(docRef, document);
       } else {
-        document = { charts, steam, youtube_regular, youtube_shorts };
+        document = { charts, files: {}, steam, youtube_regular, youtube_shorts };
         await setDoc(docRef, document);
       }
       setCollectionDocument(document);
       counts = getCounts(document);
     }
+    return counts;
+  };
+
+  const addCollectionFiles = (collectionId: string) => {
+    let counts: CollectionCounts | undefined = undefined;
+    getFiles(async (files) => {
+      const fileInfos = await uploadAndGetFileInfos(files);
+      const docRef = doc(db, collectionName, collectionId);
+      let document;
+      if (collectionDocument) {
+        document = {
+          ...collectionDocument,
+          files: { ...collectionDocument.files, ...fileInfos }
+        };
+        await updateDoc(docRef, document);
+      } else {
+        document = { charts: {}, files: fileInfos, steam: {}, youtube_regular: {}, youtube_shorts: {} };
+        await setDoc(docRef, document);
+      }
+      setCollectionDocument(document);
+      counts = getCounts(document);
+    });
     return counts;
   };
 
@@ -133,10 +150,12 @@ export const useCollection = (
 
   return {
     charts: toList(collectionDocument?.charts, collectionSequences?.charts),
+    files: toList(collectionDocument?.files, collectionSequences?.files),
     steam: toList(collectionDocument?.steam, collectionSequences?.steam),
     youTubeRegularVideos: toList(collectionDocument?.youtube_regular, collectionSequences?.youtube_regular),
     youTubeShortVideos: toList(collectionDocument?.youtube_shorts, collectionSequences?.youtube_shorts),
     addCollections,
+    addCollectionFiles,
     updateCollection,
     deleteCollection,
     getCollectionUrls

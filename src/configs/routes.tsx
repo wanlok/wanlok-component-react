@@ -5,7 +5,6 @@ import { HongKongBuildingMap } from "../pages/hong-kong-building-map";
 import { Chart } from "../pages/chart";
 import { SnapshotPage } from "../pages/snapshot";
 import { PDFPage } from "../pages/pdf";
-import { Image } from "../pages/image";
 import { CollectionPage } from "../pages/collection";
 import WANLOKImage from "../assets/images/wanlok.png";
 import WANLOKImage2 from "../assets/images/wanlok_2.png";
@@ -17,8 +16,6 @@ import MapIcon from "../assets/images/icons/map.png";
 import MapSelectedIcon from "../assets/images/icons/map_selected.png";
 import SnapshotIcon from "../assets/images/icons/snapshot.png";
 import SnapshotSelectedIcon from "../assets/images/icons/snapshot_selected.png";
-import ImageIcon from "../assets/images/icons/image.png";
-import ImageSelectedIcon from "../assets/images/icons/image_selected.png";
 
 export const routes = [
   {
@@ -74,13 +71,6 @@ export const routes = [
         path: "/snapshot",
         element: <SnapshotPage />,
         children: [{ path: ":id", element: <SnapshotPage /> }]
-      },
-      {
-        icon: ImageIcon,
-        icon_selected: ImageSelectedIcon,
-        name: "Image",
-        path: "/image",
-        element: <Image />
       }
     ]
   },

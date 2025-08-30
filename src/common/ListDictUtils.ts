@@ -17,6 +17,14 @@ export const toList = <T>(dict?: Record<string, T>, sequences?: string[]): [stri
   return entries;
 };
 
+export const toDict = <T, U = T>(list: T[], key: keyof T, mapper?: (item: T) => U): Record<string, U> => {
+  const dict: Record<string, U> = {};
+  list.forEach((item) => {
+    dict[String(item[key])] = mapper ? mapper(item) : (item as unknown as U);
+  });
+  return dict;
+};
+
 export const groupList = (list: any[], numberOfItemPerGroup: number) => {
   return list.reduce((a, item, index) => {
     const i = Math.floor(index / numberOfItemPerGroup);
