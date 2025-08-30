@@ -121,13 +121,15 @@ const CollectionList = ({
           ))}
         </Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, files) }}>
-          {files.map(([id], i) => (
+          {files.map(([id, { name }], i) => (
             <ImageTitleLink
               key={`files-${i}`}
               imageUrl={`${viewUrls.files}${id}`}
+              imageSx={{ objectPosition: "top" }}
+              title={name}
               href={`${viewUrls.files}${id}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
-              aspectRatio={"1/1"}
+              aspectRatio={"16/9"}
               leftMost={i === 0}
               rightMost={i === files.length - 1}
               scrollHorizontally={false}

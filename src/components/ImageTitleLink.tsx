@@ -1,9 +1,10 @@
-import { Box, Link, Stack, Typography } from "@mui/material";
+import { Box, Link, Stack, SxProps, Theme, Typography } from "@mui/material";
 import { ControlGroup } from "./ControlGroup";
 import { Direction } from "../services/Types";
 
 export const ImageTitleLink = ({
   imageUrl,
+  imageSx,
   title,
   href,
   width,
@@ -17,6 +18,7 @@ export const ImageTitleLink = ({
   onDeleteButtonClick
 }: {
   imageUrl: string;
+  imageSx?: SxProps<Theme>;
   title?: string;
   href: string;
   width: string;
@@ -46,7 +48,8 @@ export const ImageTitleLink = ({
               display: "block",
               objectFit: "cover",
               width: "100%",
-              height: "100%"
+              height: "100%",
+              ...imageSx
             }}
           />
         </Stack>
