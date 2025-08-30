@@ -1,8 +1,6 @@
 import { toDict } from "../common/ListDictUtils";
 import { FileInfo } from "./Types";
 
-export const fileServerAddress = "https://wanlok.ddns.net";
-
 export const uploadAndGetFileInfos = async (files: File[]) => {
   let fileInfos: { [key: string]: FileInfo } = {};
 
@@ -10,7 +8,7 @@ export const uploadAndGetFileInfos = async (files: File[]) => {
   files.forEach((file: File) => formData.append("files", file));
 
   try {
-    const response = await fetch(`${fileServerAddress}/upload`, {
+    const response = await fetch("https://wanlok.ddns.net/upload", {
       method: "POST",
       body: formData
     });

@@ -20,7 +20,6 @@ import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
 import { Direction, FileInfo, Folder, viewUrls } from "../../services/Types";
 import { WChart } from "../../components/WChart";
-import { fileServerAddress } from "../../services/ImageService";
 import { seperate } from "../../common/LayoutUtils";
 
 const FolderRow = ({
