@@ -18,7 +18,7 @@ export interface ChartItem {
 }
 
 export interface FileInfo {
-  originalName?: string;
+  id?: string;
   name?: string;
   mime_type: string;
   reject_reason?: string;

@@ -13,9 +13,8 @@ export const uploadAndGetFileInfos = async (files: File[]) => {
       body: formData
     });
     if (response.ok) {
-      fileInfos = toDict(await response.json(), "name", (item: FileInfo) => {
-        item.name = item.originalName;
-        delete item.originalName;
+      fileInfos = toDict(await response.json(), "id", (item: FileInfo) => {
+        delete item.id;
         return item;
       });
     } else {
