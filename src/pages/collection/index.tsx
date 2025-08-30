@@ -125,7 +125,7 @@ const CollectionList = ({
               imageUrl={`${fileServerAddress}/f/${id}`}
               href={`${fileServerAddress}/f/${id}`}
               width={mobile ? "100%" : "calc(25% - 1px)"}
-              height={mobile ? undefined : "240px"}
+              height={mobile ? undefined : "320px"}
               aspectRatio={mobile ? "16:9" : undefined}
               leftMost={i === 0}
               rightMost={i === files.length - 1}

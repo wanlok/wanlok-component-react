@@ -44,7 +44,7 @@ export const ImageTitleLink = ({
             alt=""
             sx={{
               display: "block",
-              objectFit: height ? "contain" : "cover",
+              objectFit: "cover",
               width: "100%",
               height: "100%"
             }}
