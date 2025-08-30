@@ -102,6 +102,7 @@ export const emptyCollectionSequences: CollectionSequences = {
 
 export const viewUrls = {
   files: "https://wanlok.ddns.net/files/",
+  hyperlinks: true,
   steam: "https://store.steampowered.com/agecheck/app/",
   youtube_regular: "https://www.youtube.com/watch?v=",
   youtube_shorts: "https://www.youtube.com/shorts/"

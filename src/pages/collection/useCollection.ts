@@ -141,7 +141,13 @@ export const useCollection = (
       if (collectionDocument) {
         for (const [key, dict] of Object.entries(collectionDocument)) {
           const viewUrl = viewUrls[key as keyof typeof viewUrls] ?? "";
-          if (viewUrl.length > 0) {
+          if (viewUrl === true) {
+            for (const id of Object.keys(dict)) {
+              urls.push(id);
+            }
+          } else if (viewUrl === false) {
+            // Do nothing
+          } else if (viewUrl.length > 0) {
             for (const id of Object.keys(dict)) {
               urls.push(`${viewUrl}${id}`);
             }
