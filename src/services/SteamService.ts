@@ -1,4 +1,4 @@
-import { SteamInfo } from "../common/WTypes";
+import { SteamInfo } from "./Types";
 
 export const fetchSteamInfo = async (appId: string) => {
   let steamInfo: SteamInfo | undefined = undefined;
@@ -28,7 +28,7 @@ export const extractAppIds = (text: string): string[] => {
     .filter(Boolean);
 };
 
-export const extractSteamInfos = async (text: string) => {
+export const getSteamInfos = async (text: string) => {
   const steam: { [key: string]: SteamInfo } = {};
 
   const appIds = extractAppIds(text);

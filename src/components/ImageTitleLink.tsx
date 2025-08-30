@@ -1,6 +1,6 @@
 import { Box, Link, Stack, Typography } from "@mui/material";
 import { ControlGroup } from "./ControlGroup";
-import { Direction } from "../common/WTypes";
+import { Direction } from "../services/Types";
 
 export const ImageTitleLink = ({
   title,

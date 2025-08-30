@@ -5,7 +5,7 @@ import DownWhiteIcon from "../assets/images/icons/down_white.png";
 import LeftWhiteIcon from "../assets/images/icons/left_white.png";
 import RightWhiteIcon from "../assets/images/icons/right_white.png";
 import CrossWhiteIcon from "../assets/images/icons/cross_white.png";
-import { Direction } from "../common/WTypes";
+import { Direction } from "../services/Types";
 
 export const ControlGroup = ({
   direction,

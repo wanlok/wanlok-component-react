@@ -1,5 +1,5 @@
 import { v4 } from "uuid";
-import { ChartItem } from "../common/WTypes";
+import { ChartItem } from "./Types";
 
 const isChartItem = (jsonObject: any): boolean => {
   return (
@@ -13,7 +13,7 @@ const isChartItem = (jsonObject: any): boolean => {
   );
 };
 
-export const extractChartItems = (text: string) => {
+export const getChartItems = (text: string) => {
   const charts: { [key: string]: ChartItem } = {};
 
   const regex = /{[^{}]*}/g;

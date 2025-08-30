@@ -1,4 +1,4 @@
-import { YouTubeOEmbed } from "../common/WTypes";
+import { YouTubeOEmbed } from "./Types";
 
 export const fetchYouTubeOEmbed = async (urlString: string) => {
   let youTubeOEmbed: YouTubeOEmbed | undefined = undefined;
@@ -40,7 +40,7 @@ const extractYouTubeInfo = (text: string): { urlString: string; id: string; type
   return matches;
 };
 
-export const extractYouTubeRegularAndShortInfos = async (text: string) => {
+export const getYouTubeRegularAndShortInfos = async (text: string) => {
   const youtube_regular: { [key: string]: YouTubeOEmbed } = {};
   const youtube_shorts: { [key: string]: YouTubeOEmbed } = {};
 

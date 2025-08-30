@@ -18,7 +18,7 @@ import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import { WChip } from "../../components/WChip";
-import { Direction, FileInfo, Folder, viewUrls } from "../../common/WTypes";
+import { Direction, FileInfo, Folder, viewUrls } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { fileServerAddress } from "../../services/ImageService";
 

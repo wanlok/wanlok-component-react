@@ -9,12 +9,12 @@ import {
   CollectionSequences,
   Direction,
   getCounts
-} from "../../common/WTypes";
+} from "../../services/Types";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
 import { getFiles } from "../../common/FileUtils";
-import { extractChartItems } from "../../services/ChartService";
-import { extractSteamInfos } from "../../services/SteamInfoExtractor";
-import { extractYouTubeRegularAndShortInfos } from "../../services/YouTubeInfoExtractor";
+import { getChartItems } from "../../services/ChartService";
+import { getSteamInfos } from "../../services/SteamService";
+import { getYouTubeRegularAndShortInfos } from "../../services/YouTubeService";
 import { uploadAndGetFileInfos } from "../../services/ImageService";
 
 const collectionName = "collections";
@@ -39,9 +39,9 @@ export const useCollection = (
   const addCollections = async (collectionId: string, text: string) => {
     let counts: CollectionCounts | undefined = undefined;
     if (collectionId && text) {
-      const { charts } = extractChartItems(text);
-      const { steam } = await extractSteamInfos(text);
-      const { youtube_regular, youtube_shorts } = await extractYouTubeRegularAndShortInfos(text);
+      const { charts } = getChartItems(text);
+      const { steam } = await getSteamInfos(text);
+      const { youtube_regular, youtube_shorts } = await getYouTubeRegularAndShortInfos(text);
       const docRef = doc(db, collectionName, collectionId);
       let document;
       if (collectionDocument) {

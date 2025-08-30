@@ -9,7 +9,7 @@ import {
   Folder,
   FolderDocument,
   isCollectionKey
-} from "../../common/WTypes";
+} from "../../services/Types";
 import { useCollection } from "./useCollection";
 import { getDateTimeString } from "../../common/DateUtils";
 

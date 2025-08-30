@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Message } from "../pages/discussion/useDiscussion";
 import { Card, CardActionArea, CardContent, Stack, Typography } from "@mui/material";
-import { YouTubeOEmbed } from "../common/WTypes";
+import { YouTubeOEmbed } from "../services/Types";
 
 const FULL_YOUTUBE_URL_REGEX =
   /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:watch\?v=[\w-]{11}|embed\/[\w-]{11})|youtu\.be\/[\w-]{11})(?:[^\s]*)?/;

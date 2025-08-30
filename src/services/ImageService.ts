@@ -1,5 +1,5 @@
 import { toDict } from "../common/ListDictUtils";
-import { FileInfo } from "../common/WTypes";
+import { FileInfo } from "./Types";
 
 export const fileServerAddress = "https://wanlok.ddns.net";
 

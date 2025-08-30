@@ -1,4 +1,4 @@
-import { toList } from "./ListDictUtils";
+import { toList } from "../common/ListDictUtils";
 
 export enum Direction {
   left = "left",
