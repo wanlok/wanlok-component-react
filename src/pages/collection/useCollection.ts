@@ -16,6 +16,7 @@ import { getChartItems } from "../../services/ChartService";
 import { getSteamInfos } from "../../services/SteamService";
 import { getYouTubeRegularAndShortInfos } from "../../services/YouTubeService";
 import { uploadAndGetFileInfos } from "../../services/ImageService";
+import { getHyperlinks } from "../../services/HyperlinkService";
 
 const collectionName = "collections";
 
@@ -42,6 +43,8 @@ export const useCollection = (
       const { charts } = getChartItems(text);
       const { steam } = await getSteamInfos(text);
       const { youtube_regular, youtube_shorts } = await getYouTubeRegularAndShortInfos(text);
+      const { hyperlinks } = await getHyperlinks(text, [charts, steam, youtube_regular, youtube_shorts]);
+
       const docRef = doc(db, collectionName, collectionId);
       let document;
       if (collectionDocument) {
@@ -49,13 +52,14 @@ export const useCollection = (
           ...collectionDocument,
           charts: { ...collectionDocument.charts, ...charts },
           files: { ...collectionDocument.files },
+          hyperlinks: { ...collectionDocument.hyperlinks, ...hyperlinks },
           steam: { ...collectionDocument.steam, ...steam },
           youtube_regular: { ...collectionDocument.youtube_regular, ...youtube_regular },
           youtube_shorts: { ...collectionDocument.youtube_shorts, ...youtube_shorts }
         };
         await updateDoc(docRef, document);
       } else {
-        document = { charts, files: {}, steam, youtube_regular, youtube_shorts };
+        document = { charts, files: {}, hyperlinks, steam, youtube_regular, youtube_shorts };
         await setDoc(docRef, document);
       }
       setCollectionDocument(document);
@@ -77,7 +81,7 @@ export const useCollection = (
         };
         await updateDoc(docRef, document);
       } else {
-        document = { charts: {}, files: fileInfos, steam: {}, youtube_regular: {}, youtube_shorts: {} };
+        document = { charts: {}, files: fileInfos, hyperlinks: {}, steam: {}, youtube_regular: {}, youtube_shorts: {} };
         await setDoc(docRef, document);
       }
       setCollectionDocument(document);
@@ -151,6 +155,7 @@ export const useCollection = (
   return {
     charts: toList(collectionDocument?.charts, collectionSequences?.charts),
     files: toList(collectionDocument?.files, collectionSequences?.files),
+    hyperlinks: toList(collectionDocument?.hyperlinks, collectionSequences?.hyperlinks),
     steam: toList(collectionDocument?.steam, collectionSequences?.steam),
     youTubeRegularVideos: toList(collectionDocument?.youtube_regular, collectionSequences?.youtube_regular),
     youTubeShortVideos: toList(collectionDocument?.youtube_shorts, collectionSequences?.youtube_shorts),

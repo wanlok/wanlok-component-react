@@ -41,6 +41,11 @@ export interface YouTubeOEmbed {
   height: number;
 }
 
+export interface Hyperlink {
+  id: string;
+  url: string;
+}
+
 export interface FolderDocument {
   folders: Folder[];
 }
@@ -48,13 +53,14 @@ export interface FolderDocument {
 export interface CollectionDocument {
   charts: { [key: string]: ChartItem };
   files: { [key: string]: FileInfo };
+  hyperlinks: { [key: string]: string };
   steam: { [key: string]: SteamInfo };
   youtube_regular: { [key: string]: YouTubeOEmbed };
   youtube_shorts: { [key: string]: YouTubeOEmbed };
 }
 
 export const isCollectionKey = (key: string): key is keyof CollectionDocument => {
-  return ["charts", "files", "steam", "youtube_regular", "youtube_shorts"].includes(key);
+  return ["charts", "files", "hyperlinks", "steam", "youtube_regular", "youtube_shorts"].includes(key);
 };
 
 export type CollectionCounts = {
@@ -64,6 +70,7 @@ export type CollectionCounts = {
 export const emptyCollectionCounts: CollectionCounts = {
   charts: 0,
   files: 0,
+  hyperlinks: 0,
   steam: 0,
   youtube_regular: 0,
   youtube_shorts: 0
@@ -73,6 +80,7 @@ export const getCounts = (collectionDocument: CollectionDocument): CollectionCou
   return {
     charts: toList(collectionDocument?.charts).length,
     files: toList(collectionDocument?.files).length,
+    hyperlinks: toList(collectionDocument?.hyperlinks).length,
     steam: toList(collectionDocument?.steam).length,
     youtube_regular: toList(collectionDocument?.youtube_regular).length,
     youtube_shorts: toList(collectionDocument?.youtube_shorts).length
@@ -86,6 +94,7 @@ export type CollectionSequences = {
 export const emptyCollectionSequences: CollectionSequences = {
   charts: [],
   files: [],
+  hyperlinks: [],
   steam: [],
   youtube_regular: [],
   youtube_shorts: []

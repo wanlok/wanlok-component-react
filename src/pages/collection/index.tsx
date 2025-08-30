@@ -80,6 +80,7 @@ const FolderRow = ({
 const CollectionList = ({
   charts,
   files,
+  hyperlinks,
   steam,
   youTubeRegularVideos,
   youTubeShortVideos,
@@ -89,6 +90,7 @@ const CollectionList = ({
 }: {
   charts: [string, any][];
   files: [string, FileInfo][];
+  hyperlinks: [string, string][];
   steam: [string, any][];
   youTubeRegularVideos: [string, any][];
   youTubeShortVideos: [string, any][];
@@ -99,7 +101,7 @@ const CollectionList = ({
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const numberOfComponentsPerSlide = 4;
-  const list = [charts, files, steam, youTubeShortVideos, youTubeRegularVideos];
+  const list = [charts, files, hyperlinks, steam, youTubeShortVideos, youTubeRegularVideos];
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack>
@@ -132,6 +134,24 @@ const CollectionList = ({
               onLeftButtonClick={() => onLeftButtonClick("files", id)}
               onRightButtonClick={() => onRightButtonClick("files", id)}
               onDeleteButtonClick={() => onDeleteButtonClick("files", id)}
+            />
+          ))}
+        </Stack>
+        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, hyperlinks) }}>
+          {hyperlinks.map(([url, id], i) => (
+            <ImageTitleLink
+              key={`hyperlinks-${i}`}
+              imageUrl={`${"https://wanlok.ddns.net/screenshot/"}${id}.png`}
+              title={url}
+              href={url}
+              width={mobile ? "100%" : "calc(25% - 1px)"}
+              aspectRatio={"16/9"}
+              leftMost={i === 0}
+              rightMost={i === hyperlinks.length - 1}
+              scrollHorizontally={false}
+              onLeftButtonClick={() => onLeftButtonClick("hyperlinks", url)}
+              onRightButtonClick={() => onRightButtonClick("hyperlinks", url)}
+              onDeleteButtonClick={() => onDeleteButtonClick("hyperlinks", url)}
             />
           ))}
         </Stack>
@@ -214,6 +234,7 @@ export const CollectionPage = () => {
   const {
     charts,
     files,
+    hyperlinks,
     steam,
     youTubeRegularVideos,
     youTubeShortVideos,
@@ -290,6 +311,7 @@ export const CollectionPage = () => {
       <CollectionList
         charts={charts}
         files={files}
+        hyperlinks={hyperlinks}
         steam={steam}
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
