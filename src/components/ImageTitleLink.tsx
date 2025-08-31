@@ -1,7 +1,7 @@
 import { Box, Link, Stack, SxProps, Theme, Typography } from "@mui/material";
 import { ControlGroup } from "./ControlGroup";
 import { Direction } from "../services/Types";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const ImageTitleLink = ({
   imageUrl,
@@ -34,7 +34,12 @@ export const ImageTitleLink = ({
   onRightButtonClick: () => void;
   onDeleteButtonClick: () => void;
 }) => {
-  const [src, setSrc] = useState(imageUrl);
+  const [src, setSrc] = useState<string>();
+
+  useEffect(() => {
+    setSrc(imageUrl);
+  }, [imageUrl]);
+
   return (
     <Stack sx={{ position: "relative", width }}>
       <Link
