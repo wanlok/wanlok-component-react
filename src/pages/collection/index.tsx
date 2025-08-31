@@ -21,6 +21,7 @@ import { WChip } from "../../components/WChip";
 import { Direction, FileInfo, Folder, viewUrls } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { seperate } from "../../common/LayoutUtils";
+import { getFileExtension } from "../../common/FileUtils";
 
 const FolderRow = ({
   folder,
@@ -121,23 +122,26 @@ const CollectionList = ({
           ))}
         </Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, files) }}>
-          {files.map(([id, { name }], i) => (
-            <ImageTitleLink
-              key={`files-${i}`}
-              imageUrl={`${viewUrls.files}${id}`}
-              imageSx={{ objectPosition: "top" }}
-              title={name}
-              href={`${viewUrls.files}${id}`}
-              width={mobile ? "100%" : "calc(25% - 1px)"}
-              aspectRatio={"16/9"}
-              leftMost={i === 0}
-              rightMost={i === files.length - 1}
-              scrollHorizontally={false}
-              onLeftButtonClick={() => onLeftButtonClick("files", id)}
-              onRightButtonClick={() => onRightButtonClick("files", id)}
-              onDeleteButtonClick={() => onDeleteButtonClick("files", id)}
-            />
-          ))}
+          {files.map(([id, { name, mime_type }], i) => {
+            const imageUrl = `${viewUrls.files}${id}${getFileExtension(mime_type)}`;
+            return (
+              <ImageTitleLink
+                key={`files-${i}`}
+                imageUrl={imageUrl}
+                imageSx={{ objectPosition: "top" }}
+                title={name}
+                href={imageUrl}
+                width={mobile ? "100%" : "calc(25% - 1px)"}
+                aspectRatio={"16/9"}
+                leftMost={i === 0}
+                rightMost={i === files.length - 1}
+                scrollHorizontally={false}
+                onLeftButtonClick={() => onLeftButtonClick("files", id)}
+                onRightButtonClick={() => onRightButtonClick("files", id)}
+                onDeleteButtonClick={() => onDeleteButtonClick("files", id)}
+              />
+            );
+          })}
         </Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, hyperlinks) }}>
           {hyperlinks.map(([url, id], i) => (
