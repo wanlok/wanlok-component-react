@@ -1,9 +1,11 @@
 import { Box, Link, Stack, SxProps, Theme, Typography } from "@mui/material";
 import { ControlGroup } from "./ControlGroup";
 import { Direction } from "../services/Types";
+import { useState } from "react";
 
 export const ImageTitleLink = ({
   imageUrl,
+  imageFallbackUrl,
   imageSx,
   title,
   href,
@@ -18,6 +20,7 @@ export const ImageTitleLink = ({
   onDeleteButtonClick
 }: {
   imageUrl: string;
+  imageFallbackUrl?: string;
   imageSx?: SxProps<Theme>;
   title?: string;
   href: string;
@@ -31,6 +34,7 @@ export const ImageTitleLink = ({
   onRightButtonClick: () => void;
   onDeleteButtonClick: () => void;
 }) => {
+  const [src, setSrc] = useState(imageUrl);
   return (
     <Stack sx={{ position: "relative", width }}>
       <Link
@@ -42,7 +46,12 @@ export const ImageTitleLink = ({
         <Stack sx={{ aspectRatio, height }}>
           <Box
             component="img"
-            src={imageUrl}
+            src={src}
+            onError={() => {
+              if (imageFallbackUrl) {
+                setSrc(imageFallbackUrl);
+              }
+            }}
             alt=""
             sx={{
               display: "block",

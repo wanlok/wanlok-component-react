@@ -147,7 +147,8 @@ const CollectionList = ({
           {hyperlinks.map(([url, id], i) => (
             <ImageTitleLink
               key={`hyperlinks-${i}`}
-              imageUrl={`${"https://wanlok.ddns.net/screenshot/"}${id}.png`}
+              imageUrl={`https://wanlok2025.github.io/screenshots/${id}.png`}
+              imageFallbackUrl={`https://wanlok.ddns.net/screenshot/${id}.png`}
               title={url}
               href={url}
               width={mobile ? "100%" : "calc(25% - 1px)"}
