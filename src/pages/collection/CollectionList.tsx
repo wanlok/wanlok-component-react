@@ -28,9 +28,11 @@ export const CollectionList = ({
   onDeleteButtonClick: (type: string, id: string) => void;
 }) => {
   const { breakpoints } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("md"));
+  const tablet = useMediaQuery(breakpoints.down("xl"));
+  const mobile = useMediaQuery(breakpoints.down("sm"));
   const numberOfComponentsPerSlide = 4;
   const list = [charts, files, hyperlinks, steam, youTubeShortVideos, youTubeRegularVideos];
+  const width = mobile ? "100%" : tablet ? "calc(50% - 1px)" : "calc(25% - 1px)";
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack>
@@ -59,7 +61,7 @@ export const CollectionList = ({
                 imageSx={{ objectPosition: "top" }}
                 title={name}
                 href={imageUrl}
-                width={mobile ? "100%" : "calc(25% - 1px)"}
+                width={width}
                 aspectRatio={"16/9"}
                 leftMost={i === 0}
                 rightMost={i === files.length - 1}
@@ -79,7 +81,7 @@ export const CollectionList = ({
               imageFallbackUrl={`${serverUrl}/screenshot/${id}.png`}
               title={url}
               href={url}
-              width={mobile ? "100%" : "calc(25% - 1px)"}
+              width={width}
               aspectRatio={"16/9"}
               leftMost={i === 0}
               rightMost={i === hyperlinks.length - 1}
@@ -97,7 +99,7 @@ export const CollectionList = ({
               imageUrl={imageUrl}
               title={title}
               href={`${viewUrls.steam}${appId}`}
-              width={mobile ? "100%" : "calc(25% - 1px)"}
+              width={width}
               aspectRatio="92/43"
               leftMost={i === 0}
               rightMost={i === steam.length - 1}
@@ -137,7 +139,7 @@ export const CollectionList = ({
               imageUrl={thumbnail_url}
               title={title}
               href={`${viewUrls.youtube_regular}${id}`}
-              width={mobile ? "100%" : "calc(25% - 1px)"}
+              width={width}
               aspectRatio="16/9"
               leftMost={i === 0}
               rightMost={i === youTubeRegularVideos.length - 1}
