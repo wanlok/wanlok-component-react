@@ -15,6 +15,7 @@ import { ImageTitleLink } from "../../components/ImageTitleLink";
 import { WCarousel } from "../../components/WCarousel";
 import SteamIcon from "../../assets/images/icons/steam.png";
 import YouTubeIcon from "../../assets/images/icons/youtube.png";
+import SendIcon from "../../assets/images/icons/send.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import GreenCircleIcon from "../../assets/images/icons/green_circle.png";
@@ -339,7 +340,8 @@ export const CollectionPage = () => {
         placeholder="Links"
         rightButtons={[
           {
-            label: "Add",
+            icon: SendIcon,
+            size: 18,
             onClickWithText: async (text) => {
               const collectionId = getDocumentId(selectedFolder?.name);
               if (collectionId) {

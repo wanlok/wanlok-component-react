@@ -88,7 +88,7 @@ export const TextInputForm = ({
             const { icon, size, onClick, onClickWithText } = buttonContent;
             children = (
               <WIconButton
-                sx={{ height: buttonHeight }}
+                sx={{ height: buttonHeight, backgroundColor: "primary.main" }}
                 key={`right-button-${index}`}
                 icon={icon}
                 iconSize={size}
