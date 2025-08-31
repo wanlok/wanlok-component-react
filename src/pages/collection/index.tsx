@@ -17,8 +17,10 @@ import SteamIcon from "../../assets/images/icons/steam.png";
 import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
+import GreenCircleIcon from "../../assets/images/icons/green_circle.png";
+import RedCircleIcon from "../../assets/images/icons/red_circle.png";
 import { WChip } from "../../components/WChip";
-import { Direction, FileInfo, Folder, viewUrls } from "../../services/Types";
+import { Direction, FileInfo, Folder, serverUrl, viewUrls } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { seperate } from "../../common/LayoutUtils";
 import { getFileExtension } from "../../common/FileUtils";
@@ -148,7 +150,7 @@ const CollectionList = ({
             <ImageTitleLink
               key={`hyperlinks-${i}`}
               imageUrl={`https://wanlok2025.github.io/screenshots/${id}.png`}
-              imageFallbackUrl={`https://wanlok.ddns.net/screenshot/${id}.png`}
+              imageFallbackUrl={`${serverUrl}/screenshot/${id}.png`}
               title={url}
               href={url}
               width={mobile ? "100%" : "calc(25% - 1px)"}
@@ -227,6 +229,7 @@ const CollectionList = ({
 
 export const CollectionPage = () => {
   const {
+    serverHealth,
     folders,
     selectedFolder,
     addFolder,
@@ -263,9 +266,10 @@ export const CollectionPage = () => {
           <Stack sx={mobile ? {} : { height: 100 }}>
             {!mobile && (
               <Stack sx={{ flex: 1, justifyContent: "center", px: 1, backgroundColor: "background.default" }}>
-                <Stack sx={{ flexDirection: "row", alignItems: "center" }}>
+                <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
                   <Typography sx={{ flex: 1, fontSize: 16, p: 1 }}>Collections</Typography>
                   <WChip icon={FolderSelectedIcon} label={`${folders.length}`} />
+                  <WChip icon={serverHealth ? GreenCircleIcon : RedCircleIcon} label={"Server"} />
                 </Stack>
               </Stack>
             )}

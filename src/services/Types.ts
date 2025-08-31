@@ -100,8 +100,10 @@ export const emptyCollectionSequences: CollectionSequences = {
   youtube_shorts: []
 };
 
+export const serverUrl = "https://wanlok.ddns.net";
+
 export const viewUrls = {
-  files: "https://wanlok.ddns.net/files/",
+  files: `${serverUrl}/files/`,
   hyperlinks: true,
   steam: "https://store.steampowered.com/agecheck/app/",
   youtube_regular: "https://www.youtube.com/watch?v=",
