@@ -11,6 +11,7 @@ import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import CrossIcon from "../../assets/images/icons/cross.png";
+import HyperlinkIcon from "../../assets/images/icons/hyperlink.png";
 import SteamIcon from "../../assets/images/icons/steam.png";
 import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import SendIcon from "../../assets/images/icons/send.png";
@@ -31,7 +32,7 @@ const FolderRow = ({
   selectedFolder?: Folder;
   panelOpened?: boolean;
 }) => {
-  const { steam, youtube_regular, youtube_shorts } = folder.counts;
+  const { hyperlinks, steam, youtube_regular, youtube_shorts } = folder.counts;
   const mobileRow = panelOpened === true || panelOpened === false;
   return (
     <Stack
@@ -54,8 +55,9 @@ const FolderRow = ({
       />
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
         <Typography sx={{ fontSize: 16 }}>{folder.name}</Typography>
-        {panelOpened === undefined && (steam > 0 || youtube_regular > 0 || youtube_shorts > 0) && (
+        {panelOpened === undefined && Object.values(folder.counts).some((count) => count > 0) && (
           <Stack sx={{ flexDirection: "row", gap: 1 }}>
+            {hyperlinks > 0 && <WChip icon={HyperlinkIcon} label={`${hyperlinks}`} />}
             {steam > 0 && <WChip icon={SteamIcon} label={`${steam}`} />}
             {youtube_regular > 0 && youtube_shorts > 0 && (
               <WChip icon={YouTubeIcon} label={`${youtube_shorts} + ${youtube_regular}`} />
@@ -123,20 +125,20 @@ export const CollectionPage = () => {
                 </Stack>
               </Stack>
             )}
-            <Stack sx={{ flexDirection: "row", gap: "1px", backgroundColor: "background.default" }}>
+            <Stack
+              sx={{ flexDirection: "row", alignItems: "center", gap: "1px", backgroundColor: "background.default" }}
+            >
               <WIconButton
                 icon={UploadIcon}
-                buttonSize={50}
                 iconSize={18}
                 onClick={uploadFolders}
-                sx={{ backgroundColor: "primray.main" }}
+                sx={{ backgroundColor: "primary.main" }}
               />
               <WIconButton
                 icon={DownloadIcon}
-                buttonSize={50}
                 iconSize={18}
                 onClick={downloadFolders}
-                sx={{ backgroundColor: "primray.main" }}
+                sx={{ backgroundColor: "primary.main" }}
               />
             </Stack>
           </Stack>
