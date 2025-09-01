@@ -7,6 +7,7 @@ import { BarChart } from "@mui/x-charts";
 import { RechartsChart } from "./RechartsChart";
 import { LabelsAboveBars } from "./LabelsAboveBars";
 import { ApexChartsChart } from "./ApexChartsChart";
+import RufflePlayerComponent from "./Ruffle";
 
 export const Chart = () => {
   const [src, setSrc] = useState<string>();
@@ -32,6 +33,7 @@ export const Chart = () => {
 
   return (
     <div>
+      <RufflePlayerComponent />
       <Button variant="contained" onClick={() => toPDF()}>
         Export Entire Page as PDF
       </Button>
