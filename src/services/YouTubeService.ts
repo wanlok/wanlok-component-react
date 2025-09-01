@@ -44,11 +44,11 @@ export const getYouTubeRegularAndShortInfos = async (text: string) => {
   const youtube_regular: { [key: string]: YouTubeOEmbed } = {};
   const youtube_shorts: { [key: string]: YouTubeOEmbed } = {};
 
-  const list = extractYouTubeInfos(text);
+  const youTubeInfos = extractYouTubeInfos(text);
 
   const results = (
     await Promise.all(
-      list.map(async ({ urlString, id, type }) => {
+      youTubeInfos.map(async ({ urlString, id, type }) => {
         const value = await fetchYouTubeOEmbed(urlString);
         return value ? { id, type, value } : null;
       })
