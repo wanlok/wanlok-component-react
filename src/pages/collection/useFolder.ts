@@ -13,6 +13,8 @@ import {
 import { useCollection } from "./useCollection";
 import { getDateTimeString } from "../../common/DateUtils";
 import { getServerHealth } from "../../services/ServerHealthService";
+import { getFiles } from "../../common/FileUtils";
+import { getCountsByUrlStrings } from "../../common/CountUtils";
 
 const collectionName = "configs";
 const documentId = "folders";
@@ -144,9 +146,9 @@ export const useFolder = () => {
     if (folderDocument) {
       const newFolders = [];
       const names = folderDocument.folders.map((folder) => folder.name);
-      for (const [name] of Object.entries(json)) {
+      for (const [name, urlStrings] of Object.entries(json)) {
         if (!names?.includes(name)) {
-          const folder = { name, counts: emptyCollectionCounts, sequences: emptyCollectionSequences };
+          const folder = { name, counts: getCountsByUrlStrings(urlStrings), sequences: emptyCollectionSequences };
           newFolders.push(folder);
         }
       }
@@ -156,8 +158,8 @@ export const useFolder = () => {
       await updateDoc(docRef, newFolderDocument);
     } else {
       newFolderDocument = {
-        folders: Object.entries(json).map((f) => {
-          return { name: f[0], counts: emptyCollectionCounts, sequences: emptyCollectionSequences };
+        folders: Object.entries(json).map(([name, urlStrings]) => {
+          return { name, counts: getCountsByUrlStrings(urlStrings), sequences: emptyCollectionSequences };
         })
       };
       const docRef = doc(db, collectionName, documentId);
@@ -173,33 +175,26 @@ export const useFolder = () => {
   };
 
   const uploadFolders = async () => {
-    const input = document.createElement("input");
-    input.type = "file";
-    input.onchange = () => {
-      const files = input.files;
-      if (files) {
-        for (let i = 0; i < files.length; i++) {
-          const fileReader = new FileReader();
-          fileReader.onload = () => {
-            let jsonObject;
-            try {
-              jsonObject = JSON.parse(fileReader.result as string);
-            } catch (e) {}
-            if (
-              jsonObject !== null &&
-              typeof jsonObject === "object" &&
-              Object.values(jsonObject).every((i) => Array.isArray(i) && i.every((j) => typeof j === "string"))
-            ) {
-              upload(jsonObject as { [folderName: string]: string[] });
-            } else {
-            }
-          };
-          fileReader.onerror = () => {};
-          fileReader.readAsText(files[i]);
-        }
+    getFiles((files) => {
+      if (files.length > 0) {
+        const fileReader = new FileReader();
+        fileReader.onload = () => {
+          let jsonObject;
+          try {
+            jsonObject = JSON.parse(fileReader.result as string);
+          } catch (e) {}
+          if (
+            jsonObject !== null &&
+            typeof jsonObject === "object" &&
+            Object.values(jsonObject).every((i) => Array.isArray(i) && i.every((j) => typeof j === "string"))
+          ) {
+            upload(jsonObject as { [folderName: string]: string[] });
+          }
+        };
+        fileReader.onerror = () => {};
+        fileReader.readAsText(files[0]);
       }
-    };
-    input.click();
+    });
   };
 
   const downloadFolder = async (folder: Folder) => {

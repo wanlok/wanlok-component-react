@@ -7,8 +7,7 @@ import {
   isCollectionKey,
   viewUrls,
   CollectionSequences,
-  Direction,
-  getCounts
+  Direction
 } from "../../services/Types";
 import { isAllEmpty, toList } from "../../common/ListDictUtils";
 import { getFiles } from "../../common/FileUtils";
@@ -17,6 +16,7 @@ import { getSteamInfos } from "../../services/SteamService";
 import { getYouTubeRegularAndShortInfos } from "../../services/YouTubeService";
 import { uploadAndGetFileInfos } from "../../services/ImageService";
 import { getHyperlinks } from "../../services/HyperlinkService";
+import { getCounts } from "../../common/CountUtils";
 
 const collectionName = "collections";
 
@@ -44,7 +44,6 @@ export const useCollection = (
       const { steam } = await getSteamInfos(text);
       const { youtube_regular, youtube_shorts } = await getYouTubeRegularAndShortInfos(text);
       const { hyperlinks } = await getHyperlinks(text, [charts, steam, youtube_regular, youtube_shorts]);
-
       const docRef = doc(db, collectionName, collectionId);
       let document;
       if (collectionDocument) {

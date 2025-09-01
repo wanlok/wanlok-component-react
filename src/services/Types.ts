@@ -1,5 +1,3 @@
-import { toList } from "../common/ListDictUtils";
-
 export enum Direction {
   left = "left",
   right = "right"
@@ -74,17 +72,6 @@ export const emptyCollectionCounts: CollectionCounts = {
   steam: 0,
   youtube_regular: 0,
   youtube_shorts: 0
-};
-
-export const getCounts = (collectionDocument: CollectionDocument): CollectionCounts => {
-  return {
-    charts: toList(collectionDocument?.charts).length,
-    files: toList(collectionDocument?.files).length,
-    hyperlinks: toList(collectionDocument?.hyperlinks).length,
-    steam: toList(collectionDocument?.steam).length,
-    youtube_regular: toList(collectionDocument?.youtube_regular).length,
-    youtube_shorts: toList(collectionDocument?.youtube_shorts).length
-  };
 };
 
 export type CollectionSequences = {

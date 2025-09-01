@@ -17,7 +17,7 @@ export const fetchSteamInfo = async (appId: string) => {
   return steamInfo;
 };
 
-export const extractAppIds = (text: string): string[] => {
+export const extractSteamAppIds = (text: string): string[] => {
   const regex = /\/app\/(\d+)/g;
   const matches = text.match(regex) || [];
   return matches
@@ -31,7 +31,7 @@ export const extractAppIds = (text: string): string[] => {
 export const getSteamInfos = async (text: string) => {
   const steam: { [key: string]: SteamInfo } = {};
 
-  const appIds = extractAppIds(text);
+  const appIds = extractSteamAppIds(text);
 
   const results = (
     await Promise.all(

@@ -11,7 +11,7 @@ export const fetchYouTubeOEmbed = async (urlString: string) => {
   return youTubeOEmbed;
 };
 
-const extractYouTubeInfo = (text: string): { urlString: string; id: string; type: string }[] => {
+export const extractYouTubeInfos = (text: string): { urlString: string; id: string; type: string }[] => {
   const regex =
     /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:(?:watch\?v=([\w-]{11}))|(?:embed\/([\w-]{11}))|(?:shorts\/([\w-]{11})))|youtu\.be\/([\w-]{11}))/g;
 
@@ -44,7 +44,7 @@ export const getYouTubeRegularAndShortInfos = async (text: string) => {
   const youtube_regular: { [key: string]: YouTubeOEmbed } = {};
   const youtube_shorts: { [key: string]: YouTubeOEmbed } = {};
 
-  const list = extractYouTubeInfo(text);
+  const list = extractYouTubeInfos(text);
 
   const results = (
     await Promise.all(

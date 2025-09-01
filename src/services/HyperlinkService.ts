@@ -17,18 +17,25 @@ const submitHyperlinks = async (urls: string[]) => {
   return data;
 };
 
-const extractHyperlinks = (text: string): string[] => {
-  const regex = /https?:\/\/[^\s"']+/g;
-  return text.match(regex) || [];
+export const extractUrlStrings = (text: string, shouldExtract: boolean): string[] => {
+  let hyperlinks: string[];
+  if (shouldExtract) {
+    const regex = /https?:\/\/[^\s"']+/g;
+    hyperlinks = text.match(regex) ?? [];
+  } else {
+    hyperlinks = [];
+  }
+  return hyperlinks;
 };
 
 export const getHyperlinks = async (text: string, list: { [key: string]: any }[]) => {
   let hyperlinks: { [key: string]: string } = {};
-  const listEmpty = list.every((obj) => Object.keys(obj).length === 0);
-  if (listEmpty) {
-    const urls = extractHyperlinks(text);
-    const results = await submitHyperlinks(urls);
-    results.forEach(({ url, id }) => {
+  const urlStrings = extractUrlStrings(
+    text,
+    list.every((obj) => Object.keys(obj).length === 0)
+  );
+  if (urlStrings.length > 0) {
+    (await submitHyperlinks(urlStrings)).forEach(({ url, id }) => {
       hyperlinks[url] = id;
     });
   }
