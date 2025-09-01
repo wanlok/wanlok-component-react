@@ -37,7 +37,7 @@ export const useCollection = (
     fetchCollectionDocument(documentId);
   }, [documentId]);
 
-  const addCollections = async (collectionId: string, text: string) => {
+  const addCollectionItems = async (collectionId: string, text: string) => {
     let counts: CollectionCounts | undefined = undefined;
     if (collectionId && text) {
       const { charts } = getChartItems(text);
@@ -112,7 +112,7 @@ export const useCollection = (
     }
   };
 
-  const deleteCollection = async (type: string, id: string) => {
+  const deleteCollectionItem = async (type: string, id: string) => {
     let counts: CollectionCounts | undefined = undefined;
     if (collectionDocument && documentId) {
       const document: CollectionDocument = { ...collectionDocument };
@@ -130,6 +130,11 @@ export const useCollection = (
       counts = getCounts(document);
     }
     return counts;
+  };
+
+  const deleteCollection = async (collectionId: string) => {
+    const docRef = doc(db, collectionName, collectionId);
+    deleteDoc(docRef);
   };
 
   const getCollectionUrls = async (id?: string) => {
@@ -164,10 +169,11 @@ export const useCollection = (
     steam: toList(collectionDocument?.steam, collectionSequences?.steam),
     youTubeRegularVideos: toList(collectionDocument?.youtube_regular, collectionSequences?.youtube_regular),
     youTubeShortVideos: toList(collectionDocument?.youtube_shorts, collectionSequences?.youtube_shorts),
-    addCollections,
+    addCollectionItems,
     addCollectionFiles,
     updateCollection,
     deleteCollection,
+    deleteCollectionItem,
     getCollectionUrls
   };
 };

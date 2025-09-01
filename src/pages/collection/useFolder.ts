@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   CollectionCounts,
@@ -46,7 +46,7 @@ export const useFolder = () => {
   const [serverHealth, setServerHealth] = useState<boolean>();
   const [folderDocument, setFolderDocument] = useState<FolderDocument>();
   const [selectedFolder, setSelectedFolder] = useState<Folder>();
-  const { addCollections, getCollectionUrls } = useCollection();
+  const { addCollectionItems, deleteCollection, getCollectionUrls } = useCollection();
 
   useEffect(() => {
     const fetchServerHealth = async () => {
@@ -142,36 +142,31 @@ export const useFolder = () => {
   };
 
   const upload = async (json: { [folderName: string]: string[] }) => {
-    let newFolderDocument;
-    if (folderDocument) {
-      const newFolders = [];
-      const names = folderDocument.folders.map((folder) => folder.name);
-      for (const [name, urlStrings] of Object.entries(json)) {
-        if (!names?.includes(name)) {
-          const folder = { name, counts: getCountsByUrlStrings(urlStrings), sequences: emptyCollectionSequences };
-          newFolders.push(folder);
+    await Promise.all(
+      Object.entries(json).map(async ([name]) => {
+        const collectionId = getDocumentId(name);
+        if (collectionId) {
+          await deleteCollection(collectionId);
         }
-      }
-      const folders = [...folderDocument.folders, ...newFolders].sort((a, b) => a.name.localeCompare(b.name));
-      newFolderDocument = { ...folderDocument, folders };
-      const docRef = doc(db, collectionName, documentId);
-      await updateDoc(docRef, newFolderDocument);
-    } else {
-      newFolderDocument = {
-        folders: Object.entries(json).map(([name, urlStrings]) => {
-          return { name, counts: getCountsByUrlStrings(urlStrings), sequences: emptyCollectionSequences };
-        })
-      };
-      const docRef = doc(db, collectionName, documentId);
-      await setDoc(docRef, newFolderDocument);
-    }
+      })
+    );
+    const docRef = doc(db, collectionName, documentId);
+    await deleteDoc(docRef);
+    const newFolderDocument = {
+      folders: Object.entries(json).map(([name, urlStrings]) => {
+        return { name, counts: getCountsByUrlStrings(urlStrings), sequences: emptyCollectionSequences };
+      })
+    };
+    await setDoc(docRef, newFolderDocument);
+    await Promise.all(
+      Object.entries(json).map(async ([name, urlStrings]) => {
+        const collectionId = getDocumentId(name);
+        if (collectionId) {
+          await addCollectionItems(collectionId, urlStrings.join("\n"));
+        }
+      })
+    );
     setFolderDocument(newFolderDocument);
-    for (const [name, list] of Object.entries(json)) {
-      const collectionId = getDocumentId(name);
-      if (collectionId) {
-        addCollections(collectionId, list.join("\n"));
-      }
-    }
   };
 
   const uploadFolders = async () => {

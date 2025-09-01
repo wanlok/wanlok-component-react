@@ -100,10 +100,10 @@ export const CollectionPage = () => {
     steam,
     youTubeRegularVideos,
     youTubeShortVideos,
-    addCollections,
+    addCollectionItems,
     addCollectionFiles,
     updateCollection,
-    deleteCollection
+    deleteCollectionItem
   } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolderSequences);
   const [panelOpened, setPanelOpened] = useState(false);
   const { breakpoints } = useTheme();
@@ -181,7 +181,7 @@ export const CollectionPage = () => {
         onLeftButtonClick={(type, id) => updateCollection(type, id, Direction.left)}
         onRightButtonClick={(type, id) => updateCollection(type, id, Direction.right)}
         onDeleteButtonClick={async (type, id) => {
-          const counts = await deleteCollection(type, id);
+          const counts = await deleteCollectionItem(type, id);
           if (counts) {
             await updateFolderCounts(counts);
           }
@@ -196,7 +196,7 @@ export const CollectionPage = () => {
             onClickWithText: async (text) => {
               const collectionId = getDocumentId(selectedFolder?.name);
               if (collectionId) {
-                const counts = await addCollections(collectionId, text);
+                const counts = await addCollectionItems(collectionId, text);
                 if (counts) {
                   await updateFolderCounts(counts);
                 }

@@ -16,7 +16,7 @@ export const getCounts = (collectionDocument: CollectionDocument): CollectionCou
 };
 
 export const getCountsByUrlStrings = (urlStrings: string[]): CollectionCounts => {
-  const text = urlStrings.join(" ");
+  const text = urlStrings.join("\n");
   const steamAppIds = extractSteamAppIds(text);
   const youTubeInfos = extractYouTubeInfos(text);
   const hyperlinks = extractUrlStrings(
