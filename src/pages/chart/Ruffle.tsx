@@ -39,7 +39,7 @@ export default function RufflePlayerComponent() {
   return (
     <div>
       <div ref={containerRef}></div>
-      <button onClick={() => setSwfPath("/yakijuju.swf")}>Start Game</button>
+      <button onClick={() => setSwfPath("/103.swf")}>Start Game</button>
     </div>
   );
 }
