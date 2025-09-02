@@ -33,7 +33,9 @@ export const Chart = () => {
 
   return (
     <div>
-      <RufflePlayerComponent />
+      <RufflePlayerComponent name={"yakijuju.swf"} />
+      <RufflePlayerComponent name={"103.swf"} />
+      <RufflePlayerComponent name={"3dlogicxgen.swf"} />
       <Button variant="contained" onClick={() => toPDF()}>
         Export Entire Page as PDF
       </Button>

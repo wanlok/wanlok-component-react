@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-export default function RufflePlayerComponent() {
+export default function RufflePlayerComponent({ name }: { name: string }) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [swfPath, setSwfPath] = useState("");
 
@@ -39,7 +39,7 @@ export default function RufflePlayerComponent() {
   return (
     <div>
       <div ref={containerRef}></div>
-      <button onClick={() => setSwfPath("/103.swf")}>Start Game</button>
+      <button onClick={() => setSwfPath("/" + name)}>Start Game</button>
     </div>
   );
 }
