@@ -115,7 +115,7 @@ export const FlashPlayer = ({
     rafId = requestAnimationFrame(captureFrame);
 
     return () => cancelAnimationFrame(rafId);
-  }, [playerCanvas, endReferenceImageData]);
+  }, [playerCanvas, endReferenceImageData, onChange]);
 
   return (
     <div>

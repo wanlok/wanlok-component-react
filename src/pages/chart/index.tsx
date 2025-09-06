@@ -1,5 +1,5 @@
 import { Button, Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Image, Page, PDFViewer, Document } from "@react-pdf/renderer";
 import { toPng } from "html-to-image";
 import { usePDF } from "react-to-pdf";
@@ -36,15 +36,14 @@ export const Chart = () => {
 
   const [swfFilePath, setSwfFilePath] = useState<string>("");
 
+  const onChange = useCallback((imageBase64String: string) => {
+    console.log("changes detected");
+    setImgSrc(imageBase64String);
+  }, []);
+
   return (
     <div>
-      <FlashPlayer
-        filePath={swfFilePath}
-        endReferenceImage={endImage}
-        onChange={(imageBase64String) => {
-          setImgSrc(imageBase64String);
-        }}
-      />
+      <FlashPlayer filePath={swfFilePath} endReferenceImage={endImage} onChange={onChange} />
       {/* <RufflePlayerComponent name={"3dlogicxgen.swf"} /> */}
       <Button
         variant="contained"
