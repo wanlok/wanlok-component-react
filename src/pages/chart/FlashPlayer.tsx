@@ -24,28 +24,27 @@ export const FlashPlayer = ({
   const cropWidth = 180;
   const cropHeight = 26;
 
-  const output = new Uint8ClampedArray(cropWidth * cropHeight * 4);
-
-  const prepare = async () => {
-    setEndReferenceImageData(await toImageData(endReferenceImage));
-  };
-
-  const loadRuffleScript = () => {
-    const script = document.createElement("script");
-    script.src = "ruffle/ruffle.js";
-    script.async = true;
-    document.body.appendChild(script);
-    return script;
-  };
-
   // Load Ruffle script once
   useEffect(() => {
+    const prepare = async () => {
+      setEndReferenceImageData(await toImageData(endReferenceImage));
+    };
+
     prepare();
+
+    const loadRuffleScript = () => {
+      const script = document.createElement("script");
+      script.src = "ruffle/ruffle.js";
+      script.async = true;
+      document.body.appendChild(script);
+      return script;
+    };
+
     const script = loadRuffleScript();
     return () => {
       script.remove();
     };
-  }, [prepare]);
+  }, [endReferenceImage]);
 
   // Initialize Ruffle player
   useEffect(() => {
@@ -83,6 +82,8 @@ export const FlashPlayer = ({
     cropCanvas.width = cropWidth;
     cropCanvas.height = cropHeight;
 
+    const output = new Uint8ClampedArray(cropWidth * cropHeight * 4);
+
     let lastTime = 0;
     const fps = 30;
     const frameDuration = 1000 / fps;
@@ -114,7 +115,7 @@ export const FlashPlayer = ({
     rafId = requestAnimationFrame(captureFrame);
 
     return () => cancelAnimationFrame(rafId);
-  }, [playerCanvas]);
+  }, [playerCanvas, endReferenceImageData]);
 
   return (
     <div>
