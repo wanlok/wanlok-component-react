@@ -5,7 +5,7 @@ export default function RufflePlayerComponent({ name }: { name: string }) {
   const [swfPath, setSwfPath] = useState("");
   const [playerCanvas, setPlayerCanvas] = useState<HTMLCanvasElement | null>(null);
 
-  const videoRef = useRef<HTMLVideoElement | null>(null);
+  const imgRef = useRef<HTMLImageElement | null>(null);
 
   useEffect(() => {
     // Load Ruffle script only once
@@ -20,53 +20,90 @@ export default function RufflePlayerComponent({ name }: { name: string }) {
   }, []);
 
   useEffect(() => {
-    if (!swfPath) return;
-    if (!window.RufflePlayer?.newest) return;
+    if (swfPath && window.RufflePlayer?.newest) {
+      const ruffle = window.RufflePlayer.newest();
+      const player = ruffle.createPlayer();
 
-    const ruffle = window.RufflePlayer.newest();
-    const player = ruffle.createPlayer();
-
-    if (containerRef.current) {
-      containerRef.current.innerHTML = "";
-      containerRef.current.appendChild(player as unknown as Node);
-    }
-
-    player.load(swfPath);
-
-    // Polling function to detect canvas
-    const checkCanvas = () => {
-      const shadow = (player as any).shadowRoot;
-      const canvas = shadow?.querySelector("canvas") as HTMLCanvasElement | null;
-      if (canvas) {
-        console.log("Canvas detected!", canvas);
-        setPlayerCanvas(canvas);
-      } else {
-        console.log("HIHI");
-        requestAnimationFrame(checkCanvas); // keep checking next frame
+      if (containerRef.current) {
+        containerRef.current.innerHTML = "";
+        containerRef.current.appendChild(player as unknown as Node);
       }
-    };
 
-    checkCanvas(); // start polling
+      player.load(swfPath);
+
+      // Polling function to detect canvas
+      const checkCanvas = () => {
+        const shadow = (player as any).shadowRoot;
+        const canvas = shadow?.querySelector("canvas") as HTMLCanvasElement | null;
+        if (canvas) {
+          setPlayerCanvas(canvas);
+        } else {
+          requestAnimationFrame(checkCanvas); // keep checking next frame
+        }
+      };
+
+      checkCanvas(); // start polling
+    }
   }, [swfPath]);
 
   useEffect(() => {
     if (!playerCanvas) return;
 
-    const handleStream = () => {
-      if (videoRef.current && !videoRef.current.srcObject) {
-        const stream = playerCanvas.captureStream(30);
-        videoRef.current.srcObject = stream;
-        videoRef.current.play().catch(console.warn);
+    const cropCanvas = document.createElement("canvas");
+    const cropCtx = cropCanvas.getContext("2d");
+    if (!cropCtx) return;
+
+    const startX = 0;
+    const startY = 0;
+
+    const cropWidth = 536;
+    const cropHeight = 40;
+
+    cropCanvas.width = cropWidth;
+    cropCanvas.height = cropHeight;
+
+    let lastTime = 0;
+    const fps = 30;
+    const frameDuration = 1000 / fps;
+    let rafId: number;
+
+    const captureFrame = (time: number) => {
+      if (time - lastTime >= frameDuration) {
+        lastTime = time;
+
+        // Clear previous frame
+        cropCtx.clearRect(0, 0, cropWidth, cropHeight);
+
+        // Draw only the cropped portion
+        cropCtx.drawImage(
+          playerCanvas,
+          startX,
+          startY, // source x, y
+          cropWidth,
+          cropHeight, // source width, height
+          0,
+          0, // destination x, y
+          cropWidth,
+          cropHeight // destination width, height
+        );
+
+        // Update the img element with cropped frame
+        if (imgRef.current) {
+          imgRef.current.src = cropCanvas.toDataURL("image/png");
+        }
       }
+      rafId = requestAnimationFrame(captureFrame);
     };
 
-    requestAnimationFrame(handleStream);
+    rafId = requestAnimationFrame(captureFrame);
+
+    return () => cancelAnimationFrame(rafId);
   }, [playerCanvas]);
 
   return (
     <div>
       <div ref={containerRef}></div>
-      <video ref={videoRef} autoPlay={true} style={{ border: "black solid 1px" }} />
+      <img ref={imgRef} alt="" />
       <button onClick={() => setSwfPath("/" + name)}>Start Game</button>
     </div>
   );
