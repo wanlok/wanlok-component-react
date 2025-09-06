@@ -1,23 +1,23 @@
 import pixelmatch from "pixelmatch";
 import { useEffect, useRef, useState } from "react";
-import { toImageData } from "../../common/ImageUtils";
+import { getImageBase64String, recognizeText, toImageData } from "../common/ImageUtils";
 
-export const FlashPlayer = ({
+export const FlashGamePlayer = ({
   filePath,
   endReferenceImage,
-  onChange
+  onScoreChange
 }: {
   filePath: string;
   endReferenceImage: string;
-  onChange: (imageBase64String: string) => void;
+  onScoreChange: (score: number) => void;
 }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [playerCanvas, setPlayerCanvas] = useState<HTMLCanvasElement | null>(null);
+  const [playerCanvas, setPlayerCanvas] = useState<HTMLCanvasElement>();
   const [endReferenceImageData, setEndReferenceImageData] = useState<ImageData>();
 
-  const imgRef = useRef<HTMLImageElement | null>(null);
-
-  const previousPixelDiffRef = useRef<number>(Number.MAX_VALUE);
+  const playerRef = useRef<HTMLDivElement>(null);
+  const currentImgRef = useRef<HTMLImageElement>(null);
+  const resultImgRef = useRef<HTMLImageElement>(null);
+  const pixelDiffRef = useRef<number>(Number.MAX_VALUE);
 
   const startX = 135;
   const startY = 0;
@@ -41,21 +41,20 @@ export const FlashPlayer = ({
     };
 
     const script = loadRuffleScript();
+
     return () => {
       script.remove();
     };
   }, [endReferenceImage]);
 
-  // Initialize Ruffle player
   useEffect(() => {
     if (!filePath || !window.RufflePlayer?.newest) return;
 
-    const ruffle = window.RufflePlayer.newest();
-    const player = ruffle.createPlayer();
+    const player = window.RufflePlayer.newest().createPlayer();
 
-    if (containerRef.current) {
-      containerRef.current.innerHTML = "";
-      containerRef.current.appendChild(player as unknown as Node);
+    if (playerRef.current) {
+      playerRef.current.innerHTML = "";
+      playerRef.current.appendChild(player as unknown as Node);
     }
 
     player.load(filePath);
@@ -77,19 +76,25 @@ export const FlashPlayer = ({
 
     const cropCanvas = document.createElement("canvas");
     const cropCtx = cropCanvas.getContext("2d", { willReadFrequently: true });
-    if (!cropCtx) return;
 
     cropCanvas.width = cropWidth;
     cropCanvas.height = cropHeight;
+    if (!cropCtx) return;
 
     const output = new Uint8ClampedArray(cropWidth * cropHeight * 4);
 
     let lastTime = 0;
     const fps = 30;
     const frameDuration = 1000 / fps;
-    let rafId: number;
 
-    const captureFrame = (time: number) => {
+    let handle: number;
+
+    const extractScore = (text: string) => {
+      const match = text.match(/\d+/);
+      return match ? parseInt(match[0], 10) : null;
+    };
+
+    const captureFrame = async (time: number) => {
       if (time - lastTime >= frameDuration) {
         lastTime = time;
 
@@ -99,29 +104,43 @@ export const FlashPlayer = ({
 
         const pixelDiff = pixelmatch(imageData, endReferenceImageData.data, output, cropWidth, cropHeight);
 
-        if (Math.abs(pixelDiff - previousPixelDiffRef.current) > 100) {
-          onChange(playerCanvas.toDataURL("image/png"));
+        if (pixelDiffRef.current > pixelDiff && pixelDiffRef.current - pixelDiff > 100 && pixelDiff === 0) {
+          const imageBase64String = getImageBase64String(playerCanvas, 320, 0, 200, 30);
+          if (imageBase64String) {
+            if (resultImgRef.current) {
+              resultImgRef.current.src = imageBase64String;
+            }
+            const text = await recognizeText(imageBase64String);
+            if (text.length > 0) {
+              const score = extractScore(text);
+              if (score) {
+                onScoreChange(score);
+              }
+            }
+          }
         }
 
-        if (imgRef.current) {
-          imgRef.current.src = cropCanvas.toDataURL("image/png");
+        if (currentImgRef.current) {
+          currentImgRef.current.src = cropCanvas.toDataURL("image/png");
         }
 
-        previousPixelDiffRef.current = pixelDiff;
+        pixelDiffRef.current = pixelDiff;
       }
-      rafId = requestAnimationFrame(captureFrame);
+
+      handle = requestAnimationFrame(captureFrame);
     };
 
-    rafId = requestAnimationFrame(captureFrame);
+    handle = requestAnimationFrame(captureFrame);
 
-    return () => cancelAnimationFrame(rafId);
-  }, [playerCanvas, endReferenceImageData, onChange]);
+    return () => cancelAnimationFrame(handle);
+  }, [playerCanvas, endReferenceImageData, onScoreChange]);
 
   return (
-    <div>
-      <div ref={containerRef}></div>
-      {/* <img ref={imgRef} alt="" />
-      <img alt="" src={endReferenceImage} /> */}
-    </div>
+    <>
+      <div ref={playerRef}></div>
+      {/* <img ref={currentImgRef} alt="" />
+      <img alt="" src={endReferenceImage} />
+      <img ref={resultImgRef} alt="" /> */}
+    </>
   );
 };
