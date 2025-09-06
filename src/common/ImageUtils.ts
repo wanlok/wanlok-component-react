@@ -17,13 +17,24 @@ export function toImageData(src: string): Promise<ImageData> {
   });
 }
 
-export function getImageBase64String(sourceCanvas: HTMLCanvasElement, rect: Rect): string | undefined {
-  let imageBase64: string | undefined = undefined;
-  const { x, y, width, height } = rect;
+export const getCanvasAndContext = (width: number, height: number) => {
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
   const context = canvas.getContext("2d", { willReadFrequently: true });
+  return { canvas, context };
+};
+
+export const getImageData = (sourceCanvas: HTMLCanvasElement, rect: Rect, context: CanvasRenderingContext2D | null) => {
+  const { x, y, width, height } = rect;
+  context?.drawImage(sourceCanvas, x, y, width, height, 0, 0, width, height);
+  return context?.getImageData(0, 0, width, height);
+};
+
+export function getImageBase64String(sourceCanvas: HTMLCanvasElement, rect: Rect): string | undefined {
+  let imageBase64: string | undefined = undefined;
+  const { x, y, width, height } = rect;
+  const { canvas, context } = getCanvasAndContext(width, height);
   if (context) {
     context.drawImage(sourceCanvas, x, y, width, height, 0, 0, width, height);
     imageBase64 = canvas.toDataURL("image/png");

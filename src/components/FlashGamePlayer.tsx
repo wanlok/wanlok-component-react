@@ -1,6 +1,12 @@
 import pixelmatch from "pixelmatch";
 import { useEffect, useRef, useState } from "react";
-import { getImageBase64String, recognizeText, toImageData } from "../common/ImageUtils";
+import {
+  getCanvasAndContext,
+  getImageBase64String,
+  getImageData,
+  recognizeText,
+  toImageData
+} from "../common/ImageUtils";
 import { Rect } from "../services/Types";
 
 export const FlashGamePlayer = ({
@@ -74,15 +80,8 @@ export const FlashGamePlayer = ({
   useEffect(() => {
     if (!playerCanvas || !endReferenceImageData) return;
 
-    const { x, y, width, height } = statusRect;
-
-    const cropCanvas = document.createElement("canvas");
-    const cropCtx = cropCanvas.getContext("2d", { willReadFrequently: true });
-
-    cropCanvas.width = width;
-    cropCanvas.height = height;
-    if (!cropCtx) return;
-
+    const { width, height } = statusRect;
+    const { canvas, context } = getCanvasAndContext(width, height);
     const output = new Uint8ClampedArray(width * height * 4);
 
     let lastTime = 0;
@@ -100,33 +99,35 @@ export const FlashGamePlayer = ({
       if (time - lastTime >= frameDuration) {
         lastTime = time;
 
-        cropCtx.drawImage(playerCanvas, x, y, width, height, 0, 0, width, height);
+        const imageData = getImageData(playerCanvas, statusRect, context);
 
-        const imageData = cropCtx.getImageData(0, 0, width, height).data;
+        if (imageData) {
+          const diff = pixelmatch(imageData.data, endReferenceImageData.data, output, width, height);
 
-        const pixelDiff = pixelmatch(imageData, endReferenceImageData.data, output, width, height);
+          if (diffRef.current > diff && diffRef.current - diff > 100 && diff === 0) {
+            console.log(diffRef.current, diff);
 
-        if (diffRef.current > pixelDiff && diffRef.current - pixelDiff > 100 && pixelDiff === 0) {
-          const imageBase64String = getImageBase64String(playerCanvas, scoreRect);
-          if (imageBase64String) {
-            if (resultImgRef.current) {
-              resultImgRef.current.src = imageBase64String;
-            }
-            const text = await recognizeText(imageBase64String);
-            if (text.length > 0) {
-              const score = extractScore(text);
-              if (score !== null) {
-                onScoreChange(score);
+            const imageBase64String = getImageBase64String(playerCanvas, scoreRect);
+            if (imageBase64String) {
+              const text = await recognizeText(imageBase64String);
+              if (text.length > 0) {
+                const score = extractScore(text);
+                if (score !== null) {
+                  onScoreChange(score);
+                }
+              }
+              if (resultImgRef.current) {
+                resultImgRef.current.src = imageBase64String;
               }
             }
           }
-        }
 
-        if (statusImgRef.current) {
-          statusImgRef.current.src = cropCanvas.toDataURL("image/png");
-        }
+          if (statusImgRef.current) {
+            statusImgRef.current.src = canvas.toDataURL("image/png");
+          }
 
-        diffRef.current = pixelDiff;
+          diffRef.current = diff;
+        }
       }
 
       handle = requestAnimationFrame(captureFrame);
@@ -140,9 +141,9 @@ export const FlashGamePlayer = ({
   return (
     <>
       <div ref={divRef}></div>
-      {/* <img ref={currentImgRef} alt="" />
-      <img alt="" src={endReferenceImage} />
-      <img ref={resultImgRef} alt="" /> */}
+      <img ref={statusImgRef} alt="" />
+      <img alt="" src={statusEndImage} />
+      <img ref={resultImgRef} alt="" />
     </>
   );
 };
