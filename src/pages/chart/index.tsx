@@ -12,6 +12,8 @@ import RufflePlayerComponent from "./Ruffle";
 export const Chart = () => {
   const [src, setSrc] = useState<string>();
 
+  const [imageBase64, setImageBase64] = useState<string>();
+
   const exportRechartsChart = async () => {
     const element = document.getElementById("recharts-container");
     if (element) {
@@ -36,6 +38,8 @@ export const Chart = () => {
       <RufflePlayerComponent name={"yakijuju.swf"} />
       <RufflePlayerComponent name={"103.swf"} />
       <RufflePlayerComponent name={"3dlogicxgen.swf"} />
+
+      <img src={imageBase64} alt="" />
       <Button variant="contained" onClick={() => toPDF()}>
         Export Entire Page as PDF
       </Button>
@@ -55,15 +59,6 @@ export const Chart = () => {
         </PDFViewer>
       )}
       <Stack ref={targetRef}>
-        <Typography variant="h4">What is Lorem Ipsum?</Typography>
-        <Typography variant="body1">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-          typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-          sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
-          PageMaker including versions of Lorem Ipsum.
-        </Typography>
         <ul>
           <li>
             <img src="https://upload.wikimedia.org/wikipedia/zh/3/32/Yahoo_HK_Logo_2019.png" alt="" />
@@ -88,30 +83,6 @@ export const Chart = () => {
           barLabel="value"
           height={300}
         />
-        <Typography variant="body1">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-          typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-          sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
-          PageMaker including versions of Lorem Ipsum.
-        </Typography>
-        <Typography variant="body1">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-          typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-          sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
-          PageMaker including versions of Lorem Ipsum.
-        </Typography>
-        <Typography variant="body1">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-          typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-          sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
-          PageMaker including versions of Lorem Ipsum.
-        </Typography>
         <Stack direction="row" sx={{}}>
           <LabelsAboveBars />
           <BarChart
@@ -122,22 +93,6 @@ export const Chart = () => {
             sx={{ flex: 0.5 }}
           />
         </Stack>
-        <Typography variant="body1">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-          typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-          sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
-          PageMaker including versions of Lorem Ipsum.
-        </Typography>
-        <Typography variant="body1">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-          typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-          sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
-          PageMaker including versions of Lorem Ipsum.
-        </Typography>
         <Stack direction="row" sx={{}}>
           <LabelsAboveBars />
           <BarChart
@@ -148,30 +103,6 @@ export const Chart = () => {
             sx={{ flex: 0.5 }}
           />
         </Stack>
-        <Typography variant="body1">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-          typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-          sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
-          PageMaker including versions of Lorem Ipsum.
-        </Typography>
-        <Typography variant="body1">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-          typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-          sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
-          PageMaker including versions of Lorem Ipsum.
-        </Typography>
-        <Typography variant="body1">
-          Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's
-          standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to
-          make a type specimen book. It has survived not only five centuries, but also the leap into electronic
-          typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-          sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus
-          PageMaker including versions of Lorem Ipsum.
-        </Typography>
         <Stack direction="row" sx={{}}>
           <LabelsAboveBars />
           <BarChart
