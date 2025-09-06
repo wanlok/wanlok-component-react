@@ -1,22 +1,6 @@
 import Tesseract from "tesseract.js";
 import { Rect } from "../services/Types";
 
-export function toImageData(src: string): Promise<ImageData> {
-  return new Promise((resolve, reject) => {
-    const image = new Image();
-    image.src = src;
-    image.onload = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = image.width;
-      canvas.height = image.height;
-      const context = canvas.getContext("2d")!;
-      context.drawImage(image, 0, 0);
-      resolve(context.getImageData(0, 0, canvas.width, canvas.height));
-    };
-    image.onerror = reject;
-  });
-}
-
 export const getCanvasAndContext = (width: number, height: number) => {
   const canvas = document.createElement("canvas");
   canvas.width = width;
@@ -24,6 +8,23 @@ export const getCanvasAndContext = (width: number, height: number) => {
   const context = canvas.getContext("2d", { willReadFrequently: true });
   return { canvas, context };
 };
+
+export function loadImageData(src: string): Promise<ImageData> {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.src = src;
+    image.onload = () => {
+      const { canvas, context } = getCanvasAndContext(image.width, image.height);
+      if (context) {
+        context.drawImage(image, 0, 0);
+        resolve(context.getImageData(0, 0, canvas.width, canvas.height));
+      } else {
+        reject();
+      }
+    };
+    image.onerror = reject;
+  });
+}
 
 export const getImageData = (sourceCanvas: HTMLCanvasElement, rect: Rect, context: CanvasRenderingContext2D | null) => {
   const { x, y, width, height } = rect;

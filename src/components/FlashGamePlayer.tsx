@@ -4,8 +4,8 @@ import {
   getCanvasAndContext,
   getImageBase64String,
   getImageData,
-  recognizeText,
-  toImageData
+  loadImageData,
+  recognizeText
 } from "../common/ImageUtils";
 import { Rect } from "../services/Types";
 
@@ -22,6 +22,12 @@ export const FlashGamePlayer = ({
   scoreRect: Rect;
   onScoreChange: (score: number) => void;
 }) => {
+  const statusRectRef = useRef(statusRect);
+  statusRectRef.current = statusRect;
+
+  const scoreRectRef = useRef(scoreRect);
+  scoreRectRef.current = scoreRect;
+
   const [playerCanvas, setPlayerCanvas] = useState<HTMLCanvasElement>();
   const [endReferenceImageData, setEndReferenceImageData] = useState<ImageData>();
 
@@ -33,7 +39,7 @@ export const FlashGamePlayer = ({
 
   useEffect(() => {
     const prepare = async () => {
-      setEndReferenceImageData(await toImageData(statusEndImage));
+      setEndReferenceImageData(await loadImageData(statusEndImage));
     };
 
     prepare();
@@ -80,7 +86,7 @@ export const FlashGamePlayer = ({
   useEffect(() => {
     if (!playerCanvas || !endReferenceImageData) return;
 
-    const { width, height } = statusRect;
+    const { width, height } = statusRectRef.current;
     const { canvas, context } = getCanvasAndContext(width, height);
     const output = new Uint8ClampedArray(width * height * 4);
 
@@ -99,15 +105,13 @@ export const FlashGamePlayer = ({
       if (time - lastTime >= frameDuration) {
         lastTime = time;
 
-        const imageData = getImageData(playerCanvas, statusRect, context);
+        const imageData = getImageData(playerCanvas, statusRectRef.current, context);
 
         if (imageData) {
           const diff = pixelmatch(imageData.data, endReferenceImageData.data, output, width, height);
 
           if (diffRef.current > diff && diffRef.current - diff > 100 && diff === 0) {
-            console.log(diffRef.current, diff);
-
-            const imageBase64String = getImageBase64String(playerCanvas, scoreRect);
+            const imageBase64String = getImageBase64String(playerCanvas, scoreRectRef.current);
             if (imageBase64String) {
               const text = await recognizeText(imageBase64String);
               if (text.length > 0) {
@@ -141,9 +145,9 @@ export const FlashGamePlayer = ({
   return (
     <>
       <div ref={divRef}></div>
-      <img ref={statusImgRef} alt="" />
+      {/* <img ref={statusImgRef} alt="" />
       <img alt="" src={statusEndImage} />
-      <img ref={resultImgRef} alt="" />
+      <img ref={resultImgRef} alt="" /> */}
     </>
   );
 };
