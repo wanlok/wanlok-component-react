@@ -1,4 +1,5 @@
 import Tesseract from "tesseract.js";
+import { Rect } from "../services/Types";
 
 export function toImageData(src: string): Promise<ImageData> {
   return new Promise((resolve, reject) => {
@@ -16,14 +17,9 @@ export function toImageData(src: string): Promise<ImageData> {
   });
 }
 
-export function getImageBase64String(
-  sourceCanvas: HTMLCanvasElement,
-  x: number,
-  y: number,
-  width: number,
-  height: number
-): string | undefined {
+export function getImageBase64String(sourceCanvas: HTMLCanvasElement, rect: Rect): string | undefined {
   let imageBase64: string | undefined = undefined;
+  const { x, y, width, height } = rect;
   const canvas = document.createElement("canvas");
   canvas.width = width;
   canvas.height = height;
