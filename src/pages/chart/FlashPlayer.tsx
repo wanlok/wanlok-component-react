@@ -45,7 +45,7 @@ export const FlashPlayer = ({
     return () => {
       script.remove();
     };
-  }, []);
+  }, [prepare]);
 
   // Initialize Ruffle player
   useEffect(() => {
@@ -114,7 +114,7 @@ export const FlashPlayer = ({
     rafId = requestAnimationFrame(captureFrame);
 
     return () => cancelAnimationFrame(rafId);
-  }, [playerCanvas]);
+  }, [playerCanvas, endReferenceImageData, onChange, output]);
 
   return (
     <div>
