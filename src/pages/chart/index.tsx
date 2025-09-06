@@ -12,8 +12,6 @@ import RufflePlayerComponent from "./Ruffle";
 export const Chart = () => {
   const [src, setSrc] = useState<string>();
 
-  const [imageBase64, setImageBase64] = useState<string>();
-
   const exportRechartsChart = async () => {
     const element = document.getElementById("recharts-container");
     if (element) {
@@ -38,8 +36,6 @@ export const Chart = () => {
       <RufflePlayerComponent name={"yakijuju.swf"} />
       <RufflePlayerComponent name={"103.swf"} />
       <RufflePlayerComponent name={"3dlogicxgen.swf"} />
-
-      <img src={imageBase64} alt="" />
       <Button variant="contained" onClick={() => toPDF()}>
         Export Entire Page as PDF
       </Button>
