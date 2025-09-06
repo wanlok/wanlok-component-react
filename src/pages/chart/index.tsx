@@ -7,10 +7,13 @@ import { BarChart } from "@mui/x-charts";
 import { RechartsChart } from "./RechartsChart";
 import { LabelsAboveBars } from "./LabelsAboveBars";
 import { ApexChartsChart } from "./ApexChartsChart";
-import RufflePlayerComponent from "./Ruffle";
+import { FlashPlayer } from "./FlashPlayer";
+import endImage from "./End.png";
 
 export const Chart = () => {
   const [src, setSrc] = useState<string>();
+
+  const [imgSrc, setImgSrc] = useState<string>();
 
   const exportRechartsChart = async () => {
     const element = document.getElementById("recharts-container");
@@ -31,11 +34,35 @@ export const Chart = () => {
 
   const { toPDF, targetRef } = usePDF({ filename: "page.pdf" });
 
+  const [swfFilePath, setSwfFilePath] = useState<string>("");
+
   return (
     <div>
-      <RufflePlayerComponent name={"yakijuju.swf"} />
-      <RufflePlayerComponent name={"103.swf"} />
-      <RufflePlayerComponent name={"3dlogicxgen.swf"} />
+      <FlashPlayer
+        filePath={swfFilePath}
+        endReferenceImage={endImage}
+        onChange={(imageBase64String) => {
+          setImgSrc(imageBase64String);
+        }}
+      />
+      {/* <RufflePlayerComponent name={"3dlogicxgen.swf"} /> */}
+      <Button
+        variant="contained"
+        onClick={() => {
+          setSwfFilePath("/yakijuju.swf");
+        }}
+      >
+        Start Game
+      </Button>
+      {/* <Button
+        variant="contained"
+        onClick={() => {
+          setSwfPath("/103.swf");
+        }}
+      >
+        Start Game
+      </Button> */}
+      <img src={imgSrc} alt="" />
       <Button variant="contained" onClick={() => toPDF()}>
         Export Entire Page as PDF
       </Button>
