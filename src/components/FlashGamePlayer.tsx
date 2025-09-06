@@ -22,14 +22,11 @@ export const FlashGamePlayer = ({
   scoreRect: Rect;
   onScoreChange: (score: number) => void;
 }) => {
-  const statusRectRef = useRef(statusRect);
-  statusRectRef.current = statusRect;
-
-  const scoreRectRef = useRef(scoreRect);
-  scoreRectRef.current = scoreRect;
-
   const [playerCanvas, setPlayerCanvas] = useState<HTMLCanvasElement>();
-  const [endReferenceImageData, setEndReferenceImageData] = useState<ImageData>();
+  const [statusEndImageData, setStatusEndImageData] = useState<ImageData>();
+
+  const [scaledStatusRect] = useState(statusRect);
+  const [scaledScoreRect] = useState(scoreRect);
 
   const divRef = useRef<HTMLDivElement>(null);
   const diffRef = useRef<number>(Number.MAX_VALUE);
@@ -38,11 +35,11 @@ export const FlashGamePlayer = ({
   const resultImgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    const prepare = async () => {
-      setEndReferenceImageData(await loadImageData(statusEndImage));
+    const load = async () => {
+      setStatusEndImageData(await loadImageData(statusEndImage));
     };
 
-    prepare();
+    load();
 
     const loadRuffleScript = () => {
       const script = document.createElement("script");
@@ -84,9 +81,9 @@ export const FlashGamePlayer = ({
   }, [filePath]);
 
   useEffect(() => {
-    if (!playerCanvas || !endReferenceImageData) return;
+    if (!playerCanvas || !statusEndImageData) return;
 
-    const { width, height } = statusRectRef.current;
+    const { width, height } = scaledStatusRect;
     const { canvas, context } = getCanvasAndContext(width, height);
     const output = new Uint8ClampedArray(width * height * 4);
 
@@ -105,13 +102,13 @@ export const FlashGamePlayer = ({
       if (time - lastTime >= frameDuration) {
         lastTime = time;
 
-        const imageData = getImageData(playerCanvas, statusRectRef.current, context);
+        const imageData = getImageData(playerCanvas, scaledStatusRect, context);
 
         if (imageData) {
-          const diff = pixelmatch(imageData.data, endReferenceImageData.data, output, width, height);
+          const diff = pixelmatch(imageData.data, statusEndImageData.data, output, width, height);
 
           if (diffRef.current > diff && diffRef.current - diff > 100 && diff === 0) {
-            const imageBase64String = getImageBase64String(playerCanvas, scoreRectRef.current);
+            const imageBase64String = getImageBase64String(playerCanvas, scaledScoreRect);
             if (imageBase64String) {
               const text = await recognizeText(imageBase64String);
               if (text.length > 0) {
@@ -140,7 +137,7 @@ export const FlashGamePlayer = ({
     handle = requestAnimationFrame(captureFrame);
 
     return () => cancelAnimationFrame(handle);
-  }, [playerCanvas, endReferenceImageData, onScoreChange]);
+  }, [playerCanvas, statusEndImageData, scaledStatusRect, scaledScoreRect, onScoreChange]);
 
   return (
     <>
