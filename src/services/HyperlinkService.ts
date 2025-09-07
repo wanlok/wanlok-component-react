@@ -1,9 +1,9 @@
 import { extractSteamUrlStrings } from "./SteamService";
-import { Hyperlink } from "./Types";
+import { Hyperlink, serverUrl } from "./Types";
 import { extractYouTubeInfos } from "./YouTubeService";
 
 const submitHyperlinks = async (urls: string[]) => {
-  const response = await fetch("https://wanlok.ddns.net/save-screenshot", {
+  const response = await fetch(`${serverUrl}/save-screenshot`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
