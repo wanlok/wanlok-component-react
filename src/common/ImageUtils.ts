@@ -1,6 +1,16 @@
 import Tesseract from "tesseract.js";
 import { Rect } from "../services/Types";
 
+export const scaleRectForCanvas = (rect: Rect, canvas: HTMLCanvasElement) => {
+  const dpr = window.devicePixelRatio || 1;
+  return {
+    x: rect.x * dpr,
+    y: rect.y * dpr,
+    width: rect.width * dpr,
+    height: rect.height * dpr
+  };
+};
+
 export const getCanvasAndContext = (width: number, height: number) => {
   const canvas = document.createElement("canvas");
   canvas.width = width;
@@ -9,22 +19,24 @@ export const getCanvasAndContext = (width: number, height: number) => {
   return { canvas, context };
 };
 
-export function loadImageData(src: string): Promise<ImageData> {
+export const loadImageData = (src: string, width?: number, height?: number): Promise<ImageData> => {
   return new Promise((resolve, reject) => {
     const image = new Image();
     image.src = src;
     image.onload = () => {
-      const { canvas, context } = getCanvasAndContext(image.width, image.height);
+      const w = width ?? image.width;
+      const h = height ?? image.height;
+      const { context } = getCanvasAndContext(w, h);
       if (context) {
-        context.drawImage(image, 0, 0);
-        resolve(context.getImageData(0, 0, canvas.width, canvas.height));
+        context.drawImage(image, 0, 0, w, h);
+        resolve(context.getImageData(0, 0, w, h));
       } else {
         reject();
       }
     };
     image.onerror = reject;
   });
-}
+};
 
 export const getImageData = (sourceCanvas: HTMLCanvasElement, rect: Rect, context: CanvasRenderingContext2D | null) => {
   const { x, y, width, height } = rect;
@@ -32,7 +44,7 @@ export const getImageData = (sourceCanvas: HTMLCanvasElement, rect: Rect, contex
   return context?.getImageData(0, 0, width, height);
 };
 
-export function getImageBase64String(sourceCanvas: HTMLCanvasElement, rect: Rect): string | undefined {
+export const getImageBase64String = (sourceCanvas: HTMLCanvasElement, rect: Rect) => {
   let imageBase64: string | undefined = undefined;
   const { x, y, width, height } = rect;
   const { canvas, context } = getCanvasAndContext(width, height);
@@ -41,9 +53,9 @@ export function getImageBase64String(sourceCanvas: HTMLCanvasElement, rect: Rect
     imageBase64 = canvas.toDataURL("image/png");
   }
   return imageBase64;
-}
+};
 
-export async function recognizeText(imageBase64String: string): Promise<string> {
+export const recognizeText = async (imageBase64String: string) => {
   const { data } = await Tesseract.recognize(imageBase64String, "eng");
   return data.text.trim();
-}
+};
