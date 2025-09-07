@@ -7,7 +7,9 @@ export const startAnimationLoop = (framePerSecond: number, callback: () => Promi
     if (!running && time - lastTime >= frameDuration) {
       lastTime = time;
       running = true;
-      await callback();
+      try {
+        await callback();
+      } catch (e) {}
       running = false;
     }
     handle = requestAnimationFrame(loop);
