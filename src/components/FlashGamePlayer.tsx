@@ -13,12 +13,14 @@ import { Rect } from "../services/Types";
 
 export const FlashGamePlayer = ({
   filePath,
+  threshold,
   statusEndImage,
   statusRect,
   scoreRect,
   onScoreChange
 }: {
   filePath: string;
+  threshold: number;
   statusEndImage: string;
   statusRect: Rect;
   scoreRect: Rect;
@@ -112,11 +114,10 @@ export const FlashGamePlayer = ({
             statusEndImageData.height
           );
 
-          if (diffRef.current > diff && diffRef.current - diff > 100 && diff === 0) {
+          if (diffRef.current > diff && diffRef.current - diff > threshold && diff < threshold) {
             const imageBase64String = getImageBase64String(playerCanvas, scoreRectRef.current);
             if (imageBase64String) {
               const text = await recognizeText(imageBase64String);
-              console.log(text);
               if (text.length > 0) {
                 const score = extractScore(text);
                 if (score !== null) {

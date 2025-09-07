@@ -15,6 +15,7 @@ export const Chart = () => {
     <div>
       <FlashGamePlayer
         filePath={filePath}
+        threshold={100}
         statusEndImage={statusEndImage}
         statusRect={{ x: 135, y: 0, width: 180, height: 26 }}
         scoreRect={{ x: 320, y: 0, width: 200, height: 30 }}
@@ -25,7 +26,7 @@ export const Chart = () => {
         <Button
           variant="contained"
           onClick={() => {
-            setFilePath("/yakijuju.swf");
+            setFilePath("yakijuju.swf");
           }}
         >
           Start Game
