@@ -14,36 +14,36 @@ import { Rect } from "../services/Types";
 export const FlashGamePlayer = ({
   filePath,
   threshold,
-  statusEndImage,
-  statusRect,
+  progressEndImage,
+  progressRect,
   scoreRect,
   onScoreChange
 }: {
   filePath: string;
   threshold: number;
-  statusEndImage: string;
-  statusRect: Rect;
+  progressEndImage: string;
+  progressRect: Rect;
   scoreRect: Rect;
   onScoreChange: (score: number) => void;
 }) => {
   const [playerCanvas, setPlayerCanvas] = useState<HTMLCanvasElement>();
-  const [statusEndImageData, setStatusEndImageData] = useState<ImageData>();
+  const [progressEndImageData, setProgressEndImageData] = useState<ImageData>();
 
-  const statusRectRef = useRef(scaleRect(statusRect));
+  const progressRectRef = useRef(scaleRect(progressRect));
   const scoreRectRef = useRef(scaleRect(scoreRect));
 
   const divRef = useRef<HTMLDivElement>(null);
   const diffRef = useRef<number>(Number.MAX_VALUE);
 
-  const statusImgRef = useRef<HTMLImageElement>(null);
+  const progressImgRef = useRef<HTMLImageElement>(null);
   const resultImgRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     const load = async () => {
-      setStatusEndImageData(await loadImageData(statusEndImage));
+      setProgressEndImageData(await loadImageData(progressEndImage));
     };
     load();
-  }, [statusEndImage]);
+  }, [progressEndImage]);
 
   useEffect(() => {
     const script = document.createElement("script");
@@ -81,11 +81,12 @@ export const FlashGamePlayer = ({
   }, [filePath]);
 
   useEffect(() => {
-    if (!playerCanvas || !statusEndImageData) return;
+    if (!playerCanvas || !progressEndImageData) return;
 
-    const { width, height } = statusRectRef.current;
+    const { width, height } = progressRectRef.current;
     const { canvas, context } = getCanvasAndContext(width, height);
-    const output = new Uint8ClampedArray(statusEndImageData.width * statusEndImageData.height * 4);
+
+    const output = new Uint8ClampedArray(progressEndImageData.width * progressEndImageData.height * 4);
 
     let lastTime = 0;
     const fps = 30;
@@ -94,33 +95,38 @@ export const FlashGamePlayer = ({
     let handle: number;
 
     const extractScore = (text: string) => {
-      return parseInt(text.toLowerCase().replace("score:", "").replace("sc0re:", "").replace(/o/g, "0").trim());
+      const score = parseInt(text.toLowerCase().replace("score:", "").replace("sc0re:", "").replace(/o/g, "0").trim());
+      return isNaN(score) ? undefined : score;
     };
 
     const captureFrame = async (time: number) => {
       if (time - lastTime >= frameDuration) {
         lastTime = time;
 
-        let imageData = getImageData(playerCanvas, statusRectRef.current, context);
-        if (imageData) {
-          imageData = resizeImageData(imageData, statusEndImageData.width, statusEndImageData.height);
+        let progressImageData = getImageData(playerCanvas, progressRectRef.current, context);
+        if (progressImageData) {
+          progressImageData = resizeImageData(
+            progressImageData,
+            progressEndImageData.width,
+            progressEndImageData.height
+          );
         }
-        if (imageData) {
+        if (progressImageData) {
           const diff = pixelmatch(
-            imageData.data,
-            statusEndImageData.data,
+            progressImageData.data,
+            progressEndImageData.data,
             output,
-            statusEndImageData.width,
-            statusEndImageData.height
+            progressEndImageData.width,
+            progressEndImageData.height
           );
 
-          if (diffRef.current > diff && diffRef.current - diff > threshold && diff < threshold) {
+          if (Math.abs(diffRef.current - diff) > threshold) {
             const imageBase64String = getImageBase64String(playerCanvas, scoreRectRef.current);
             if (imageBase64String) {
               const text = await recognizeText(imageBase64String);
               if (text.length > 0) {
                 const score = extractScore(text);
-                if (score !== null) {
+                if (score !== undefined) {
                   onScoreChange(score);
                 }
               }
@@ -130,8 +136,8 @@ export const FlashGamePlayer = ({
             }
           }
 
-          if (statusImgRef.current) {
-            statusImgRef.current.src = canvas.toDataURL("image/png");
+          if (progressImgRef.current) {
+            progressImgRef.current.src = canvas.toDataURL("image/png");
           }
 
           diffRef.current = diff;
@@ -144,13 +150,13 @@ export const FlashGamePlayer = ({
     handle = requestAnimationFrame(captureFrame);
 
     return () => cancelAnimationFrame(handle);
-  }, [playerCanvas, statusEndImageData, onScoreChange]);
+  }, [playerCanvas, threshold, progressEndImageData, onScoreChange]);
 
   return (
     <>
       <div ref={divRef}></div>
-      {/* <img ref={statusImgRef} alt="" />
-      <img alt="" src={statusEndImage} />
+      {/* <img ref={progressImgRef} alt="" />
+      <img alt="" src={progressEndImage} />
       <img ref={resultImgRef} alt="" /> */}
     </>
   );
