@@ -1,12 +1,12 @@
 import { Stack, Typography } from "@mui/material";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { FlashGamePlayer } from "../../components/FlashGamePlayer";
 import statusEndImage from "./End.png";
 import { TextInputForm } from "../../components/TextInputForm";
 import { useGame } from "./useGame";
 
 export const ComponentPage = () => {
-  const [score, setScore] = useState<number>(0);
+  const scoreRef = useRef(0);
 
   const { name, filePath, scores, startGame, addScore } = useGame();
 
@@ -39,17 +39,13 @@ export const ComponentPage = () => {
           return isNaN(score) ? undefined : score;
         }}
         onScoreChange={(newScore) => {
-          if (newScore > score) {
-            console.log("update score", score, newScore);
-            setScore(newScore);
+          if (newScore > scoreRef.current) {
+            console.log("update score", scoreRef.current, newScore);
             addScore(newScore);
+            scoreRef.current = newScore;
           }
         }}
       />
-
-      <Typography variant="h4">Score</Typography>
-      <Typography>{score}</Typography>
-
       <Typography variant="h4">Scoreboard</Typography>
       {Object.entries(scores)
         .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
