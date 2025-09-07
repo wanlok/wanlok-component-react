@@ -17,13 +17,16 @@ export const fetchSteamInfo = async (appId: string) => {
   return steamInfo;
 };
 
-export const extractSteamAppIds = (text: string): string[] => {
-  const regex = /\/app\/(\d+)/g;
-  const matches = text.match(regex) || [];
-  return matches
-    .map((str) => {
-      const idMatch = str.match(/\/app\/(\d+)/);
-      return idMatch ? idMatch[1] : "";
+export const extractSteamUrlStrings = (text: string): string[] => {
+  const regex = /https:\/\/store\.steampowered\.com\/[^\s]+/g;
+  return text.match(regex) || [];
+};
+
+const extractSteamAppIds = (urlStrings: string[]): string[] => {
+  return urlStrings
+    .map((urlString) => {
+      const match = urlString.match(/\/app\/(\d+)/);
+      return match ? match[1] : "";
     })
     .filter(Boolean);
 };
@@ -31,7 +34,7 @@ export const extractSteamAppIds = (text: string): string[] => {
 export const getSteamInfos = async (text: string) => {
   const steam: { [key: string]: SteamInfo } = {};
 
-  const appIds = extractSteamAppIds(text);
+  const appIds = extractSteamAppIds(extractSteamUrlStrings(text));
 
   const results = (
     await Promise.all(

@@ -23,7 +23,7 @@ export const Chart = () => {
         }}
         onScoreChange={(newScore) => {
           if (newScore > score) {
-            console.log("update score", newScore);
+            console.log("update score", score, newScore);
             setScore(newScore);
           }
         }}
