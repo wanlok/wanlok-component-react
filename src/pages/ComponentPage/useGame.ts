@@ -20,7 +20,7 @@ export const useGame = () => {
       }
     };
     fetchDocument(documentId);
-  }, [documentId]);
+  }, []);
 
   const startGame = (name: string) => {
     setName(name);
