@@ -1,5 +1,5 @@
 import { Stack, Typography } from "@mui/material";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { FlashGamePlayer } from "../../components/FlashGamePlayer";
 import statusEndImage from "./End.png";
 import { TextInputForm } from "../../components/TextInputForm";
