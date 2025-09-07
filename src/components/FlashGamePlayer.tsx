@@ -5,7 +5,9 @@ import {
   getImageBase64String,
   getImageData,
   loadImageData,
-  recognizeText
+  recognizeText,
+  resizeImageData,
+  scaleRect
 } from "../common/ImageUtils";
 import { Rect } from "../services/Types";
 
@@ -25,8 +27,8 @@ export const FlashGamePlayer = ({
   const [playerCanvas, setPlayerCanvas] = useState<HTMLCanvasElement>();
   const [statusEndImageData, setStatusEndImageData] = useState<ImageData>();
 
-  const [scaledStatusRect] = useState(statusRect);
-  const [scaledScoreRect] = useState(scoreRect);
+  const [scaledStatusRect, setScaledStatusRect] = useState(statusRect);
+  const [scaledScoreRect, setScaledScoreRect] = useState(scoreRect);
 
   const divRef = useRef<HTMLDivElement>(null);
   const diffRef = useRef<number>(Number.MAX_VALUE);
@@ -38,7 +40,6 @@ export const FlashGamePlayer = ({
     const load = async () => {
       setStatusEndImageData(await loadImageData(statusEndImage));
     };
-
     load();
   }, [statusEndImage]);
 
@@ -70,6 +71,8 @@ export const FlashGamePlayer = ({
       const canvas = shadow?.querySelector("canvas") as HTMLCanvasElement | null;
       if (canvas) {
         setPlayerCanvas(canvas);
+        setScaledStatusRect(scaleRect(statusRect));
+        setScaledScoreRect(scaleRect(scoreRect));
         clearInterval(intervalId);
       }
     }, 100);
@@ -82,7 +85,7 @@ export const FlashGamePlayer = ({
 
     const { width, height } = scaledStatusRect;
     const { canvas, context } = getCanvasAndContext(width, height);
-    const output = new Uint8ClampedArray(width * height * 4);
+    const output = new Uint8ClampedArray(statusEndImageData.width * statusEndImageData.height * 4);
 
     let lastTime = 0;
     const fps = 30;
@@ -91,23 +94,31 @@ export const FlashGamePlayer = ({
     let handle: number;
 
     const extractScore = (text: string) => {
-      const match = text.match(/\d+/);
-      return match ? parseInt(match[0], 10) : null;
+      return parseInt(text.toLowerCase().replace("score:", "").replace("sc0re:", "").replace(/o/g, "0").trim());
     };
 
     const captureFrame = async (time: number) => {
       if (time - lastTime >= frameDuration) {
         lastTime = time;
 
-        const imageData = getImageData(playerCanvas, scaledStatusRect, context);
-
+        let imageData = getImageData(playerCanvas, scaledStatusRect, context);
         if (imageData) {
-          const diff = pixelmatch(imageData.data, statusEndImageData.data, output, width, height);
+          imageData = resizeImageData(imageData, statusEndImageData.width, statusEndImageData.height);
+        }
+        if (imageData) {
+          const diff = pixelmatch(
+            imageData.data,
+            statusEndImageData.data,
+            output,
+            statusEndImageData.width,
+            statusEndImageData.height
+          );
 
           if (diffRef.current > diff && diffRef.current - diff > 100 && diff === 0) {
             const imageBase64String = getImageBase64String(playerCanvas, scaledScoreRect);
             if (imageBase64String) {
               const text = await recognizeText(imageBase64String);
+              console.log(text);
               if (text.length > 0) {
                 const score = extractScore(text);
                 if (score !== null) {

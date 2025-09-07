@@ -1,7 +1,7 @@
 import Tesseract from "tesseract.js";
 import { Rect } from "../services/Types";
 
-export const scaleRectForCanvas = (rect: Rect, canvas: HTMLCanvasElement) => {
+export const scaleRect = (rect: Rect) => {
   const dpr = window.devicePixelRatio || 1;
   return {
     x: rect.x * dpr,
@@ -19,23 +19,29 @@ export const getCanvasAndContext = (width: number, height: number) => {
   return { canvas, context };
 };
 
-export const loadImageData = (src: string, width?: number, height?: number): Promise<ImageData> => {
+export const loadImageData = (src: string): Promise<ImageData> => {
   return new Promise((resolve, reject) => {
     const image = new Image();
     image.src = src;
     image.onload = () => {
-      const w = width ?? image.width;
-      const h = height ?? image.height;
-      const { context } = getCanvasAndContext(w, h);
+      const { context } = getCanvasAndContext(image.width, image.height);
       if (context) {
-        context.drawImage(image, 0, 0, w, h);
-        resolve(context.getImageData(0, 0, w, h));
+        context.drawImage(image, 0, 0, image.width, image.height);
+        resolve(context.getImageData(0, 0, image.width, image.height));
       } else {
         reject();
       }
     };
     image.onerror = reject;
   });
+};
+
+export const resizeImageData = (source: ImageData, targetWidth: number, targetHeight: number) => {
+  const { context } = getCanvasAndContext(targetWidth, targetHeight);
+  const { canvas: sourceCanvas, context: sourceContext } = getCanvasAndContext(source.width, source.height);
+  sourceContext?.putImageData(source, 0, 0);
+  context?.drawImage(sourceCanvas, 0, 0, targetWidth, targetHeight);
+  return context?.getImageData(0, 0, targetWidth, targetHeight);
 };
 
 export const getImageData = (sourceCanvas: HTMLCanvasElement, rect: Rect, context: CanvasRenderingContext2D | null) => {
