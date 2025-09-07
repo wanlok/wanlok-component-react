@@ -10,6 +10,7 @@ import {
   scaleRect
 } from "../common/ImageUtils";
 import { Rect } from "../services/Types";
+import { startAnimationLoop } from "../common/AnimationUtils";
 
 export const FlashGamePlayer = ({
   filePath,
@@ -39,6 +40,8 @@ export const FlashGamePlayer = ({
 
   const progressImgRef = useRef<HTMLImageElement>(null);
   const resultImgRef = useRef<HTMLImageElement>(null);
+
+  const scoreRef = useRef<number>(0);
 
   useEffect(() => {
     const load = async () => {
@@ -90,65 +93,46 @@ export const FlashGamePlayer = ({
 
     const output = new Uint8ClampedArray(progressEndImageData.width * progressEndImageData.height * 4);
 
-    let lastTime = 0;
-    const fps = 30;
-    const frameDuration = 1000 / fps;
+    return startAnimationLoop(30, async () => {
+      let progressImageData = getImageData(playerCanvas, progressRectRef.current, context);
 
-    let handle: number;
-
-    const captureFrame = async (time: number) => {
-      if (time - lastTime >= frameDuration) {
-        lastTime = time;
-
-        let progressImageData = getImageData(playerCanvas, progressRectRef.current, context);
-
-        if (progressImageData) {
-          progressImageData = resizeImageData(
-            progressImageData,
-            progressEndImageData.width,
-            progressEndImageData.height
-          );
-        }
-
-        if (progressImageData) {
-          const diff = pixelmatch(
-            progressImageData.data,
-            progressEndImageData.data,
-            output,
-            progressEndImageData.width,
-            progressEndImageData.height
-          );
-
-          if (Math.abs(diffRef.current - diff) > threshold) {
-            const imageBase64String = getImageBase64String(playerCanvas, scoreRectRef.current);
-            if (imageBase64String) {
-              const text = await recognizeText(imageBase64String);
-              if (text.length > 0) {
-                const score = extractScore(text);
-                if (score !== undefined) {
-                  onScoreChange(score);
-                }
-              }
-              if (resultImgRef.current) {
-                resultImgRef.current.src = imageBase64String;
-              }
-            }
-          }
-
-          if (progressImgRef.current) {
-            progressImgRef.current.src = canvas.toDataURL("image/png");
-          }
-
-          diffRef.current = diff;
-        }
+      if (progressImageData) {
+        progressImageData = resizeImageData(progressImageData, progressEndImageData.width, progressEndImageData.height);
       }
 
-      handle = requestAnimationFrame(captureFrame);
-    };
+      if (progressImageData) {
+        const diff = pixelmatch(
+          progressImageData.data,
+          progressEndImageData.data,
+          output,
+          progressEndImageData.width,
+          progressEndImageData.height
+        );
 
-    handle = requestAnimationFrame(captureFrame);
+        if (Math.abs(diffRef.current - diff) > threshold) {
+          const imageBase64String = getImageBase64String(playerCanvas, scoreRectRef.current);
+          if (imageBase64String) {
+            const text = await recognizeText(imageBase64String);
+            if (text.length > 0) {
+              const score = extractScore(text);
+              if (score !== undefined && score > scoreRef.current) {
+                scoreRef.current = score;
+                onScoreChange(score);
+              }
+            }
+            if (resultImgRef.current) {
+              resultImgRef.current.src = imageBase64String;
+            }
+          }
+        }
 
-    return () => cancelAnimationFrame(handle);
+        if (progressImgRef.current) {
+          progressImgRef.current.src = canvas.toDataURL("image/png");
+        }
+
+        diffRef.current = diff;
+      }
+    });
   }, [playerCanvas, threshold, progressEndImageData, extractScore, onScoreChange]);
 
   return (
