@@ -32,8 +32,14 @@ export const useGame = () => {
       let scores: { [key: string]: number };
       const docRef = doc(db, collectionName, documentId);
       if (yakijujuDocument) {
-        scores = { ...yakijujuDocument.scores, [name]: score };
-        await updateDoc(docRef, { scores });
+        const previousScores = yakijujuDocument.scores;
+        const previousScore = previousScores[name];
+        if (previousScore && score > previousScore) {
+          scores = { ...yakijujuDocument.scores, [name]: score };
+          await updateDoc(docRef, { scores });
+        } else {
+          scores = previousScores;
+        }
       } else {
         scores = { [name]: score };
         await setDoc(docRef, { scores });
