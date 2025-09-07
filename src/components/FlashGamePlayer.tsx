@@ -40,21 +40,18 @@ export const FlashGamePlayer = ({
     };
 
     load();
+  }, [statusEndImage]);
 
-    const loadRuffleScript = () => {
-      const script = document.createElement("script");
-      script.src = "ruffle/ruffle.js";
-      script.async = true;
-      document.body.appendChild(script);
-      return script;
-    };
-
-    const script = loadRuffleScript();
+  useEffect(() => {
+    const script = document.createElement("script");
+    script.src = "ruffle/ruffle.js";
+    script.async = true;
+    document.body.appendChild(script);
 
     return () => {
       script.remove();
     };
-  }, [statusEndImage]);
+  }, []);
 
   useEffect(() => {
     if (!filePath || !window.RufflePlayer?.newest) return;
