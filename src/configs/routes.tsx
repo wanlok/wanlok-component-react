@@ -2,7 +2,7 @@ import { LayoutMenu } from "../components/LayoutMenu";
 import { Landing } from "../pages/landing";
 import { DiscussionPage } from "../pages/discussion";
 import { HongKongBuildingMap } from "../pages/hong-kong-building-map";
-import { Chart } from "../pages/chart";
+import { ComponentPage } from "../pages/ComponentPage";
 import { SnapshotPage } from "../pages/snapshot";
 import { PDFPage } from "../pages/pdf";
 import { CollectionPage } from "../pages/collection";
@@ -60,9 +60,9 @@ export const routes = [
       {
         icon: FolderIcon,
         icon_selected: FolderSelectedIcon,
-        name: "Chart",
-        path: "/chart",
-        element: <Chart />
+        name: "Components",
+        path: "/components",
+        element: <ComponentPage />
       },
       {
         icon: SnapshotIcon,

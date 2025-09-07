@@ -103,3 +103,7 @@ export const viewUrls = {
   youtube_regular: "https://www.youtube.com/watch?v=",
   youtube_shorts: "https://www.youtube.com/shorts/"
 };
+
+export interface YakijujuDocument {
+  scores: { [key: string]: number };
+}
