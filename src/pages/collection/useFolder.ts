@@ -208,7 +208,7 @@ export const useFolder = () => {
           return [folder.name, urls];
         })
       ).then((entries) => Object.fromEntries(entries));
-      download(JSON.stringify(map), getDateTimeString(new Date()));
+      download(JSON.stringify(map, null, 2), getDateTimeString(new Date()));
     }
   };
 
