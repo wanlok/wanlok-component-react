@@ -17,6 +17,7 @@ export const FlashGamePlayer = ({
   progressEndImage,
   progressRect,
   scoreRect,
+  extractScore,
   onScoreChange
 }: {
   filePath: string;
@@ -24,6 +25,7 @@ export const FlashGamePlayer = ({
   progressEndImage: string;
   progressRect: Rect;
   scoreRect: Rect;
+  extractScore: (text: string) => number | undefined;
   onScoreChange: (score: number) => void;
 }) => {
   const [playerCanvas, setPlayerCanvas] = useState<HTMLCanvasElement>();
@@ -94,16 +96,12 @@ export const FlashGamePlayer = ({
 
     let handle: number;
 
-    const extractScore = (text: string) => {
-      const score = parseInt(text.toLowerCase().replace("score:", "").replace("sc0re:", "").replace(/o/g, "0").trim());
-      return isNaN(score) ? undefined : score;
-    };
-
     const captureFrame = async (time: number) => {
       if (time - lastTime >= frameDuration) {
         lastTime = time;
 
         let progressImageData = getImageData(playerCanvas, progressRectRef.current, context);
+
         if (progressImageData) {
           progressImageData = resizeImageData(
             progressImageData,
@@ -111,6 +109,7 @@ export const FlashGamePlayer = ({
             progressEndImageData.height
           );
         }
+
         if (progressImageData) {
           const diff = pixelmatch(
             progressImageData.data,
@@ -150,7 +149,7 @@ export const FlashGamePlayer = ({
     handle = requestAnimationFrame(captureFrame);
 
     return () => cancelAnimationFrame(handle);
-  }, [playerCanvas, threshold, progressEndImageData, onScoreChange]);
+  }, [playerCanvas, threshold, progressEndImageData, extractScore, onScoreChange]);
 
   return (
     <>

@@ -11,10 +11,16 @@ export const Chart = () => {
     <div>
       <FlashGamePlayer
         filePath={filePath}
-        threshold={50}
+        threshold={100}
         progressEndImage={statusEndImage}
         progressRect={{ x: 135, y: 0, width: 180, height: 26 }}
         scoreRect={{ x: 320, y: 0, width: 200, height: 30 }}
+        extractScore={(text: string) => {
+          const score = parseInt(
+            text.toLowerCase().replace("score:", "").replace("sc0re:", "").replace(/o/g, "0").trim()
+          );
+          return isNaN(score) ? undefined : score;
+        }}
         onScoreChange={(newScore) => {
           if (newScore > score) {
             console.log("update score", newScore);
