@@ -19,10 +19,7 @@ export const getCountsByUrlStrings = (urlStrings: string[]): CollectionCounts =>
   const text = urlStrings.join("\n");
   const steamUrlStrings = extractSteamUrlStrings(text);
   const youTubeInfos = extractYouTubeInfos(text);
-  const hyperlinks = extractUrlStrings(
-    text,
-    [steamUrlStrings, youTubeInfos].every((list) => list.length === 0)
-  );
+  const hyperlinks = extractUrlStrings(text);
   return {
     charts: 0,
     files: 0,

@@ -22,7 +22,7 @@ export const extractSteamUrlStrings = (text: string): string[] => {
   return text.match(regex) || [];
 };
 
-const extractSteamAppIds = (urlStrings: string[]): string[] => {
+export const extractSteamAppIds = (urlStrings: string[]): string[] => {
   return urlStrings
     .map((urlString) => {
       const match = urlString.match(/\/app\/(\d+)/);

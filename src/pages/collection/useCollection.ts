@@ -43,7 +43,7 @@ export const useCollection = (
       const { charts } = getChartItems(text);
       const { steam } = await getSteamInfos(text);
       const { youtube_regular, youtube_shorts } = await getYouTubeRegularAndShortInfos(text);
-      const { hyperlinks } = await getHyperlinks(text, [charts, steam, youtube_regular, youtube_shorts]);
+      const { hyperlinks } = await getHyperlinks(text);
       const docRef = doc(db, collectionName, collectionId);
       let document;
       if (collectionDocument) {
