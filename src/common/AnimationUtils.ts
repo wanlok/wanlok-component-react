@@ -1,11 +1,14 @@
-export const startAnimationLoop = (framePerSecond: number, callback: () => void) => {
+export const startAnimationLoop = (framePerSecond: number, callback: () => Promise<void>) => {
   let handle: number;
   let lastTime = 0;
+  let running = false;
   const frameDuration = 1000 / framePerSecond;
-  const loop = (time: number) => {
-    if (time - lastTime >= frameDuration) {
+  const loop = async (time: number) => {
+    if (!running && time - lastTime >= frameDuration) {
       lastTime = time;
-      callback();
+      running = true;
+      await callback();
+      running = false;
     }
     handle = requestAnimationFrame(loop);
   };
