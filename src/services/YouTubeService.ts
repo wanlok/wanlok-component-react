@@ -11,40 +11,35 @@ export const fetchYouTubeOEmbed = async (urlString: string) => {
   return youTubeOEmbed;
 };
 
-export const extractYouTubeInfos = (text: string): { urlString: string; id: string; type: string }[] => {
-  const regex =
-    /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:(?:watch\?v=([\w-]{11}))|(?:embed\/([\w-]{11}))|(?:shorts\/([\w-]{11})))|youtu\.be\/([\w-]{11}))/g;
+const YOUTUBE_URL_REGEX =
+  /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:(?:watch\?v=([\w-]{11})(?:[^\s]*)?)|(?:embed\/([\w-]{11})(?:[^\s]*)?)|(?:shorts\/([\w-]{11})(?:[^\s]*)?))|youtu\.be\/([\w-]{11})(?:[^\s]*)?)/g;
 
-  const matches: { urlString: string; id: string; type: string }[] = [];
-  let match: RegExpExecArray | null;
+const SINGLE_URL_REGEX =
+  /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:(?:watch\?v=([\w-]{11}))|(?:embed\/([\w-]{11}))|(?:shorts\/([\w-]{11})))|youtu\.be\/([\w-]{11}))/;
 
-  while ((match = regex.exec(text)) !== null) {
-    const [urlString, watchId, embedId, shortsId, shareId] = match;
+export const extractYouTubeUrlStrings = (text: string): string[] => {
+  return text.match(YOUTUBE_URL_REGEX) ?? [];
+};
 
-    let id: string | undefined;
-    let type: string;
-
-    if (shortsId) {
-      id = shortsId;
-      type = "youtube_shorts";
-    } else {
-      id = watchId ?? embedId ?? shareId;
-      type = "youtube_regular";
-    }
-
-    if (id) {
-      matches.push({ urlString, id, type });
+export const extractYouTubeInfos = (urlStrings: string[]): { urlString: string; id: string; type: string }[] => {
+  const youTubeInfos: { urlString: string; id: string; type: string }[] = [];
+  for (const urlString of urlStrings) {
+    const match = urlString.match(SINGLE_URL_REGEX);
+    if (match) {
+      const [, watchId, embedId, shortsId, shareId] = match;
+      const id = shortsId ?? watchId ?? embedId ?? shareId ?? "";
+      const type = shortsId ? "youtube_shorts" : "youtube_regular";
+      youTubeInfos.push({ urlString, id, type });
     }
   }
-
-  return matches;
+  return youTubeInfos;
 };
 
 export const getYouTubeRegularAndShortInfos = async (text: string) => {
   const youtube_regular: { [key: string]: YouTubeOEmbed } = {};
   const youtube_shorts: { [key: string]: YouTubeOEmbed } = {};
 
-  const youTubeInfos = extractYouTubeInfos(text);
+  const youTubeInfos = extractYouTubeInfos(extractYouTubeUrlStrings(text));
 
   const results = (
     await Promise.all(

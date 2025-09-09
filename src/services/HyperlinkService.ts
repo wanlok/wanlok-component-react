@@ -1,6 +1,6 @@
-import { extractSteamUrlStrings } from "./SteamService";
 import { Hyperlink, serverUrl } from "./Types";
-import { extractYouTubeInfos } from "./YouTubeService";
+import { extractSteamUrlStrings } from "./SteamService";
+import { extractYouTubeUrlStrings } from "./YouTubeService";
 
 const submitHyperlinks = async (urls: string[]) => {
   const response = await fetch(`${serverUrl}/save-screenshot`, {
@@ -20,10 +20,7 @@ const submitHyperlinks = async (urls: string[]) => {
 };
 
 export const extractUrlStrings = (text: string): string[] => {
-  const exclusion = new Set([
-    ...extractSteamUrlStrings(text),
-    ...extractYouTubeInfos(text).map(({ urlString }) => urlString)
-  ]);
+  const exclusion = new Set([...extractSteamUrlStrings(text), ...extractYouTubeUrlStrings(text)]);
   const regex = /https?:\/\/[^\s"']+/g;
   const urlStrings = text.match(regex) ?? [];
   return urlStrings.filter((urlString) => !exclusion.has(urlString));
