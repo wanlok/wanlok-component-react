@@ -1,7 +1,6 @@
-import { extractUrlStrings } from "../services/HyperlinkService";
-import { extractSteamUrlStrings } from "../services/SteamService";
-import { CollectionCounts, CollectionDocument } from "../services/Types";
-import { extractYouTubeInfos, extractYouTubeUrlStrings } from "../services/YouTubeService";
+import { extractUrlStrings } from "./StringUtils";
+import { CollectionCounts, CollectionDocument, regex } from "../services/Types";
+import { extractYouTubeInfos } from "../services/YouTubeService";
 import { toList } from "./ListDictUtils";
 
 export const getCounts = (collectionDocument: CollectionDocument): CollectionCounts => {
@@ -17,9 +16,10 @@ export const getCounts = (collectionDocument: CollectionDocument): CollectionCou
 
 export const getCountsByUrlStrings = (urlStrings: string[]): CollectionCounts => {
   const text = urlStrings.join("\n");
-  const hyperlinks = extractUrlStrings(text);
-  const steamUrlStrings = extractSteamUrlStrings(text);
-  const youTubeInfos = extractYouTubeInfos(extractYouTubeUrlStrings(text));
+  const steamUrlStrings = extractUrlStrings(text, regex.STEAM);
+  const youTubeUrlStrings = extractUrlStrings(text, regex.YOUTUBE);
+  const hyperlinks = extractUrlStrings(text, regex.HYPERLINK, [...steamUrlStrings, ...youTubeUrlStrings]);
+  const youTubeInfos = extractYouTubeInfos(youTubeUrlStrings);
   return {
     charts: 0,
     files: 0,

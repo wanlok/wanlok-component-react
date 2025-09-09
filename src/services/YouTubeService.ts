@@ -1,4 +1,8 @@
-import { YouTubeOEmbed } from "./Types";
+import { extractUrlStrings } from "../common/StringUtils";
+import { regex, YouTubeOEmbed } from "./Types";
+
+const SINGLE_URL_REGEX =
+  /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:(?:watch\?v=([\w-]{11}))|(?:embed\/([\w-]{11}))|(?:shorts\/([\w-]{11})))|youtu\.be\/([\w-]{11}))/;
 
 export const fetchYouTubeOEmbed = async (urlString: string) => {
   let youTubeOEmbed: YouTubeOEmbed | undefined = undefined;
@@ -9,16 +13,6 @@ export const fetchYouTubeOEmbed = async (urlString: string) => {
     }
   } catch (e) {}
   return youTubeOEmbed;
-};
-
-const YOUTUBE_URL_REGEX =
-  /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:(?:watch\?v=([\w-]{11})(?:[^\s]*)?)|(?:embed\/([\w-]{11})(?:[^\s]*)?)|(?:shorts\/([\w-]{11})(?:[^\s]*)?))|youtu\.be\/([\w-]{11})(?:[^\s]*)?)/g;
-
-const SINGLE_URL_REGEX =
-  /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:(?:watch\?v=([\w-]{11}))|(?:embed\/([\w-]{11}))|(?:shorts\/([\w-]{11})))|youtu\.be\/([\w-]{11}))/;
-
-export const extractYouTubeUrlStrings = (text: string): string[] => {
-  return text.match(YOUTUBE_URL_REGEX) ?? [];
 };
 
 export const extractYouTubeInfos = (urlStrings: string[]): { urlString: string; id: string; type: string }[] => {
@@ -39,7 +33,7 @@ export const getYouTubeRegularAndShortInfos = async (text: string) => {
   const youtube_regular: { [key: string]: YouTubeOEmbed } = {};
   const youtube_shorts: { [key: string]: YouTubeOEmbed } = {};
 
-  const youTubeInfos = extractYouTubeInfos(extractYouTubeUrlStrings(text));
+  const youTubeInfos = extractYouTubeInfos(extractUrlStrings(text, regex.YOUTUBE));
 
   const results = (
     await Promise.all(

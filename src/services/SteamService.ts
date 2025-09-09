@@ -1,4 +1,5 @@
-import { SteamInfo } from "./Types";
+import { extractUrlStrings } from "../common/StringUtils";
+import { regex, SteamInfo } from "./Types";
 
 export const fetchSteamInfo = async (appId: string) => {
   let steamInfo: SteamInfo | undefined = undefined;
@@ -17,11 +18,6 @@ export const fetchSteamInfo = async (appId: string) => {
   return steamInfo;
 };
 
-export const extractSteamUrlStrings = (text: string): string[] => {
-  const regex = /https:\/\/store\.steampowered\.com\/[^\s]+/g;
-  return text.match(regex) || [];
-};
-
 export const extractSteamAppIds = (urlStrings: string[]): string[] => {
   return urlStrings
     .map((urlString) => {
@@ -34,7 +30,7 @@ export const extractSteamAppIds = (urlStrings: string[]): string[] => {
 export const getSteamInfos = async (text: string) => {
   const steam: { [key: string]: SteamInfo } = {};
 
-  const appIds = extractSteamAppIds(extractSteamUrlStrings(text));
+  const appIds = extractSteamAppIds(extractUrlStrings(text, regex.STEAM));
 
   const results = (
     await Promise.all(

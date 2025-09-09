@@ -104,6 +104,13 @@ export const viewUrls = {
   youtube_shorts: "https://www.youtube.com/shorts/"
 };
 
+export const regex = {
+  HYPERLINK: /https?:\/\/[^\s"']+/g,
+  STEAM: /https:\/\/store\.steampowered\.com\/[^\s]+/g,
+  YOUTUBE:
+    /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:(?:watch\?v=([\w-]{11})(?:[^\s]*)?)|(?:embed\/([\w-]{11})(?:[^\s]*)?)|(?:shorts\/([\w-]{11})(?:[^\s]*)?))|youtu\.be\/([\w-]{11})(?:[^\s]*)?)/g
+};
+
 export interface YakijujuDocument {
   scores: { [key: string]: number };
 }
