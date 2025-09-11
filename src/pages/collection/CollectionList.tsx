@@ -1,10 +1,11 @@
-import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Stack, useMediaQuery, useTheme } from "@mui/material";
 import { FileInfo, serverUrl, TextItem, viewUrls } from "../../services/Types";
 import { seperate } from "../../common/LayoutUtils";
 import { WChart } from "../../components/WChart";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
 import { getFileExtension } from "../../common/FileUtils";
 import { WCarousel } from "../../components/WCarousel";
+import { TextCard } from "../../components/TextCard";
 
 export const CollectionList = ({
   charts,
@@ -114,9 +115,16 @@ export const CollectionList = ({
         </Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, texts) }}>
           {texts.map(([id, { value }], i) => (
-            <Stack sx={{ position: "relative", width, aspectRatio: "1/1", backgroundColor: "#fff740" }}>
-              <Typography sx={{ p: 2 }}>{value}</Typography>
-            </Stack>
+            <TextCard
+              text={value}
+              width={width}
+              leftMost={i === 0}
+              rightMost={i === steam.length - 1}
+              scrollHorizontally={false}
+              onLeftButtonClick={() => onLeftButtonClick("texts", id)}
+              onRightButtonClick={() => onRightButtonClick("texts", id)}
+              onDeleteButtonClick={() => onDeleteButtonClick("texts", id)}
+            />
           ))}
         </Stack>
         <WCarousel
