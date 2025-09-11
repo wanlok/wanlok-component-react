@@ -1,5 +1,5 @@
-import { Stack, useMediaQuery, useTheme } from "@mui/material";
-import { FileInfo, serverUrl, viewUrls } from "../../services/Types";
+import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { FileInfo, serverUrl, TextItem, viewUrls } from "../../services/Types";
 import { seperate } from "../../common/LayoutUtils";
 import { WChart } from "../../components/WChart";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
@@ -11,6 +11,7 @@ export const CollectionList = ({
   files,
   hyperlinks,
   steam,
+  texts,
   youTubeRegularVideos,
   youTubeShortVideos,
   onLeftButtonClick,
@@ -21,6 +22,7 @@ export const CollectionList = ({
   files: [string, FileInfo][];
   hyperlinks: [string, string][];
   steam: [string, any][];
+  texts: [string, TextItem][];
   youTubeRegularVideos: [string, any][];
   youTubeShortVideos: [string, any][];
   onLeftButtonClick: (type: string, id: string) => void;
@@ -108,6 +110,13 @@ export const CollectionList = ({
               onRightButtonClick={() => onRightButtonClick("steam", appId)}
               onDeleteButtonClick={() => onDeleteButtonClick("steam", appId)}
             />
+          ))}
+        </Stack>
+        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, texts) }}>
+          {texts.map(([id, { value }], i) => (
+            <Stack sx={{ position: "relative", width, aspectRatio: "1/1", backgroundColor: "#fff740" }}>
+              <Typography sx={{ p: 2 }}>{value}</Typography>
+            </Stack>
           ))}
         </Stack>
         <WCarousel

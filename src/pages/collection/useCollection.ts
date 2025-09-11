@@ -178,6 +178,7 @@ export const useCollection = (
     files: toList(collectionDocument?.files, collectionSequences?.files),
     hyperlinks: toList(collectionDocument?.hyperlinks, collectionSequences?.hyperlinks),
     steam: toList(collectionDocument?.steam, collectionSequences?.steam),
+    texts: toList(collectionDocument?.texts, collectionSequences?.texts),
     youTubeRegularVideos: toList(collectionDocument?.youtube_regular, collectionSequences?.youtube_regular),
     youTubeShortVideos: toList(collectionDocument?.youtube_shorts, collectionSequences?.youtube_shorts),
     addCollectionItems,

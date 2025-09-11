@@ -98,6 +98,7 @@ export const CollectionPage = () => {
     files,
     hyperlinks,
     steam,
+    texts,
     youTubeRegularVideos,
     youTubeShortVideos,
     addCollectionItems,
@@ -176,6 +177,7 @@ export const CollectionPage = () => {
         files={files}
         hyperlinks={hyperlinks}
         steam={steam}
+        texts={texts}
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
         onLeftButtonClick={(type, id) => updateCollection(type, id, Direction.left)}
