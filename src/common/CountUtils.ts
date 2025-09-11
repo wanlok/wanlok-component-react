@@ -9,6 +9,7 @@ export const getCounts = (collectionDocument: CollectionDocument): CollectionCou
     files: toList(collectionDocument?.files).length,
     hyperlinks: toList(collectionDocument?.hyperlinks).length,
     steam: toList(collectionDocument?.steam).length,
+    texts: toList(collectionDocument?.texts).length,
     youtube_regular: toList(collectionDocument?.youtube_regular).length,
     youtube_shorts: toList(collectionDocument?.youtube_shorts).length
   };
@@ -25,6 +26,7 @@ export const getCountsByUrlStrings = (urlStrings: string[]): CollectionCounts =>
     files: 0,
     hyperlinks: hyperlinks.length,
     steam: steamUrlStrings.length,
+    texts: 0,
     youtube_regular: youTubeInfos.filter((info) => info.type === "youtube_regular").length,
     youtube_shorts: youTubeInfos.filter((info) => info.type === "youtube_shorts").length
   };

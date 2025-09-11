@@ -34,6 +34,10 @@ export interface SteamInfo {
   imageUrl: string;
 }
 
+export interface TextItem {
+  value: string;
+}
+
 export interface YouTubeOEmbed {
   title: string;
   author_name: string;
@@ -60,12 +64,13 @@ export interface CollectionDocument {
   files: { [key: string]: FileInfo };
   hyperlinks: { [key: string]: string };
   steam: { [key: string]: SteamInfo };
+  texts: { [key: string]: TextItem };
   youtube_regular: { [key: string]: YouTubeOEmbed };
   youtube_shorts: { [key: string]: YouTubeOEmbed };
 }
 
 export const isCollectionKey = (key: string): key is keyof CollectionDocument => {
-  return ["charts", "files", "hyperlinks", "steam", "youtube_regular", "youtube_shorts"].includes(key);
+  return ["charts", "files", "hyperlinks", "steam", "texts", "youtube_regular", "youtube_shorts"].includes(key);
 };
 
 export type CollectionCounts = {
@@ -77,6 +82,7 @@ export const emptyCollectionCounts: CollectionCounts = {
   files: 0,
   hyperlinks: 0,
   steam: 0,
+  texts: 0,
   youtube_regular: 0,
   youtube_shorts: 0
 };
@@ -90,6 +96,7 @@ export const emptyCollectionSequences: CollectionSequences = {
   files: [],
   hyperlinks: [],
   steam: [],
+  texts: [],
   youtube_regular: [],
   youtube_shorts: []
 };

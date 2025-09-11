@@ -16,6 +16,7 @@ import { getSteamInfos } from "../../services/SteamService";
 import { getYouTubeRegularAndShortInfos } from "../../services/YouTubeService";
 import { uploadAndGetFileInfos } from "../../services/ImageService";
 import { getHyperlinks } from "../../services/HyperlinkService";
+import { getTexts } from "../../services/TextService";
 import { getCounts } from "../../common/CountUtils";
 
 const collectionName = "collections";
@@ -44,6 +45,7 @@ export const useCollection = (
       const { steam } = await getSteamInfos(text);
       const { youtube_regular, youtube_shorts } = await getYouTubeRegularAndShortInfos(text);
       const { hyperlinks } = await getHyperlinks(text);
+      const { texts } = await getTexts(text);
       const docRef = doc(db, collectionName, collectionId);
       let document;
       if (collectionDocument) {
@@ -53,12 +55,13 @@ export const useCollection = (
           files: { ...collectionDocument.files },
           hyperlinks: { ...collectionDocument.hyperlinks, ...hyperlinks },
           steam: { ...collectionDocument.steam, ...steam },
+          texts: { ...collectionDocument.texts, ...texts },
           youtube_regular: { ...collectionDocument.youtube_regular, ...youtube_regular },
           youtube_shorts: { ...collectionDocument.youtube_shorts, ...youtube_shorts }
         };
         await updateDoc(docRef, document);
       } else {
-        document = { charts, files: {}, hyperlinks, steam, youtube_regular, youtube_shorts };
+        document = { charts, files: {}, hyperlinks, steam, texts, youtube_regular, youtube_shorts };
         await setDoc(docRef, document);
       }
       setCollectionDocument(document);
@@ -80,7 +83,15 @@ export const useCollection = (
         };
         await updateDoc(docRef, document);
       } else {
-        document = { charts: {}, files: fileInfos, hyperlinks: {}, steam: {}, youtube_regular: {}, youtube_shorts: {} };
+        document = {
+          charts: {},
+          files: fileInfos,
+          hyperlinks: {},
+          steam: {},
+          texts: {},
+          youtube_regular: {},
+          youtube_shorts: {}
+        };
         await setDoc(docRef, document);
       }
       setCollectionDocument(document);
