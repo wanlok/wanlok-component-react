@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Divider, Stack, Typography } from "@mui/material";
 import { useCollection } from "./useCollection";
 import { TextInputForm } from "../../components/TextInputForm";
 import { WCardList } from "../../components/WCardList";
@@ -110,8 +110,6 @@ export const CollectionPage = () => {
     deleteCollectionItem
   } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolderSequences);
   const [panelOpened, setPanelOpened] = useState(false);
-  const { breakpoints } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("md"));
   return (
     <LayoutPanel
       panelOpened={panelOpened}
