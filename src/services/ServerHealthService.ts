@@ -10,5 +10,11 @@ export const fetchServerHealth = async () => {
 };
 
 export const getServerHealth = async () => {
-  return await fetchServerHealth();
+  let serverHealth;
+  try {
+    serverHealth = await fetchServerHealth();
+  } catch (e) {
+    serverHealth = undefined;
+  }
+  return serverHealth;
 };
