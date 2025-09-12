@@ -27,14 +27,19 @@ export const TextCard = ({
     <Stack
       sx={{
         position: "relative",
-        width,
-        aspectRatio: "16/9",
-        backgroundColor: "#fff740",
-        alignItems: "center",
-        justifyContent: "center"
+        width
       }}
     >
-      <Typography sx={{ p: 2 }}>{text}</Typography>
+      <Stack
+        sx={{
+          aspectRatio: "16/9",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "#FFDE21"
+        }}
+      >
+        <Typography sx={{ p: 2 }}>{text}</Typography>
+      </Stack>
       {controlGroupState === 1 && (
         <ControlGroup
           direction={Direction.right}
