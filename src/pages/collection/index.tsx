@@ -55,9 +55,7 @@ const FolderRow = ({
         sx={{ width: "24px", height: "24px" }}
       />
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
-        <Typography variant="body1" sx={folder === selectedFolder ? { fontWeight: 800 } : {}}>
-          {folder.name}
-        </Typography>
+        <Typography variant="body1">{folder.name}</Typography>
         {panelOpened === undefined && Object.values(folder.counts).some((count) => count > 0) && (
           <Stack sx={{ flexDirection: "row", gap: 1 }}>
             {hyperlinks > 0 && <WChip icon={HyperlinkIcon} label={`${hyperlinks}`} />}
@@ -121,7 +119,7 @@ export const CollectionPage = () => {
           <CollectionHeader
             top={
               <>
-                <Typography variant="body1" sx={{ p: 1, fontWeight: 800, flex: 1 }}>
+                <Typography variant="body1" sx={{ p: 1, flex: 1 }}>
                   Collections
                 </Typography>
                 <WChip icon={FolderSelectedIcon} label={`${folders.length}`} />
@@ -177,7 +175,7 @@ export const CollectionPage = () => {
       <CollectionHeader
         top={
           <>
-            <Typography variant="body1" sx={{ p: 1, fontWeight: 800 }}>
+            <Typography variant="body1" sx={{ p: 1 }}>
               {selectedFolder ? selectedFolder.name : ""}
             </Typography>
           </>
