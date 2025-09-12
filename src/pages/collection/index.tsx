@@ -22,6 +22,7 @@ import RedCircleIcon from "../../assets/images/icons/red_circle.png";
 import { WChip } from "../../components/WChip";
 import { Direction, Folder } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
+import { CollectionHeader } from "../../components/CollectionHeader";
 
 const FolderRow = ({
   folder,
@@ -54,7 +55,9 @@ const FolderRow = ({
         sx={{ width: "24px", height: "24px" }}
       />
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
-        <Typography sx={{ fontSize: 16 }}>{folder.name}</Typography>
+        <Typography variant="body1" sx={folder === selectedFolder ? { fontWeight: 800 } : {}}>
+          {folder.name}
+        </Typography>
         {panelOpened === undefined && Object.values(folder.counts).some((count) => count > 0) && (
           <Stack sx={{ flexDirection: "row", gap: 1 }}>
             {hyperlinks > 0 && <WChip icon={HyperlinkIcon} label={`${hyperlinks}`} />}
@@ -116,33 +119,33 @@ export const CollectionPage = () => {
       width={300}
       panel={
         <>
-          <Stack sx={mobile ? {} : { height: 100 }}>
-            {!mobile && (
-              <Stack sx={{ flex: 1, justifyContent: "center", px: 1, backgroundColor: "background.default" }}>
-                <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-                  <Typography sx={{ flex: 1, fontSize: 16, p: 1 }}>Collections</Typography>
-                  <WChip icon={FolderSelectedIcon} label={`${folders.length}`} />
-                  <WChip icon={serverHealth ? GreenCircleIcon : RedCircleIcon} label={"Server"} />
-                </Stack>
-              </Stack>
-            )}
-            <Stack
-              sx={{ flexDirection: "row", alignItems: "center", gap: "1px", backgroundColor: "background.default" }}
-            >
-              <WIconButton
-                icon={UploadIcon}
-                iconSize={18}
-                onClick={uploadFolders}
-                sx={{ backgroundColor: "primary.main" }}
-              />
-              <WIconButton
-                icon={DownloadIcon}
-                iconSize={18}
-                onClick={downloadFolders}
-                sx={{ backgroundColor: "primary.main" }}
-              />
-            </Stack>
-          </Stack>
+          <CollectionHeader
+            top={
+              <>
+                <Typography variant="body1" sx={{ p: 1, fontWeight: 800, flex: 1 }}>
+                  Collections
+                </Typography>
+                <WChip icon={FolderSelectedIcon} label={`${folders.length}`} />
+                <WChip icon={serverHealth ? GreenCircleIcon : RedCircleIcon} label={"Server"} />
+              </>
+            }
+            bottom={
+              <>
+                <WIconButton
+                  icon={UploadIcon}
+                  iconSize={18}
+                  onClick={uploadFolders}
+                  sx={{ backgroundColor: "primary.main" }}
+                />
+                <WIconButton
+                  icon={DownloadIcon}
+                  iconSize={18}
+                  onClick={downloadFolders}
+                  sx={{ backgroundColor: "primary.main" }}
+                />
+              </>
+            }
+          />
           <WCardList
             items={folders}
             renderContent={(folder) => <FolderRow folder={folder} selectedFolder={selectedFolder} />}
@@ -172,6 +175,20 @@ export const CollectionPage = () => {
         )
       }
     >
+      <CollectionHeader
+        top={
+          <>
+            <Typography variant="body1" sx={{ p: 1, fontWeight: 800 }}>
+              {selectedFolder ? selectedFolder.name : "No Folder Selected"}
+            </Typography>
+          </>
+        }
+        bottom={
+          <>
+            <WIconButton icon={""} iconSize={18} onClick={() => {}} sx={{ backgroundColor: "primary.main" }} />
+          </>
+        }
+      />
       <CollectionList
         charts={charts}
         files={files}

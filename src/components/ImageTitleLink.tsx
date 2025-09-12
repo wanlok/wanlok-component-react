@@ -70,7 +70,7 @@ export const ImageTitleLink = ({
         {title && (
           <Stack sx={{ p: 2 }}>
             <Typography
-              variant="body2"
+              variant="body1"
               sx={{
                 display: "-webkit-box",
                 WebkitLineClamp: 2,
@@ -78,7 +78,6 @@ export const ImageTitleLink = ({
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 color: "common.white",
-                fontSize: 16,
                 wordBreak: title.indexOf(" ") > 0 ? undefined : "break-all"
               }}
             >
