@@ -24,21 +24,9 @@ export const TextCard = ({
   onDeleteButtonClick: () => void;
 }) => {
   return (
-    <Stack
-      sx={{
-        position: "relative",
-        width
-      }}
-    >
-      <Stack
-        sx={{
-          aspectRatio: "4/3",
-          alignItems: "center",
-          justifyContent: "center",
-          backgroundColor: "#FFDE21"
-        }}
-      >
-        <Typography sx={{ p: 2 }}>{text}</Typography>
+    <Stack sx={{ position: "relative", width }}>
+      <Stack sx={{ aspectRatio: "4/3", backgroundColor: "#FFDE21" }}>
+        <Typography sx={{ p: 2, whiteSpace: "pre-wrap" }}>{text}</Typography>
       </Stack>
       {controlGroupState === 1 && (
         <ControlGroup
