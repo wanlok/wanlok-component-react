@@ -32,7 +32,7 @@ export const TextCard = ({
     >
       <Stack
         sx={{
-          aspectRatio: "16/9",
+          aspectRatio: "4/3",
           alignItems: "center",
           justifyContent: "center",
           backgroundColor: "#FFDE21"
