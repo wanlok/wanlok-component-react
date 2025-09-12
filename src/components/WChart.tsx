@@ -8,7 +8,7 @@ export const WChart = ({
   width,
   leftMost = false,
   rightMost = false,
-  scrollHorizontally = false,
+  scrollHorizontally,
   onLeftButtonClick,
   onRightButtonClick,
   onDeleteButtonClick
@@ -17,7 +17,7 @@ export const WChart = ({
   width: string;
   leftMost?: boolean;
   rightMost?: boolean;
-  scrollHorizontally?: boolean;
+  scrollHorizontally: boolean;
   onLeftButtonClick: () => void;
   onRightButtonClick: () => void;
   onDeleteButtonClick: () => void;
@@ -26,7 +26,7 @@ export const WChart = ({
     <Stack sx={{ position: "relative", width, backgroundColor: "#EEEEEE" }}>
       <LineChart xAxis={[{ data: chartItem.x }]} series={[{ data: chartItem.y }]} height={300} />
       <ControlGroup
-        direction={Direction.left}
+        direction={Direction.right}
         scrollHorizontally={scrollHorizontally}
         onDeleteButtonClick={onDeleteButtonClick}
       />

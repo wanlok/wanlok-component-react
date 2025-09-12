@@ -14,7 +14,8 @@ export const ImageTitleLink = ({
   aspectRatio,
   leftMost = false,
   rightMost = false,
-  scrollHorizontally = false,
+  scrollHorizontally,
+  controlGroupState,
   onLeftButtonClick,
   onRightButtonClick,
   onDeleteButtonClick
@@ -29,7 +30,8 @@ export const ImageTitleLink = ({
   aspectRatio?: string;
   leftMost?: boolean;
   rightMost?: boolean;
-  scrollHorizontally?: boolean;
+  scrollHorizontally: boolean;
+  controlGroupState: number;
   onLeftButtonClick: () => void;
   onRightButtonClick: () => void;
   onDeleteButtonClick: () => void;
@@ -86,17 +88,21 @@ export const ImageTitleLink = ({
           </Stack>
         )}
       </Link>
-      <ControlGroup
-        direction={Direction.left}
-        scrollHorizontally={scrollHorizontally}
-        onDeleteButtonClick={onDeleteButtonClick}
-      />
-      <ControlGroup
-        direction={Direction.right}
-        scrollHorizontally={scrollHorizontally}
-        onLeftButtonClick={leftMost ? undefined : onLeftButtonClick}
-        onRightButtonClick={rightMost ? undefined : onRightButtonClick}
-      />
+      {controlGroupState === 1 && (
+        <ControlGroup
+          direction={Direction.right}
+          scrollHorizontally={scrollHorizontally}
+          onDeleteButtonClick={onDeleteButtonClick}
+        />
+      )}
+      {controlGroupState === 2 && (
+        <ControlGroup
+          direction={Direction.right}
+          scrollHorizontally={scrollHorizontally}
+          onLeftButtonClick={leftMost ? undefined : onLeftButtonClick}
+          onRightButtonClick={rightMost ? undefined : onRightButtonClick}
+        />
+      )}
     </Stack>
   );
 };

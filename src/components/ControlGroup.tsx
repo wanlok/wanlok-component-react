@@ -9,13 +9,13 @@ import { Direction } from "../services/Types";
 
 export const ControlGroup = ({
   direction,
-  scrollHorizontally = false,
+  scrollHorizontally,
   onLeftButtonClick,
   onRightButtonClick,
   onDeleteButtonClick
 }: {
   direction: Direction;
-  scrollHorizontally?: boolean;
+  scrollHorizontally: boolean;
   onLeftButtonClick?: () => void;
   onRightButtonClick?: () => void;
   onDeleteButtonClick?: () => void;

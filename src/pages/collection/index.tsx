@@ -110,6 +110,7 @@ export const CollectionPage = () => {
     deleteCollectionItem
   } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolderSequences);
   const [panelOpened, setPanelOpened] = useState(false);
+  const [controlGroupState, setControlGroupState] = useState(0);
   return (
     <LayoutPanel
       panelOpened={panelOpened}
@@ -177,13 +178,30 @@ export const CollectionPage = () => {
         top={
           <>
             <Typography variant="body1" sx={{ p: 1, fontWeight: 800 }}>
-              {selectedFolder ? selectedFolder.name : "No Folder Selected"}
+              {selectedFolder ? selectedFolder.name : ""}
             </Typography>
           </>
         }
         bottom={
           <>
-            <WIconButton icon={""} iconSize={18} onClick={() => {}} sx={{ backgroundColor: "primary.main" }} />
+            <WIconButton
+              icon={""}
+              iconSize={18}
+              onClick={() => setControlGroupState(0)}
+              sx={{ backgroundColor: "primary.main" }}
+            />
+            <WIconButton
+              icon={""}
+              iconSize={18}
+              onClick={() => setControlGroupState(1)}
+              sx={{ backgroundColor: "primary.main" }}
+            />
+            <WIconButton
+              icon={""}
+              iconSize={18}
+              onClick={() => setControlGroupState(2)}
+              sx={{ backgroundColor: "primary.main" }}
+            />
           </>
         }
       />
@@ -195,6 +213,7 @@ export const CollectionPage = () => {
         texts={texts}
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
+        controlGroupState={controlGroupState}
         onLeftButtonClick={(type, id) => updateCollection(type, id, Direction.left)}
         onRightButtonClick={(type, id) => updateCollection(type, id, Direction.right)}
         onDeleteButtonClick={async (type, id) => {

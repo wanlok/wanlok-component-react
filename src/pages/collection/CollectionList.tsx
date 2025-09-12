@@ -15,6 +15,7 @@ export const CollectionList = ({
   texts,
   youTubeRegularVideos,
   youTubeShortVideos,
+  controlGroupState,
   onLeftButtonClick,
   onRightButtonClick,
   onDeleteButtonClick
@@ -26,6 +27,7 @@ export const CollectionList = ({
   texts: [string, TextItem][];
   youTubeRegularVideos: [string, any][];
   youTubeShortVideos: [string, any][];
+  controlGroupState: number;
   onLeftButtonClick: (type: string, id: string) => void;
   onRightButtonClick: (type: string, id: string) => void;
   onDeleteButtonClick: (type: string, id: string) => void;
@@ -69,6 +71,7 @@ export const CollectionList = ({
                 leftMost={i === 0}
                 rightMost={i === files.length - 1}
                 scrollHorizontally={false}
+                controlGroupState={controlGroupState}
                 onLeftButtonClick={() => onLeftButtonClick("files", id)}
                 onRightButtonClick={() => onRightButtonClick("files", id)}
                 onDeleteButtonClick={() => onDeleteButtonClick("files", id)}
@@ -89,6 +92,7 @@ export const CollectionList = ({
               leftMost={i === 0}
               rightMost={i === hyperlinks.length - 1}
               scrollHorizontally={false}
+              controlGroupState={controlGroupState}
               onLeftButtonClick={() => onLeftButtonClick("hyperlinks", url)}
               onRightButtonClick={() => onRightButtonClick("hyperlinks", url)}
               onDeleteButtonClick={() => onDeleteButtonClick("hyperlinks", url)}
@@ -107,6 +111,7 @@ export const CollectionList = ({
               leftMost={i === 0}
               rightMost={i === steam.length - 1}
               scrollHorizontally={false}
+              controlGroupState={controlGroupState}
               onLeftButtonClick={() => onLeftButtonClick("steam", appId)}
               onRightButtonClick={() => onRightButtonClick("steam", appId)}
               onDeleteButtonClick={() => onDeleteButtonClick("steam", appId)}
@@ -116,11 +121,13 @@ export const CollectionList = ({
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, texts) }}>
           {texts.map(([id, { value }], i) => (
             <TextCard
+              key={id}
               text={value}
               width={width}
               leftMost={i === 0}
-              rightMost={i === steam.length - 1}
+              rightMost={i === texts.length - 1}
               scrollHorizontally={false}
+              controlGroupState={controlGroupState}
               onLeftButtonClick={() => onLeftButtonClick("texts", id)}
               onRightButtonClick={() => onRightButtonClick("texts", id)}
               onDeleteButtonClick={() => onDeleteButtonClick("texts", id)}
@@ -140,8 +147,9 @@ export const CollectionList = ({
               width={mobile ? "50%" : `calc(${100 / numberOfComponentsPerSlide}% - 1px)`}
               aspectRatio="9/16"
               leftMost={i === 0 && j === 0}
-              scrollHorizontally={true}
               rightMost={i * numberOfComponentsPerSlide + j === youTubeShortVideos.length - 1}
+              scrollHorizontally={true}
+              controlGroupState={controlGroupState}
               onLeftButtonClick={() => onLeftButtonClick("youtube_shorts", id)}
               onRightButtonClick={() => onRightButtonClick("youtube_shorts", id)}
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
@@ -161,6 +169,7 @@ export const CollectionList = ({
               leftMost={i === 0}
               rightMost={i === youTubeRegularVideos.length - 1}
               scrollHorizontally={false}
+              controlGroupState={controlGroupState}
               onLeftButtonClick={() => onLeftButtonClick("youtube_regular", id)}
               onRightButtonClick={() => onRightButtonClick("youtube_regular", id)}
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}
