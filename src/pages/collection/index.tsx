@@ -1,4 +1,4 @@
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Box, Stack, Typography } from "@mui/material";
 import { useCollection } from "./useCollection";
 import { TextInputForm } from "../../components/TextInputForm";
 import { WCardList } from "../../components/WCardList";
@@ -9,7 +9,7 @@ import { WIconButton } from "../../components/WButton";
 import { WChip } from "../../components/WChip";
 import { Direction, Folder } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
-import { CollectionHeader } from "../../components/CollectionHeader";
+import { CollectionHeader, FolderCollectionHeader } from "./CollectionHeader";
 
 import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
@@ -21,12 +21,6 @@ import SteamIcon from "../../assets/images/icons/steam.png";
 import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import SendIcon from "../../assets/images/icons/send.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
-import DownloadIcon from "../../assets/images/icons/download.png";
-import GreenCircleIcon from "../../assets/images/icons/green_circle.png";
-import RedCircleIcon from "../../assets/images/icons/red_circle.png";
-import HiddenIcon from "../../assets/images/icons/hidden.png";
-import DeleteIcon from "../../assets/images/icons/delete.png";
-import LeftRightIcon from "../../assets/images/icons/left_right.png";
 
 const FolderRow = ({
   folder,
@@ -121,48 +115,13 @@ export const CollectionPage = () => {
       width={300}
       panel={
         <>
-          <CollectionHeader
-            top={
-              <>
-                <Typography variant="body1" sx={{ p: 1, flex: 1 }}>
-                  Collections
-                </Typography>
-                <WChip icon={FolderSelectedIcon} label={`${folders.length}`} />
-                <WChip icon={serverHealth ? GreenCircleIcon : RedCircleIcon} label={"Server"} />
-              </>
-            }
-            bottom={
-              <>
-                <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-                  <WIconButton
-                    icon={HiddenIcon}
-                    iconSize={24}
-                    onClick={() => setFolderControlGroupState(0)}
-                    sx={{ backgroundColor: "primary.main" }}
-                  />
-                  <WIconButton
-                    icon={DeleteIcon}
-                    iconSize={20}
-                    onClick={() => setFolderControlGroupState(1)}
-                    sx={{ backgroundColor: "primary.main" }}
-                  />
-                </Stack>
-                <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-                  <WIconButton
-                    icon={UploadIcon}
-                    iconSize={18}
-                    onClick={uploadFolders}
-                    sx={{ backgroundColor: "primary.main" }}
-                  />
-                  <WIconButton
-                    icon={DownloadIcon}
-                    iconSize={18}
-                    onClick={downloadFolders}
-                    sx={{ backgroundColor: "primary.main" }}
-                  />
-                </Stack>
-              </>
-            }
+          <FolderCollectionHeader
+            numberOfFolders={folders.length}
+            serverHealth={serverHealth}
+            onHiddenButtonClick={() => setFolderControlGroupState(0)}
+            onDeleteButtonClick={() => setFolderControlGroupState(1)}
+            onUploadButtonClick={uploadFolders}
+            onDownloadButtonClick={downloadFolders}
           />
           <WCardList
             items={folders}
@@ -194,49 +153,15 @@ export const CollectionPage = () => {
       }
     >
       <CollectionHeader
-        top={
-          <>
-            <Typography variant="body1" sx={{ p: 1 }}>
-              {selectedFolder ? selectedFolder.name : ""}
-            </Typography>
-          </>
-        }
-        bottom={
-          <>
-            <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-              <WIconButton
-                icon={HiddenIcon}
-                iconSize={24}
-                onClick={() => setControlGroupState(0)}
-                sx={{ backgroundColor: "primary.main" }}
-              />
-              <WIconButton
-                icon={DeleteIcon}
-                iconSize={20}
-                onClick={() => setControlGroupState(1)}
-                sx={{ backgroundColor: "primary.main" }}
-              />
-              <WIconButton
-                icon={LeftRightIcon}
-                iconSize={24}
-                onClick={() => setControlGroupState(2)}
-                sx={{ backgroundColor: "primary.main" }}
-              />
-            </Stack>
-            <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-              <WIconButton
-                icon={DownloadIcon}
-                iconSize={18}
-                onClick={() => {
-                  if (selectedFolder) {
-                    downloadFolder(selectedFolder);
-                  }
-                }}
-                sx={{ backgroundColor: "primary.main" }}
-              />
-            </Stack>
-          </>
-        }
+        folder={selectedFolder}
+        onHiddenButtonClick={() => setControlGroupState(0)}
+        onDeleteButtonClick={() => setControlGroupState(1)}
+        onLeftRightButtonClick={() => setControlGroupState(2)}
+        onDownloadButtonClick={() => {
+          if (selectedFolder) {
+            downloadFolder(selectedFolder);
+          }
+        }}
       />
       <CollectionList
         charts={charts}
