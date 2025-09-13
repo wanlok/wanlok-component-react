@@ -84,8 +84,9 @@ export const CollectionPage = () => {
     folders,
     selectedFolder,
     addFolder,
-    updateFolderSequences,
     updateFolderCounts,
+    updateFolderSequences,
+    resetFolderSequences,
     deleteFolder,
     openFolder,
     uploadFolders,
@@ -157,6 +158,7 @@ export const CollectionPage = () => {
         onHiddenButtonClick={() => setControlGroupState(0)}
         onDeleteButtonClick={() => setControlGroupState(1)}
         onLeftRightButtonClick={() => setControlGroupState(2)}
+        onResetButtonClick={resetFolderSequences}
         onDownloadButtonClick={() => {
           if (selectedFolder) {
             downloadFolder(selectedFolder);

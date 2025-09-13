@@ -3,6 +3,7 @@ import { ReactNode } from "react";
 import { WChip } from "../../components/WChip";
 
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
+import ResetIcon from "../../assets/images/icons/reset.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import GreenCircleIcon from "../../assets/images/icons/green_circle.png";
@@ -95,12 +96,14 @@ export const CollectionHeader = ({
   onHiddenButtonClick,
   onDeleteButtonClick,
   onLeftRightButtonClick,
+  onResetButtonClick,
   onDownloadButtonClick
 }: {
   folder: Folder | undefined;
   onHiddenButtonClick: () => void;
   onDeleteButtonClick: () => void;
   onLeftRightButtonClick: () => void;
+  onResetButtonClick: () => void;
   onDownloadButtonClick: () => void;
 }) => {
   return (
@@ -135,6 +138,12 @@ export const CollectionHeader = ({
             />
           </Stack>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+            <WIconButton
+              icon={ResetIcon}
+              iconSize={20}
+              onClick={onResetButtonClick}
+              sx={{ backgroundColor: "primary.main" }}
+            />
             <WIconButton
               icon={DownloadIcon}
               iconSize={18}

@@ -132,6 +132,22 @@ export const useFolder = () => {
     }
   };
 
+  const resetFolderSequences = async () => {
+    if (selectedFolder) {
+      const sorted = Object.keys(selectedFolder.sequences).some(
+        (key) => isCollectionKey(key) && selectedFolder.sequences[key].length > 0
+      );
+      if (sorted) {
+        console.log("HELLO WORLD");
+        await updateFolderDocument({
+          name: selectedFolder.name,
+          counts: selectedFolder.counts,
+          sequences: emptyCollectionSequences
+        });
+      }
+    }
+  };
+
   const deleteFolder = async (folder: Folder) => {
     if (folderDocument) {
       const folders = folderDocument.folders.filter((f) => f.name !== folder.name);
@@ -219,6 +235,7 @@ export const useFolder = () => {
     addFolder,
     updateFolderCounts,
     updateFolderSequences,
+    resetFolderSequences,
     deleteFolder,
     openFolder,
     uploadFolders,
