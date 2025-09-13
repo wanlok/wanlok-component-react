@@ -6,6 +6,11 @@ import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { WIconButton } from "../../components/WButton";
+import { WChip } from "../../components/WChip";
+import { Direction, Folder } from "../../services/Types";
+import { CollectionList } from "./CollectionList";
+import { CollectionHeader } from "../../components/CollectionHeader";
+
 import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
@@ -19,10 +24,9 @@ import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import GreenCircleIcon from "../../assets/images/icons/green_circle.png";
 import RedCircleIcon from "../../assets/images/icons/red_circle.png";
-import { WChip } from "../../components/WChip";
-import { Direction, Folder } from "../../services/Types";
-import { CollectionList } from "./CollectionList";
-import { CollectionHeader } from "../../components/CollectionHeader";
+import HiddenIcon from "../../assets/images/icons/hidden.png";
+import DeleteIcon from "../../assets/images/icons/delete.png";
+import LeftRightIcon from "../../assets/images/icons/left_right.png";
 
 const FolderRow = ({
   folder,
@@ -183,20 +187,20 @@ export const CollectionPage = () => {
         bottom={
           <>
             <WIconButton
-              icon={""}
-              iconSize={18}
+              icon={HiddenIcon}
+              iconSize={24}
               onClick={() => setControlGroupState(0)}
               sx={{ backgroundColor: "primary.main" }}
             />
             <WIconButton
-              icon={""}
-              iconSize={18}
+              icon={DeleteIcon}
+              iconSize={20}
               onClick={() => setControlGroupState(1)}
               sx={{ backgroundColor: "primary.main" }}
             />
             <WIconButton
-              icon={""}
-              iconSize={18}
+              icon={LeftRightIcon}
+              iconSize={24}
               onClick={() => setControlGroupState(2)}
               sx={{ backgroundColor: "primary.main" }}
             />
