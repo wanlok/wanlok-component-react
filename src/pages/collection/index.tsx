@@ -112,6 +112,7 @@ export const CollectionPage = () => {
     deleteCollectionItem
   } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolderSequences);
   const [panelOpened, setPanelOpened] = useState(false);
+  const [folderControlGroupState, setFolderControlGroupState] = useState(0);
   const [controlGroupState, setControlGroupState] = useState(0);
   return (
     <LayoutPanel
@@ -132,18 +133,34 @@ export const CollectionPage = () => {
             }
             bottom={
               <>
-                <WIconButton
-                  icon={UploadIcon}
-                  iconSize={18}
-                  onClick={uploadFolders}
-                  sx={{ backgroundColor: "primary.main" }}
-                />
-                <WIconButton
-                  icon={DownloadIcon}
-                  iconSize={18}
-                  onClick={downloadFolders}
-                  sx={{ backgroundColor: "primary.main" }}
-                />
+                <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+                  <WIconButton
+                    icon={HiddenIcon}
+                    iconSize={24}
+                    onClick={() => setFolderControlGroupState(0)}
+                    sx={{ backgroundColor: "primary.main" }}
+                  />
+                  <WIconButton
+                    icon={DeleteIcon}
+                    iconSize={20}
+                    onClick={() => setFolderControlGroupState(1)}
+                    sx={{ backgroundColor: "primary.main" }}
+                  />
+                </Stack>
+                <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+                  <WIconButton
+                    icon={UploadIcon}
+                    iconSize={18}
+                    onClick={uploadFolders}
+                    sx={{ backgroundColor: "primary.main" }}
+                  />
+                  <WIconButton
+                    icon={DownloadIcon}
+                    iconSize={18}
+                    onClick={downloadFolders}
+                    sx={{ backgroundColor: "primary.main" }}
+                  />
+                </Stack>
               </>
             }
           />
@@ -156,9 +173,9 @@ export const CollectionPage = () => {
             }}
             renderRightContent={(folder) => (
               <Stack sx={{}}>
-                <WIconButton icon={CrossIcon} iconSize={16} onClick={() => deleteFolder(folder)} />
-                <Divider />
-                <WIconButton icon={DownloadIcon} iconSize={18} onClick={() => downloadFolder(folder)} />
+                {folderControlGroupState === 1 && (
+                  <WIconButton icon={CrossIcon} iconSize={16} onClick={() => deleteFolder(folder)} />
+                )}
               </Stack>
             )}
           />
@@ -186,24 +203,38 @@ export const CollectionPage = () => {
         }
         bottom={
           <>
-            <WIconButton
-              icon={HiddenIcon}
-              iconSize={24}
-              onClick={() => setControlGroupState(0)}
-              sx={{ backgroundColor: "primary.main" }}
-            />
-            <WIconButton
-              icon={DeleteIcon}
-              iconSize={20}
-              onClick={() => setControlGroupState(1)}
-              sx={{ backgroundColor: "primary.main" }}
-            />
-            <WIconButton
-              icon={LeftRightIcon}
-              iconSize={24}
-              onClick={() => setControlGroupState(2)}
-              sx={{ backgroundColor: "primary.main" }}
-            />
+            <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+              <WIconButton
+                icon={HiddenIcon}
+                iconSize={24}
+                onClick={() => setControlGroupState(0)}
+                sx={{ backgroundColor: "primary.main" }}
+              />
+              <WIconButton
+                icon={DeleteIcon}
+                iconSize={20}
+                onClick={() => setControlGroupState(1)}
+                sx={{ backgroundColor: "primary.main" }}
+              />
+              <WIconButton
+                icon={LeftRightIcon}
+                iconSize={24}
+                onClick={() => setControlGroupState(2)}
+                sx={{ backgroundColor: "primary.main" }}
+              />
+            </Stack>
+            <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+              <WIconButton
+                icon={DownloadIcon}
+                iconSize={18}
+                onClick={() => {
+                  if (selectedFolder) {
+                    downloadFolder(selectedFolder);
+                  }
+                }}
+                sx={{ backgroundColor: "primary.main" }}
+              />
+            </Stack>
           </>
         }
       />
