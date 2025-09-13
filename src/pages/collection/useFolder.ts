@@ -138,7 +138,6 @@ export const useFolder = () => {
         (key) => isCollectionKey(key) && selectedFolder.sequences[key].length > 0
       );
       if (sorted) {
-        console.log("HELLO WORLD");
         await updateFolderDocument({
           name: selectedFolder.name,
           counts: selectedFolder.counts,
