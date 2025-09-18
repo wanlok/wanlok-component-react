@@ -132,18 +132,23 @@ export const useFolder = () => {
     }
   };
 
-  const resetFolderSequences = async () => {
+  const isFolderSorted = () => {
+    let folderSorted = false;
     if (selectedFolder) {
-      const sorted = Object.keys(selectedFolder.sequences).some(
+      folderSorted = Object.keys(selectedFolder.sequences).some(
         (key) => isCollectionKey(key) && selectedFolder.sequences[key].length > 0
       );
-      if (sorted) {
-        await updateFolderDocument({
-          name: selectedFolder.name,
-          counts: selectedFolder.counts,
-          sequences: emptyCollectionSequences
-        });
-      }
+    }
+    return folderSorted;
+  };
+
+  const resetFolderSequences = async () => {
+    if (selectedFolder) {
+      await updateFolderDocument({
+        name: selectedFolder.name,
+        counts: selectedFolder.counts,
+        sequences: emptyCollectionSequences
+      });
     }
   };
 
@@ -234,6 +239,7 @@ export const useFolder = () => {
     addFolder,
     updateFolderCounts,
     updateFolderSequences,
+    isFolderSorted,
     resetFolderSequences,
     deleteFolder,
     openFolder,

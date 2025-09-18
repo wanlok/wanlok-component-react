@@ -86,6 +86,7 @@ export const CollectionPage = () => {
     addFolder,
     updateFolderCounts,
     updateFolderSequences,
+    isFolderSorted,
     resetFolderSequences,
     deleteFolder,
     openFolder,
@@ -155,6 +156,7 @@ export const CollectionPage = () => {
     >
       <CollectionHeader
         folder={selectedFolder}
+        resetButtonHidden={!isFolderSorted()}
         onHiddenButtonClick={() => setControlGroupState(0)}
         onDeleteButtonClick={() => setControlGroupState(1)}
         onLeftRightButtonClick={() => setControlGroupState(2)}

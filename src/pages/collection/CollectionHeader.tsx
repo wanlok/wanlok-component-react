@@ -13,6 +13,7 @@ import DeleteIcon from "../../assets/images/icons/delete.png";
 import LeftRightIcon from "../../assets/images/icons/left_right.png";
 import { WIconButton } from "../../components/WButton";
 import { Folder } from "../../services/Types";
+import { SelectInput } from "../../components/SelectInput";
 
 export const CollectionHeaderLayout = ({ top, bottom }: { top: ReactNode; bottom: ReactNode }) => {
   const { breakpoints } = useTheme();
@@ -93,6 +94,7 @@ export const FolderCollectionHeader = ({
 
 export const CollectionHeader = ({
   folder,
+  resetButtonHidden,
   onHiddenButtonClick,
   onDeleteButtonClick,
   onLeftRightButtonClick,
@@ -100,6 +102,7 @@ export const CollectionHeader = ({
   onDownloadButtonClick
 }: {
   folder: Folder | undefined;
+  resetButtonHidden: boolean;
   onHiddenButtonClick: () => void;
   onDeleteButtonClick: () => void;
   onLeftRightButtonClick: () => void;
@@ -110,9 +113,12 @@ export const CollectionHeader = ({
     <CollectionHeaderLayout
       top={
         <>
-          <Typography variant="body1" sx={{ p: 1 }}>
+          <Typography variant="body1" sx={{ p: 1, flex: 1 }}>
             {folder ? folder.name : ""}
           </Typography>
+          <Stack sx={{ flexDirection: "row", height: 48, alignItems: "center" }}>
+            <SelectInput items={[{ label: "Test", value: "test" }]} value={"test"} onChange={(value: string) => {}} />
+          </Stack>
         </>
       }
       bottom={
@@ -138,12 +144,14 @@ export const CollectionHeader = ({
             />
           </Stack>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-            <WIconButton
-              icon={ResetIcon}
-              iconSize={20}
-              onClick={onResetButtonClick}
-              sx={{ backgroundColor: "primary.main" }}
-            />
+            {!resetButtonHidden && (
+              <WIconButton
+                icon={ResetIcon}
+                iconSize={20}
+                onClick={onResetButtonClick}
+                sx={{ backgroundColor: "primary.main" }}
+              />
+            )}
             <WIconButton
               icon={DownloadIcon}
               iconSize={18}
