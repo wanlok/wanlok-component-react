@@ -59,7 +59,7 @@ export const TextInput = ({
 }) => {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   return (
-    <FormControl>
+    <>
       <TextField
         inputRef={inputRef}
         placeholder={placeholder}
@@ -104,7 +104,7 @@ export const TextInput = ({
           }
         }}
       />
-      {!hideHelperText && <FormHelperText sx={{ mt: 1 }}>Shift + Enter for multiple lines</FormHelperText>}
-    </FormControl>
+      {!hideHelperText && <FormHelperText sx={{ mt: 1 }}>Shift + Enter for multiple lines 1234</FormHelperText>}
+    </>
   );
 };
