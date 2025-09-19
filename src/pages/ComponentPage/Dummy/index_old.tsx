@@ -1,16 +1,9 @@
-import { Dataset } from "../../common/Types";
-import { getDateString } from "../../common/DateUtils";
+import { getDateString } from "../../../common/DateUtils";
 import { Button } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import moment from "moment";
-import { apexChartProps, setGridColour, setTooltip, setX, setYColour } from "./LineChart";
-import ReactApexChart from "react-apexcharts";
-import { Document, Page, PDFViewer, Text } from "@react-pdf/renderer";
-import Html from "react-pdf-html";
-import ReactDOMServer from "react-dom/server";
-import { SomeComponent } from "./SomeComponent";
+import { apexChartProps, setGridColour, setTooltip, setX, setYColour } from "../Dummy/LineChart";
 import { toPng } from "html-to-image";
-import { RechartsChart } from "./RechartsChart";
+import { RechartsChart } from "../Dummy/RechartsChart";
 
 function getNumberOfDays(dates: Date[]) {
   var numberOfDays = 0;

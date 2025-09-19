@@ -1,6 +1,6 @@
-import { Dataset } from "../../common/Types";
+import { Dataset } from "../../../common/Types";
 
-const pointWidth = 12;
+// const pointWidth = 12;
 const fullWidth = 12;
 
 function getMonthSet(x: string[]) {

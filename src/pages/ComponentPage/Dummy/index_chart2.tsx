@@ -1,7 +1,7 @@
 import { Button } from "@mui/material";
 import { toPng } from "html-to-image";
 import { createRoot } from "react-dom/client";
-import { RechartsChart } from "./RechartsChart";
+import { RechartsChart } from "../Dummy/RechartsChart";
 
 export const DummyChart2 = () => {
   const handleExport = async () => {

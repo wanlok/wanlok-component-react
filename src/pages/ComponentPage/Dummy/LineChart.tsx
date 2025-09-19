@@ -2,7 +2,7 @@ import ReactDOMServer from "react-dom/server";
 import ReactApexChart, { Props as ApexChartProps } from "react-apexcharts";
 import classes from "./LineChart.module.css";
 import { useEffect } from "react";
-import { getDimension } from "../../common/getDimension";
+import { getDimension } from "../../../common/getDimension";
 
 interface Series {
   series: ApexAxisChartSeries;

@@ -23,7 +23,6 @@ const FolderRow = ({
     <Stack
       sx={{
         flexDirection: "row",
-        minHeight: (mobileRow ? 48 : 48 + 48 + 1) + "px",
         py: 2,
         pl: 2,
         pr: mobileRow ? 2 : 0,
@@ -81,6 +80,8 @@ export const ComponentPage = () => {
           <></>
         )
       }
-    ></LayoutPanel>
+    >
+      <Typography>{selectedFolder?.name}</Typography>
+    </LayoutPanel>
   );
 };
