@@ -1,8 +1,8 @@
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { Snapshot } from "../snapshot/useSnapshot";
 import { useParams } from "react-router-dom";
+import { Snapshot } from "../ComponentPage/Snapshot/useSnapshot";
 
 export const usePDFSnapshot = () => {
   const { id } = useParams();

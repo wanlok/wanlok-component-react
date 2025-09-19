@@ -1,7 +1,7 @@
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { db } from "../../firebase";
-import { YakijujuDocument } from "../../services/Types";
+import { db } from "../../../firebase";
+import { YakijujuDocument } from "../../../services/Types";
 
 const collectionName = "configs";
 const documentId = "yakijuju";

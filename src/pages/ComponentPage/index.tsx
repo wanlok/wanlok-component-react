@@ -8,6 +8,8 @@ import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
+import { ArcGISHongKongMap } from "./ArcGISHongKongMap";
+import { SnapshotPage } from "./Snapshot";
 
 const FolderRow = ({
   folder,
@@ -81,7 +83,9 @@ export const ComponentPage = () => {
         )
       }
     >
-      <Typography>{selectedFolder?.name}</Typography>
+      {selectedFolder?.id === "basic-inputs" && <Typography>Hello World</Typography>}
+      {selectedFolder?.id === "arcgis-hong-kong-map" && <ArcGISHongKongMap />}
+      {selectedFolder?.id === "snapshot" && <SnapshotPage />}
     </LayoutPanel>
   );
 };

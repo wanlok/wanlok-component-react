@@ -2,7 +2,7 @@ import { ButtonGroup, Card, CardContent, Grid, Typography } from "@mui/material"
 import classes from "./BuildingListPanel.module.css";
 import { Building } from "./ArcGISMap";
 import { Dispatch, useRef } from "react";
-import { WButton } from "../../components/WButton";
+import { WButton } from "../../../components/WButton";
 
 export const BuildingListPanel = ({
   buildings,

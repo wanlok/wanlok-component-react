@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export interface ComponentFolder {
@@ -7,9 +7,9 @@ export interface ComponentFolder {
 }
 
 export const folders: ComponentFolder[] = [
-  { name: "Folder 1", id: "folder-1" },
-  { name: "Folder 2", id: "folder-2" },
-  { name: "Folder 3", id: "folder-3" }
+  { name: "Basic Inputs", id: "basic-inputs" },
+  { name: "ArcGIS Hong Kong Map", id: "arcgis-hong-kong-map" },
+  { name: "Snapshot", id: "snapshot" }
 ];
 
 export const useComponentFolder = () => {

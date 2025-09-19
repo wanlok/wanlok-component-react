@@ -6,7 +6,7 @@ import { Divider, Grid } from "@mui/material";
 import { BuildingListPanel } from "./BuildingListPanel";
 import { AddPanel } from "./AddPanel";
 
-export const HongKongBuildingMap = () => {
+export const ArcGISHongKongMap = () => {
   const [height] = useOutletContext() as number[];
   const [cameraConfigString, setCameraConfigString] = useState<string>("");
   const [buildingIdsString, setBuildingIdsString] = useState<string>("");

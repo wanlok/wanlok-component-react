@@ -2,7 +2,7 @@ import { Dispatch } from "react";
 import { Grid, TextField, Typography } from "@mui/material";
 import classes from "./AddPanel.module.css";
 import { Building, parseBuildingIds, parseCameraConfig } from "./ArcGISMap";
-import { WButton } from "../../components/WButton";
+import { WButton } from "../../../components/WButton";
 
 export function AddPanel({
   cameraConfigString,

@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { useGame } from "../useGame";
+import { useGame } from "./useGame";
 import { Stack, Typography } from "@mui/material";
 import { TextInputForm } from "../../../components/TextInputForm";
 import { FlashGamePlayer } from "../../../components/FlashGamePlayer";

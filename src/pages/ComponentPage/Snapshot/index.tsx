@@ -1,10 +1,10 @@
 import { Card, CardActionArea, CardContent, Divider, Stack, Typography } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
-import { WButton } from "../../components/WButton";
+import { WButton } from "../../../components/WButton";
 import { Row, Snapshot, useSnapshot } from "./useSnapshot";
 import { useNavigate, useParams } from "react-router-dom";
-import { TextInput } from "../../components/TextInput";
-import { SelectInput } from "../../components/SelectInput";
+import { TextInput } from "../../../components/TextInput";
+import { SelectInput } from "../../../components/SelectInput";
 
 export const SnapshotInput = ({
   row,
@@ -202,11 +202,11 @@ export const SnapshotPage = () => {
   const snapshotIndexRef = useRef<number>(-1);
   const snapshotRef = useRef<Snapshot>(emptySnapshot);
   const [snapshot, setSnapshot] = useState<Snapshot>(emptySnapshot);
-  const { id } = useParams();
+  const { id2 } = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const index = snapshots.findIndex((s) => s.id === id);
+    const index = snapshots.findIndex((s) => s.id === id2);
     if (index > -1) {
       snapshotIndexRef.current = index;
       snapshotRef.current = JSON.parse(JSON.stringify(snapshots[index]));
@@ -216,7 +216,7 @@ export const SnapshotPage = () => {
       snapshotRef.current = JSON.parse(JSON.stringify(emptySnapshot));
       setSnapshot(JSON.parse(JSON.stringify(emptySnapshot)));
     }
-  }, [snapshots, id]);
+  }, [snapshots, id2]);
 
   const onAddButtonClick = () => {
     setSnapshot((previous) => {
