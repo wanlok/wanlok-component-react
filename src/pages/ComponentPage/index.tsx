@@ -1,59 +1,86 @@
-import { Stack, Typography } from "@mui/material";
-import { useRef } from "react";
-import { FlashGamePlayer } from "../../components/FlashGamePlayer";
-import statusEndImage from "./End.png";
-import { TextInputForm } from "../../components/TextInputForm";
-import { useGame } from "./useGame";
+import { useState } from "react";
+import { Box, Stack, Typography } from "@mui/material";
+import { ComponentFolder, folders, useComponentFolder } from "./useComponentFolder";
+import { LayoutPanel } from "../../components/LayoutPanel";
+import { WCardList } from "../../components/WCardList";
 
-export const ComponentPage = () => {
-  const scoreRef = useRef(0);
+import FolderIcon from "../../assets/images/icons/folder.png";
+import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
+import UpIcon from "../../assets/images/icons/up.png";
+import DownIcon from "../../assets/images/icons/down.png";
 
-  const { name, filePath, scores, startGame, addScore } = useGame();
-
+const FolderRow = ({
+  folder,
+  selectedFolder,
+  panelOpened
+}: {
+  folder: ComponentFolder;
+  selectedFolder?: ComponentFolder;
+  panelOpened?: boolean;
+}) => {
+  const mobileRow = panelOpened === true || panelOpened === false;
   return (
-    <Stack>
-      {!name && (
-        <TextInputForm
-          placeholder="Name"
-          rightButtons={[
-            {
-              label: "Start Game",
-              onClickWithText: (text) => {
-                startGame(text);
-              }
-            }
-          ]}
+    <Stack
+      sx={{
+        flexDirection: "row",
+        minHeight: (mobileRow ? 48 : 48 + 48 + 1) + "px",
+        py: 2,
+        pl: 2,
+        pr: mobileRow ? 2 : 0,
+        gap: 2,
+        boxSizing: "border-box",
+        backgroundColor: mobileRow ? "background.default" : "transparent"
+      }}
+    >
+      <Box
+        component="img"
+        src={folder === selectedFolder ? FolderSelectedIcon : FolderIcon}
+        alt=""
+        sx={{ width: "24px", height: "24px" }}
+      />
+      <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
+        <Typography variant="body1">{folder.name}</Typography>
+      </Stack>
+      {mobileRow && (
+        <Box
+          component="img"
+          src={panelOpened ? UpIcon : DownIcon}
+          alt=""
+          sx={{ width: "16px", height: "16px", mt: "4px" }}
         />
       )}
-      <Typography>{name}</Typography>
-      <FlashGamePlayer
-        filePath={filePath}
-        threshold={100}
-        progressEndImage={statusEndImage}
-        progressRect={{ x: 135, y: 0, width: 180, height: 26 }}
-        scoreRect={{ x: 320, y: 0, width: 200, height: 30 }}
-        extractScore={(text: string) => {
-          const score = parseInt(
-            text.toLowerCase().replace("score:", "").replace("sc0re:", "").replace(/o/g, "0").trim()
-          );
-          return isNaN(score) ? undefined : score;
-        }}
-        onScoreChange={(newScore) => {
-          if (newScore > scoreRef.current) {
-            console.log("update score", scoreRef.current, newScore);
-            addScore(newScore);
-            scoreRef.current = newScore;
-          }
-        }}
-      />
-      <Typography variant="h4">Scoreboard</Typography>
-      {Object.entries(scores)
-        .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
-        .map(([name, score], index) => (
-          <Typography key={`scoreboard-${index}`}>
-            {name} {score}
-          </Typography>
-        ))}
     </Stack>
+  );
+};
+
+export const ComponentPage = () => {
+  const { selectedFolder, openFolder } = useComponentFolder();
+  const [panelOpened, setPanelOpened] = useState<boolean>(false);
+  return (
+    <LayoutPanel
+      panelOpened={panelOpened}
+      setPanelOpened={setPanelOpened}
+      width={300}
+      panel={
+        <>
+          <WCardList
+            items={folders}
+            renderContent={(folder) => <FolderRow folder={folder} selectedFolder={selectedFolder} />}
+            onContentClick={(folder) => {
+              openFolder(folder);
+              setPanelOpened(false);
+            }}
+            renderRightContent={() => <></>}
+          />
+        </>
+      }
+      topChildren={
+        selectedFolder ? (
+          <FolderRow folder={selectedFolder} selectedFolder={selectedFolder} panelOpened={panelOpened} />
+        ) : (
+          <></>
+        )
+      }
+    ></LayoutPanel>
   );
 };

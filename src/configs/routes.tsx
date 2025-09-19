@@ -39,9 +39,8 @@ export const routes = [
         icon: FolderIcon,
         icon_selected: FolderSelectedIcon,
         name: "Collections",
-        path: "/collections",
-        element: <CollectionPage />,
-        children: [{ path: ":id", element: <SnapshotPage /> }]
+        path: "/collections/:id?",
+        element: <CollectionPage />
       },
       {
         icon: DiscussionIcon,
@@ -61,7 +60,7 @@ export const routes = [
         icon: FolderIcon,
         icon_selected: FolderSelectedIcon,
         name: "Components",
-        path: "/components",
+        path: "/components/:id?",
         element: <ComponentPage />
       },
       {
