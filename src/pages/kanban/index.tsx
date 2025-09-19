@@ -8,6 +8,7 @@ import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
+import { LayoutHeader } from "../../components/LayoutHeader";
 
 const FolderRow = ({
   folder,
@@ -62,6 +63,7 @@ export const Kanban = () => {
       width={300}
       panel={
         <>
+          <LayoutHeader top={<Typography sx={{ p: 1 }}>Kanban</Typography>} bottom={<Stack sx={{ height: 48 }} />} />
           <WCardList
             items={folders}
             renderContent={(folder) => <FolderRow folder={folder} selectedFolder={selectedFolder} />}
@@ -81,9 +83,13 @@ export const Kanban = () => {
         )
       }
     >
-      {selectedFolder?.id === "project-1" && <Typography>Project 1</Typography>}
-      {selectedFolder?.id === "project-2" && <Typography>Project 2</Typography>}
-      {selectedFolder?.id === "project-3" && <Typography>Project 3</Typography>}
+      <LayoutHeader top={<></>} bottom={<></>} />
+      <Stack sx={{ flex: 1, flexDirection: "row" }}>
+        <Stack sx={{ flex: 1, backgroundColor: "blue" }}></Stack>
+        <Stack sx={{ flex: 1, backgroundColor: "red" }}></Stack>
+        <Stack sx={{ flex: 1, backgroundColor: "yellow" }}></Stack>
+        <Stack sx={{ flex: 1, backgroundColor: "blue" }}></Stack>
+      </Stack>
     </LayoutPanel>
   );
 };

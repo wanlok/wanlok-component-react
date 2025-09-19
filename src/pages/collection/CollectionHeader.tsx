@@ -1,5 +1,4 @@
-import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { ReactNode } from "react";
+import { Stack, Typography } from "@mui/material";
 import { WChip } from "../../components/WChip";
 
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
@@ -14,21 +13,7 @@ import LeftRightIcon from "../../assets/images/icons/left_right.png";
 import { WIconButton } from "../../components/WButton";
 import { Folder } from "../../services/Types";
 import { SelectInput } from "../../components/SelectInput";
-
-export const CollectionHeaderLayout = ({ top, bottom }: { top: ReactNode; bottom: ReactNode }) => {
-  const { breakpoints } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("md"));
-  return mobile ? (
-    <></>
-  ) : (
-    <Stack sx={mobile ? {} : { height: 100 }}>
-      <Stack sx={{ flex: 1, justifyContent: "center", px: 1, backgroundColor: "background.default" }}>
-        <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>{top}</Stack>
-      </Stack>
-      <Stack sx={{ flexDirection: "row", gap: 1, backgroundColor: "background.default" }}>{bottom}</Stack>
-    </Stack>
-  );
-};
+import { LayoutHeader } from "../../components/LayoutHeader";
 
 export const FolderCollectionHeader = ({
   numberOfFolders,
@@ -46,7 +31,7 @@ export const FolderCollectionHeader = ({
   onDownloadButtonClick: () => void;
 }) => {
   return (
-    <CollectionHeaderLayout
+    <LayoutHeader
       top={
         <>
           <Typography variant="body1" sx={{ p: 1, flex: 1 }}>
@@ -110,7 +95,7 @@ export const CollectionHeader = ({
   onDownloadButtonClick: () => void;
 }) => {
   return (
-    <CollectionHeaderLayout
+    <LayoutHeader
       top={
         <>
           <Typography variant="body1" sx={{ p: 1, flex: 1 }}>
