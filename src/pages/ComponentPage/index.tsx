@@ -10,6 +10,7 @@ import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import { ArcGISHongKongMap } from "./ArcGISHongKongMap";
 import { SnapshotPage } from "./Snapshot";
+import { BasicInputs } from "./BasicInputs";
 
 const FolderRow = ({
   folder,
@@ -83,7 +84,7 @@ export const ComponentPage = () => {
         )
       }
     >
-      {selectedFolder?.id === "basic-inputs" && <Typography>Hello World</Typography>}
+      {selectedFolder?.id === "basic-inputs" && <BasicInputs />}
       {selectedFolder?.id === "arcgis-hong-kong-map" && <ArcGISHongKongMap />}
       {selectedFolder?.id === "snapshot" && <SnapshotPage />}
     </LayoutPanel>
