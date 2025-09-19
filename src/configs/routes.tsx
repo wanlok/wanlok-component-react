@@ -10,6 +10,7 @@ import FolderIcon from "../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../assets/images/icons/folder_selected.png";
 import DiscussionIcon from "../assets/images/icons/discussion.png";
 import DiscussionSelectedIcon from "../assets/images/icons/discussion_selected.png";
+import { Kanban } from "../pages/kanban";
 
 export const routes = [
   {
@@ -28,6 +29,13 @@ export const routes = [
         // { path: "/:id", element: <PostDetails />, loader: postDetailsLoader },
         //   { path: "/", element: <Landing /> },
         // ],
+      },
+      {
+        icon: FolderIcon,
+        icon_selected: FolderSelectedIcon,
+        name: "Kanban",
+        path: "/kanban/:id?",
+        element: <Kanban />
       },
       {
         icon: FolderIcon,
