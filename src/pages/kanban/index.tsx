@@ -100,19 +100,21 @@ export const MyKan = () => {
                   if (!rect) return;
 
                   const movement = (x + 16) / rect.width;
-                  let offset = 0;
 
-                  if (movement > 0.25) {
-                    offset = Math.max(1, Math.floor(movement));
-                  } else if (movement < -0.25) {
-                    offset = Math.min(-1, Math.ceil(movement));
-                  }
+                  // new offset logic
+                  const offset =
+                    Math.abs(movement) > 0.25 ? Math.sign(movement) * Math.ceil(Math.abs(movement) - 0.25) : 0;
 
                   if (offset !== 0) {
                     setData((prev) => {
                       const newData = [...prev];
+                      // remove item from current column
                       newData[index].list = newData[index].list.filter((i) => i !== item);
+
+                      // wrap-around column index
                       const targetIndex = (index + offset + newData.length) % newData.length;
+
+                      // add item to target column
                       newData[targetIndex].list = [...newData[targetIndex].list, item];
                       return newData;
                     });
