@@ -1,5 +1,5 @@
-import { ReactNode, RefObject, useRef, useState } from "react";
-import { Box, Card, CardContent, Divider, Stack, Typography } from "@mui/material";
+import { useState } from "react";
+import { Box, Stack, Typography } from "@mui/material";
 import { ComponentFolder, folders, useKanban } from "./useKanban";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
@@ -10,7 +10,7 @@ import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import { LayoutHeader } from "../../components/LayoutHeader";
 import { WButton } from "../../components/WButton";
-import Draggable, { DraggableEventHandler } from "react-draggable";
+import { KanbanLayout } from "./KanbanLayout";
 
 const FolderRow = ({
   folder,
@@ -51,85 +51,6 @@ const FolderRow = ({
           sx={{ width: "16px", height: "16px", mt: "4px" }}
         />
       )}
-    </Stack>
-  );
-};
-
-export const Dummy = ({ onStop, children }: { onStop: DraggableEventHandler | undefined; children: ReactNode }) => {
-  return (
-    <Draggable handle=".drag-handle" onStop={onStop}>
-      <Card
-        // ref={nodeRef}
-        sx={{
-          // position: "absolute",
-          width: "100%",
-          boxShadow: 6,
-          borderRadius: 2
-        }}
-        className="drag-handle"
-      >
-        <CardContent>{children}</CardContent>
-      </Card>
-    </Draggable>
-  );
-};
-
-export const MyKan = () => {
-  const [data, setData] = useState<
-    {
-      ref: RefObject<HTMLDivElement>;
-      list: string[];
-    }[]
-  >([
-    { ref: useRef<HTMLDivElement>(null), list: ["AAAAA"] },
-    { ref: useRef<HTMLDivElement>(null), list: ["BBBBB", "CCCCC"] },
-    { ref: useRef<HTMLDivElement>(null), list: ["DDDDD", "EEEEE"] },
-    { ref: useRef<HTMLDivElement>(null), list: ["FFFFF"] }
-  ]);
-
-  return (
-    <Stack sx={{ flex: 1, flexDirection: "row" }}>
-      {data.map(({ ref, list }, index) => (
-        <>
-          {index !== 0 && <Divider orientation="vertical" />}
-          <Stack ref={ref} sx={{ flex: 1, p: 2 }}>
-            {list.map((item) => (
-              <Dummy
-                key={item}
-                onStop={(_, { x, node }) => {
-                  const rect = ref.current?.getBoundingClientRect();
-                  if (!rect) return;
-
-                  const movement = (x + 16) / rect.width;
-
-                  const offset =
-                    Math.abs(movement) > 0.25 ? Math.sign(movement) * Math.ceil(Math.abs(movement) - 0.25) : 0;
-
-                  if (offset !== 0) {
-                    setData((prev) => {
-                      const newData = [...prev];
-                      // remove from current
-                      newData[index].list = newData[index].list.filter((i) => i !== item);
-                      // wrap-around target column
-                      const targetIndex = (index + offset + newData.length) % newData.length;
-                      // add to target
-                      newData[targetIndex].list = [...newData[targetIndex].list, item];
-                      return newData;
-                    });
-                  } else {
-                    // no movement past threshold → snap back
-                    if (node) {
-                      node.style.transform = "translate(0px, 0px)"; // reset drag transform
-                    }
-                  }
-                }}
-              >
-                <Typography>{item}</Typography>
-              </Dummy>
-            ))}
-          </Stack>
-        </>
-      ))}
     </Stack>
   );
 };
@@ -179,7 +100,7 @@ export const Kanban = () => {
           </>
         }
       />
-      {newItemOpened ? <>Hello World</> : <MyKan />}
+      {newItemOpened ? <>Hello World</> : <KanbanLayout />}
     </LayoutPanel>
   );
 };
