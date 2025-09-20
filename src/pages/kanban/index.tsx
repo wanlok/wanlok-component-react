@@ -1,5 +1,5 @@
 import { ReactNode, RefObject, useRef, useState } from "react";
-import { Box, Card, CardContent, Divider, Paper, PaperProps, Stack, Typography } from "@mui/material";
+import { Box, Card, CardContent, Divider, Stack, Typography } from "@mui/material";
 import { ComponentFolder, folders, useKanban } from "./useKanban";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
@@ -9,7 +9,7 @@ import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import { LayoutHeader } from "../../components/LayoutHeader";
-import { WButton, WIconButton } from "../../components/WButton";
+import { WButton } from "../../components/WButton";
 import Draggable, { DraggableEventHandler } from "react-draggable";
 
 const FolderRow = ({
