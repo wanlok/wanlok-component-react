@@ -95,29 +95,32 @@ export const MyKan = () => {
           <Stack ref={ref} sx={{ flex: 1, p: 2 }}>
             {list.map((item) => (
               <Dummy
-                onStop={(_, { x }) => {
+                key={item}
+                onStop={(_, { x, node }) => {
                   const rect = ref.current?.getBoundingClientRect();
                   if (!rect) return;
 
                   const movement = (x + 16) / rect.width;
 
-                  // new offset logic
                   const offset =
                     Math.abs(movement) > 0.25 ? Math.sign(movement) * Math.ceil(Math.abs(movement) - 0.25) : 0;
 
                   if (offset !== 0) {
                     setData((prev) => {
                       const newData = [...prev];
-                      // remove item from current column
+                      // remove from current
                       newData[index].list = newData[index].list.filter((i) => i !== item);
-
-                      // wrap-around column index
+                      // wrap-around target column
                       const targetIndex = (index + offset + newData.length) % newData.length;
-
-                      // add item to target column
+                      // add to target
                       newData[targetIndex].list = [...newData[targetIndex].list, item];
                       return newData;
                     });
+                  } else {
+                    // no movement past threshold → snap back
+                    if (node) {
+                      node.style.transform = "translate(0px, 0px)"; // reset drag transform
+                    }
                   }
                 }}
               >
