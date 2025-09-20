@@ -47,8 +47,6 @@ const KanbanCard = ({
       <Card
         ref={nodeRef}
         sx={{
-          // position: "absolute",
-          width: "100%",
           boxShadow: 6,
           borderRadius: 2
         }}
