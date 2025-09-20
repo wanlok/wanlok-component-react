@@ -82,9 +82,9 @@ export const MyKan = () => {
     }[]
   >([
     { ref: useRef<HTMLDivElement>(null), list: ["AAAAA"] },
-    { ref: useRef<HTMLDivElement>(null), list: [] },
-    { ref: useRef<HTMLDivElement>(null), list: [] },
-    { ref: useRef<HTMLDivElement>(null), list: [] }
+    { ref: useRef<HTMLDivElement>(null), list: ["BBBBB", "CCCCC"] },
+    { ref: useRef<HTMLDivElement>(null), list: ["DDDDD", "EEEEE"] },
+    { ref: useRef<HTMLDivElement>(null), list: ["FFFFF"] }
   ]);
 
   return (
@@ -97,27 +97,25 @@ export const MyKan = () => {
               <Dummy
                 onStop={(_, { x }) => {
                   const rect = ref.current?.getBoundingClientRect();
-                  if (rect) {
-                    const a = (x + 16) / rect?.width;
-                    if (a > 0.25) {
-                      const newData = [...data];
+                  if (!rect) return;
+
+                  const movement = (x + 16) / rect.width;
+                  let offset = 0;
+
+                  if (movement > 0.25) {
+                    offset = Math.max(1, Math.floor(movement));
+                  } else if (movement < -0.25) {
+                    offset = Math.min(-1, Math.ceil(movement));
+                  }
+
+                  if (offset !== 0) {
+                    setData((prev) => {
+                      const newData = [...prev];
                       newData[index].list = newData[index].list.filter((i) => i !== item);
-                      if (index + 1 < newData.length) {
-                        newData[index + 1].list.push(item);
-                      } else {
-                        newData[0].list.push(item);
-                      }
-                      setData(newData);
-                    } else if (a < -0.25) {
-                      const newData = [...data];
-                      newData[index].list = newData[index].list.filter((i) => i !== item);
-                      if (index - 1 >= 0) {
-                        newData[index - 1].list.push(item);
-                      } else {
-                        newData[newData.length - 1].list.push(item);
-                      }
-                      setData(newData);
-                    }
+                      const targetIndex = (index + offset + newData.length) % newData.length;
+                      newData[targetIndex].list = [...newData[targetIndex].list, item];
+                      return newData;
+                    });
                   }
                 }}
               >
