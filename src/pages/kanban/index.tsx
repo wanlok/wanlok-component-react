@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Box, Stack, Typography } from "@mui/material";
+import { ReactNode, RefObject, useRef, useState } from "react";
+import { Box, Card, CardContent, Paper, PaperProps, Stack, Typography } from "@mui/material";
 import { ComponentFolder, folders, useKanban } from "./useKanban";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
@@ -9,6 +9,8 @@ import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import { LayoutHeader } from "../../components/LayoutHeader";
+import { WButton, WIconButton } from "../../components/WButton";
+import Draggable, { DraggableEventHandler } from "react-draggable";
 
 const FolderRow = ({
   folder,
@@ -53,9 +55,85 @@ const FolderRow = ({
   );
 };
 
+export const Dummy = ({ onStop, children }: { onStop: DraggableEventHandler | undefined; children: ReactNode }) => {
+  return (
+    <Draggable handle=".drag-handle" onStop={onStop}>
+      <Card
+        // ref={nodeRef}
+        sx={{
+          // position: "absolute",
+          width: "100%",
+          boxShadow: 6,
+          borderRadius: 2
+        }}
+        className="drag-handle"
+      >
+        <CardContent>{children}</CardContent>
+      </Card>
+    </Draggable>
+  );
+};
+
+interface DDD {
+  ref: RefObject<HTMLDivElement>;
+  backgroundColor: string;
+  list: string[];
+}
+
+export const MyKan = () => {
+  const [data, setData] = useState<DDD[]>([
+    { ref: useRef<HTMLDivElement>(null), backgroundColor: "red", list: ["AAAAA"] },
+    { ref: useRef<HTMLDivElement>(null), backgroundColor: "green", list: [] },
+    { ref: useRef<HTMLDivElement>(null), backgroundColor: "blue", list: [] },
+    { ref: useRef<HTMLDivElement>(null), backgroundColor: "yellow", list: [] }
+  ]);
+
+  return (
+    <Stack sx={{ flex: 1, flexDirection: "row" }}>
+      {data.map(({ ref, backgroundColor, list }, index) => (
+        <Stack ref={ref} sx={{ flex: 1, p: 2, backgroundColor }}>
+          {list.map((item) => (
+            <Dummy
+              onStop={(e, { x }) => {
+                const rect = ref.current?.getBoundingClientRect();
+                if (rect) {
+                  const a = (x + 16) / rect?.width;
+                  if (a > 0.25) {
+                    const newData = [...data];
+                    newData[index].list = newData[index].list.filter((i) => i !== item);
+                    if (index + 1 < newData.length) {
+                      newData[index + 1].list.push(item);
+                    } else {
+                      newData[0].list.push(item);
+                    }
+                    setData(newData);
+                  } else if (a < -0.25) {
+                    const newData = [...data];
+                    newData[index].list = newData[index].list.filter((i) => i !== item);
+                    if (index - 1 >= 0) {
+                      newData[index - 1].list.push(item);
+                    } else {
+                      newData[newData.length - 1].list.push(item);
+                    }
+                    setData(newData);
+                  }
+                }
+              }}
+            >
+              <Typography>{item}</Typography>
+            </Dummy>
+          ))}
+        </Stack>
+      ))}
+    </Stack>
+  );
+};
+
 export const Kanban = () => {
   const { selectedFolder, openFolder } = useKanban();
-  const [panelOpened, setPanelOpened] = useState<boolean>(false);
+  const [panelOpened, setPanelOpened] = useState(false);
+  const [newItemOpened, setNewItemOpened] = useState(false);
+
   return (
     <LayoutPanel
       panelOpened={panelOpened}
@@ -83,13 +161,20 @@ export const Kanban = () => {
         )
       }
     >
-      <LayoutHeader top={<></>} bottom={<></>} />
-      <Stack sx={{ flex: 1, flexDirection: "row" }}>
-        <Stack sx={{ flex: 1, backgroundColor: "blue" }}></Stack>
-        <Stack sx={{ flex: 1, backgroundColor: "red" }}></Stack>
-        <Stack sx={{ flex: 1, backgroundColor: "yellow" }}></Stack>
-        <Stack sx={{ flex: 1, backgroundColor: "blue" }}></Stack>
-      </Stack>
+      <LayoutHeader
+        top={<Typography sx={{ p: 1 }}>{selectedFolder?.name}</Typography>}
+        bottom={
+          <>
+            <WButton
+              onClick={() => setNewItemOpened(!newItemOpened)}
+              sx={{ backgroundColor: "primary.main", height: 48 }}
+            >
+              New Item
+            </WButton>
+          </>
+        }
+      />
+      {newItemOpened ? <>Hello World</> : <MyKan />}
     </LayoutPanel>
   );
 };
