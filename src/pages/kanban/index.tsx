@@ -1,5 +1,5 @@
 import { ReactNode, RefObject, useRef, useState } from "react";
-import { Box, Card, CardContent, Paper, PaperProps, Stack, Typography } from "@mui/material";
+import { Box, Card, CardContent, Divider, Paper, PaperProps, Stack, Typography } from "@mui/material";
 import { ComponentFolder, folders, useKanban } from "./useKanban";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
@@ -74,56 +74,58 @@ export const Dummy = ({ onStop, children }: { onStop: DraggableEventHandler | un
   );
 };
 
-interface DDD {
-  ref: RefObject<HTMLDivElement>;
-  backgroundColor: string;
-  list: string[];
-}
-
 export const MyKan = () => {
-  const [data, setData] = useState<DDD[]>([
-    { ref: useRef<HTMLDivElement>(null), backgroundColor: "red", list: ["AAAAA"] },
-    { ref: useRef<HTMLDivElement>(null), backgroundColor: "green", list: [] },
-    { ref: useRef<HTMLDivElement>(null), backgroundColor: "blue", list: [] },
-    { ref: useRef<HTMLDivElement>(null), backgroundColor: "yellow", list: [] }
+  const [data, setData] = useState<
+    {
+      ref: RefObject<HTMLDivElement>;
+      list: string[];
+    }[]
+  >([
+    { ref: useRef<HTMLDivElement>(null), list: ["AAAAA"] },
+    { ref: useRef<HTMLDivElement>(null), list: [] },
+    { ref: useRef<HTMLDivElement>(null), list: [] },
+    { ref: useRef<HTMLDivElement>(null), list: [] }
   ]);
 
   return (
     <Stack sx={{ flex: 1, flexDirection: "row" }}>
-      {data.map(({ ref, backgroundColor, list }, index) => (
-        <Stack ref={ref} sx={{ flex: 1, p: 2, backgroundColor }}>
-          {list.map((item) => (
-            <Dummy
-              onStop={(e, { x }) => {
-                const rect = ref.current?.getBoundingClientRect();
-                if (rect) {
-                  const a = (x + 16) / rect?.width;
-                  if (a > 0.25) {
-                    const newData = [...data];
-                    newData[index].list = newData[index].list.filter((i) => i !== item);
-                    if (index + 1 < newData.length) {
-                      newData[index + 1].list.push(item);
-                    } else {
-                      newData[0].list.push(item);
+      {data.map(({ ref, list }, index) => (
+        <>
+          {index !== 0 && <Divider orientation="vertical" />}
+          <Stack ref={ref} sx={{ flex: 1, p: 2 }}>
+            {list.map((item) => (
+              <Dummy
+                onStop={(_, { x }) => {
+                  const rect = ref.current?.getBoundingClientRect();
+                  if (rect) {
+                    const a = (x + 16) / rect?.width;
+                    if (a > 0.25) {
+                      const newData = [...data];
+                      newData[index].list = newData[index].list.filter((i) => i !== item);
+                      if (index + 1 < newData.length) {
+                        newData[index + 1].list.push(item);
+                      } else {
+                        newData[0].list.push(item);
+                      }
+                      setData(newData);
+                    } else if (a < -0.25) {
+                      const newData = [...data];
+                      newData[index].list = newData[index].list.filter((i) => i !== item);
+                      if (index - 1 >= 0) {
+                        newData[index - 1].list.push(item);
+                      } else {
+                        newData[newData.length - 1].list.push(item);
+                      }
+                      setData(newData);
                     }
-                    setData(newData);
-                  } else if (a < -0.25) {
-                    const newData = [...data];
-                    newData[index].list = newData[index].list.filter((i) => i !== item);
-                    if (index - 1 >= 0) {
-                      newData[index - 1].list.push(item);
-                    } else {
-                      newData[newData.length - 1].list.push(item);
-                    }
-                    setData(newData);
                   }
-                }
-              }}
-            >
-              <Typography>{item}</Typography>
-            </Dummy>
-          ))}
-        </Stack>
+                }}
+              >
+                <Typography>{item}</Typography>
+              </Dummy>
+            ))}
+          </Stack>
+        </>
       ))}
     </Stack>
   );
