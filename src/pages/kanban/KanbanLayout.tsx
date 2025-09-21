@@ -1,4 +1,4 @@
-import { Card, CardContent, Divider, Stack, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, Divider, Stack, Typography } from "@mui/material";
 import { Fragment, RefObject, useRef, useState } from "react";
 import Draggable from "react-draggable";
 
@@ -9,32 +9,32 @@ const data = [
   { name: "column-4", list: ["FFFFF"] }
 ];
 
-const padding = 16;
-
-const xThreshold = 0.8;
-// const yThreshold = 1;
-
-const getColumnWidthAndHeight = (stackRef: RefObject<HTMLDivElement>) => {
-  const rect = stackRef.current?.getBoundingClientRect();
-  return rect ? { width: rect.width, height: rect.height } : { width: 0, height: 0 };
-};
+const padding = 2;
 
 const getColumnOffset = (stackRef: RefObject<HTMLDivElement>, x: number) => {
-  const ratio = (x + padding) / getColumnWidthAndHeight(stackRef).width;
-  return Math.abs(ratio) > xThreshold ? Math.sign(ratio) * Math.ceil(Math.abs(ratio) - xThreshold) : 0;
+  const threshold = 0.25;
+  const width = stackRef.current?.getBoundingClientRect().width ?? 0;
+  const ratio = (x + padding * 8) / width;
+  return Math.abs(ratio) > threshold ? Math.sign(ratio) * Math.ceil(Math.abs(ratio) - threshold) : 0;
 };
 
-const getRowOffset = (stackRef: RefObject<HTMLDivElement>, node: HTMLElement) => {
-  let offset = 0;
-  const children = stackRef.current?.children ?? [];
+const getRowOffset = (stackRef: RefObject<HTMLDivElement>, y: number, node: HTMLElement) => {
+  let offset = -1;
+  const children = Array.from(stackRef.current?.children ?? []) as HTMLElement[];
   for (let i = 0; i < children.length; i++) {
-    if (children[i] !== node) {
+    if (children[i] === node) {
+      if (i + 1 < children.length) {
+        if (children[i].getBoundingClientRect().bottom - children[i + 1].getBoundingClientRect().y > 0) {
+          offset = i;
+        }
+      }
+    } else {
       if (node.getBoundingClientRect().y >= children[i].getBoundingClientRect().y) {
         offset = i;
       }
     }
   }
-  return offset;
+  return y < 0 ? offset + 1 : offset;
 };
 
 const KanbanCard = ({
@@ -54,10 +54,12 @@ const KanbanCard = ({
       nodeRef={nodeRef}
       handle=".drag-handle"
       position={{ x: 0, y: 0 }}
-      onStop={(_, { x, node }) => {
+      onStop={(_, { x, y, node }) => {
         const columnOffset = getColumnOffset(stackRef, x);
         if (columnOffset === 0) {
-          onRowChange(item, getRowOffset(stackRef, node));
+          if (Math.abs(y) > 0) {
+            onRowChange(item, getRowOffset(stackRef, y, node));
+          }
         } else {
           onColumnChange(item, columnOffset);
         }
@@ -71,9 +73,11 @@ const KanbanCard = ({
         }}
         className="drag-handle"
       >
-        <CardContent>
-          <Typography>{item}</Typography>
-        </CardContent>
+        <CardActionArea onClick={() => {}}>
+          <CardContent>
+            <Typography>{item}</Typography>
+          </CardContent>
+        </CardActionArea>
       </Card>
     </Draggable>
   );
@@ -90,7 +94,7 @@ const KanbanColumn = ({
 }) => {
   const stackRef = useRef<HTMLDivElement>(null);
   return (
-    <Stack ref={stackRef} sx={{ flex: 1, p: padding + "px" }}>
+    <Stack ref={stackRef} sx={{ flex: 1, p: padding, gap: 1 }}>
       {list.map((item) => (
         <KanbanCard
           key={item}
