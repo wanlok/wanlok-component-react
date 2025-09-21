@@ -71,7 +71,7 @@ const KanbanColumn = ({
   return (
     <Stack ref={stackRef} sx={{ flex: 1, p: 2 }}>
       {list.map((item) => (
-        <KanbanCard stackRef={stackRef} key={item} item={item} onIndexChange={onIndexChange} />
+        <KanbanCard key={item} stackRef={stackRef} item={item} onIndexChange={onIndexChange} />
       ))}
     </Stack>
   );
@@ -81,18 +81,24 @@ export const KanbanLayout = () => {
   const [columns, setColumns] = useState(data);
   return (
     <Stack sx={{ flex: 1, flexDirection: "row" }}>
-      {columns.map(({ name, list }, i) => (
+      {columns.map(({ name, list }, columnIndex) => (
         <Fragment key={name}>
-          {i !== 0 && <Divider orientation="vertical" />}
+          {columnIndex !== 0 && <Divider orientation="vertical" />}
           <KanbanColumn
             list={list}
-            onIndexChange={(item, j) => {
+            onIndexChange={(selectedItem, j) => {
               setColumns((prev) => {
-                const newData = [...prev];
-                newData[i].list = newData[i].list.filter((i) => i !== item);
-                const k = (i + j + newData.length) % newData.length;
-                newData[k].list = [...newData[k].list, item];
-                return newData;
+                const newColumns = [...prev];
+                newColumns[columnIndex].list = newColumns[columnIndex].list.filter((item) => item !== selectedItem);
+                let k = columnIndex + j;
+                if (k < 0) {
+                  k = 0;
+                }
+                if (k >= newColumns.length) {
+                  k = newColumns.length - 1;
+                }
+                newColumns[k].list = [...newColumns[k].list, selectedItem];
+                return newColumns;
               });
             }}
           />
