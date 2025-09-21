@@ -23,10 +23,12 @@ const getRowOffset = (stackRef: RefObject<HTMLDivElement>, y: number, node: HTML
   const children = Array.from(stackRef.current?.children ?? []) as HTMLElement[];
   for (let i = 0; i < children.length; i++) {
     if (children[i] === node) {
-      if (i + 1 < children.length) {
-        if (children[i].getBoundingClientRect().bottom - children[i + 1].getBoundingClientRect().y > 0) {
-          offset = i;
-        }
+      if (
+        (i + 1 < children.length &&
+          children[i].getBoundingClientRect().bottom - children[i + 1].getBoundingClientRect().y > 0) ||
+        (i + 1 >= children.length && y > 0)
+      ) {
+        offset = i;
       }
     } else {
       if (node.getBoundingClientRect().y >= children[i].getBoundingClientRect().y) {
