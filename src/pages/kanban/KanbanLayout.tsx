@@ -18,15 +18,20 @@ const getColumnOffset = (stackRef: RefObject<HTMLDivElement>, x: number) => {
   return Math.abs(ratio) > threshold ? Math.sign(ratio) * Math.ceil(Math.abs(ratio) - threshold) : 0;
 };
 
-const getRowOffset = (stackRef: RefObject<HTMLDivElement>, y: number, node: HTMLElement, columnOffset: number) => {
+const getRowOffset = (
+  stackRef: RefObject<HTMLDivElement>,
+  y: number,
+  draggedNode: HTMLElement,
+  columnOffset: number
+) => {
   let offset = -1;
-  const children = Array.from(stackRef.current?.children ?? []) as HTMLElement[];
-  for (let i = 0; i < children.length; i++) {
-    if (children[i] === node) {
+  const nodes = Array.from(stackRef.current?.children ?? []) as HTMLElement[];
+  for (let i = 0; i < nodes.length; i++) {
+    if (nodes[i] === draggedNode) {
       if (
-        (i + 1 < children.length &&
-          children[i].getBoundingClientRect().bottom - children[i + 1].getBoundingClientRect().y > 0) ||
-        (i + 1 >= children.length && y > 0)
+        (i + 1 < nodes.length &&
+          nodes[i].getBoundingClientRect().bottom - nodes[i + 1].getBoundingClientRect().y > 0) ||
+        (i + 1 >= nodes.length && y > 0)
       ) {
         offset = i;
       }
@@ -34,19 +39,19 @@ const getRowOffset = (stackRef: RefObject<HTMLDivElement>, y: number, node: HTML
       if (columnOffset !== 0) {
         if (
           i > 0 &&
-          node.getBoundingClientRect().y >=
-            children[i - 1].getBoundingClientRect().y + children[i - 1].getBoundingClientRect().height / 2
+          draggedNode.getBoundingClientRect().y >=
+            nodes[i - 1].getBoundingClientRect().y + nodes[i - 1].getBoundingClientRect().height / 2
         ) {
           offset = i;
         }
         if (
-          node.getBoundingClientRect().y >=
-          children[i].getBoundingClientRect().y + children[i].getBoundingClientRect().height / 2
+          draggedNode.getBoundingClientRect().y >=
+          nodes[i].getBoundingClientRect().y + nodes[i].getBoundingClientRect().height / 2
         ) {
           offset = i + 1;
         }
       } else {
-        if (node.getBoundingClientRect().y >= children[i].getBoundingClientRect().y) {
+        if (draggedNode.getBoundingClientRect().y >= nodes[i].getBoundingClientRect().y) {
           offset = i;
         }
       }
@@ -59,12 +64,12 @@ const KanbanCard = ({
   stackRef,
   stackRefs,
   item,
-  onDrag
+  onDragStop
 }: {
   stackRef: RefObject<HTMLDivElement>;
   stackRefs: RefObject<RefObject<HTMLDivElement>[]>;
   item: string;
-  onDrag: (item: string, columnOffset: number, rowOffset: number) => void;
+  onDragStop: (item: string, columnOffset: number, rowOffset: number) => void;
 }) => {
   const nodeRef = useRef(null);
   return (
@@ -72,14 +77,22 @@ const KanbanCard = ({
       nodeRef={nodeRef}
       handle=".drag-handle"
       position={{ x: 0, y: 0 }}
-      onStop={(_, { x, y, node }) => {
+      onStart={(_, { node: draggedNode }) => {
+        for (const stackRef of stackRefs.current ?? []) {
+          const nodes = Array.from(stackRef.current?.children ?? []) as HTMLElement[];
+          for (const node of nodes) {
+            node.style.zIndex = node === draggedNode ? "1" : "";
+          }
+        }
+      }}
+      onStop={(_, { x, y, node: draggedNode }) => {
         const i = stackRefs.current?.indexOf(stackRef);
         if (i !== undefined) {
           const columnOffset = getColumnOffset(stackRef, x);
           const targetStackRef = stackRefs.current?.[i + columnOffset];
           if (targetStackRef) {
-            const rowOffset = getRowOffset(targetStackRef, y, node, columnOffset);
-            onDrag(item, columnOffset, rowOffset);
+            const rowOffset = getRowOffset(targetStackRef, y, draggedNode, columnOffset);
+            onDragStop(item, columnOffset, rowOffset);
           }
         }
       }}
@@ -152,7 +165,7 @@ export const KanbanLayout = () => {
                   stackRef={stackRef}
                   stackRefs={stackRefs}
                   item={item}
-                  onDrag={(item, columnOffset, rowOffset) =>
+                  onDragStop={(item, columnOffset, rowOffset) =>
                     setColumns(getColumns(columns, i, item, columnOffset, rowOffset))
                   }
                 />
