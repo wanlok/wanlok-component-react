@@ -16,7 +16,7 @@ interface IconButtonContent {
   onClick?: () => void;
 }
 
-export const TextInputForm = ({
+export const WText = ({
   placeholder,
   rightButtons
 }: {

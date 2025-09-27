@@ -33,7 +33,7 @@ export const FolderCollectionHeader = ({
   return (
     <LayoutHeader
       top={
-        <Stack sx={topSx}>
+        <Stack sx={[topSx, { px: 1 }]}>
           <Typography variant="body1" sx={{ flex: 1 }}>
             Collections
           </Typography>
@@ -97,7 +97,7 @@ export const CollectionHeader = ({
   return (
     <LayoutHeader
       top={
-        <Stack sx={topSx}>
+        <Stack sx={[topSx, { px: 1 }]}>
           <Typography variant="body1" sx={{ flex: 1 }}>
             {folder ? folder.name : ""}
           </Typography>

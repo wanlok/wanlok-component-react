@@ -10,6 +10,7 @@ import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import { LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { KanbanLayout } from "./KanbanLayout";
+import { WButton } from "../../components/WButton";
 
 export interface ColumnData {
   name: string;
@@ -19,7 +20,7 @@ export interface ColumnData {
 const data = [
   { name: "To Do", list: ["AAAAA"] },
   { name: "In Progress", list: ["BBBBB", "CCCCC"] },
-  { name: "In Review", list: ["DDDDD", "EEEEE"] },
+  { name: "Ready To Deploy", list: ["DDDDD", "EEEEE"] },
   { name: "Done", list: ["FFFFF"] }
 ];
 
@@ -69,6 +70,13 @@ const FolderRow = ({
 const KanbanHeaderTop = ({ selectedFolder }: { selectedFolder: ComponentFolder | undefined }) => {
   return (
     <Stack sx={topSx}>
+      <WButton
+        sx={{ height: "inherit" }}
+        // key={`right-button-${index}`}
+        onClick={() => {}}
+      >
+        Hello World
+      </WButton>
       <Typography variant="body1">{selectedFolder?.name}</Typography>
     </Stack>
   );
@@ -108,7 +116,7 @@ export const Kanban = () => {
         <>
           <LayoutHeader
             top={
-              <Stack sx={topSx}>
+              <Stack sx={[topSx, { px: 1 }]}>
                 <Typography variant="body1">Kanban</Typography>
               </Stack>
             }

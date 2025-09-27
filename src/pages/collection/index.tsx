@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { useCollection } from "./useCollection";
-import { TextInputForm } from "../../components/TextInputForm";
+import { WText } from "../../components/WText";
 import { WCardList } from "../../components/WCardList";
 import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
@@ -140,7 +140,7 @@ export const CollectionPage = () => {
               </Stack>
             )}
           />
-          <TextInputForm
+          <WText
             placeholder="New Folder"
             rightButtons={[{ label: "Add", onClickWithText: (text) => addFolder(text) }]}
           />
@@ -185,7 +185,7 @@ export const CollectionPage = () => {
           }
         }}
       />
-      <TextInputForm
+      <WText
         placeholder="Links"
         rightButtons={[
           {
