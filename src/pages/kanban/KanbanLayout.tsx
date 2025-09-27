@@ -1,5 +1,5 @@
 import { Card, CardActionArea, CardContent, Divider, Stack, Typography } from "@mui/material";
-import { Fragment, RefObject, useRef, useState } from "react";
+import { createRef, Fragment, RefObject, useRef, useState } from "react";
 import Draggable from "react-draggable";
 
 const data = [
@@ -18,7 +18,7 @@ const getColumnOffset = (stackRef: RefObject<HTMLDivElement>, x: number) => {
   return Math.abs(ratio) > threshold ? Math.sign(ratio) * Math.ceil(Math.abs(ratio) - threshold) : 0;
 };
 
-const getRowOffset = (stackRef: RefObject<HTMLDivElement>, y: number, node: HTMLElement) => {
+const getRowOffset = (stackRef: RefObject<HTMLDivElement>, y: number, node: HTMLElement, columnOffset: number) => {
   let offset = -1;
   const children = Array.from(stackRef.current?.children ?? []) as HTMLElement[];
   for (let i = 0; i < children.length; i++) {
@@ -31,8 +31,25 @@ const getRowOffset = (stackRef: RefObject<HTMLDivElement>, y: number, node: HTML
         offset = i;
       }
     } else {
-      if (node.getBoundingClientRect().y >= children[i].getBoundingClientRect().y) {
-        offset = i;
+      if (columnOffset !== 0) {
+        if (i > 0) {
+          if (
+            node.getBoundingClientRect().y >=
+            children[i - 1].getBoundingClientRect().y + children[i - 1].getBoundingClientRect().height / 2
+          ) {
+            offset = i;
+          }
+        }
+        if (
+          node.getBoundingClientRect().y >=
+          children[i].getBoundingClientRect().y + children[i].getBoundingClientRect().height / 2
+        ) {
+          offset = i + 1;
+        }
+      } else {
+        if (node.getBoundingClientRect().y >= children[i].getBoundingClientRect().y) {
+          offset = i;
+        }
       }
     }
   }
@@ -41,14 +58,14 @@ const getRowOffset = (stackRef: RefObject<HTMLDivElement>, y: number, node: HTML
 
 const KanbanCard = ({
   stackRef,
+  stackRefs,
   item,
-  onColumnChange,
-  onRowChange
+  onColumnChange
 }: {
   stackRef: RefObject<HTMLDivElement>;
+  stackRefs: RefObject<RefObject<HTMLDivElement>[]>;
   item: string;
-  onColumnChange: (item: string, i: number) => void;
-  onRowChange: (item: string, rowOffset: number) => void;
+  onColumnChange: (item: string, columnOffset: number, rowOffset: number) => void;
 }) => {
   const nodeRef = useRef(null);
   return (
@@ -57,13 +74,14 @@ const KanbanCard = ({
       handle=".drag-handle"
       position={{ x: 0, y: 0 }}
       onStop={(_, { x, y, node }) => {
-        const columnOffset = getColumnOffset(stackRef, x);
-        if (columnOffset === 0) {
-          if (Math.abs(y) > 0) {
-            onRowChange(item, getRowOffset(stackRef, y, node));
+        const i = stackRefs.current?.indexOf(stackRef);
+        if (i !== undefined) {
+          const columnOffset = getColumnOffset(stackRef, x);
+          const targetStackRef = stackRefs.current?.[i + columnOffset];
+          if (targetStackRef) {
+            const rowOffset = getRowOffset(targetStackRef, y, node, columnOffset);
+            onColumnChange(item, columnOffset, rowOffset);
           }
-        } else {
-          onColumnChange(item, columnOffset);
         }
       }}
     >
@@ -86,25 +104,20 @@ const KanbanCard = ({
 };
 
 const KanbanColumn = ({
+  stackRef,
+  stackRefs,
   list,
-  onColumnChange,
-  onRowChange
+  onColumnChange
 }: {
+  stackRef: RefObject<HTMLDivElement>;
+  stackRefs: RefObject<RefObject<HTMLDivElement>[]>;
   list: string[];
-  onColumnChange: (item: string, i: number) => void;
-  onRowChange: (item: string, rowOffset: number) => void;
+  onColumnChange: (item: string, i: number, j: number) => void;
 }) => {
-  const stackRef = useRef<HTMLDivElement>(null);
   return (
     <Stack ref={stackRef} sx={{ flex: 1, p: padding, gap: 1 }}>
       {list.map((item) => (
-        <KanbanCard
-          key={item}
-          stackRef={stackRef}
-          item={item}
-          onColumnChange={onColumnChange}
-          onRowChange={onRowChange}
-        />
+        <KanbanCard key={item} stackRef={stackRef} stackRefs={stackRefs} item={item} onColumnChange={onColumnChange} />
       ))}
     </Stack>
   );
@@ -112,14 +125,17 @@ const KanbanColumn = ({
 
 export const KanbanLayout = () => {
   const [columns, setColumns] = useState(data);
+  const stackRefs = useRef(data.map(() => createRef<HTMLDivElement>()));
   return (
     <Stack sx={{ flex: 1, flexDirection: "row" }}>
       {columns.map(({ name, list }, i) => (
         <Fragment key={name}>
           {i !== 0 && <Divider orientation="vertical" />}
           <KanbanColumn
+            stackRef={stackRefs.current[i]}
+            stackRefs={stackRefs}
             list={list}
-            onColumnChange={(selectedItem, columnOffset) => {
+            onColumnChange={(selectedItem, columnOffset, rowOffset) => {
               setColumns((prev) => {
                 const newColumns = [...prev];
                 newColumns[i].list = newColumns[i].list.filter((item) => item !== selectedItem);
@@ -130,16 +146,11 @@ export const KanbanLayout = () => {
                 if (j >= newColumns.length) {
                   j = newColumns.length - 1;
                 }
-                newColumns[j].list = [...newColumns[j].list, selectedItem];
-                return newColumns;
-              });
-            }}
-            onRowChange={(selectedItem, rowOffset) => {
-              setColumns((prev) => {
-                const newColumns = [...prev];
-                const column = newColumns[i];
-                column.list.splice(column.list.indexOf(selectedItem), 1);
-                let j = rowOffset;
+                newColumns[j].list = [...newColumns[j].list];
+
+                const column = newColumns[j];
+
+                j = rowOffset;
                 if (j < 0) {
                   j = 0;
                 }
@@ -147,6 +158,7 @@ export const KanbanLayout = () => {
                   j = column.list.length;
                 }
                 column.list.splice(j, 0, selectedItem);
+
                 return newColumns;
               });
             }}
