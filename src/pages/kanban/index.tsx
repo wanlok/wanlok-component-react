@@ -69,7 +69,7 @@ const FolderRow = ({
 const KanbanHeaderTop = ({ selectedFolder }: { selectedFolder: ComponentFolder | undefined }) => {
   return (
     <Stack sx={topSx}>
-      <Typography>{selectedFolder?.name}</Typography>
+      <Typography variant="body1">{selectedFolder?.name}</Typography>
     </Stack>
   );
 };
@@ -97,7 +97,7 @@ const KanbanHeaderBottom = () => {
 export const Kanban = () => {
   const { selectedFolder, openFolder } = useKanban();
   const [panelOpened, setPanelOpened] = useState(false);
-  const [newItemOpened, setNewItemOpened] = useState(false);
+  const [newItemOpened] = useState(false);
 
   return (
     <LayoutPanel
