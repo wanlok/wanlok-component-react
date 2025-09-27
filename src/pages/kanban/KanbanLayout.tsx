@@ -32,13 +32,12 @@ const getRowOffset = (stackRef: RefObject<HTMLDivElement>, y: number, node: HTML
       }
     } else {
       if (columnOffset !== 0) {
-        if (i > 0) {
-          if (
-            node.getBoundingClientRect().y >=
+        if (
+          i > 0 &&
+          node.getBoundingClientRect().y >=
             children[i - 1].getBoundingClientRect().y + children[i - 1].getBoundingClientRect().height / 2
-          ) {
-            offset = i;
-          }
+        ) {
+          offset = i;
         }
         if (
           node.getBoundingClientRect().y >=
@@ -60,12 +59,12 @@ const KanbanCard = ({
   stackRef,
   stackRefs,
   item,
-  onColumnChange
+  onDrag
 }: {
   stackRef: RefObject<HTMLDivElement>;
   stackRefs: RefObject<RefObject<HTMLDivElement>[]>;
   item: string;
-  onColumnChange: (item: string, columnOffset: number, rowOffset: number) => void;
+  onDrag: (item: string, columnOffset: number, rowOffset: number) => void;
 }) => {
   const nodeRef = useRef(null);
   return (
@@ -80,7 +79,7 @@ const KanbanCard = ({
           const targetStackRef = stackRefs.current?.[i + columnOffset];
           if (targetStackRef) {
             const rowOffset = getRowOffset(targetStackRef, y, node, columnOffset);
-            onColumnChange(item, columnOffset, rowOffset);
+            onDrag(item, columnOffset, rowOffset);
           }
         }
       }}
@@ -103,24 +102,37 @@ const KanbanCard = ({
   );
 };
 
-const KanbanColumn = ({
-  stackRef,
-  stackRefs,
-  list,
-  onColumnChange
-}: {
-  stackRef: RefObject<HTMLDivElement>;
-  stackRefs: RefObject<RefObject<HTMLDivElement>[]>;
-  list: string[];
-  onColumnChange: (item: string, i: number, j: number) => void;
-}) => {
-  return (
-    <Stack ref={stackRef} sx={{ flex: 1, p: padding, gap: 1 }}>
-      {list.map((item) => (
-        <KanbanCard key={item} stackRef={stackRef} stackRefs={stackRefs} item={item} onColumnChange={onColumnChange} />
-      ))}
-    </Stack>
-  );
+const getColumns = (
+  columns: {
+    name: string;
+    list: string[];
+  }[],
+  i: number,
+  draggedItem: string,
+  columnOffset: number,
+  rowOffset: number
+) => {
+  const newColumns = [...columns];
+  newColumns[i].list = newColumns[i].list.filter((item) => item !== draggedItem);
+  let j;
+  j = i + columnOffset;
+  if (j < 0) {
+    j = 0;
+  }
+  if (j >= newColumns.length) {
+    j = newColumns.length - 1;
+  }
+  newColumns[j].list = [...newColumns[j].list];
+  const column = newColumns[j];
+  j = rowOffset;
+  if (j < 0) {
+    j = 0;
+  }
+  if (j > column.list.length) {
+    j = column.list.length;
+  }
+  column.list.splice(j, 0, draggedItem);
+  return newColumns;
 };
 
 export const KanbanLayout = () => {
@@ -128,43 +140,27 @@ export const KanbanLayout = () => {
   const stackRefs = useRef(data.map(() => createRef<HTMLDivElement>()));
   return (
     <Stack sx={{ flex: 1, flexDirection: "row" }}>
-      {columns.map(({ name, list }, i) => (
-        <Fragment key={name}>
-          {i !== 0 && <Divider orientation="vertical" />}
-          <KanbanColumn
-            stackRef={stackRefs.current[i]}
-            stackRefs={stackRefs}
-            list={list}
-            onColumnChange={(selectedItem, columnOffset, rowOffset) => {
-              setColumns((prev) => {
-                const newColumns = [...prev];
-                newColumns[i].list = newColumns[i].list.filter((item) => item !== selectedItem);
-                let j = i + columnOffset;
-                if (j < 0) {
-                  j = 0;
-                }
-                if (j >= newColumns.length) {
-                  j = newColumns.length - 1;
-                }
-                newColumns[j].list = [...newColumns[j].list];
-
-                const column = newColumns[j];
-
-                j = rowOffset;
-                if (j < 0) {
-                  j = 0;
-                }
-                if (j > column.list.length) {
-                  j = column.list.length;
-                }
-                column.list.splice(j, 0, selectedItem);
-
-                return newColumns;
-              });
-            }}
-          />
-        </Fragment>
-      ))}
+      {columns.map(({ name, list }, i) => {
+        const stackRef = stackRefs.current[i];
+        return (
+          <Fragment key={name}>
+            {i !== 0 && <Divider orientation="vertical" />}
+            <Stack ref={stackRef} sx={{ flex: 1, p: padding, gap: 1 }}>
+              {list.map((item) => (
+                <KanbanCard
+                  key={item}
+                  stackRef={stackRef}
+                  stackRefs={stackRefs}
+                  item={item}
+                  onDrag={(item, columnOffset, rowOffset) =>
+                    setColumns(getColumns(columns, i, item, columnOffset, rowOffset))
+                  }
+                />
+              ))}
+            </Stack>
+          </Fragment>
+        );
+      })}
     </Stack>
   );
 };
