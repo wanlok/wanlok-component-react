@@ -13,7 +13,7 @@ import LeftRightIcon from "../../assets/images/icons/left_right.png";
 import { WIconButton } from "../../components/WButton";
 import { Folder } from "../../services/Types";
 import { SelectInput } from "../../components/SelectInput";
-import { LayoutHeader } from "../../components/LayoutHeader";
+import { LayoutHeader, topSx } from "../../components/LayoutHeader";
 
 export const FolderCollectionHeader = ({
   numberOfFolders,
@@ -33,16 +33,16 @@ export const FolderCollectionHeader = ({
   return (
     <LayoutHeader
       top={
-        <>
-          <Typography variant="body1" sx={{ p: 1, flex: 1 }}>
+        <Stack sx={topSx}>
+          <Typography variant="body1" sx={{ flex: 1 }}>
             Collections
           </Typography>
           <WChip icon={FolderSelectedIcon} label={`${numberOfFolders}`} />
           <WChip icon={serverHealth ? GreenCircleIcon : RedCircleIcon} label={"Server"} />
-        </>
+        </Stack>
       }
       bottom={
-        <>
+        <Stack sx={{ flexDirection: "row", gap: 1 }}>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
             <WIconButton
               icon={HiddenIcon}
@@ -71,7 +71,7 @@ export const FolderCollectionHeader = ({
               sx={{ backgroundColor: "primary.main" }}
             />
           </Stack>
-        </>
+        </Stack>
       }
     />
   );
@@ -97,17 +97,15 @@ export const CollectionHeader = ({
   return (
     <LayoutHeader
       top={
-        <>
-          <Typography variant="body1" sx={{ p: 1, flex: 1 }}>
+        <Stack sx={topSx}>
+          <Typography variant="body1" sx={{ flex: 1 }}>
             {folder ? folder.name : ""}
           </Typography>
-          <Stack sx={{ flexDirection: "row", height: 48, alignItems: "center" }}>
-            <SelectInput items={[{ label: "Test", value: "test" }]} value={"test"} onChange={(value: string) => {}} />
-          </Stack>
-        </>
+          <SelectInput items={[{ label: "Test", value: "test" }]} value={"test"} onChange={(value: string) => {}} />
+        </Stack>
       }
       bottom={
-        <>
+        <Stack sx={{ flexDirection: "row", gap: 1 }}>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
             <WIconButton
               icon={HiddenIcon}
@@ -144,7 +142,7 @@ export const CollectionHeader = ({
               sx={{ backgroundColor: "primary.main" }}
             />
           </Stack>
-        </>
+        </Stack>
       }
     />
   );

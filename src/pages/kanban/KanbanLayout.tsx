@@ -1,13 +1,7 @@
 import { Card, CardActionArea, CardContent, Divider, Stack, Typography } from "@mui/material";
 import { createRef, Fragment, RefObject, useRef, useState } from "react";
 import Draggable from "react-draggable";
-
-const data = [
-  { name: "column-1", list: ["AAAAA"] },
-  { name: "column-2", list: ["BBBBB", "CCCCC"] },
-  { name: "column-3", list: ["DDDDD", "EEEEE"] },
-  { name: "column-4", list: ["FFFFF"] }
-];
+import { ColumnData } from ".";
 
 const padding = 2;
 
@@ -115,16 +109,7 @@ const KanbanCard = ({
   );
 };
 
-const getColumns = (
-  columns: {
-    name: string;
-    list: string[];
-  }[],
-  i: number,
-  draggedItem: string,
-  columnOffset: number,
-  rowOffset: number
-) => {
+const getColumns = (columns: ColumnData[], i: number, draggedItem: string, columnOffset: number, rowOffset: number) => {
   const newColumns = [...columns];
   newColumns[i].list = newColumns[i].list.filter((item) => item !== draggedItem);
   let j;
@@ -148,7 +133,7 @@ const getColumns = (
   return newColumns;
 };
 
-export const KanbanLayout = () => {
+export const KanbanLayout = ({ data }: { data: ColumnData[] }) => {
   const [columns, setColumns] = useState(data);
   const stackRefs = useRef(data.map(() => createRef<HTMLDivElement>()));
   return (

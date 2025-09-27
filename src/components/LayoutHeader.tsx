@@ -1,5 +1,7 @@
-import { Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Stack, SxProps, useMediaQuery, useTheme } from "@mui/material";
 import { ReactNode } from "react";
+
+export const topSx: SxProps = { flexDirection: "row", gap: 1, alignItems: "center", height: 52, px: 1 };
 
 export const LayoutHeader = ({ top, bottom }: { top: ReactNode; bottom: ReactNode }) => {
   const { breakpoints } = useTheme();
@@ -7,11 +9,9 @@ export const LayoutHeader = ({ top, bottom }: { top: ReactNode; bottom: ReactNod
   return mobile ? (
     <></>
   ) : (
-    <Stack sx={mobile ? {} : { height: 100 }}>
-      <Stack sx={{ flex: 1, justifyContent: "center", px: 1, backgroundColor: "background.default" }}>
-        <Stack sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>{top}</Stack>
-      </Stack>
-      <Stack sx={{ flexDirection: "row", gap: 1, backgroundColor: "background.default" }}>{bottom}</Stack>
+    <Stack sx={[{ backgroundColor: "background.default" }, mobile ? {} : { height: 100 }]}>
+      {top}
+      {bottom}
     </Stack>
   );
 };

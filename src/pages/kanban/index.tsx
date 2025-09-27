@@ -8,9 +8,20 @@ import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
-import { LayoutHeader } from "../../components/LayoutHeader";
-import { WButton } from "../../components/WButton";
+import { LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { KanbanLayout } from "./KanbanLayout";
+
+export interface ColumnData {
+  name: string;
+  list: string[];
+}
+
+const data = [
+  { name: "To Do", list: ["AAAAA"] },
+  { name: "In Progress", list: ["BBBBB", "CCCCC"] },
+  { name: "In Review", list: ["DDDDD", "EEEEE"] },
+  { name: "Done", list: ["FFFFF"] }
+];
 
 const FolderRow = ({
   folder,
@@ -55,6 +66,34 @@ const FolderRow = ({
   );
 };
 
+const KanbanHeaderTop = ({ selectedFolder }: { selectedFolder: ComponentFolder | undefined }) => {
+  return (
+    <Stack sx={topSx}>
+      <Typography>{selectedFolder?.name}</Typography>
+    </Stack>
+  );
+};
+
+const KanbanHeaderBottom = () => {
+  return (
+    <Stack sx={{ flex: 1, flexDirection: "row", gap: "1px" }}>
+      {data.map(({ name }) => {
+        return (
+          <Stack sx={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+            <Typography>{name}</Typography>
+          </Stack>
+        );
+      })}
+      {/* <WButton
+              onClick={() => setNewItemOpened(!newItemOpened)}
+              sx={{ backgroundColor: "primary.main", height: 48 }}
+            >
+              New Item
+            </WButton> */}
+    </Stack>
+  );
+};
+
 export const Kanban = () => {
   const { selectedFolder, openFolder } = useKanban();
   const [panelOpened, setPanelOpened] = useState(false);
@@ -67,7 +106,14 @@ export const Kanban = () => {
       width={300}
       panel={
         <>
-          <LayoutHeader top={<Typography sx={{ p: 1 }}>Kanban</Typography>} bottom={<Stack sx={{ height: 48 }} />} />
+          <LayoutHeader
+            top={
+              <Stack sx={topSx}>
+                <Typography variant="body1">Kanban</Typography>
+              </Stack>
+            }
+            bottom={<></>}
+          />
           <WCardList
             items={folders}
             renderContent={(folder) => <FolderRow folder={folder} selectedFolder={selectedFolder} />}
@@ -87,20 +133,8 @@ export const Kanban = () => {
         )
       }
     >
-      <LayoutHeader
-        top={<Typography sx={{ p: 1 }}>{selectedFolder?.name}</Typography>}
-        bottom={
-          <>
-            <WButton
-              onClick={() => setNewItemOpened(!newItemOpened)}
-              sx={{ backgroundColor: "primary.main", height: 48 }}
-            >
-              New Item
-            </WButton>
-          </>
-        }
-      />
-      {newItemOpened ? <>Hello World</> : <KanbanLayout />}
+      <LayoutHeader top={<KanbanHeaderTop selectedFolder={selectedFolder} />} bottom={<KanbanHeaderBottom />} />
+      {newItemOpened ? <>Hello World</> : <KanbanLayout data={data} />}
     </LayoutPanel>
   );
 };
