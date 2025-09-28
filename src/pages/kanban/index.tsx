@@ -10,7 +10,7 @@ import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import { LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { KanbanLayout } from "./KanbanLayout";
-import { WButton } from "../../components/WButton";
+import { WText } from "../../components/WText";
 
 export interface ColumnData {
   name: string;
@@ -69,15 +69,17 @@ const FolderRow = ({
 
 const KanbanHeaderTop = ({ selectedFolder }: { selectedFolder: ComponentFolder | undefined }) => {
   return (
-    <Stack sx={topSx}>
-      <WButton
-        sx={{ height: "inherit" }}
-        // key={`right-button-${index}`}
-        onClick={() => {}}
-      >
-        Hello World
-      </WButton>
-      <Typography variant="body1">{selectedFolder?.name}</Typography>
+    <Stack sx={[topSx, { height: 55 }]}>
+      <Stack sx={{ flex: 1 }}>
+        <WText
+          text={selectedFolder?.name}
+          placeholder="Dummy"
+          rightButtons={[
+            { label: "Add", onClick: () => {} },
+            { label: "Add", onClick: () => {} }
+          ]}
+        />
+      </Stack>
     </Stack>
   );
 };
@@ -87,7 +89,17 @@ const KanbanHeaderBottom = () => {
     <Stack sx={{ flex: 1, flexDirection: "row", gap: "1px" }}>
       {data.map(({ name }) => {
         return (
-          <Stack sx={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
+          <Stack
+            sx={{
+              flex: 1,
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "common.black",
+              color: "common.white",
+              borderTopLeftRadius: 16,
+              borderTopRightRadius: 16
+            }}
+          >
             <Typography>{name}</Typography>
           </Stack>
         );

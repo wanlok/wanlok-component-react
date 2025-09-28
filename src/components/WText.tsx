@@ -17,18 +17,24 @@ interface IconButtonContent {
 }
 
 export const WText = ({
+  text = "",
   placeholder,
   rightButtons
 }: {
+  text?: string;
   placeholder: string;
   rightButtons: (LabelButtonContent | IconButtonContent)[];
 }) => {
-  const [text, setText] = useState<string>("");
+  const [value, setValue] = useState<string>(text);
   const [buttonHeight, setButtonHeight] = useState<number>();
   const [sufficientSpaces, setSufficientSpaces] = useState<boolean>(false);
   const sufficientSpacesHeightRef = useRef<number>();
 
   const stackRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setValue(text);
+  }, [text]);
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver(([entry]) => {
@@ -56,16 +62,21 @@ export const WText = ({
   }, [buttonHeight, rightButtons.length]);
 
   const getText = (onClick: (text: string) => void) => {
-    if (text && text.trim().length > 0) {
-      onClick(text);
-      setText("");
+    if (value && value.trim().length > 0) {
+      onClick(value);
+      setValue("");
     }
   };
 
   return (
     <Stack ref={stackRef} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
       <Stack sx={{ flex: 1, p: 1 }}>
-        <TextInput placeholder={placeholder} value={text} onChange={(value) => setText(value)} hideHelperText={true} />
+        <TextInput
+          placeholder={placeholder}
+          value={value}
+          onChange={(changedText) => setValue(changedText)}
+          hideHelperText={true}
+        />
       </Stack>
       <Stack sx={{ flexDirection: sufficientSpaces ? "column" : "row", gap: "1px" }}>
         {rightButtons.map((buttonContent, index) => {
