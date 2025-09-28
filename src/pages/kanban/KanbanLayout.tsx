@@ -75,6 +75,7 @@ const KanbanCard = ({
       onStart={(_, { node: draggedNode }) => {
         for (const stackRef of stackRefs.current ?? []) {
           if (stackRef.current) {
+            stackRef.current.style.marginTop = "-" + stackRef.current.scrollTop + "px";
             stackRef.current.style.overflowY = "visible";
           }
           const nodes = Array.from(stackRef.current?.children[0]?.children ?? []) as HTMLElement[];
@@ -95,6 +96,7 @@ const KanbanCard = ({
         }
         for (const stackRef of stackRefs.current ?? []) {
           if (stackRef.current) {
+            stackRef.current.style.marginTop = 0 + "px";
             stackRef.current.style.overflowY = "auto";
           }
         }
@@ -153,7 +155,7 @@ export const KanbanLayout = () => {
   const stackRefs = useRef(columns.map(() => createRef<HTMLDivElement>()));
   const { height } = useWindowDimensions();
   return (
-    <Stack sx={{ flex: 1, flexDirection: "row" }}>
+    <Stack sx={{ flex: 1, flexDirection: "row", overflow: "hidden" }}>
       {columns.map(({ name, list }, i) => {
         const stackRef = stackRefs.current[i];
         return (
