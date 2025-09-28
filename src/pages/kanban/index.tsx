@@ -67,17 +67,32 @@ const FolderRow = ({
   );
 };
 
-const KanbanHeaderTop = ({ selectedFolder }: { selectedFolder: ComponentFolder | undefined }) => {
+const KanbanHeaderTop = ({
+  selectedFolder,
+  onAddItemButtonClick
+}: {
+  selectedFolder: ComponentFolder | undefined;
+  onAddItemButtonClick: () => void;
+}) => {
+  const [editable, setEditable] = useState(false);
   return (
     <Stack sx={[topSx, { height: 55 }]}>
       <Stack sx={{ flex: 1 }}>
         <WText
           text={selectedFolder?.name}
+          editable={editable}
           placeholder="Dummy"
-          rightButtons={[
-            { label: "Add", onClick: () => {} },
-            { label: "Add", onClick: () => {} }
-          ]}
+          rightButtons={
+            editable
+              ? [
+                  { label: "Save", onClick: () => {} },
+                  { label: "Cancel", onClick: () => setEditable(false) }
+                ]
+              : [
+                  { label: "Change Name", onClick: () => setEditable(true) },
+                  { label: "Add Item", onClick: onAddItemButtonClick }
+                ]
+          }
         />
       </Stack>
     </Stack>
@@ -104,12 +119,6 @@ const KanbanHeaderBottom = () => {
           </Stack>
         );
       })}
-      {/* <WButton
-              onClick={() => setNewItemOpened(!newItemOpened)}
-              sx={{ backgroundColor: "primary.main", height: 48 }}
-            >
-              New Item
-            </WButton> */}
     </Stack>
   );
 };
@@ -117,8 +126,7 @@ const KanbanHeaderBottom = () => {
 export const Kanban = () => {
   const { selectedFolder, openFolder } = useKanban();
   const [panelOpened, setPanelOpened] = useState(false);
-  const [newItemOpened] = useState(false);
-
+  const [newItemOpened, setNewItemOpened] = useState(false);
   return (
     <LayoutPanel
       panelOpened={panelOpened}
@@ -153,7 +161,15 @@ export const Kanban = () => {
         )
       }
     >
-      <LayoutHeader top={<KanbanHeaderTop selectedFolder={selectedFolder} />} bottom={<KanbanHeaderBottom />} />
+      <LayoutHeader
+        top={
+          <KanbanHeaderTop
+            selectedFolder={selectedFolder}
+            onAddItemButtonClick={() => setNewItemOpened(!newItemOpened)}
+          />
+        }
+        bottom={<KanbanHeaderBottom />}
+      />
       {newItemOpened ? <>Hello World</> : <KanbanLayout data={data} />}
     </LayoutPanel>
   );
