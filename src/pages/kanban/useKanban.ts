@@ -24,22 +24,10 @@ export interface ColumnData {
 }
 
 const dummyData: ColumnData[] = [
-  { name: "To Do", list: [{ id: "AAAAA", name: "AAAAA" }] },
-  {
-    name: "In Progress",
-    list: [
-      { id: "BBBBB", name: "BBBBB" },
-      { id: "CCCCC", name: "CCCCC" }
-    ]
-  },
-  {
-    name: "Ready To Deploy",
-    list: [
-      { id: "DDDDD", name: "DDDDD" },
-      { id: "EEEEE", name: "EEEEE" }
-    ]
-  },
-  { name: "Done", list: [{ id: "FFFFF", name: "FFFFF" }] }
+  { name: "To Do", list: [] },
+  { name: "In Progress", list: [] },
+  { name: "Ready To Deploy", list: [] },
+  { name: "Done", list: [] }
 ];
 
 export const useKanban = () => {
@@ -72,7 +60,8 @@ export const useKanban = () => {
 
   const addItem = () => {
     const newColumns = [...columns];
-    newColumns[0].list.push({ id: uuidv4(), name: "New Item" });
+    const itemNumber = columns.reduce((sum, { list }) => sum + list.length, 1);
+    newColumns[0].list.push({ id: uuidv4(), name: `Item ${itemNumber}` });
     setColumns(newColumns);
   };
 
