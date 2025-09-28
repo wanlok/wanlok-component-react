@@ -9,20 +9,8 @@ import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import { LayoutHeader, topSx } from "../../components/LayoutHeader";
-import { KanbanLayout } from "./KanbanLayout";
 import { WText } from "../../components/WText";
-
-export interface ColumnData {
-  name: string;
-  list: string[];
-}
-
-const data = [
-  { name: "To Do", list: ["AAAAA"] },
-  { name: "In Progress", list: ["BBBBB", "CCCCC"] },
-  { name: "Ready To Deploy", list: ["DDDDD", "EEEEE"] },
-  { name: "Done", list: ["FFFFF"] }
-];
+import { KanbanLayout } from "./KanbanLayout";
 
 const FolderRow = ({
   folder,
@@ -100,9 +88,10 @@ const KanbanHeaderTop = ({
 };
 
 const KanbanHeaderBottom = () => {
+  const { columnNames } = useKanban();
   return (
     <Stack sx={{ flex: 1, flexDirection: "row", gap: "1px" }}>
-      {data.map(({ name }) => {
+      {columnNames.map((columnName) => {
         return (
           <Stack
             sx={{
@@ -115,7 +104,7 @@ const KanbanHeaderBottom = () => {
               borderTopRightRadius: 16
             }}
           >
-            <Typography>{name}</Typography>
+            <Typography>{columnName}</Typography>
           </Stack>
         );
       })}
@@ -124,9 +113,8 @@ const KanbanHeaderBottom = () => {
 };
 
 export const Kanban = () => {
-  const { selectedFolder, openFolder } = useKanban();
+  const { selectedFolder, openFolder, columnData, addItem } = useKanban();
   const [panelOpened, setPanelOpened] = useState(false);
-  const [newItemOpened, setNewItemOpened] = useState(false);
   return (
     <LayoutPanel
       panelOpened={panelOpened}
@@ -162,15 +150,10 @@ export const Kanban = () => {
       }
     >
       <LayoutHeader
-        top={
-          <KanbanHeaderTop
-            selectedFolder={selectedFolder}
-            onAddItemButtonClick={() => setNewItemOpened(!newItemOpened)}
-          />
-        }
+        top={<KanbanHeaderTop selectedFolder={selectedFolder} onAddItemButtonClick={addItem} />}
         bottom={<KanbanHeaderBottom />}
       />
-      {newItemOpened ? <>Hello World</> : <KanbanLayout data={data} />}
+      <KanbanLayout data={columnData} />
     </LayoutPanel>
   );
 };

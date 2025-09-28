@@ -1,7 +1,7 @@
 import { Card, CardActionArea, CardContent, Divider, Stack, Typography } from "@mui/material";
 import { createRef, Fragment, RefObject, useRef, useState } from "react";
 import Draggable from "react-draggable";
-import { ColumnData } from ".";
+import { ColumnData } from "./useKanban";
 
 const padding = 2;
 
