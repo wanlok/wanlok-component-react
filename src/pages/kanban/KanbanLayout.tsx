@@ -2,6 +2,7 @@ import { Card, CardActionArea, CardContent, Divider, Stack, Typography } from "@
 import { createRef, Fragment, RefObject, useRef } from "react";
 import Draggable from "react-draggable";
 import { ColumnData, ColumnItem, useKanban } from "./useKanban";
+import { useWindowDimensions } from "../../common/useWindowDimension";
 
 const padding = 2;
 
@@ -19,7 +20,7 @@ const getRowOffset = (
   columnOffset: number
 ) => {
   let offset = -1;
-  const nodes = Array.from(stackRef.current?.children ?? []) as HTMLElement[];
+  const nodes = Array.from(stackRef.current?.children[0]?.children ?? []) as HTMLElement[];
   for (let i = 0; i < nodes.length; i++) {
     if (nodes[i] === draggedNode) {
       if (
@@ -73,7 +74,10 @@ const KanbanCard = ({
       position={{ x: 0, y: 0 }}
       onStart={(_, { node: draggedNode }) => {
         for (const stackRef of stackRefs.current ?? []) {
-          const nodes = Array.from(stackRef.current?.children ?? []) as HTMLElement[];
+          if (stackRef.current) {
+            stackRef.current.style.overflowY = "visible";
+          }
+          const nodes = Array.from(stackRef.current?.children[0]?.children ?? []) as HTMLElement[];
           for (const node of nodes) {
             node.style.zIndex = node === draggedNode ? "1" : "";
           }
@@ -87,6 +91,11 @@ const KanbanCard = ({
           if (targetStackRef) {
             const rowOffset = getRowOffset(targetStackRef, y, draggedNode, columnOffset);
             onDragStop(item, columnOffset, rowOffset);
+          }
+        }
+        for (const stackRef of stackRefs.current ?? []) {
+          if (stackRef.current) {
+            stackRef.current.style.overflowY = "auto";
           }
         }
       }}
@@ -142,6 +151,7 @@ const getColumns = (
 export const KanbanLayout = () => {
   const { columns, setColumns } = useKanban();
   const stackRefs = useRef(columns.map(() => createRef<HTMLDivElement>()));
+  const { height } = useWindowDimensions();
   return (
     <Stack sx={{ flex: 1, flexDirection: "row" }}>
       {columns.map(({ name, list }, i) => {
@@ -149,18 +159,20 @@ export const KanbanLayout = () => {
         return (
           <Fragment key={name}>
             {i !== 0 && <Divider orientation="vertical" />}
-            <Stack ref={stackRef} sx={{ flex: 1, p: padding, gap: 1 }}>
-              {list.map((item) => (
-                <KanbanCard
-                  key={item.id}
-                  stackRef={stackRef}
-                  stackRefs={stackRefs}
-                  item={item}
-                  onDragStop={(item, columnOffset, rowOffset) =>
-                    setColumns(getColumns(columns, i, item, columnOffset, rowOffset))
-                  }
-                />
-              ))}
+            <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto", height: height - 100 }}>
+              <Stack sx={{ p: padding, gap: 1 }}>
+                {list.map((item) => (
+                  <KanbanCard
+                    key={item.id}
+                    stackRef={stackRef}
+                    stackRefs={stackRefs}
+                    item={item}
+                    onDragStop={(item, columnOffset, rowOffset) =>
+                      setColumns(getColumns(columns, i, item, columnOffset, rowOffset))
+                    }
+                  />
+                ))}
+              </Stack>
             </Stack>
           </Fragment>
         );
