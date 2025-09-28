@@ -1,7 +1,7 @@
 import { Card, CardActionArea, CardContent, Divider, Stack, Typography } from "@mui/material";
 import { createRef, Fragment, RefObject, useRef } from "react";
 import Draggable from "react-draggable";
-import { ColumnData, useKanban } from "./useKanban";
+import { ColumnData, ColumnItem, useKanban } from "./useKanban";
 
 const padding = 2;
 
@@ -62,8 +62,8 @@ const KanbanCard = ({
 }: {
   stackRef: RefObject<HTMLDivElement>;
   stackRefs: RefObject<RefObject<HTMLDivElement>[]>;
-  item: string;
-  onDragStop: (item: string, columnOffset: number, rowOffset: number) => void;
+  item: ColumnItem;
+  onDragStop: (item: ColumnItem, columnOffset: number, rowOffset: number) => void;
 }) => {
   const nodeRef = useRef(null);
   return (
@@ -101,7 +101,7 @@ const KanbanCard = ({
       >
         <CardActionArea onClick={() => {}}>
           <CardContent>
-            <Typography>{item}</Typography>
+            <Typography>{item.name}</Typography>
           </CardContent>
         </CardActionArea>
       </Card>
@@ -109,7 +109,13 @@ const KanbanCard = ({
   );
 };
 
-const getColumns = (columns: ColumnData[], i: number, draggedItem: string, columnOffset: number, rowOffset: number) => {
+const getColumns = (
+  columns: ColumnData[],
+  i: number,
+  draggedItem: ColumnItem,
+  columnOffset: number,
+  rowOffset: number
+) => {
   const newColumns = [...columns];
   newColumns[i].list = newColumns[i].list.filter((item) => item !== draggedItem);
   let j;
@@ -146,7 +152,7 @@ export const KanbanLayout = () => {
             <Stack ref={stackRef} sx={{ flex: 1, p: padding, gap: 1 }}>
               {list.map((item) => (
                 <KanbanCard
-                  key={item}
+                  key={item.id}
                   stackRef={stackRef}
                   stackRefs={stackRefs}
                   item={item}

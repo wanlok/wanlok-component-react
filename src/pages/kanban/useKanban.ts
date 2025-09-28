@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 export interface ComponentFolder {
   id: string;
@@ -12,16 +13,33 @@ export const folders: ComponentFolder[] = [
   { name: "Project 3", id: "project-3" }
 ];
 
-export interface ColumnData {
+export interface ColumnItem {
+  id: string;
   name: string;
-  list: string[];
 }
 
-const dummyData = [
-  { name: "To Do", list: ["AAAAA"] },
-  { name: "In Progress", list: ["BBBBB", "CCCCC"] },
-  { name: "Ready To Deploy", list: ["DDDDD", "EEEEE"] },
-  { name: "Done", list: ["FFFFF"] }
+export interface ColumnData {
+  name: string;
+  list: ColumnItem[];
+}
+
+const dummyData: ColumnData[] = [
+  { name: "To Do", list: [{ id: "AAAAA", name: "AAAAA" }] },
+  {
+    name: "In Progress",
+    list: [
+      { id: "BBBBB", name: "BBBBB" },
+      { id: "CCCCC", name: "CCCCC" }
+    ]
+  },
+  {
+    name: "Ready To Deploy",
+    list: [
+      { id: "DDDDD", name: "DDDDD" },
+      { id: "EEEEE", name: "EEEEE" }
+    ]
+  },
+  { name: "Done", list: [{ id: "FFFFF", name: "FFFFF" }] }
 ];
 
 export const useKanban = () => {
@@ -54,7 +72,7 @@ export const useKanban = () => {
 
   const addItem = () => {
     const newColumns = [...columns];
-    newColumns[0].list.push("New Item");
+    newColumns[0].list.push({ id: uuidv4(), name: "New Item" });
     setColumns(newColumns);
   };
 
