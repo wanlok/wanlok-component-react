@@ -1,7 +1,7 @@
 import { Card, CardActionArea, CardContent, Divider, Stack, Typography } from "@mui/material";
-import { createRef, Fragment, RefObject, useRef, useState } from "react";
+import { createRef, Fragment, RefObject, useRef } from "react";
 import Draggable from "react-draggable";
-import { ColumnData } from "./useKanban";
+import { ColumnData, useKanban } from "./useKanban";
 
 const padding = 2;
 
@@ -133,9 +133,9 @@ const getColumns = (columns: ColumnData[], i: number, draggedItem: string, colum
   return newColumns;
 };
 
-export const KanbanLayout = ({ data }: { data: ColumnData[] }) => {
-  const [columns, setColumns] = useState(data);
-  const stackRefs = useRef(data.map(() => createRef<HTMLDivElement>()));
+export const KanbanLayout = () => {
+  const { columns, setColumns } = useKanban();
+  const stackRefs = useRef(columns.map(() => createRef<HTMLDivElement>()));
   return (
     <Stack sx={{ flex: 1, flexDirection: "row" }}>
       {columns.map(({ name, list }, i) => {

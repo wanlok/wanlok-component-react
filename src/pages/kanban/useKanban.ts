@@ -17,7 +17,7 @@ export interface ColumnData {
   list: string[];
 }
 
-const data = [
+const dummyData = [
   { name: "To Do", list: ["AAAAA"] },
   { name: "In Progress", list: ["BBBBB", "CCCCC"] },
   { name: "Ready To Deploy", list: ["DDDDD", "EEEEE"] },
@@ -29,7 +29,7 @@ export const useKanban = () => {
   const navigate = useNavigate();
   const [selectedFolder, setSelectedFolder] = useState<ComponentFolder>();
 
-  const columnNames = data.map(({ name }) => name);
+  const [columns, setColumns] = useState(dummyData);
 
   const openFolder = useCallback(
     (folder: ComponentFolder) => {
@@ -53,8 +53,10 @@ export const useKanban = () => {
   }, [id, openFolder]);
 
   const addItem = () => {
-    console.log("Hello World");
+    const newColumns = [...columns];
+    newColumns[0].list.push("New Item");
+    setColumns(newColumns);
   };
 
-  return { selectedFolder, openFolder, columnNames, columnData: data, addItem };
+  return { selectedFolder, openFolder, columns, setColumns, addItem };
 };

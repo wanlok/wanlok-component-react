@@ -88,10 +88,10 @@ const KanbanHeaderTop = ({
 };
 
 const KanbanHeaderBottom = () => {
-  const { columnNames } = useKanban();
+  const { columns } = useKanban();
   return (
     <Stack sx={{ flex: 1, flexDirection: "row", gap: "1px" }}>
-      {columnNames.map((columnName) => {
+      {columns.map(({ name }) => {
         return (
           <Stack
             sx={{
@@ -104,7 +104,7 @@ const KanbanHeaderBottom = () => {
               borderTopRightRadius: 16
             }}
           >
-            <Typography>{columnName}</Typography>
+            <Typography variant="body1">{name}</Typography>
           </Stack>
         );
       })}
@@ -113,7 +113,7 @@ const KanbanHeaderBottom = () => {
 };
 
 export const Kanban = () => {
-  const { selectedFolder, openFolder, columnData, addItem } = useKanban();
+  const { selectedFolder, openFolder, addItem } = useKanban();
   const [panelOpened, setPanelOpened] = useState(false);
   return (
     <LayoutPanel
@@ -153,7 +153,7 @@ export const Kanban = () => {
         top={<KanbanHeaderTop selectedFolder={selectedFolder} onAddItemButtonClick={addItem} />}
         bottom={<KanbanHeaderBottom />}
       />
-      <KanbanLayout data={columnData} />
+      <KanbanLayout />
     </LayoutPanel>
   );
 };
