@@ -11,6 +11,7 @@ import FolderSelectedIcon from "../assets/images/icons/folder_selected.png";
 import DiscussionIcon from "../assets/images/icons/discussion.png";
 import DiscussionSelectedIcon from "../assets/images/icons/discussion_selected.png";
 import { Kanban } from "../pages/kanban";
+import { BanknoteAPI } from "../pages/api/BanknoteAPI";
 
 export const routes = [
   {
@@ -60,6 +61,10 @@ export const routes = [
         // children: [{ path: "/snapshot/:id2", element: <ComponentPage /> }]
       }
     ]
+  },
+  {
+    path: "/api/banknotes",
+    element: <BanknoteAPI />
   },
   {
     path: "/pdf",
