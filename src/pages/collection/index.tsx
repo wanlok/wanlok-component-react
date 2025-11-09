@@ -120,8 +120,8 @@ export const CollectionPage = () => {
           <FolderCollectionHeader
             numberOfFolders={folders.length}
             serverHealth={serverHealth}
-            onHiddenButtonClick={() => setFolderControlGroupState(0)}
-            onDeleteButtonClick={() => setFolderControlGroupState(1)}
+            folderControlGroupState={folderControlGroupState}
+            onDeleteButtonClick={() => setFolderControlGroupState(folderControlGroupState === 1 ? 0 : 1)}
             onUploadButtonClick={uploadFolders}
             onDownloadButtonClick={downloadFolders}
           />
@@ -157,9 +157,9 @@ export const CollectionPage = () => {
       <CollectionHeader
         folder={selectedFolder}
         resetButtonHidden={!isFolderSorted()}
-        onHiddenButtonClick={() => setControlGroupState(0)}
-        onDeleteButtonClick={() => setControlGroupState(1)}
-        onLeftRightButtonClick={() => setControlGroupState(2)}
+        controlGroupState={controlGroupState}
+        onDeleteButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
+        onLeftRightButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
         onResetButtonClick={resetFolderSequences}
         onDownloadButtonClick={() => {
           if (selectedFolder) {

@@ -7,8 +7,7 @@ import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import GreenCircleIcon from "../../assets/images/icons/green_circle.png";
 import RedCircleIcon from "../../assets/images/icons/red_circle.png";
-import HiddenIcon from "../../assets/images/icons/hidden.png";
-import DeleteIcon from "../../assets/images/icons/delete.png";
+import CrossIcon from "../../assets/images/icons/cross.png";
 import LeftRightIcon from "../../assets/images/icons/left_right.png";
 import { WIconButton } from "../../components/WButton";
 import { Folder } from "../../services/Types";
@@ -18,14 +17,14 @@ import { LayoutHeader, topSx } from "../../components/LayoutHeader";
 export const FolderCollectionHeader = ({
   numberOfFolders,
   serverHealth,
-  onHiddenButtonClick,
+  folderControlGroupState,
   onDeleteButtonClick,
   onUploadButtonClick,
   onDownloadButtonClick
 }: {
   numberOfFolders: number;
   serverHealth: boolean | undefined;
-  onHiddenButtonClick: () => void;
+  folderControlGroupState: number;
   onDeleteButtonClick: () => void;
   onUploadButtonClick: () => void;
   onDownloadButtonClick: () => void;
@@ -45,16 +44,10 @@ export const FolderCollectionHeader = ({
         <Stack sx={{ flexDirection: "row", gap: 1 }}>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
             <WIconButton
-              icon={HiddenIcon}
-              iconSize={24}
-              onClick={onHiddenButtonClick}
-              sx={{ backgroundColor: "primary.main" }}
-            />
-            <WIconButton
-              icon={DeleteIcon}
-              iconSize={20}
+              icon={CrossIcon}
+              iconSize={16}
               onClick={onDeleteButtonClick}
-              sx={{ backgroundColor: "primary.main" }}
+              sx={{ backgroundColor: folderControlGroupState === 1 ? "primary.dark" : "primary.main" }}
             />
           </Stack>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
@@ -80,7 +73,7 @@ export const FolderCollectionHeader = ({
 export const CollectionHeader = ({
   folder,
   resetButtonHidden,
-  onHiddenButtonClick,
+  controlGroupState,
   onDeleteButtonClick,
   onLeftRightButtonClick,
   onResetButtonClick,
@@ -88,7 +81,7 @@ export const CollectionHeader = ({
 }: {
   folder: Folder | undefined;
   resetButtonHidden: boolean;
-  onHiddenButtonClick: () => void;
+  controlGroupState: number;
   onDeleteButtonClick: () => void;
   onLeftRightButtonClick: () => void;
   onResetButtonClick: () => void;
@@ -108,22 +101,16 @@ export const CollectionHeader = ({
         <Stack sx={{ flexDirection: "row", gap: 1 }}>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
             <WIconButton
-              icon={HiddenIcon}
-              iconSize={24}
-              onClick={onHiddenButtonClick}
-              sx={{ backgroundColor: "primary.main" }}
-            />
-            <WIconButton
-              icon={DeleteIcon}
-              iconSize={20}
+              icon={CrossIcon}
+              iconSize={16}
               onClick={onDeleteButtonClick}
-              sx={{ backgroundColor: "primary.main" }}
+              sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
             />
             <WIconButton
               icon={LeftRightIcon}
               iconSize={24}
               onClick={onLeftRightButtonClick}
-              sx={{ backgroundColor: "primary.main" }}
+              sx={{ backgroundColor: controlGroupState === 2 ? "primary.dark" : "primary.main" }}
             />
           </Stack>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
