@@ -28,14 +28,14 @@ export const TextCard = ({
       <Stack sx={{ aspectRatio: "4/3", backgroundColor: "#FFDE21" }}>
         <Typography sx={{ p: 2, whiteSpace: "pre-wrap" }}>{text}</Typography>
       </Stack>
-      {controlGroupState === 1 && (
+      {controlGroupState === 2 && (
         <ControlGroup
           direction={Direction.right}
           scrollHorizontally={scrollHorizontally}
           onDeleteButtonClick={onDeleteButtonClick}
         />
       )}
-      {controlGroupState === 2 && (
+      {controlGroupState === 3 && (
         <ControlGroup
           direction={Direction.right}
           scrollHorizontally={scrollHorizontally}

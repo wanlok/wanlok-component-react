@@ -10,6 +10,7 @@ import { WChip } from "../../components/WChip";
 import { Direction, Folder } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
 import { CollectionHeader, FolderCollectionHeader } from "./CollectionHeader";
+import { WModal } from "../../components/WModal";
 
 import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
@@ -110,6 +111,7 @@ export const CollectionPage = () => {
   const [panelOpened, setPanelOpened] = useState(false);
   const [folderControlGroupState, setFolderControlGroupState] = useState(0);
   const [controlGroupState, setControlGroupState] = useState(0);
+  const [open, setOpen] = useState(false);
   return (
     <LayoutPanel
       panelOpened={panelOpened}
@@ -158,8 +160,8 @@ export const CollectionPage = () => {
         folder={selectedFolder}
         resetButtonHidden={!isFolderSorted()}
         controlGroupState={controlGroupState}
-        onDeleteButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
-        onLeftRightButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
+        onDeleteButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
+        onLeftRightButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
         onResetButtonClick={resetFolderSequences}
         onDownloadButtonClick={() => {
           if (selectedFolder) {
@@ -176,14 +178,15 @@ export const CollectionPage = () => {
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
         controlGroupState={controlGroupState}
-        onLeftButtonClick={(type, id) => updateCollection(type, id, Direction.left)}
-        onRightButtonClick={(type, id) => updateCollection(type, id, Direction.right)}
+        onDetailsButtonClick={() => setOpen(true)}
         onDeleteButtonClick={async (type, id) => {
           const counts = await deleteCollectionItem(type, id);
           if (counts) {
             await updateFolderCounts(counts);
           }
         }}
+        onLeftButtonClick={(type, id) => updateCollection(type, id, Direction.left)}
+        onRightButtonClick={(type, id) => updateCollection(type, id, Direction.right)}
       />
       <WText
         placeholder="Links"
@@ -213,6 +216,9 @@ export const CollectionPage = () => {
           }
         ]}
       />
+      <WModal open={open} onClose={() => setOpen(false)}>
+        <Typography>Hello World</Typography>
+      </WModal>
     </LayoutPanel>
   );
 };

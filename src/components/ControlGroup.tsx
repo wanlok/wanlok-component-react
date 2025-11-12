@@ -10,18 +10,21 @@ import { Direction } from "../services/Types";
 export const ControlGroup = ({
   direction,
   scrollHorizontally,
+  onDetailsButtonClick,
+  onDeleteButtonClick,
   onLeftButtonClick,
-  onRightButtonClick,
-  onDeleteButtonClick
+  onRightButtonClick
 }: {
   direction: Direction;
   scrollHorizontally: boolean;
+  onDetailsButtonClick?: () => void;
+  onDeleteButtonClick?: () => void;
   onLeftButtonClick?: () => void;
   onRightButtonClick?: () => void;
-  onDeleteButtonClick?: () => void;
 }) => {
   const { breakpoints, palette } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
+  const sx = { backgroundColor: alpha(palette.common.black, 0.6) };
   return (
     <Stack
       sx={[
@@ -29,45 +32,19 @@ export const ControlGroup = ({
         direction === Direction.left ? { left: 0 } : { right: 0 }
       ]}
     >
-      {onDeleteButtonClick && (
-        <WIconButton
-          icon={CrossWhiteIcon}
-          iconSize={16}
-          onClick={onDeleteButtonClick}
-          sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
-        />
-      )}
+      {onDetailsButtonClick && <WIconButton icon={""} iconSize={16} onClick={onDetailsButtonClick} sx={sx} />}
+      {onDeleteButtonClick && <WIconButton icon={CrossWhiteIcon} iconSize={16} onClick={onDeleteButtonClick} sx={sx} />}
       {!scrollHorizontally && mobile && onLeftButtonClick && (
-        <WIconButton
-          icon={UpWhiteIcon}
-          iconSize={16}
-          onClick={onLeftButtonClick}
-          sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
-        />
+        <WIconButton icon={UpWhiteIcon} iconSize={16} onClick={onLeftButtonClick} sx={sx} />
       )}
       {!scrollHorizontally && mobile && onRightButtonClick && (
-        <WIconButton
-          icon={DownWhiteIcon}
-          iconSize={16}
-          onClick={onRightButtonClick}
-          sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
-        />
+        <WIconButton icon={DownWhiteIcon} iconSize={16} onClick={onRightButtonClick} sx={sx} />
       )}
       {(scrollHorizontally || !mobile) && onRightButtonClick && (
-        <WIconButton
-          icon={RightWhiteIcon}
-          iconSize={16}
-          onClick={onRightButtonClick}
-          sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
-        />
+        <WIconButton icon={RightWhiteIcon} iconSize={16} onClick={onRightButtonClick} sx={sx} />
       )}
       {(scrollHorizontally || !mobile) && onLeftButtonClick && (
-        <WIconButton
-          icon={LeftWhiteIcon}
-          iconSize={16}
-          onClick={onLeftButtonClick}
-          sx={{ backgroundColor: alpha(palette.common.black, 0.6) }}
-        />
+        <WIconButton icon={LeftWhiteIcon} iconSize={16} onClick={onLeftButtonClick} sx={sx} />
       )}
     </Stack>
   );

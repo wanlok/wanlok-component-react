@@ -16,9 +16,10 @@ export const CollectionList = ({
   youTubeRegularVideos,
   youTubeShortVideos,
   controlGroupState,
+  onDetailsButtonClick,
+  onDeleteButtonClick,
   onLeftButtonClick,
-  onRightButtonClick,
-  onDeleteButtonClick
+  onRightButtonClick
 }: {
   charts: [string, any][];
   files: [string, FileInfo][];
@@ -28,9 +29,10 @@ export const CollectionList = ({
   youTubeRegularVideos: [string, any][];
   youTubeShortVideos: [string, any][];
   controlGroupState: number;
+  onDetailsButtonClick: (type: string, id: string) => void;
+  onDeleteButtonClick: (type: string, id: string) => void;
   onLeftButtonClick: (type: string, id: string) => void;
   onRightButtonClick: (type: string, id: string) => void;
-  onDeleteButtonClick: (type: string, id: string) => void;
 }) => {
   const { breakpoints } = useTheme();
   const tablet = useMediaQuery(breakpoints.down("xl"));
@@ -50,9 +52,9 @@ export const CollectionList = ({
               leftMost={i === 0}
               rightMost={i === charts.length - 1}
               scrollHorizontally={false}
+              onDeleteButtonClick={() => onDeleteButtonClick("charts", uuid)}
               onLeftButtonClick={() => onLeftButtonClick("charts", uuid)}
               onRightButtonClick={() => onRightButtonClick("charts", uuid)}
-              onDeleteButtonClick={() => onDeleteButtonClick("charts", uuid)}
             />
           ))}
         </Stack>
@@ -72,6 +74,7 @@ export const CollectionList = ({
                 rightMost={i === files.length - 1}
                 scrollHorizontally={false}
                 controlGroupState={controlGroupState}
+                onDetailsButtonClick={() => onDetailsButtonClick("files", id)}
                 onLeftButtonClick={() => onLeftButtonClick("files", id)}
                 onRightButtonClick={() => onRightButtonClick("files", id)}
                 onDeleteButtonClick={() => onDeleteButtonClick("files", id)}
@@ -93,9 +96,10 @@ export const CollectionList = ({
               rightMost={i === hyperlinks.length - 1}
               scrollHorizontally={false}
               controlGroupState={controlGroupState}
+              onDetailsButtonClick={() => onDetailsButtonClick("hyperlinks", url)}
+              onDeleteButtonClick={() => onDeleteButtonClick("hyperlinks", url)}
               onLeftButtonClick={() => onLeftButtonClick("hyperlinks", url)}
               onRightButtonClick={() => onRightButtonClick("hyperlinks", url)}
-              onDeleteButtonClick={() => onDeleteButtonClick("hyperlinks", url)}
             />
           ))}
         </Stack>
@@ -112,9 +116,10 @@ export const CollectionList = ({
               rightMost={i === steam.length - 1}
               scrollHorizontally={false}
               controlGroupState={controlGroupState}
+              onDetailsButtonClick={() => onDetailsButtonClick("steam", appId)}
+              onDeleteButtonClick={() => onDeleteButtonClick("steam", appId)}
               onLeftButtonClick={() => onLeftButtonClick("steam", appId)}
               onRightButtonClick={() => onRightButtonClick("steam", appId)}
-              onDeleteButtonClick={() => onDeleteButtonClick("steam", appId)}
             />
           ))}
         </Stack>
@@ -128,9 +133,9 @@ export const CollectionList = ({
               rightMost={i === texts.length - 1}
               scrollHorizontally={false}
               controlGroupState={controlGroupState}
+              onDeleteButtonClick={() => onDeleteButtonClick("texts", id)}
               onLeftButtonClick={() => onLeftButtonClick("texts", id)}
               onRightButtonClick={() => onRightButtonClick("texts", id)}
-              onDeleteButtonClick={() => onDeleteButtonClick("texts", id)}
             />
           ))}
         </Stack>
@@ -150,9 +155,10 @@ export const CollectionList = ({
               rightMost={i * numberOfComponentsPerSlide + j === youTubeShortVideos.length - 1}
               scrollHorizontally={true}
               controlGroupState={controlGroupState}
+              onDetailsButtonClick={() => onDetailsButtonClick("youtube_shorts", id)}
+              onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
               onLeftButtonClick={() => onLeftButtonClick("youtube_shorts", id)}
               onRightButtonClick={() => onRightButtonClick("youtube_shorts", id)}
-              onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
             />
           )}
           sx={{ mt: seperate(list, youTubeShortVideos) }}
@@ -170,9 +176,10 @@ export const CollectionList = ({
               rightMost={i === youTubeRegularVideos.length - 1}
               scrollHorizontally={false}
               controlGroupState={controlGroupState}
+              onDetailsButtonClick={() => onDetailsButtonClick("youtube_regular", id)}
+              onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}
               onLeftButtonClick={() => onLeftButtonClick("youtube_regular", id)}
               onRightButtonClick={() => onRightButtonClick("youtube_regular", id)}
-              onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}
             />
           ))}
         </Stack>

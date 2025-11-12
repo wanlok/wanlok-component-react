@@ -47,7 +47,7 @@ export const FolderCollectionHeader = ({
               icon={CrossIcon}
               iconSize={16}
               onClick={onDeleteButtonClick}
-              sx={{ backgroundColor: folderControlGroupState === 1 ? "primary.dark" : "primary.main" }}
+              sx={{ backgroundColor: folderControlGroupState === 2 ? "primary.dark" : "primary.main" }}
             />
           </Stack>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
@@ -104,13 +104,13 @@ export const CollectionHeader = ({
               icon={CrossIcon}
               iconSize={16}
               onClick={onDeleteButtonClick}
-              sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
+              sx={{ backgroundColor: controlGroupState === 2 ? "primary.dark" : "primary.main" }}
             />
             <WIconButton
               icon={LeftRightIcon}
               iconSize={24}
               onClick={onLeftRightButtonClick}
-              sx={{ backgroundColor: controlGroupState === 2 ? "primary.dark" : "primary.main" }}
+              sx={{ backgroundColor: controlGroupState === 3 ? "primary.dark" : "primary.main" }}
             />
           </Stack>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
