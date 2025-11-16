@@ -23,6 +23,7 @@ import SteamIcon from "../../assets/images/icons/steam.png";
 import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import SendIcon from "../../assets/images/icons/send.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
+import { Dummy } from "./Dummy";
 
 const FolderRow = ({
   folder,
@@ -113,6 +114,7 @@ export const CollectionPage = () => {
   const [panelOpened, setPanelOpened] = useState(false);
   const [folderControlGroupState, setFolderControlGroupState] = useState(0);
   const [controlGroupState, setControlGroupState] = useState(0);
+  const [open2, setOpen2] = useState(false);
   const [open, setOpen] = useState(false);
   return (
     <LayoutPanel
@@ -162,6 +164,7 @@ export const CollectionPage = () => {
         folder={selectedFolder}
         resetButtonHidden={!isFolderSorted()}
         controlGroupState={controlGroupState}
+        onInfoButtonClick={() => setOpen2(true)}
         onDeleteButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
         onLeftRightButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
         onResetButtonClick={resetFolderSequences}
@@ -221,6 +224,9 @@ export const CollectionPage = () => {
           }
         ]}
       />
+      <WModal open={open2} onClose={() => setOpen2(false)}>
+        <Dummy />
+      </WModal>
       <WModal open={open} onClose={() => setOpen(false)}>
         <Typography>Hello World</Typography>
       </WModal>

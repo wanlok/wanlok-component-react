@@ -74,6 +74,7 @@ export const CollectionHeader = ({
   folder,
   resetButtonHidden,
   controlGroupState,
+  onInfoButtonClick,
   onDeleteButtonClick,
   onLeftRightButtonClick,
   onResetButtonClick,
@@ -82,6 +83,7 @@ export const CollectionHeader = ({
   folder: Folder | undefined;
   resetButtonHidden: boolean;
   controlGroupState: number;
+  onInfoButtonClick: () => void;
   onDeleteButtonClick: () => void;
   onLeftRightButtonClick: () => void;
   onResetButtonClick: () => void;
@@ -100,6 +102,12 @@ export const CollectionHeader = ({
       bottom={
         <Stack sx={{ flexDirection: "row", gap: 1 }}>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+            <WIconButton
+              icon={""}
+              iconSize={16}
+              onClick={onInfoButtonClick}
+              sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
+            />
             <WIconButton
               icon={CrossIcon}
               iconSize={16}

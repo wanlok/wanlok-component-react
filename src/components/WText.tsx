@@ -24,7 +24,7 @@ export const WText = ({
 }: {
   text?: string;
   editable?: boolean;
-  placeholder: string;
+  placeholder?: string;
   rightButtons: (LabelButtonContent | IconButtonContent)[];
 }) => {
   const [value, setValue] = useState<string>(text);
