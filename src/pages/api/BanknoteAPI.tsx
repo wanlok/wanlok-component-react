@@ -23,7 +23,7 @@ export const useAPI = () => {
 
     const list: Banknote[] = [];
 
-    for (const [_, { name, url }] of Object.entries(data.files as Record<string, CloudinaryFileInfo>)) {
+    for (const { name, url } of Object.values(data.files as Record<string, CloudinaryFileInfo>)) {
       list.push({ name, url });
     }
 
