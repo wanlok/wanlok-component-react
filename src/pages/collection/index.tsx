@@ -14,6 +14,7 @@ import { WModal } from "../../components/WModal";
 
 import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
+import DocumentSelectedIcon from "../../assets/images/icons/document_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import CrossIcon from "../../assets/images/icons/cross.png";
@@ -32,7 +33,7 @@ const FolderRow = ({
   selectedFolder?: Folder;
   panelOpened?: boolean;
 }) => {
-  const { hyperlinks, steam, youtube_regular, youtube_shorts } = folder.counts;
+  const { files, hyperlinks, steam, youtube_regular, youtube_shorts } = folder.counts;
   const mobileRow = panelOpened === true || panelOpened === false;
   return (
     <Stack
@@ -57,6 +58,7 @@ const FolderRow = ({
         <Typography variant="body1">{folder.name}</Typography>
         {panelOpened === undefined && Object.values(folder.counts).some((count) => count > 0) && (
           <Stack sx={{ flexDirection: "row", gap: 1 }}>
+            {files > 0 && <WChip icon={DocumentSelectedIcon} label={`${files}`} />}
             {hyperlinks > 0 && <WChip icon={HyperlinkIcon} label={`${hyperlinks}`} />}
             {steam > 0 && <WChip icon={SteamIcon} label={`${steam}`} />}
             {youtube_regular > 0 && youtube_shorts > 0 && (
@@ -210,7 +212,10 @@ export const CollectionPage = () => {
             onClick: async () => {
               const collectionId = getDocumentId(selectedFolder?.name);
               if (collectionId) {
-                addCollectionFiles(collectionId);
+                const counts = await addCollectionFiles(collectionId);
+                if (counts) {
+                  await updateFolderCounts(counts);
+                }
               }
             }
           }

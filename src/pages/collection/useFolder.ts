@@ -190,26 +190,25 @@ export const useFolder = () => {
   };
 
   const uploadFolders = async () => {
-    getFiles((files) => {
-      if (files.length > 0) {
-        const fileReader = new FileReader();
-        fileReader.onload = () => {
-          let jsonObject;
-          try {
-            jsonObject = JSON.parse(fileReader.result as string);
-          } catch (e) {}
-          if (
-            jsonObject !== null &&
-            typeof jsonObject === "object" &&
-            Object.values(jsonObject).every((i) => Array.isArray(i) && i.every((j) => typeof j === "string"))
-          ) {
-            upload(jsonObject as { [folderName: string]: string[] });
-          }
-        };
-        fileReader.onerror = () => {};
-        fileReader.readAsText(files[0]);
-      }
-    });
+    let files = await getFiles();
+    if (files.length > 0) {
+      const fileReader = new FileReader();
+      fileReader.onload = () => {
+        let jsonObject;
+        try {
+          jsonObject = JSON.parse(fileReader.result as string);
+        } catch (e) {}
+        if (
+          jsonObject !== null &&
+          typeof jsonObject === "object" &&
+          Object.values(jsonObject).every((i) => Array.isArray(i) && i.every((j) => typeof j === "string"))
+        ) {
+          upload(jsonObject as { [folderName: string]: string[] });
+        }
+      };
+      fileReader.onerror = () => {};
+      fileReader.readAsText(files[0]);
+    }
   };
 
   const downloadFolder = async (folder: Folder) => {

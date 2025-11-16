@@ -70,33 +70,32 @@ export const useCollection = (
     return counts;
   };
 
-  const addCollectionFiles = (collectionId: string) => {
+  const addCollectionFiles = async (collectionId: string) => {
     let counts: CollectionCounts | undefined = undefined;
-    getFiles(async (files) => {
-      const fileInfos = await uploadAndGetFileInfos(files);
-      const docRef = doc(db, collectionName, collectionId);
-      let document;
-      if (collectionDocument) {
-        document = {
-          ...collectionDocument,
-          files: { ...collectionDocument.files, ...fileInfos }
-        };
-        await updateDoc(docRef, document);
-      } else {
-        document = {
-          charts: {},
-          files: fileInfos,
-          hyperlinks: {},
-          steam: {},
-          texts: {},
-          youtube_regular: {},
-          youtube_shorts: {}
-        };
-        await setDoc(docRef, document);
-      }
-      setCollectionDocument(document);
-      counts = getCounts(document);
-    });
+    let files = await getFiles();
+    const fileInfos = await uploadAndGetFileInfos(files);
+    const docRef = doc(db, collectionName, collectionId);
+    let document;
+    if (collectionDocument) {
+      document = {
+        ...collectionDocument,
+        files: { ...collectionDocument.files, ...fileInfos }
+      };
+      await updateDoc(docRef, document);
+    } else {
+      document = {
+        charts: {},
+        files: fileInfos,
+        hyperlinks: {},
+        steam: {},
+        texts: {},
+        youtube_regular: {},
+        youtube_shorts: {}
+      };
+      await setDoc(docRef, document);
+    }
+    setCollectionDocument(document);
+    counts = getCounts(document);
     return counts;
   };
 
