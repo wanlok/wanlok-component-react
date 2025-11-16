@@ -1,8 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { getFileExtension } from "../../common/FileUtils";
-import { viewUrls } from "../../services/Types";
+import { CloudinaryFileInfo } from "../../services/Types";
 
 const collectionName = "collections";
 const documentId = "banknotes";
@@ -24,10 +23,7 @@ export const useAPI = () => {
 
     const list: Banknote[] = [];
 
-    for (const [id, { mime_type, name }] of Object.entries(
-      data.files as Record<string, { mime_type: string; name: string }>
-    )) {
-      const url = `${viewUrls.files}${id}${getFileExtension(mime_type)}`;
+    for (const [_, { name, url }] of Object.entries(data.files as Record<string, CloudinaryFileInfo>)) {
       list.push({ name, url });
     }
 
