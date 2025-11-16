@@ -31,6 +31,7 @@ export interface FileInfo {
 
 export interface CloudinaryFileInfo {
   name: string;
+  mime_type: string;
   url: string;
 }
 
