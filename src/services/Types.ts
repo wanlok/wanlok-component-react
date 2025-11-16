@@ -29,6 +29,11 @@ export interface FileInfo {
   reject_reason?: string;
 }
 
+export interface CloudinaryFileInfo {
+  name: string;
+  url: string;
+}
+
 export interface SteamInfo {
   title: string;
   imageUrl: string;
@@ -61,7 +66,7 @@ export interface FolderDocument {
 
 export interface CollectionDocument {
   charts: { [key: string]: ChartItem };
-  files: { [key: string]: FileInfo };
+  files: { [key: string]: CloudinaryFileInfo };
   hyperlinks: { [key: string]: string };
   steam: { [key: string]: SteamInfo };
   texts: { [key: string]: TextItem };

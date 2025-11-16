@@ -1,9 +1,8 @@
 import { Stack, useMediaQuery, useTheme } from "@mui/material";
-import { FileInfo, serverUrl, TextItem, viewUrls } from "../../services/Types";
+import { CloudinaryFileInfo, serverUrl, TextItem, viewUrls } from "../../services/Types";
 import { seperate } from "../../common/LayoutUtils";
 import { WChart } from "../../components/WChart";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
-import { getFileExtension } from "../../common/FileUtils";
 import { WCarousel } from "../../components/WCarousel";
 import { TextCard } from "../../components/TextCard";
 
@@ -22,7 +21,7 @@ export const CollectionList = ({
   onRightButtonClick
 }: {
   charts: [string, any][];
-  files: [string, FileInfo][];
+  files: [string, CloudinaryFileInfo][];
   hyperlinks: [string, string][];
   steam: [string, any][];
   texts: [string, TextItem][];
@@ -59,15 +58,14 @@ export const CollectionList = ({
           ))}
         </Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, files) }}>
-          {files.map(([id, { name, mime_type }], i) => {
-            const imageUrl = `${viewUrls.files}${id}${getFileExtension(mime_type)}`;
+          {files.map(([id, { name, url }], i) => {
             return (
               <ImageTitleLink
                 key={`files-${i}`}
-                imageUrl={imageUrl}
+                imageUrl={url}
                 imageSx={{ objectPosition: "top" }}
                 title={name}
-                href={imageUrl}
+                href={url}
                 width={width}
                 aspectRatio={"16/9"}
                 leftMost={i === 0}
