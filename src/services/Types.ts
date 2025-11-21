@@ -12,6 +12,7 @@ export interface Rect {
 
 export interface Folder {
   name: string;
+  attributes: CollectionAttributes;
   counts: CollectionCounts;
   sequences: CollectionSequences;
 }
@@ -78,6 +79,10 @@ export interface CollectionDocument {
 export const isCollectionKey = (key: string): key is keyof CollectionDocument => {
   return ["charts", "files", "hyperlinks", "steam", "texts", "youtube_regular", "youtube_shorts"].includes(key);
 };
+
+export type CollectionAttributes = { name: string; type: "text" | "number" }[];
+
+export const emptyCollectionAttributes: CollectionAttributes = [];
 
 export type CollectionCounts = {
   [key in keyof CollectionDocument]: number;

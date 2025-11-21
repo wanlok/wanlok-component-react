@@ -2,26 +2,23 @@ import { Stack } from "@mui/material";
 import { TextInput } from "../../components/TextInput";
 import { WText } from "../../components/WText";
 import { SelectInput } from "../../components/SelectInput";
-import { Dispatch } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { WButton } from "../../components/WButton";
-
-export interface Aaa {
-  name: string;
-  type: string;
-}
+import { CollectionAttributes } from "../../services/Types";
 
 export const Dummy = ({
   attributes,
-  setAttributes
+  setAttributes,
+  updateFolderAttributes
 }: {
-  attributes: Aaa[];
-  setAttributes: Dispatch<React.SetStateAction<Aaa[]>>;
+  attributes: CollectionAttributes;
+  setAttributes: Dispatch<SetStateAction<CollectionAttributes>>;
+  updateFolderAttributes: (attributes: CollectionAttributes) => Promise<void>;
 }) => {
   const options = [
     { label: "Text", value: "text" },
     { label: "Number", value: "number" }
   ];
-
   return (
     <>
       <WText
@@ -30,7 +27,12 @@ export const Dummy = ({
         rightButtons={[
           {
             label: "Add",
-            onClick: () => setAttributes([...attributes, { name: "", type: "text" }])
+            onClick: () => {
+              if (!attributes) {
+                return;
+              }
+              setAttributes([...attributes, { name: "", type: "text" }]);
+            }
           }
         ]}
       />
@@ -56,6 +58,9 @@ export const Dummy = ({
                 items={options}
                 value={type}
                 onChange={(value: string) => {
+                  if (value !== "text" && value !== "number") {
+                    return;
+                  }
                   setAttributes((prev) => {
                     const newAttributes = [...prev];
                     newAttributes[index].type = value;
@@ -69,7 +74,7 @@ export const Dummy = ({
       })}
       <WButton
         onClick={() => {
-          console.log("Hello World");
+          updateFolderAttributes(attributes);
         }}
       >
         Save

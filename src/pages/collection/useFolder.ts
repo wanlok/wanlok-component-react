@@ -3,7 +3,9 @@ import { db } from "../../firebase";
 import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
 import {
+  CollectionAttributes,
   CollectionCounts,
+  emptyCollectionAttributes,
   emptyCollectionCounts,
   emptyCollectionSequences,
   Folder,
@@ -87,7 +89,7 @@ export const useFolder = () => {
   const addFolder = async (name: string) => {
     if (name.length > 0 && /^[a-zA-Z0-9 ]+$/.test(name)) {
       let folders: Folder[];
-      const folder = { name, counts: emptyCollectionCounts, sequences: emptyCollectionSequences };
+      const folder = { name, attributes: [], counts: emptyCollectionCounts, sequences: emptyCollectionSequences };
       const docRef = doc(db, collectionName, documentId);
       if (folderDocument) {
         const duplicated = folderDocument.folders.some((f) => f.name === folder.name);
@@ -116,9 +118,25 @@ export const useFolder = () => {
     }
   };
 
+  const updateFolderAttributes = async (attributes: CollectionAttributes) => {
+    if (selectedFolder) {
+      await updateFolderDocument({
+        name: selectedFolder.name,
+        attributes,
+        counts: selectedFolder.counts,
+        sequences: selectedFolder.sequences
+      });
+    }
+  };
+
   const updateFolderCounts = async (counts: CollectionCounts) => {
     if (selectedFolder) {
-      await updateFolderDocument({ name: selectedFolder.name, counts, sequences: selectedFolder.sequences });
+      await updateFolderDocument({
+        name: selectedFolder.name,
+        attributes: selectedFolder.attributes,
+        counts,
+        sequences: selectedFolder.sequences
+      });
     }
   };
 
@@ -128,7 +146,12 @@ export const useFolder = () => {
       if (isCollectionKey(type)) {
         newSequences[type] = sequences;
       }
-      await updateFolderDocument({ name: selectedFolder.name, counts: selectedFolder.counts, sequences: newSequences });
+      await updateFolderDocument({
+        name: selectedFolder.name,
+        attributes: selectedFolder.attributes,
+        counts: selectedFolder.counts,
+        sequences: newSequences
+      });
     }
   };
 
@@ -146,6 +169,7 @@ export const useFolder = () => {
     if (selectedFolder) {
       await updateFolderDocument({
         name: selectedFolder.name,
+        attributes: selectedFolder.attributes,
         counts: selectedFolder.counts,
         sequences: emptyCollectionSequences
       });
@@ -174,7 +198,12 @@ export const useFolder = () => {
     await deleteDoc(docRef);
     const newFolderDocument = {
       folders: Object.entries(json).map(([name, urlStrings]) => {
-        return { name, counts: getCountsByUrlStrings(urlStrings), sequences: emptyCollectionSequences };
+        return {
+          name,
+          attributes: emptyCollectionAttributes,
+          counts: getCountsByUrlStrings(urlStrings),
+          sequences: emptyCollectionSequences
+        };
       })
     };
     await setDoc(docRef, newFolderDocument);
@@ -236,6 +265,7 @@ export const useFolder = () => {
     folders: folderDocument ? folderDocument?.folders : [],
     selectedFolder,
     addFolder,
+    updateFolderAttributes,
     updateFolderCounts,
     updateFolderSequences,
     isFolderSorted,

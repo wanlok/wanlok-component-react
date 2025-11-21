@@ -2,12 +2,12 @@ import { Box, Stack, Typography } from "@mui/material";
 import { useCollection } from "./useCollection";
 import { WText } from "../../components/WText";
 import { WCardList } from "../../components/WCardList";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { WIconButton } from "../../components/WButton";
 import { WChip } from "../../components/WChip";
-import { Direction, Folder } from "../../services/Types";
+import { CollectionAttributes, Direction, Folder } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
 import { CollectionHeader, FolderCollectionHeader } from "./CollectionHeader";
 import { WModal } from "../../components/WModal";
@@ -23,7 +23,7 @@ import SteamIcon from "../../assets/images/icons/steam.png";
 import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import SendIcon from "../../assets/images/icons/send.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
-import { Aaa, Dummy } from "./Dummy";
+import { Dummy } from "./Dummy";
 
 const FolderRow = ({
   folder,
@@ -88,6 +88,7 @@ export const CollectionPage = () => {
     folders,
     selectedFolder,
     addFolder,
+    updateFolderAttributes,
     updateFolderCounts,
     updateFolderSequences,
     isFolderSorted,
@@ -116,7 +117,13 @@ export const CollectionPage = () => {
   const [controlGroupState, setControlGroupState] = useState(0);
   const [open2, setOpen2] = useState(false);
   const [open, setOpen] = useState(false);
-  const [attributes, setAttributes] = useState<Aaa[]>([]);
+
+  const [attributes, setAttributes] = useState<CollectionAttributes>([]);
+
+  useEffect(() => {
+    setAttributes(selectedFolder?.attributes || []);
+  }, [selectedFolder]);
+
   return (
     <LayoutPanel
       panelOpened={panelOpened}
@@ -226,7 +233,7 @@ export const CollectionPage = () => {
         ]}
       />
       <WModal open={open2} onClose={() => setOpen2(false)}>
-        <Dummy attributes={attributes} setAttributes={setAttributes} />
+        <Dummy attributes={attributes} setAttributes={setAttributes} updateFolderAttributes={updateFolderAttributes} />
       </WModal>
       <WModal open={open} onClose={() => setOpen(false)}>
         <Typography>Hello World</Typography>
