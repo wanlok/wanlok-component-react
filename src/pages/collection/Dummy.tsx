@@ -2,23 +2,28 @@ import { Stack } from "@mui/material";
 import { TextInput } from "../../components/TextInput";
 import { WText } from "../../components/WText";
 import { SelectInput } from "../../components/SelectInput";
-import { Dispatch, SetStateAction } from "react";
+import { useEffect, useState } from "react";
 import { WButton } from "../../components/WButton";
-import { CollectionAttributes } from "../../services/Types";
+import { CollectionAttributes, Folder } from "../../services/Types";
+
+const options = [
+  { label: "Text", value: "text" },
+  { label: "Number", value: "number" }
+];
 
 export const Dummy = ({
-  attributes,
-  setAttributes,
+  selectedFolder,
   updateFolderAttributes
 }: {
-  attributes: CollectionAttributes;
-  setAttributes: Dispatch<SetStateAction<CollectionAttributes>>;
+  selectedFolder: Folder;
   updateFolderAttributes: (attributes: CollectionAttributes) => Promise<void>;
 }) => {
-  const options = [
-    { label: "Text", value: "text" },
-    { label: "Number", value: "number" }
-  ];
+  const [attributes, setAttributes] = useState<CollectionAttributes>([]);
+
+  useEffect(() => {
+    setAttributes([...selectedFolder.attributes.map((attribute) => ({ ...attribute }))]);
+  }, [selectedFolder]);
+
   return (
     <>
       <WText
@@ -36,18 +41,16 @@ export const Dummy = ({
           }
         ]}
       />
-      {attributes.map(({ name, type }, index) => {
+      {attributes.map(({ name, type }, i) => {
         return (
-          <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
+          <Stack key={`attribute-${i}`} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
             <Stack sx={{ flex: 1 }}>
               <TextInput
                 value={name}
                 onChange={(value) => {
-                  setAttributes((prev) => {
-                    const newAttributes = [...prev];
-                    newAttributes[index].name = value;
-                    return newAttributes;
-                  });
+                  const newAttributes = [...attributes];
+                  newAttributes[i].name = value;
+                  setAttributes(newAttributes);
                 }}
                 hideHelperText={true}
                 inputPropsSx={{ flex: 1 }}
@@ -61,11 +64,9 @@ export const Dummy = ({
                   if (value !== "text" && value !== "number") {
                     return;
                   }
-                  setAttributes((prev) => {
-                    const newAttributes = [...prev];
-                    newAttributes[index].type = value;
-                    return newAttributes;
-                  });
+                  const newAttributes = [...attributes];
+                  newAttributes[i].type = value;
+                  setAttributes(newAttributes);
                 }}
               />
             </Stack>

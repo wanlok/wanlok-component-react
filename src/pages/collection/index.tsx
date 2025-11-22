@@ -7,7 +7,7 @@ import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { WIconButton } from "../../components/WButton";
 import { WChip } from "../../components/WChip";
-import { CollectionAttributes, Direction, Folder } from "../../services/Types";
+import { Direction, Folder } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
 import { CollectionHeader, FolderCollectionHeader } from "./CollectionHeader";
 import { WModal } from "../../components/WModal";
@@ -118,12 +118,6 @@ export const CollectionPage = () => {
   const [open2, setOpen2] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const [attributes, setAttributes] = useState<CollectionAttributes>([]);
-
-  useEffect(() => {
-    setAttributes(selectedFolder?.attributes || []);
-  }, [selectedFolder]);
-
   return (
     <LayoutPanel
       panelOpened={panelOpened}
@@ -232,9 +226,17 @@ export const CollectionPage = () => {
           }
         ]}
       />
-      <WModal open={open2} onClose={() => setOpen2(false)}>
-        <Dummy attributes={attributes} setAttributes={setAttributes} updateFolderAttributes={updateFolderAttributes} />
-      </WModal>
+      {selectedFolder && (
+        <WModal
+          open={open2}
+          onClose={() => {
+            setOpen2(false);
+            console.log("onClose still called");
+          }}
+        >
+          <Dummy selectedFolder={selectedFolder} updateFolderAttributes={updateFolderAttributes} />
+        </WModal>
+      )}
       <WModal open={open} onClose={() => setOpen(false)}>
         <Typography>Hello World</Typography>
       </WModal>
