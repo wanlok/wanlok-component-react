@@ -40,7 +40,7 @@ export const Dummy2 = ({
         }
       }
     }
-  }, [collectionTypeId]);
+  }, [files, collectionTypeId]);
 
   return (
     <WModal open={collectionTypeId !== undefined} onClose={() => setCollectionTypeId(undefined)}>
