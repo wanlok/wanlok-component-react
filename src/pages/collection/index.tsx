@@ -10,7 +10,8 @@ import { WChip } from "../../components/WChip";
 import { Direction, Folder } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
 import { CollectionHeader, FolderCollectionHeader } from "./CollectionHeader";
-import { WModal } from "../../components/WModal";
+import { Dummy } from "./Dummy";
+import { Dummy2 } from "./Dummy2";
 
 import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
@@ -23,7 +24,6 @@ import SteamIcon from "../../assets/images/icons/steam.png";
 import YouTubeIcon from "../../assets/images/icons/youtube.png";
 import SendIcon from "../../assets/images/icons/send.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
-import { Dummy } from "./Dummy";
 
 const FolderRow = ({
   folder,
@@ -109,14 +109,15 @@ export const CollectionPage = () => {
     youTubeShortVideos,
     addCollectionItems,
     addCollectionFiles,
-    updateCollection,
+    updateCollectionAttributes,
+    updateCollectionSequences,
     deleteCollectionItem
   } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolderSequences);
   const [panelOpened, setPanelOpened] = useState(false);
   const [folderControlGroupState, setFolderControlGroupState] = useState(0);
   const [controlGroupState, setControlGroupState] = useState(0);
   const [open2, setOpen2] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [collectionTypeId, setCollectionTypeId] = useState<{ type: string; id: string } | undefined>(undefined);
 
   return (
     <LayoutPanel
@@ -185,15 +186,15 @@ export const CollectionPage = () => {
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
         controlGroupState={controlGroupState}
-        onDetailsButtonClick={() => setOpen(true)}
+        onDetailsButtonClick={(type, id) => setCollectionTypeId({ type, id })}
         onDeleteButtonClick={async (type, id) => {
           const counts = await deleteCollectionItem(type, id);
           if (counts) {
             await updateFolderCounts(counts);
           }
         }}
-        onLeftButtonClick={(type, id) => updateCollection(type, id, Direction.left)}
-        onRightButtonClick={(type, id) => updateCollection(type, id, Direction.right)}
+        onLeftButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.left)}
+        onRightButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.right)}
       />
       <WText
         placeholder="Links"
@@ -226,20 +227,19 @@ export const CollectionPage = () => {
           }
         ]}
       />
-      {selectedFolder && (
-        <WModal
-          open={open2}
-          onClose={() => {
-            setOpen2(false);
-            console.log("onClose still called");
-          }}
-        >
-          <Dummy selectedFolder={selectedFolder} updateFolderAttributes={updateFolderAttributes} />
-        </WModal>
-      )}
-      <WModal open={open} onClose={() => setOpen(false)}>
-        <Typography>Hello World</Typography>
-      </WModal>
+      <Dummy
+        open={open2}
+        setOpen={setOpen2}
+        selectedFolder={selectedFolder}
+        updateFolderAttributes={updateFolderAttributes}
+      />
+      <Dummy2
+        files={files}
+        collectionTypeId={collectionTypeId}
+        setCollectionTypeId={setCollectionTypeId}
+        selectedFolder={selectedFolder}
+        updateCollectionAttributes={updateCollectionAttributes}
+      />
     </LayoutPanel>
   );
 };

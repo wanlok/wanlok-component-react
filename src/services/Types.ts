@@ -30,7 +30,11 @@ export interface FileInfo {
   reject_reason?: string;
 }
 
-export interface CloudinaryFileInfo {
+interface ParentInfo {
+  attributes?: { [key: string]: string };
+}
+
+export interface CloudinaryFileInfo extends ParentInfo {
   name: string;
   mime_type: string;
   url: string;

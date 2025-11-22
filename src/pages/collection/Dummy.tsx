@@ -1,10 +1,11 @@
-import { Stack } from "@mui/material";
+import { Checkbox, Stack } from "@mui/material";
 import { TextInput } from "../../components/TextInput";
 import { WText } from "../../components/WText";
 import { SelectInput } from "../../components/SelectInput";
-import { useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { WButton } from "../../components/WButton";
 import { CollectionAttributes, Folder } from "../../services/Types";
+import { WModal } from "../../components/WModal";
 
 const options = [
   { label: "Text", value: "text" },
@@ -12,20 +13,28 @@ const options = [
 ];
 
 export const Dummy = ({
+  open,
+  setOpen,
   selectedFolder,
   updateFolderAttributes
 }: {
-  selectedFolder: Folder;
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  selectedFolder?: Folder;
   updateFolderAttributes: (attributes: CollectionAttributes) => Promise<void>;
 }) => {
   const [attributes, setAttributes] = useState<CollectionAttributes>([]);
+  const [checkboxStatus, setCheckboxStatus] = useState(new Set<number>());
 
   useEffect(() => {
-    setAttributes([...selectedFolder.attributes.map((attribute) => ({ ...attribute }))]);
+    if (selectedFolder) {
+      setAttributes([...selectedFolder.attributes.map((attribute) => ({ ...attribute }))]);
+      setCheckboxStatus(new Set());
+    }
   }, [selectedFolder]);
 
   return (
-    <>
+    <WModal open={open} onClose={() => setOpen(false)}>
       <WText
         text="Attributes"
         editable={false}
@@ -37,6 +46,13 @@ export const Dummy = ({
                 return;
               }
               setAttributes([...attributes, { name: "", type: "text" }]);
+            }
+          },
+          {
+            label: "Delete",
+            onClick: () => {
+              setAttributes(attributes.filter((_, i) => !checkboxStatus.has(i)));
+              setCheckboxStatus(new Set());
             }
           }
         ]}
@@ -70,16 +86,24 @@ export const Dummy = ({
                 }}
               />
             </Stack>
+            <Stack>
+              <Checkbox
+                checked={checkboxStatus.has(i)}
+                onChange={(event) => {
+                  const newCheckboxStatus = new Set(checkboxStatus);
+                  if (event.target.checked) {
+                    newCheckboxStatus.add(i);
+                  } else {
+                    newCheckboxStatus.delete(i);
+                  }
+                  setCheckboxStatus(newCheckboxStatus);
+                }}
+              />
+            </Stack>
           </Stack>
         );
       })}
-      <WButton
-        onClick={() => {
-          updateFolderAttributes(attributes);
-        }}
-      >
-        Save
-      </WButton>
-    </>
+      <WButton onClick={async () => await updateFolderAttributes(attributes)}>Save</WButton>
+    </WModal>
   );
 };

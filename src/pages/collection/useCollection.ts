@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { deleteDoc, deleteField, doc, FieldPath, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { collection, deleteDoc, deleteField, doc, FieldPath, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import {
   CollectionDocument,
   CollectionCounts,
@@ -99,7 +99,28 @@ export const useCollection = (
     return counts;
   };
 
-  const updateCollection = async (type: string, id: string, direction: Direction) => {
+  const updateCollectionAttributes = async (
+    type: string,
+    id: string,
+    attributes: {
+      [key: string]: string;
+    }
+  ) => {
+    if (collectionDocument && isCollectionKey(type)) {
+      if (type === "files") {
+        let newCollectionDocument = { ...collectionDocument };
+        newCollectionDocument.files[id] = {
+          ...collectionDocument.files[id],
+          attributes
+        };
+        const docRef = doc(db, collectionName, documentId!);
+        await updateDoc(docRef, newCollectionDocument);
+        setCollectionDocument(newCollectionDocument);
+      }
+    }
+  };
+
+  const updateCollectionSequences = async (type: string, id: string, direction: Direction) => {
     if (collectionDocument && isCollectionKey(type)) {
       const keys = Object.keys(collectionDocument[type]);
       const typeSequences = collectionSequences?.[type];
@@ -182,7 +203,8 @@ export const useCollection = (
     youTubeShortVideos: toList(collectionDocument?.youtube_shorts, collectionSequences?.youtube_shorts),
     addCollectionItems,
     addCollectionFiles,
-    updateCollection,
+    updateCollectionAttributes,
+    updateCollectionSequences,
     deleteCollection,
     deleteCollectionItem,
     getCollectionUrls
