@@ -2,7 +2,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import { useCollection } from "./useCollection";
 import { WText } from "../../components/WText";
 import { WCardList } from "../../components/WCardList";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { WIconButton } from "../../components/WButton";
