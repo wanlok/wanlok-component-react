@@ -2,6 +2,7 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { Attributes, CloudinaryFileInfo, CollectionAttributes, Folder, TypedAttributes } from "../../services/Types";
+import { setTypedAttributes } from "../../common/setTypedAttributes";
 
 interface Banknote {
   name: string;
@@ -12,18 +13,7 @@ interface Banknote {
 
 const parseAttributes = (collectionAttributes: CollectionAttributes, attributes: Attributes | undefined) => {
   let typedAttributes: TypedAttributes = { w: 0, h: 0 };
-
-  collectionAttributes.forEach(({ name, type }) => {
-    const value = attributes?.[name];
-    if (value) {
-      if (type === "number") {
-        typedAttributes[name] = Number(value);
-      } else {
-        typedAttributes[name] = value;
-      }
-    }
-  });
-
+  setTypedAttributes(typedAttributes, collectionAttributes, attributes);
   return typedAttributes as { w: number; h: number };
 };
 
