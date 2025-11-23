@@ -1,7 +1,7 @@
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { CloudinaryFileInfo } from "../../services/Types";
+import { CloudinaryFileInfo, CollectionAttributes, Folder } from "../../services/Types";
 
 const collectionName = "collections";
 const documentId = "banknotes";
@@ -11,23 +11,57 @@ interface Banknote {
   url: string;
 }
 
+const getAttributes = async () => {
+  let attributes: CollectionAttributes = [];
+
+  const data = (await getDoc(doc(db, "configs", "folders"))).data() as { folders: Folder[] } | undefined;
+
+  if (data) {
+    const folder = data.folders.find((folder) => folder.name === "Banknotes");
+    if (folder?.attributes) {
+      attributes = folder?.attributes;
+    }
+  }
+
+  return attributes;
+};
+
+const getBanknotes = async (collectionAttributes: CollectionAttributes) => {
+  let banknotes: Banknote[] = [];
+
+  const data = (await getDoc(doc(db, collectionName, documentId))).data() as
+    | {
+        files: Record<string, CloudinaryFileInfo>;
+      }
+    | undefined;
+
+  if (data) {
+    for (const { name, url, attributes } of Object.values(data.files)) {
+      let newAttributes: { [key: string]: number | string } = {};
+      collectionAttributes.map(({ name, type }) => {
+        let typedValue;
+        let value = attributes?.[name];
+        if (type === "number" && value) {
+          typedValue = Number(value);
+        } else {
+          typedValue = value;
+        }
+        if (typedValue) {
+          newAttributes[name] = typedValue;
+        }
+      });
+      banknotes.push({ name, url, ...newAttributes });
+    }
+  }
+
+  return banknotes;
+};
+
 export const useAPI = () => {
   const [list, setList] = useState<Banknote[]>([]);
 
   const fetch = async () => {
-    const data = (await getDoc(doc(db, collectionName, documentId))).data();
-
-    if (!data) {
-      return;
-    }
-
-    const list: Banknote[] = [];
-
-    for (const { name, url } of Object.values(data.files as Record<string, CloudinaryFileInfo>)) {
-      list.push({ name, url });
-    }
-
-    setList(list);
+    setList(await getBanknotes(await getAttributes()));
   };
 
   useEffect(() => {
