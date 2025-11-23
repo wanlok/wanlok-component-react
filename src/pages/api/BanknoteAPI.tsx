@@ -1,77 +1,74 @@
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { CloudinaryFileInfo, CollectionAttributes, Folder } from "../../services/Types";
-
-const collectionName = "collections";
-const documentId = "banknotes";
+import { Attributes, CloudinaryFileInfo, CollectionAttributes, Folder, TypedAttributes } from "../../services/Types";
 
 interface Banknote {
   name: string;
   url: string;
+  w: number;
+  h: number;
 }
 
-const getAttributes = async () => {
-  let attributes: CollectionAttributes = [];
+const parseAttributes = (collectionAttributes: CollectionAttributes, attributes: Attributes | undefined) => {
+  let typedAttributes: TypedAttributes = { w: 0, h: 0 };
 
-  const data = (await getDoc(doc(db, "configs", "folders"))).data() as { folders: Folder[] } | undefined;
-
-  if (data) {
-    const folder = data.folders.find((folder) => folder.name === "Banknotes");
-    if (folder?.attributes) {
-      attributes = folder?.attributes;
+  collectionAttributes.forEach(({ name, type }) => {
+    const value = attributes?.[name];
+    if (value) {
+      if (type === "number") {
+        typedAttributes[name] = Number(value);
+      } else {
+        typedAttributes[name] = value;
+      }
     }
+  });
+
+  return typedAttributes as { w: number; h: number };
+};
+
+const getAttributes = async () => {
+  const data = (await getDoc(doc(db, "configs", "folders"))).data() as { folders: Folder[] } | undefined;
+  const folder = data?.folders.find((folder) => folder.name === "Banknotes");
+
+  if (!folder) {
+    return [];
   }
 
-  return attributes;
+  return folder.attributes;
 };
 
 const getBanknotes = async (collectionAttributes: CollectionAttributes) => {
-  let banknotes: Banknote[] = [];
-
-  const data = (await getDoc(doc(db, collectionName, documentId))).data() as
+  const data = (await getDoc(doc(db, "collections", "banknotes"))).data() as
     | {
         files: Record<string, CloudinaryFileInfo>;
       }
     | undefined;
 
-  if (data) {
-    for (const { name, url, attributes } of Object.values(data.files)) {
-      let newAttributes: { [key: string]: number | string } = {};
-      collectionAttributes.map(({ name, type }) => {
-        let typedValue;
-        let value = attributes?.[name];
-        if (type === "number" && value) {
-          typedValue = Number(value);
-        } else {
-          typedValue = value;
-        }
-        if (typedValue) {
-          newAttributes[name] = typedValue;
-        }
-      });
-      banknotes.push({ name, url, ...newAttributes });
-    }
+  if (!data) {
+    return [];
   }
 
-  return banknotes;
+  return Object.values(data.files).map(({ name, url, attributes }) => {
+    return { name, url, ...parseAttributes(collectionAttributes, attributes) };
+  });
 };
 
-export const useAPI = () => {
-  const [list, setList] = useState<Banknote[]>([]);
+export const useBanknoteAPI = () => {
+  const [banknotes, setBanknotes] = useState<Banknote[]>([]);
 
   const fetch = async () => {
-    setList(await getBanknotes(await getAttributes()));
+    setBanknotes(await getBanknotes(await getAttributes()));
   };
 
   useEffect(() => {
     fetch();
   }, []);
 
-  return { list };
+  return { jsonString: JSON.stringify(banknotes) };
 };
 
 export const BanknoteAPI = () => {
-  const { list } = useAPI();
-  return <>{JSON.stringify(list)}</>;
+  const { jsonString } = useBanknoteAPI();
+  return <>{jsonString}</>;
 };

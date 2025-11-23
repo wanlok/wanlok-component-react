@@ -84,6 +84,10 @@ export const isCollectionKey = (key: string): key is keyof CollectionDocument =>
   return ["charts", "files", "hyperlinks", "steam", "texts", "youtube_regular", "youtube_shorts"].includes(key);
 };
 
+export type Attributes = { [key: string]: string };
+
+export type TypedAttributes = { [key: string]: number | string };
+
 export type CollectionAttributes = { name: string; type: "text" | "number" }[];
 
 export const emptyCollectionAttributes: CollectionAttributes = [];
