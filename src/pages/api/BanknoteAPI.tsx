@@ -7,14 +7,14 @@ import { setTypedAttributes } from "../../common/setTypedAttributes";
 interface Banknote {
   name: string;
   url: string;
-  w: number;
-  h: number;
+  width: number;
+  height: number;
 }
 
 const parseAttributes = (collectionAttributes: CollectionAttributes, attributes: Attributes | undefined) => {
-  let typedAttributes: TypedAttributes = { w: 0, h: 0 };
+  let typedAttributes: TypedAttributes = { width: 0, height: 0 };
   setTypedAttributes(typedAttributes, collectionAttributes, attributes);
-  return typedAttributes as { w: number; h: number };
+  return typedAttributes as { width: number; height: number };
 };
 
 const getAttributes = async () => {
@@ -36,16 +36,22 @@ const getBanknotes = async (collectionAttributes: CollectionAttributes) => {
     | undefined;
 
   if (!data) {
-    return [];
+    return {};
   }
 
-  return Object.values(data.files).map(({ name, url, attributes }) => {
-    return { name, url, ...parseAttributes(collectionAttributes, attributes) };
+  let dict: Record<string, Banknote> = {};
+
+  Object.keys(data.files).forEach((key) => {
+    const { name, url, attributes } = data.files[key];
+    const { width, height } = parseAttributes(collectionAttributes, attributes);
+    dict[key] = { name, url, width, height };
   });
+
+  return dict;
 };
 
 export const useBanknoteAPI = () => {
-  const [banknotes, setBanknotes] = useState<Banknote[]>([]);
+  const [banknotes, setBanknotes] = useState<Record<string, Banknote>>({});
 
   const fetch = async () => {
     setBanknotes(await getBanknotes(await getAttributes()));
