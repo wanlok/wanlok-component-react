@@ -1,6 +1,11 @@
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
+import { db } from "../../firebase";
+
+const collectionName = "configs";
+const documentId = "kanban";
 
 export interface ComponentFolder {
   id: string;
@@ -58,6 +63,20 @@ export const useKanban = () => {
     }
   }, [id, openFolder]);
 
+  const addProject = async (name: string) => {
+    if (name.length === 0) {
+      return;
+    }
+    const docRef = doc(db, collectionName, documentId);
+    const document = await getDoc(docRef);
+    if (document.exists()) {
+      const projects = document.data().projects || [];
+      await updateDoc(docRef, { projects: [...projects, { name }] });
+    } else {
+      await setDoc(docRef, { projects: [{ name }] });
+    }
+  };
+
   const addItem = () => {
     const newColumns = [...columns];
     const itemNumber = columns.reduce((sum, { list }) => sum + list.length, 1);
@@ -65,5 +84,5 @@ export const useKanban = () => {
     setColumns(newColumns);
   };
 
-  return { selectedFolder, openFolder, columns, setColumns, addItem };
+  return { selectedFolder, openFolder, columns, setColumns, addProject, addItem };
 };

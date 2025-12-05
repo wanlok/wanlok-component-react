@@ -9,9 +9,12 @@ import { KanbanHeader } from "./KanbanHeader";
 import { KanbanLayout } from "./KanbanLayout";
 
 export const Kanban = () => {
-  const { selectedFolder, openFolder, addItem } = useKanban();
+  const { selectedFolder, openFolder, addProject, addItem } = useKanban();
   const [panelOpened, setPanelOpened] = useState(false);
   const [opened, setOpened] = useState(false);
+
+  const [projectModalRows, setProjectModalRows] = useState([{ label: "Name", value: "" }]);
+
   return (
     <LayoutPanel
       panelOpened={panelOpened}
@@ -41,7 +44,21 @@ export const Kanban = () => {
     >
       <KanbanHeader selectedFolder={selectedFolder} onAddItemButtonClick={addItem} />
       <KanbanLayout />
-      <ProjectModal open={opened} onClose={() => setOpened(false)} />
+      <ProjectModal
+        open={opened}
+        onClose={() => setOpened(false)}
+        rows={projectModalRows}
+        onRowValueChange={(i, value) => {
+          const newProjectModalRows = [...projectModalRows];
+          newProjectModalRows[i].value = value;
+          setProjectModalRows(newProjectModalRows);
+        }}
+        onSaveButtonClick={() => {
+          addProject(projectModalRows[0].value);
+          projectModalRows[0].value = "";
+          setOpened(false);
+        }}
+      />
     </LayoutPanel>
   );
 };

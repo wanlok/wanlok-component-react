@@ -10,6 +10,14 @@ export interface Rect {
   height: number;
 }
 
+export interface KanbanProject {
+  name: string;
+}
+
+export interface Kanban {
+  projects: KanbanProject[];
+}
+
 export interface Folder {
   name: string;
   attributes: CollectionAttributes;
