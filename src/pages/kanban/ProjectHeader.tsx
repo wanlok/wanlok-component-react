@@ -7,7 +7,7 @@ import CrossIcon from "../../assets/images/icons/cross.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 
-export const KanbanHeader = ({ onCreateButtonClick }: { onCreateButtonClick: () => void }) => {
+export const ProjectHeader = ({ onCreateButtonClick }: { onCreateButtonClick: () => void }) => {
   return (
     <LayoutHeader
       top={

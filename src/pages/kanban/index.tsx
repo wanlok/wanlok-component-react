@@ -11,10 +11,11 @@ import DownIcon from "../../assets/images/icons/down.png";
 import { LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { WText } from "../../components/WText";
 import { KanbanLayout } from "./KanbanLayout";
-import { KanbanHeader } from "./KanbanHeader";
+import { ProjectHeader } from "./ProjectHeader";
 import { WModal } from "../../components/WModal";
 import { TextInput } from "../../components/TextInput";
 import { WButton } from "../../components/WButton";
+import { ProjectModal } from "./ProjectModal";
 
 const FolderRow = ({
   folder,
@@ -127,7 +128,7 @@ export const Kanban = () => {
       width={300}
       panel={
         <>
-          <KanbanHeader onCreateButtonClick={() => setOpened(true)} />
+          <ProjectHeader onCreateButtonClick={() => setOpened(true)} />
           <WCardList
             items={folders}
             renderContent={(folder) => <FolderRow folder={folder} selectedFolder={selectedFolder} />}
@@ -152,25 +153,7 @@ export const Kanban = () => {
         bottom={<KanbanHeaderBottom />}
       />
       <KanbanLayout />
-      <WModal open={opened} onClose={() => setOpened(false)}>
-        <WText text="Attributes" editable={false} rightButtons={[]} />
-        <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
-          <Stack sx={{ flex: 1 }}>
-            <TextInput
-              label="Hello World"
-              value={"Hello World"}
-              onChange={(value) => {
-                // const newAttributes = [...attributes];
-                // newAttributes[i].name = value;
-                // setAttributes(newAttributes);
-              }}
-              hideHelperText={true}
-              inputPropsSx={{ flex: 1 }}
-            />
-          </Stack>
-        </Stack>
-        <WButton>Save</WButton>
-      </WModal>
+      <ProjectModal open={opened} onClose={() => setOpened(false)} />
     </LayoutPanel>
   );
 };
