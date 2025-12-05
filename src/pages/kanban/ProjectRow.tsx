@@ -1,0 +1,50 @@
+import { Box, Stack, Typography } from "@mui/material";
+import { ComponentFolder } from "./useKanban";
+
+import FolderIcon from "../../assets/images/icons/folder.png";
+import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
+import UpIcon from "../../assets/images/icons/up.png";
+import DownIcon from "../../assets/images/icons/down.png";
+
+export const ProjectRow = ({
+  folder,
+  selectedFolder,
+  panelOpened
+}: {
+  folder: ComponentFolder;
+  selectedFolder?: ComponentFolder;
+  panelOpened?: boolean;
+}) => {
+  const mobileRow = panelOpened === true || panelOpened === false;
+  return (
+    <Stack
+      sx={{
+        flexDirection: "row",
+        py: 2,
+        pl: 2,
+        pr: mobileRow ? 2 : 0,
+        gap: 2,
+        boxSizing: "border-box",
+        backgroundColor: mobileRow ? "background.default" : "transparent"
+      }}
+    >
+      <Box
+        component="img"
+        src={folder === selectedFolder ? FolderSelectedIcon : FolderIcon}
+        alt=""
+        sx={{ width: "24px", height: "24px" }}
+      />
+      <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
+        <Typography variant="body1">{folder.name}</Typography>
+      </Stack>
+      {mobileRow && (
+        <Box
+          component="img"
+          src={panelOpened ? UpIcon : DownIcon}
+          alt=""
+          sx={{ width: "16px", height: "16px", mt: "4px" }}
+        />
+      )}
+    </Stack>
+  );
+};
