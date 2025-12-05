@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { FormHelperText, SxProps, TextField, Theme } from "@mui/material";
+import { FormControl, FormHelperText, FormLabel, SxProps, TextField, Theme } from "@mui/material";
 
 const tabSpaces = "  ";
 
@@ -43,6 +43,7 @@ const handleTab = (
 };
 
 export const TextInput = ({
+  label,
   placeholder,
   value,
   onChange,
@@ -50,6 +51,7 @@ export const TextInput = ({
   tabAllowed = false,
   inputPropsSx
 }: {
+  label?: string;
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
@@ -59,7 +61,8 @@ export const TextInput = ({
 }) => {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   return (
-    <>
+    <FormControl>
+      {label && <FormLabel>{label}</FormLabel>}
       <TextField
         inputRef={inputRef}
         placeholder={placeholder}
@@ -105,6 +108,6 @@ export const TextInput = ({
         }}
       />
       {!hideHelperText && <FormHelperText sx={{ mt: 1 }}>Shift + Enter for multiple lines 1234</FormHelperText>}
-    </>
+    </FormControl>
   );
 };
