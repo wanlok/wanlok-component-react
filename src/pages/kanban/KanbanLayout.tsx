@@ -1,8 +1,8 @@
 import { Card, CardActionArea, CardContent, Divider, Stack, Typography } from "@mui/material";
-import { createRef, Fragment, RefObject, useRef } from "react";
+import { createRef, Fragment, RefObject, useRef, useState } from "react";
 import Draggable from "react-draggable";
-import { ColumnData, ColumnItem, useKanban } from "./useKanban";
 import { useWindowDimensions } from "../../common/useWindowDimension";
+import { KanbanColumn, KanbanItem } from "../../services/Types";
 
 const padding = 2;
 
@@ -63,8 +63,8 @@ const KanbanCard = ({
 }: {
   stackRef: RefObject<HTMLDivElement>;
   stackRefs: RefObject<RefObject<HTMLDivElement>[]>;
-  item: ColumnItem;
-  onDragStop: (item: ColumnItem, columnOffset: number, rowOffset: number) => void;
+  item: KanbanItem;
+  onDragStop: (item: KanbanItem, columnOffset: number, rowOffset: number) => void;
 }) => {
   const nodeRef = useRef(null);
   return (
@@ -126,9 +126,9 @@ const KanbanCard = ({
 };
 
 const getColumns = (
-  columns: ColumnData[],
+  columns: KanbanColumn[],
   i: number,
-  draggedItem: ColumnItem,
+  draggedItem: KanbanItem,
   columnOffset: number,
   rowOffset: number
 ) => {
@@ -156,7 +156,7 @@ const getColumns = (
 };
 
 export const KanbanLayout = () => {
-  const { columns, setColumns } = useKanban();
+  const [columns, setColumns] = useState<KanbanColumn[]>([]);
   const stackRefs = useRef(columns.map(() => createRef<HTMLDivElement>()));
   const { height } = useWindowDimensions();
   return (

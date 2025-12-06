@@ -1,14 +1,14 @@
 import { Stack, Typography } from "@mui/material";
 import { LayoutHeader, topSx } from "../../components/LayoutHeader";
-import { ComponentFolder, useKanban } from "./useKanban";
 import { useState } from "react";
 import { WText } from "../../components/WText";
+import { KanbanColumn, KanbanProject } from "../../services/Types";
 
 const Top = ({
-  selectedFolder,
+  project,
   onAddItemButtonClick
 }: {
-  selectedFolder: ComponentFolder | undefined;
+  project: KanbanProject | undefined;
   onAddItemButtonClick: () => void;
 }) => {
   const [editable, setEditable] = useState(false);
@@ -16,7 +16,7 @@ const Top = ({
     <Stack sx={[topSx, { height: 55 }]}>
       <Stack sx={{ flex: 1 }}>
         <WText
-          text={selectedFolder?.name}
+          text={project?.name}
           editable={editable}
           placeholder="Dummy"
           rightButtons={
@@ -37,7 +37,7 @@ const Top = ({
 };
 
 const Bottom = () => {
-  const { columns } = useKanban();
+  const columns: KanbanColumn[] = [];
   return (
     <Stack sx={{ flex: 1, flexDirection: "row", gap: "1px" }}>
       {columns.map(({ name }) => {
@@ -62,16 +62,13 @@ const Bottom = () => {
 };
 
 export const KanbanHeader = ({
-  selectedFolder,
+  project,
   onAddItemButtonClick
 }: {
-  selectedFolder: ComponentFolder | undefined;
+  project: KanbanProject | undefined;
   onAddItemButtonClick: () => void;
 }) => {
   return (
-    <LayoutHeader
-      top={<Top selectedFolder={selectedFolder} onAddItemButtonClick={onAddItemButtonClick} />}
-      bottom={<Bottom />}
-    />
+    <LayoutHeader top={<Top project={project} onAddItemButtonClick={onAddItemButtonClick} />} bottom={<Bottom />} />
   );
 };

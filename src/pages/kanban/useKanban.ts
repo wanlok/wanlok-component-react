@@ -1,88 +1,76 @@
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../../firebase";
+import { Kanban, KanbanProject } from "../../services/Types";
 
 const collectionName = "configs";
 const documentId = "kanban";
 
-export interface ComponentFolder {
-  id: string;
-  name: string;
-}
-
-export const folders: ComponentFolder[] = [
-  { name: "Project 1", id: "project-1" },
-  { name: "Project 2", id: "project-2" },
-  { name: "Project 3", id: "project-3" }
-];
-
-export interface ColumnItem {
-  id: string;
-  name: string;
-}
-
-export interface ColumnData {
-  name: string;
-  list: ColumnItem[];
-}
-
-const dummyData: ColumnData[] = [
-  { name: "To Do", list: [] },
-  { name: "In Progress", list: [] },
-  { name: "Ready To Deploy", list: [] },
-  { name: "Done", list: [] }
-];
+// const dummyData: ColumnData[] = [
+//   { name: "To Do", list: [] },
+//   { name: "In Progress", list: [] },
+//   { name: "Ready To Deploy", list: [] },
+//   { name: "Done", list: [] }
+// ];
 
 export const useKanban = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [selectedFolder, setSelectedFolder] = useState<ComponentFolder>();
 
-  const [columns, setColumns] = useState(dummyData);
+  // const [columns, setColumns] = useState(dummyData);
 
-  const openFolder = useCallback(
-    (folder: ComponentFolder) => {
-      navigate(`/kanban/${folder.id}`);
+  const [kanban, setKanban] = useState<Kanban>();
+  const [selectedProject, setSelectedProject] = useState<KanbanProject>();
+
+  const fetched = useRef<boolean>(false);
+
+  const openProject = useCallback(
+    (project: KanbanProject) => {
+      navigate(`/kanban/${project.id}`);
     },
     [navigate]
   );
 
   useEffect(() => {
-    if (folders.length > 0) {
-      let folder: ComponentFolder | undefined = undefined;
-      if (id) {
-        folder = folders.find((f) => f.id === id);
+    const fetchKanban = async () => {
+      if (fetched.current) {
+        return;
       }
-      if (folder) {
-        setSelectedFolder(folder);
-      } else {
-        openFolder(folders[0]);
-      }
-    }
-  }, [id, openFolder]);
+      fetched.current = true;
+      const docRef = doc(db, collectionName, documentId);
+      setKanban((await getDoc(docRef)).data() as Kanban | undefined);
+    };
+    fetchKanban();
+  }, [documentId]);
 
-  const addProject = async (name: string) => {
-    if (name.length === 0) {
-      return;
+  useEffect(() => {
+    const project = kanban?.projects.find((project) => project.id === id);
+    if (project) {
+      setSelectedProject(project);
     }
+  }, [id, kanban]);
+
+  const addProject = async (name: string, columns: string[]) => {
     const docRef = doc(db, collectionName, documentId);
     const document = await getDoc(docRef);
+    const id = uuidv4();
+    const project = { id, name, columns };
     if (document.exists()) {
-      const projects = document.data().projects || [];
-      await updateDoc(docRef, { projects: [...projects, { name }] });
+      const projects = document.data().projects ?? [];
+      await updateDoc(docRef, { projects: [...projects, project] });
     } else {
-      await setDoc(docRef, { projects: [{ name }] });
+      await setDoc(docRef, { projects: [project] });
     }
   };
 
   const addItem = () => {
-    const newColumns = [...columns];
-    const itemNumber = columns.reduce((sum, { list }) => sum + list.length, 1);
-    newColumns[0].list.push({ id: uuidv4(), name: `Item ${itemNumber}` });
-    setColumns(newColumns);
+    // const newColumns = [...columns];
+    // const itemNumber = columns.reduce((sum, { list }) => sum + list.length, 1);
+    // newColumns[0].list.push({ id: uuidv4(), name: `Item ${itemNumber}` });
+    // setColumns(newColumns);
   };
 
-  return { selectedFolder, openFolder, columns, setColumns, addProject, addItem };
+  return { selectedProject, addProject, openProject, kanban: kanban, addItem };
 };

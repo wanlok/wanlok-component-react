@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { folders, useKanban } from "./useKanban";
+import { useKanban } from "./useKanban";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
 import { ProjectHeader } from "./ProjectHeader";
@@ -9,11 +9,14 @@ import { KanbanHeader } from "./KanbanHeader";
 import { KanbanLayout } from "./KanbanLayout";
 
 export const Kanban = () => {
-  const { selectedFolder, openFolder, addProject, addItem } = useKanban();
+  const { selectedProject, addProject, openProject, kanban, addItem } = useKanban();
   const [panelOpened, setPanelOpened] = useState(false);
   const [opened, setOpened] = useState(false);
 
-  const [projectModalRows, setProjectModalRows] = useState([{ label: "Name", value: "" }]);
+  const [projectModalRows, setProjectModalRows] = useState([
+    { label: "Name", value: "" },
+    { label: "Columns", value: ["A", "B", "C", "D"] }
+  ]);
 
   return (
     <LayoutPanel
@@ -24,10 +27,10 @@ export const Kanban = () => {
         <>
           <ProjectHeader onCreateButtonClick={() => setOpened(true)} />
           <WCardList
-            items={folders}
-            renderContent={(folder) => <ProjectRow folder={folder} selectedFolder={selectedFolder} />}
-            onContentClick={(folder) => {
-              openFolder(folder);
+            items={kanban?.projects ?? []}
+            renderContent={(project) => <ProjectRow project={project} selectedProject={selectedProject} />}
+            onContentClick={(project) => {
+              openProject(project);
               setPanelOpened(false);
             }}
             renderRightContent={() => <></>}
@@ -35,14 +38,14 @@ export const Kanban = () => {
         </>
       }
       topChildren={
-        selectedFolder ? (
-          <ProjectRow folder={selectedFolder} selectedFolder={selectedFolder} panelOpened={panelOpened} />
+        selectedProject ? (
+          <ProjectRow project={selectedProject} selectedProject={selectedProject} panelOpened={panelOpened} />
         ) : (
           <></>
         )
       }
     >
-      <KanbanHeader selectedFolder={selectedFolder} onAddItemButtonClick={addItem} />
+      <KanbanHeader project={selectedProject} onAddItemButtonClick={addItem} />
       <KanbanLayout />
       <ProjectModal
         open={opened}
@@ -50,11 +53,16 @@ export const Kanban = () => {
         rows={projectModalRows}
         onRowValueChange={(i, value) => {
           const newProjectModalRows = [...projectModalRows];
-          newProjectModalRows[i].value = value;
-          setProjectModalRows(newProjectModalRows);
+          // if (typeof value === "string") {
+          //   newProjectModalRows[i].value = value;
+          //   setProjectModalRows(newProjectModalRows);
+          // } else {
+          // }
         }}
         onSaveButtonClick={() => {
-          addProject(projectModalRows[0].value);
+          const name = projectModalRows[0].value as string;
+          const columns = projectModalRows[1].value as string[];
+          addProject(name, columns);
           projectModalRows[0].value = "";
           setOpened(false);
         }}

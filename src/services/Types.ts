@@ -10,8 +10,25 @@ export interface Rect {
   height: number;
 }
 
-export interface KanbanProject {
+export interface ComponentFolder {
+  id: string;
   name: string;
+}
+
+export interface KanbanItem {
+  id: string;
+  name: string;
+}
+
+export interface KanbanColumn {
+  name: string;
+  list: KanbanItem[];
+}
+
+export interface KanbanProject {
+  id: string;
+  name: string;
+  columns: KanbanColumn[];
 }
 
 export interface Kanban {

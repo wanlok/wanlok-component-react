@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { ComponentFolder } from "./useKanban";
+import { KanbanProject } from "../../services/Types";
 
 import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
@@ -7,12 +7,12 @@ import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 
 export const ProjectRow = ({
-  folder,
-  selectedFolder,
+  project,
+  selectedProject,
   panelOpened
 }: {
-  folder: ComponentFolder;
-  selectedFolder?: ComponentFolder;
+  project: KanbanProject;
+  selectedProject?: KanbanProject;
   panelOpened?: boolean;
 }) => {
   const mobileRow = panelOpened === true || panelOpened === false;
@@ -30,12 +30,12 @@ export const ProjectRow = ({
     >
       <Box
         component="img"
-        src={folder === selectedFolder ? FolderSelectedIcon : FolderIcon}
+        src={project === selectedProject ? FolderSelectedIcon : FolderIcon}
         alt=""
         sx={{ width: "24px", height: "24px" }}
       />
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
-        <Typography variant="body1">{folder.name}</Typography>
+        <Typography variant="body1">{project.name}</Typography>
       </Stack>
       {mobileRow && (
         <Box
