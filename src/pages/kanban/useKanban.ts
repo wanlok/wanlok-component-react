@@ -35,7 +35,7 @@ export const useKanban = () => {
       setKanban((await getDoc(docRef)).data() as Kanban | undefined);
     };
     fetchKanban();
-  }, []);
+  }, [docRef]);
 
   useEffect(() => {
     const project = kanban?.projects.find((project) => project.id === id);
