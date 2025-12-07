@@ -64,7 +64,7 @@ export const ProjectModal = ({
       <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
         <Stack sx={{ flex: 1 }}>
           {rows.map(({ label, value }, i) => (
-            <Row label={label} value={value} index={i} onRowValueChange={onRowValueChange} />
+            <Row key={`row-${i}`} label={label} value={value} index={i} onRowValueChange={onRowValueChange} />
           ))}
         </Stack>
       </Stack>

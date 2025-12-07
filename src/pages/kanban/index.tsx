@@ -46,7 +46,13 @@ export const Kanban = () => {
       }
     >
       <KanbanHeader project={selectedProject} onAddItemButtonClick={addItem} />
-      <KanbanLayout project={selectedProject} onDragStop={moveItem} />
+      <KanbanLayout
+        project={selectedProject}
+        onDragStop={moveItem}
+        onClick={(i, j) => {
+          console.log("clicked", i, j);
+        }}
+      />
       <ProjectModal
         open={opened}
         onClose={() => setOpened(false)}

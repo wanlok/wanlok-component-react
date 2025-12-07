@@ -42,9 +42,10 @@ const Bottom = ({ project }: { project: KanbanProject | undefined }) => {
   }
   return (
     <Stack sx={{ flex: 1, flexDirection: "row", gap: "1px" }}>
-      {project.columns.map(({ name }) => {
+      {project.columns.map(({ name }, i) => {
         return (
           <Stack
+            key={`column-${i}`}
             sx={{
               flex: 1,
               alignItems: "center",

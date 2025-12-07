@@ -17,6 +17,8 @@ export const useKanban = () => {
 
   const fetched = useRef<boolean>(false);
 
+  const docRef = doc(db, collectionName, documentId);
+
   const openProject = useCallback(
     (project: KanbanProject) => {
       navigate(`/kanban/${project.id}`);
@@ -30,7 +32,6 @@ export const useKanban = () => {
         return;
       }
       fetched.current = true;
-      const docRef = doc(db, collectionName, documentId);
       setKanban((await getDoc(docRef)).data() as Kanban | undefined);
     };
     fetchKanban();
@@ -44,7 +45,6 @@ export const useKanban = () => {
   }, [id, kanban]);
 
   const addProject = async (name: string, columnNames: string[]) => {
-    const docRef = doc(db, collectionName, documentId);
     const document = await getDoc(docRef);
     const columns = columnNames.map((name) => ({ name, items: [] }));
     const project = { id: uuidv4(), name, columns };
@@ -57,12 +57,13 @@ export const useKanban = () => {
   };
 
   const addItem = () => {
-    if (!selectedProject) {
+    if (!kanban || !selectedProject) {
       return;
     }
     const columns = [...selectedProject.columns];
     const itemNumber = selectedProject.columns.reduce((sum, { items }) => sum + items.length, 1);
     columns[0].items.push({ id: uuidv4(), name: `Item ${itemNumber}` });
+    updateDoc(docRef, { projects: [...kanban.projects] });
     setSelectedProject({ ...selectedProject, columns });
   };
 
@@ -70,9 +71,8 @@ export const useKanban = () => {
     if (!kanban || !selectedProject) {
       return;
     }
-    setSelectedProject({ ...selectedProject, columns });
-    const docRef = doc(db, collectionName, documentId);
     updateDoc(docRef, { projects: [...kanban.projects] });
+    setSelectedProject({ ...selectedProject, columns });
   };
 
   return { kanban, selectedProject, addProject, openProject, addItem, moveItem };

@@ -4,6 +4,7 @@ import Draggable from "react-draggable";
 import { KanbanItem } from "../../services/Types";
 
 export const padding = 2;
+export const threshold = 4;
 
 const getColumnOffset = (stackRef: RefObject<HTMLDivElement>, x: number) => {
   const threshold = 0.25;
@@ -58,20 +59,27 @@ export const KanbanCard = ({
   stackRef,
   stackRefs,
   item,
-  onDragStop
+  onDragStop,
+  onClick
 }: {
   stackRef: RefObject<HTMLDivElement>;
   stackRefs: RefObject<RefObject<HTMLDivElement>[]>;
   item: KanbanItem;
   onDragStop: (item: KanbanItem, columnOffset: number, rowOffset: number) => void;
+  onClick: () => void;
 }) => {
-  const nodeRef = useRef(null);
+  const nodeRef = useRef<HTMLDivElement>(null);
+  const startY = useRef(0);
+  const dragged = useRef(false);
+  const getY = () => nodeRef.current?.getBoundingClientRect()?.y ?? 0;
   return (
     <Draggable
       nodeRef={nodeRef}
       handle=".drag-handle"
       position={{ x: 0, y: 0 }}
       onStart={(_, { node: draggedNode }) => {
+        startY.current = getY();
+        dragged.current = false;
         for (const stackRef of stackRefs.current ?? []) {
           if (stackRef.current) {
             stackRef.current.style.marginTop = "-" + stackRef.current.scrollTop + "px";
@@ -84,6 +92,10 @@ export const KanbanCard = ({
         }
       }}
       onStop={(_, { x, y, node: draggedNode }) => {
+        if (Math.abs(startY.current - getY()) <= threshold) {
+          return;
+        }
+        dragged.current = true;
         const i = stackRefs.current?.indexOf(stackRef);
         if (i !== undefined) {
           const columnOffset = getColumnOffset(stackRef, x);
@@ -109,7 +121,13 @@ export const KanbanCard = ({
         }}
         className="drag-handle"
       >
-        <CardActionArea onClick={() => {}}>
+        <CardActionArea
+          onClick={() => {
+            if (!dragged.current) {
+              onClick();
+            }
+          }}
+        >
           <CardContent>
             <Typography>{item.name}</Typography>
             <Typography>

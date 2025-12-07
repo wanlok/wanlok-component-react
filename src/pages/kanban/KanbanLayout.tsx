@@ -36,10 +36,12 @@ const getColumns = (
 
 export const KanbanColumnLayout = ({
   project,
-  onDragStop
+  onDragStop,
+  onClick
 }: {
   project: KanbanProject;
   onDragStop: (columns: KanbanColumn[]) => void;
+  onClick: (i: number, j: number) => void;
 }) => {
   const stackRefs = useRef(project.columns.map(() => createRef<HTMLDivElement>()));
   const { height } = useWindowDimensions();
@@ -52,7 +54,7 @@ export const KanbanColumnLayout = ({
             {i !== 0 && <Divider orientation="vertical" />}
             <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto", height: height - 100 }}>
               <Stack sx={{ p: padding, gap: 1 }}>
-                {items.map((item) => (
+                {items.map((item, j) => (
                   <KanbanCard
                     key={item.id}
                     stackRef={stackRef}
@@ -61,6 +63,7 @@ export const KanbanColumnLayout = ({
                     onDragStop={(item, columnOffset, rowOffset) =>
                       onDragStop(getColumns(project.columns, i, item, columnOffset, rowOffset))
                     }
+                    onClick={() => onClick(i, j)}
                   />
                 ))}
               </Stack>
@@ -74,10 +77,12 @@ export const KanbanColumnLayout = ({
 
 export const KanbanLayout = ({
   project,
-  onDragStop
+  onDragStop,
+  onClick
 }: {
   project: KanbanProject | undefined;
   onDragStop: (columns: KanbanColumn[]) => void;
+  onClick: (i: number, j: number) => void;
 }) => {
   if (!project) {
     return (
@@ -86,5 +91,5 @@ export const KanbanLayout = ({
       </>
     );
   }
-  return <KanbanColumnLayout project={project} onDragStop={onDragStop} />;
+  return <KanbanColumnLayout project={project} onDragStop={onDragStop} onClick={onClick} />;
 };
