@@ -107,7 +107,7 @@ export const TextInput = ({
           }
         }}
       />
-      {!hideHelperText && <FormHelperText sx={{ mt: 1 }}>Shift + Enter for multiple lines 1234</FormHelperText>}
+      {!hideHelperText && <FormHelperText sx={{ mt: 1 }}>Shift + Enter for multiple lines</FormHelperText>}
     </FormControl>
   );
 };

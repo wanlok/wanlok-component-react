@@ -40,7 +40,7 @@ export const DummyChart2 = () => {
 
   return (
     <>
-      <div>Hello World 1234</div>
+      <div>Hello World</div>
       <Button variant="contained" onClick={handleExport}>
         Export Chart
       </Button>
