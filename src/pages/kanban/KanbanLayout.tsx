@@ -1,129 +1,8 @@
-import { Card, CardActionArea, CardContent, Divider, Stack, Typography } from "@mui/material";
-import { createRef, Fragment, RefObject, useRef, useState } from "react";
-import Draggable from "react-draggable";
+import { createRef, Fragment, useRef } from "react";
+import { Divider, Stack, Typography } from "@mui/material";
 import { useWindowDimensions } from "../../common/useWindowDimension";
-import { KanbanColumn, KanbanItem } from "../../services/Types";
-
-const padding = 2;
-
-const getColumnOffset = (stackRef: RefObject<HTMLDivElement>, x: number) => {
-  const threshold = 0.25;
-  const width = stackRef.current?.getBoundingClientRect().width ?? 0;
-  const ratio = (x + padding * 8) / width;
-  return Math.abs(ratio) > threshold ? Math.sign(ratio) * Math.ceil(Math.abs(ratio) - threshold) : 0;
-};
-
-const getRowOffset = (
-  stackRef: RefObject<HTMLDivElement>,
-  y: number,
-  draggedNode: HTMLElement,
-  columnOffset: number
-) => {
-  let offset = -1;
-  const nodes = Array.from(stackRef.current?.children[0]?.children ?? []) as HTMLElement[];
-  for (let i = 0; i < nodes.length; i++) {
-    if (nodes[i] === draggedNode) {
-      if (
-        (i + 1 < nodes.length &&
-          nodes[i].getBoundingClientRect().bottom - nodes[i + 1].getBoundingClientRect().y > 0) ||
-        (i + 1 >= nodes.length && y > 0)
-      ) {
-        offset = i;
-      }
-    } else {
-      if (columnOffset !== 0) {
-        if (
-          i > 0 &&
-          draggedNode.getBoundingClientRect().y >=
-            nodes[i - 1].getBoundingClientRect().y + nodes[i - 1].getBoundingClientRect().height / 2
-        ) {
-          offset = i;
-        }
-        if (
-          draggedNode.getBoundingClientRect().y >=
-          nodes[i].getBoundingClientRect().y + nodes[i].getBoundingClientRect().height / 2
-        ) {
-          offset = i + 1;
-        }
-      } else {
-        if (draggedNode.getBoundingClientRect().y >= nodes[i].getBoundingClientRect().y) {
-          offset = i;
-        }
-      }
-    }
-  }
-  return y < 0 ? offset + 1 : offset;
-};
-
-const KanbanCard = ({
-  stackRef,
-  stackRefs,
-  item,
-  onDragStop
-}: {
-  stackRef: RefObject<HTMLDivElement>;
-  stackRefs: RefObject<RefObject<HTMLDivElement>[]>;
-  item: KanbanItem;
-  onDragStop: (item: KanbanItem, columnOffset: number, rowOffset: number) => void;
-}) => {
-  const nodeRef = useRef(null);
-  return (
-    <Draggable
-      nodeRef={nodeRef}
-      handle=".drag-handle"
-      position={{ x: 0, y: 0 }}
-      onStart={(_, { node: draggedNode }) => {
-        for (const stackRef of stackRefs.current ?? []) {
-          if (stackRef.current) {
-            stackRef.current.style.marginTop = "-" + stackRef.current.scrollTop + "px";
-            stackRef.current.style.overflowY = "visible";
-          }
-          const nodes = Array.from(stackRef.current?.children[0]?.children ?? []) as HTMLElement[];
-          for (const node of nodes) {
-            node.style.zIndex = node === draggedNode ? "1" : "";
-          }
-        }
-      }}
-      onStop={(_, { x, y, node: draggedNode }) => {
-        const i = stackRefs.current?.indexOf(stackRef);
-        if (i !== undefined) {
-          const columnOffset = getColumnOffset(stackRef, x);
-          const targetStackRef = stackRefs.current?.[i + columnOffset];
-          if (targetStackRef) {
-            const rowOffset = getRowOffset(targetStackRef, y, draggedNode, columnOffset);
-            onDragStop(item, columnOffset, rowOffset);
-          }
-        }
-        for (const stackRef of stackRefs.current ?? []) {
-          if (stackRef.current) {
-            stackRef.current.style.marginTop = 0 + "px";
-            stackRef.current.style.overflowY = "auto";
-          }
-        }
-      }}
-    >
-      <Card
-        ref={nodeRef}
-        sx={{
-          boxShadow: 6,
-          borderRadius: 2
-        }}
-        className="drag-handle"
-      >
-        <CardActionArea onClick={() => {}}>
-          <CardContent>
-            <Typography>{item.name}</Typography>
-            <Typography>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book.
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </Draggable>
-  );
-};
+import { KanbanColumn, KanbanItem, KanbanProject } from "../../services/Types";
+import { KanbanCard, padding } from "./KanbanCard";
 
 const getColumns = (
   columns: KanbanColumn[],
@@ -133,7 +12,7 @@ const getColumns = (
   rowOffset: number
 ) => {
   const newColumns = [...columns];
-  newColumns[i].list = newColumns[i].list.filter((item) => item !== draggedItem);
+  newColumns[i].items = newColumns[i].items.filter((item) => item !== draggedItem);
   let j;
   j = i + columnOffset;
   if (j < 0) {
@@ -142,40 +21,45 @@ const getColumns = (
   if (j >= newColumns.length) {
     j = newColumns.length - 1;
   }
-  newColumns[j].list = [...newColumns[j].list];
+  newColumns[j].items = [...newColumns[j].items];
   const column = newColumns[j];
   j = rowOffset;
   if (j < 0) {
     j = 0;
   }
-  if (j > column.list.length) {
-    j = column.list.length;
+  if (j > column.items.length) {
+    j = column.items.length;
   }
-  column.list.splice(j, 0, draggedItem);
+  column.items.splice(j, 0, draggedItem);
   return newColumns;
 };
 
-export const KanbanLayout = () => {
-  const [columns, setColumns] = useState<KanbanColumn[]>([]);
-  const stackRefs = useRef(columns.map(() => createRef<HTMLDivElement>()));
+export const KanbanColumnLayout = ({
+  project,
+  onDragStop
+}: {
+  project: KanbanProject;
+  onDragStop: (columns: KanbanColumn[]) => void;
+}) => {
+  const stackRefs = useRef(project.columns.map(() => createRef<HTMLDivElement>()));
   const { height } = useWindowDimensions();
   return (
     <Stack sx={{ flex: 1, flexDirection: "row", overflow: "hidden" }}>
-      {columns.map(({ name, list }, i) => {
+      {project.columns.map(({ name, items }, i) => {
         const stackRef = stackRefs.current[i];
         return (
           <Fragment key={name}>
             {i !== 0 && <Divider orientation="vertical" />}
             <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto", height: height - 100 }}>
               <Stack sx={{ p: padding, gap: 1 }}>
-                {list.map((item) => (
+                {items.map((item) => (
                   <KanbanCard
                     key={item.id}
                     stackRef={stackRef}
                     stackRefs={stackRefs}
                     item={item}
                     onDragStop={(item, columnOffset, rowOffset) =>
-                      setColumns(getColumns(columns, i, item, columnOffset, rowOffset))
+                      onDragStop(getColumns(project.columns, i, item, columnOffset, rowOffset))
                     }
                   />
                 ))}
@@ -186,4 +70,21 @@ export const KanbanLayout = () => {
       })}
     </Stack>
   );
+};
+
+export const KanbanLayout = ({
+  project,
+  onDragStop
+}: {
+  project: KanbanProject | undefined;
+  onDragStop: (columns: KanbanColumn[]) => void;
+}) => {
+  if (!project) {
+    return (
+      <>
+        <Typography>No Project Selected</Typography>
+      </>
+    );
+  }
+  return <KanbanColumnLayout project={project} onDragStop={onDragStop} />;
 };

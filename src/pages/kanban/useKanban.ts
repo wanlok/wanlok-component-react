@@ -3,23 +3,14 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../../firebase";
-import { Kanban, KanbanProject } from "../../services/Types";
+import { Kanban, KanbanColumn, KanbanProject } from "../../services/Types";
 
 const collectionName = "configs";
 const documentId = "kanban";
 
-// const dummyData: ColumnData[] = [
-//   { name: "To Do", list: [] },
-//   { name: "In Progress", list: [] },
-//   { name: "Ready To Deploy", list: [] },
-//   { name: "Done", list: [] }
-// ];
-
 export const useKanban = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
-  // const [columns, setColumns] = useState(dummyData);
 
   const [kanban, setKanban] = useState<Kanban>();
   const [selectedProject, setSelectedProject] = useState<KanbanProject>();
@@ -52,11 +43,11 @@ export const useKanban = () => {
     }
   }, [id, kanban]);
 
-  const addProject = async (name: string, columns: string[]) => {
+  const addProject = async (name: string, columnNames: string[]) => {
     const docRef = doc(db, collectionName, documentId);
     const document = await getDoc(docRef);
-    const id = uuidv4();
-    const project = { id, name, columns };
+    const columns = columnNames.map((name) => ({ name, items: [] }));
+    const project = { id: uuidv4(), name, columns };
     if (document.exists()) {
       const projects = document.data().projects ?? [];
       await updateDoc(docRef, { projects: [...projects, project] });
@@ -66,11 +57,23 @@ export const useKanban = () => {
   };
 
   const addItem = () => {
-    // const newColumns = [...columns];
-    // const itemNumber = columns.reduce((sum, { list }) => sum + list.length, 1);
-    // newColumns[0].list.push({ id: uuidv4(), name: `Item ${itemNumber}` });
-    // setColumns(newColumns);
+    if (!selectedProject) {
+      return;
+    }
+    const columns = [...selectedProject.columns];
+    const itemNumber = selectedProject.columns.reduce((sum, { items }) => sum + items.length, 1);
+    columns[0].items.push({ id: uuidv4(), name: `Item ${itemNumber}` });
+    setSelectedProject({ ...selectedProject, columns });
   };
 
-  return { selectedProject, addProject, openProject, kanban: kanban, addItem };
+  const moveItem = (columns: KanbanColumn[]) => {
+    if (!kanban || !selectedProject) {
+      return;
+    }
+    setSelectedProject({ ...selectedProject, columns });
+    const docRef = doc(db, collectionName, documentId);
+    updateDoc(docRef, { projects: [...kanban.projects] });
+  };
+
+  return { kanban, selectedProject, addProject, openProject, addItem, moveItem };
 };

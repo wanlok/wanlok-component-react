@@ -9,13 +9,13 @@ import { KanbanHeader } from "./KanbanHeader";
 import { KanbanLayout } from "./KanbanLayout";
 
 export const Kanban = () => {
-  const { selectedProject, addProject, openProject, kanban, addItem } = useKanban();
+  const { kanban, selectedProject, addProject, openProject, addItem, moveItem } = useKanban();
   const [panelOpened, setPanelOpened] = useState(false);
   const [opened, setOpened] = useState(false);
 
   const [projectModalRows, setProjectModalRows] = useState([
     { label: "Name", value: "" },
-    { label: "Columns", value: ["A", "B", "C", "D"] }
+    { label: "Columns", value: ["To Do", "In Progress", "Ready To Deploy", "Done"] }
   ]);
 
   return (
@@ -46,18 +46,15 @@ export const Kanban = () => {
       }
     >
       <KanbanHeader project={selectedProject} onAddItemButtonClick={addItem} />
-      <KanbanLayout />
+      <KanbanLayout project={selectedProject} onDragStop={moveItem} />
       <ProjectModal
         open={opened}
         onClose={() => setOpened(false)}
         rows={projectModalRows}
         onRowValueChange={(i, value) => {
           const newProjectModalRows = [...projectModalRows];
-          // if (typeof value === "string") {
-          //   newProjectModalRows[i].value = value;
-          //   setProjectModalRows(newProjectModalRows);
-          // } else {
-          // }
+          newProjectModalRows[i].value = value;
+          setProjectModalRows(newProjectModalRows);
         }}
         onSaveButtonClick={() => {
           const name = projectModalRows[0].value as string;

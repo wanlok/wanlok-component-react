@@ -13,7 +13,7 @@ export const Row = ({
   label: string;
   value: string | string[];
   index: number;
-  onRowValueChange: (index: number, value: string) => void;
+  onRowValueChange: (index: number, value: string | string[]) => void;
 }) => {
   if (typeof value === "string") {
     return (
@@ -32,7 +32,11 @@ export const Row = ({
         <TextInput
           label={`${i + 1}`}
           value={v}
-          onChange={(value) => onRowValueChange(index, value)}
+          onChange={(v) => {
+            const values = [...value];
+            values[i] = v;
+            onRowValueChange(index, values);
+          }}
           hideHelperText={true}
           inputPropsSx={{ flex: 1 }}
         />
@@ -51,7 +55,7 @@ export const ProjectModal = ({
   open: boolean;
   onClose: () => void;
   rows: { label: string; value: string | string[] }[];
-  onRowValueChange: (index: number, value: string) => void;
+  onRowValueChange: (index: number, value: string | string[]) => void;
   onSaveButtonClick: () => void;
 }) => {
   return (
@@ -59,8 +63,8 @@ export const ProjectModal = ({
       <WText text="Attributes" editable={false} rightButtons={[]} />
       <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
         <Stack sx={{ flex: 1 }}>
-          {rows.map(({ label, value }, index) => (
-            <Row label={label} value={value} index={index} onRowValueChange={onRowValueChange} />
+          {rows.map(({ label, value }, i) => (
+            <Row label={label} value={value} index={i} onRowValueChange={onRowValueChange} />
           ))}
         </Stack>
       </Stack>

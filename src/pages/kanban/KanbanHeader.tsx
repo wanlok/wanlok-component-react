@@ -1,8 +1,8 @@
+import { useState } from "react";
 import { Stack, Typography } from "@mui/material";
 import { LayoutHeader, topSx } from "../../components/LayoutHeader";
-import { useState } from "react";
 import { WText } from "../../components/WText";
-import { KanbanColumn, KanbanProject } from "../../services/Types";
+import { KanbanProject } from "../../services/Types";
 
 const Top = ({
   project,
@@ -36,11 +36,13 @@ const Top = ({
   );
 };
 
-const Bottom = () => {
-  const columns: KanbanColumn[] = [];
+const Bottom = ({ project }: { project: KanbanProject | undefined }) => {
+  if (!project) {
+    return <></>;
+  }
   return (
     <Stack sx={{ flex: 1, flexDirection: "row", gap: "1px" }}>
-      {columns.map(({ name }) => {
+      {project.columns.map(({ name }) => {
         return (
           <Stack
             sx={{
@@ -69,6 +71,9 @@ export const KanbanHeader = ({
   onAddItemButtonClick: () => void;
 }) => {
   return (
-    <LayoutHeader top={<Top project={project} onAddItemButtonClick={onAddItemButtonClick} />} bottom={<Bottom />} />
+    <LayoutHeader
+      top={<Top project={project} onAddItemButtonClick={onAddItemButtonClick} />}
+      bottom={<Bottom project={project} />}
+    />
   );
 };

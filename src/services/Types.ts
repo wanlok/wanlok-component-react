@@ -22,7 +22,7 @@ export interface KanbanItem {
 
 export interface KanbanColumn {
   name: string;
-  list: KanbanItem[];
+  items: KanbanItem[];
 }
 
 export interface KanbanProject {
