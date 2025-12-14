@@ -69,8 +69,10 @@ export const KanbanCard = ({
   onClick: () => void;
 }) => {
   const nodeRef = useRef<HTMLDivElement>(null);
+  const startX = useRef(0);
   const startY = useRef(0);
   const dragged = useRef(false);
+  const getX = () => nodeRef.current?.getBoundingClientRect()?.x ?? 0;
   const getY = () => nodeRef.current?.getBoundingClientRect()?.y ?? 0;
   return (
     <Draggable
@@ -78,6 +80,7 @@ export const KanbanCard = ({
       handle=".drag-handle"
       position={{ x: 0, y: 0 }}
       onStart={(_, { node: draggedNode }) => {
+        startX.current = getX();
         startY.current = getY();
         dragged.current = false;
         for (const stackRef of stackRefs.current ?? []) {
@@ -92,7 +95,9 @@ export const KanbanCard = ({
         }
       }}
       onStop={(_, { x, y, node: draggedNode }) => {
-        if (Math.abs(startY.current - getY()) <= threshold) {
+        const offsetX = Math.abs(startX.current - getX());
+        const offsetY = Math.abs(startY.current - getY());
+        if (offsetX <= threshold && offsetY <= threshold) {
           return;
         }
         dragged.current = true;
