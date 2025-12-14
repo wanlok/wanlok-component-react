@@ -30,7 +30,7 @@ export const ProjectRow = ({
     >
       <Box
         component="img"
-        src={project === selectedProject ? FolderSelectedIcon : FolderIcon}
+        src={project.id === selectedProject?.id ? FolderSelectedIcon : FolderIcon}
         alt=""
         sx={{ width: "24px", height: "24px" }}
       />
