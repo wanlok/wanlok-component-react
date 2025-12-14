@@ -7,7 +7,15 @@ import CrossIcon from "../../assets/images/icons/cross.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 
-export const ProjectHeader = ({ onCreateButtonClick }: { onCreateButtonClick: () => void }) => {
+export const ProjectHeader = ({
+  controlGroupState,
+  onCreateButtonClick,
+  onDeleteButtonClick
+}: {
+  controlGroupState: number;
+  onCreateButtonClick: () => void;
+  onDeleteButtonClick: () => void;
+}) => {
   return (
     <LayoutHeader
       top={
@@ -27,9 +35,8 @@ export const ProjectHeader = ({ onCreateButtonClick }: { onCreateButtonClick: ()
             <WIconButton
               icon={CrossIcon}
               iconSize={16}
-              onClick={() => {}}
-              //   sx={{ backgroundColor: folderControlGroupState === 2 ? "primary.dark" : "primary.main" }}
-              sx={{ backgroundColor: "primary.main" }}
+              onClick={onDeleteButtonClick}
+              sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
             />
           </Stack>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>

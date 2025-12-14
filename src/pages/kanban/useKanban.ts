@@ -60,6 +60,16 @@ export const useKanban = () => {
     setKanban(kanban);
   };
 
+  const deleteProject = async (project: KanbanProject) => {
+    if (!kanban) {
+      return;
+    }
+    const projects = kanban.projects.filter((p) => p.id !== project.id);
+    updateDoc(docRef, { projects });
+    setKanban({ projects });
+    setSelectedProject(undefined);
+  };
+
   const addItem = () => {
     if (!kanban || !selectedProject) {
       return;
@@ -79,5 +89,5 @@ export const useKanban = () => {
     setSelectedProject({ ...selectedProject, columns });
   };
 
-  return { kanban, selectedProject, addProject, openProject, addItem, moveItem };
+  return { kanban, selectedProject, addProject, deleteProject, openProject, addItem, moveItem };
 };

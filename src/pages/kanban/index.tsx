@@ -7,9 +7,14 @@ import { ProjectRow } from "./ProjectRow";
 import { ProjectModal } from "./ProjectModal";
 import { KanbanHeader } from "./KanbanHeader";
 import { KanbanLayout } from "./KanbanLayout";
+import { WIconButton } from "../../components/WButton";
+
+import CrossIcon from "../../assets/images/icons/cross.png";
+import { Stack } from "@mui/material";
 
 export const Kanban = () => {
-  const { kanban, selectedProject, addProject, openProject, addItem, moveItem } = useKanban();
+  const { kanban, selectedProject, addProject, deleteProject, openProject, addItem, moveItem } = useKanban();
+  const [controlGroupState, setControlGroupState] = useState(0);
   const [panelOpened, setPanelOpened] = useState(false);
   const [opened, setOpened] = useState(false);
 
@@ -25,7 +30,11 @@ export const Kanban = () => {
       width={300}
       panel={
         <>
-          <ProjectHeader onCreateButtonClick={() => setOpened(true)} />
+          <ProjectHeader
+            controlGroupState={controlGroupState}
+            onCreateButtonClick={() => setOpened(true)}
+            onDeleteButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
+          />
           <WCardList
             items={kanban?.projects ?? []}
             renderContent={(project) => <ProjectRow project={project} selectedProject={selectedProject} />}
@@ -33,7 +42,13 @@ export const Kanban = () => {
               openProject(project);
               setPanelOpened(false);
             }}
-            renderRightContent={() => <></>}
+            renderRightContent={(project) => (
+              <Stack>
+                {controlGroupState === 1 && (
+                  <WIconButton icon={CrossIcon} iconSize={16} onClick={() => deleteProject(project)} />
+                )}
+              </Stack>
+            )}
           />
         </>
       }

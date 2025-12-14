@@ -26,7 +26,7 @@ const Top = ({
                   { label: "Cancel", onClick: () => setEditable(false) }
                 ]
               : [
-                  { label: "Change Name", onClick: () => setEditable(true) },
+                  // { label: "Change Name", onClick: () => setEditable(true) },
                   { label: "Add Item", onClick: onAddItemButtonClick }
                 ]
           }
