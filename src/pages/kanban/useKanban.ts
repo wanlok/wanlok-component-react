@@ -48,12 +48,16 @@ export const useKanban = () => {
     const document = await getDoc(docRef);
     const columns = columnNames.map((name) => ({ name, items: [] }));
     const project = { id: uuidv4(), name, columns };
+    let kanban;
     if (document.exists()) {
       const projects = document.data().projects ?? [];
-      await updateDoc(docRef, { projects: [...projects, project] });
+      kanban = { projects: [...projects, project] };
+      await updateDoc(docRef, kanban);
     } else {
-      await setDoc(docRef, { projects: [project] });
+      kanban = { projects: [project] };
+      await setDoc(docRef, kanban);
     }
+    setKanban(kanban);
   };
 
   const addItem = () => {
