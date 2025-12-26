@@ -11,11 +11,13 @@ import { WIconButton } from "../../components/WButton";
 
 import CrossIcon from "../../assets/images/icons/cross.png";
 import { Stack } from "@mui/material";
+import { KanbanItemModal } from "./KanbanItemModal";
 
 export const Kanban = () => {
   const { kanban, selectedProject, addProject, deleteProject, openProject, addItem, moveItem } = useKanban();
   const [controlGroupState, setControlGroupState] = useState(0);
   const [panelOpened, setPanelOpened] = useState(false);
+  const [kanbanItemModalOpened, setKanbanItemModalOpened] = useState(false);
   const [opened, setOpened] = useState(false);
 
   const [projectModalRows, setProjectModalRows] = useState([
@@ -66,8 +68,10 @@ export const Kanban = () => {
         onDragStop={moveItem}
         onClick={(i, j) => {
           console.log("clicked", i, j);
+          setKanbanItemModalOpened(true);
         }}
       />
+      <KanbanItemModal open={kanbanItemModalOpened} onClose={() => setKanbanItemModalOpened(false)} />
       <ProjectModal
         open={opened}
         onClose={() => setOpened(false)}
