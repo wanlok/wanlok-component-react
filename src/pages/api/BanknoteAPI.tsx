@@ -44,7 +44,9 @@ const getBanknotes = async (collectionAttributes: CollectionAttributes) => {
   Object.keys(data.files).forEach((key) => {
     const { name, url, attributes } = data.files[key];
     const { width, height } = parseAttributes(collectionAttributes, attributes);
-    dict[key] = { name, url, width, height };
+    if (width > 0 && height > 0) {
+      dict[key] = { name, url, width, height };
+    }
   });
 
   return dict;
