@@ -22,25 +22,25 @@ export const useMapper = () => {
     setNumberOfFiles(value);
   };
 
-  const changeFile = (key: string, e: ChangeEvent<HTMLInputElement>) => {
+  const changeFile = (id: string, e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       setFiles((prev) => ({
         ...prev,
-        [key]: file
+        [id]: file
       }));
     }
   };
 
-  const deleteFile = (key: string) => {
+  const deleteFile = (id: string) => {
     setFiles((prev) => {
-      const { [key]: _, ...rest } = prev;
+      const { [id]: _, ...rest } = prev;
       return rest;
     });
   };
 
-  const readFile = (key: string) => {
-    const file = files[key];
+  const readFile = (id: string) => {
+    const file = files[id];
     if (file) {
       const fielReader = new FileReader();
       fielReader.onload = ({ target }) => {

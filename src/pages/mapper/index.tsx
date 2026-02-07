@@ -2,6 +2,7 @@ import { Button, Stack, Typography } from "@mui/material";
 import { SelectInput } from "../../components/SelectInput";
 import { useMapper } from "./useMapper";
 import { ChangeEvent } from "react";
+import { MapperSelect } from "./MapperSelect";
 
 interface DummyInterface {
   id: string;
@@ -54,6 +55,13 @@ export const MapperPage = () => {
             />
           );
         })}
+      </Stack>
+      <Stack gap={1}>
+        {fileMetadata
+          .filter(({ id }) => files[id])
+          .map(({ id }) => {
+            return <MapperSelect key={id} id={id} file={files[id]} />;
+          })}
       </Stack>
     </Stack>
   );
