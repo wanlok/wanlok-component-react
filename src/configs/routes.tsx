@@ -12,6 +12,7 @@ import DiscussionIcon from "../assets/images/icons/discussion.png";
 import DiscussionSelectedIcon from "../assets/images/icons/discussion_selected.png";
 import { Kanban } from "../pages/kanban";
 import { BanknoteAPI } from "../pages/api/BanknoteAPI";
+import { MapperPage } from "../pages/mapper";
 
 export const routes = [
   {
@@ -44,6 +45,13 @@ export const routes = [
         name: "Collections",
         path: "/collections/:id?",
         element: <CollectionPage />
+      },
+      {
+        icon: FolderIcon,
+        icon_selected: FolderSelectedIcon,
+        name: "Mapper",
+        path: "/mapper/:id?",
+        element: <MapperPage />
       },
       {
         icon: DiscussionIcon,
