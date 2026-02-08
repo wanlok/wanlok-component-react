@@ -1,11 +1,5 @@
-import { useEffect, useState } from "react";
-import { readFileAsString } from "../../common/readFileAsString";
-import { Box, MenuItem, Select, Stack, Typography } from "@mui/material";
-
-interface Item {
-  image_url: string;
-  name: string;
-}
+import { Box, MenuItem, Select, SelectChangeEvent, Stack, Typography } from "@mui/material";
+import { Item, ProcessedFile } from "./useMapper";
 
 const iconSize = 64;
 
@@ -30,31 +24,22 @@ const Row = ({ item }: { item: Item | undefined }) => {
   );
 };
 
-export const MapperSelect = ({ file }: { id: string; file: File }) => {
-  const [items, setItems] = useState<Item[]>();
-  const [value, setValue] = useState<string>("");
+interface MapperSelectInterface {
+  processedFile: ProcessedFile;
+  value: string;
+  onChange: (e: SelectChangeEvent<any>) => any;
+}
 
-  useEffect(() => {
-    const load = async () => {
-      const jsonString = await readFileAsString(file);
-      if (jsonString) {
-        try {
-          setItems(JSON.parse(jsonString) as Item[]);
-        } catch (e) {}
-      }
-    };
-    load();
-  }, []);
-
+export const MapperSelect = ({ processedFile, value, onChange }: MapperSelectInterface) => {
+  const items = processedFile.items;
   if (!items) {
     return <></>;
   }
-
   return (
     <Select
       fullWidth
       value={value}
-      onChange={(e) => setValue(e.target.value)}
+      onChange={onChange}
       renderValue={(selected) => {
         const item = items.find((i) => i.name === selected);
         return (

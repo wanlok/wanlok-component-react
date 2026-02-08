@@ -1,10 +1,21 @@
 import { ChangeEvent, useState } from "react";
+import { readFileAsString } from "../../common/readFileAsString";
 
 const maxNumberOfFiles = 5;
 
+export interface Item {
+  image_url: string;
+  name: string;
+}
+
+export interface ProcessedFile {
+  name: string;
+  items: Item[] | null;
+}
+
 export const useMapper = () => {
   const [numberOfFiles, setNumberOfFiles] = useState<string>("2");
-  const [files, setFiles] = useState<Record<string, File>>({});
+  const [processedFiles, setItems] = useState<Record<string, ProcessedFile>>({});
 
   const fileItems = Array.from({ length: maxNumberOfFiles }).map((_, index) => {
     return { label: `${index + 1}`, value: `${index + 1}` };
@@ -22,46 +33,42 @@ export const useMapper = () => {
     setNumberOfFiles(value);
   };
 
-  const changeFile = (id: string, e: ChangeEvent<HTMLInputElement>) => {
+  const changeFile = async (id: string, e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFiles((prev) => ({
-        ...prev,
-        [id]: file
-      }));
+      const processedFile = {
+        name: file.name,
+        items: await getItems(file)
+      };
+      setItems((prev) => ({ ...prev, [id]: processedFile }));
     }
   };
 
   const deleteFile = (id: string) => {
-    setFiles((prev) => {
+    setItems((prev) => {
       const { [id]: _, ...rest } = prev;
       return rest;
     });
   };
 
-  const readFile = (id: string) => {
-    const file = files[id];
-    if (file) {
-      const fielReader = new FileReader();
-      fielReader.onload = ({ target }) => {
-        const result = target?.result;
-        if (typeof result === "string") {
-          console.log(result);
-        }
-      };
-      //   fielReader.onerror = (error) => {};
-      fielReader.readAsText(file);
+  const getItems = async (file: File) => {
+    let items: Item[] | null = null;
+    const jsonString = await readFileAsString(file);
+    if (jsonString) {
+      try {
+        items = JSON.parse(jsonString) as Item[];
+      } catch (e) {}
     }
+    return items;
   };
 
   return {
     numberOfFiles,
-    files,
+    processedFiles,
     fileItems,
     fileMetadata,
     changeNumberOfFiles,
     changeFile,
-    deleteFile,
-    readFile
+    deleteFile
   };
 };
