@@ -36,19 +36,21 @@ export const useMapper = () => {
   );
 
   useEffect(() => {
-    const newValues = { ...values };
-    const ids = metadata.map(({ id }) => id);
-    for (const id in newValues) {
-      if (!ids.includes(id)) {
-        delete newValues[id];
+    setValues((prev) => {
+      const newValues = { ...prev };
+      const ids = metadata.map(({ id }) => id);
+      for (const id in newValues) {
+        if (!ids.includes(id)) {
+          delete newValues[id];
+        }
       }
-    }
-    for (const { id } of metadata) {
-      if (newValues[id] === undefined) {
-        newValues[id] = "";
+      for (const { id } of metadata) {
+        if (newValues[id] === undefined) {
+          newValues[id] = "";
+        }
       }
-    }
-    setValues(newValues);
+      return newValues;
+    });
   }, [metadata]);
 
   const changeNumberOfFiles = (value: string) => {
