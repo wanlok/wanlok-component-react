@@ -1,5 +1,5 @@
 import { Box, MenuItem, Select, SelectChangeEvent, Stack, Typography } from "@mui/material";
-import { Item, ProcessedFile } from "./useMapper";
+import { Item } from "./useMapper";
 
 const iconSize = 64;
 
@@ -25,13 +25,12 @@ const Row = ({ item }: { item: Item | undefined }) => {
 };
 
 interface MapperSelectInterface {
-  processedFile: ProcessedFile;
+  items: Item[] | null;
   value: string;
   onChange: (e: SelectChangeEvent<any>) => any;
 }
 
-export const MapperSelect = ({ processedFile, value, onChange }: MapperSelectInterface) => {
-  const items = processedFile.items;
+export const MapperSelect = ({ items, value, onChange }: MapperSelectInterface) => {
   if (!items) {
     return <></>;
   }
@@ -49,7 +48,7 @@ export const MapperSelect = ({ processedFile, value, onChange }: MapperSelectInt
         );
       }}
     >
-      {items.slice(0, 5).map((item) => {
+      {items.slice(0, 8).map((item) => {
         return (
           <MenuItem key={`item ${item.name}`} value={item.name}>
             <Row item={item} />

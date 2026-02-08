@@ -1,7 +1,7 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { SelectInput } from "../../components/SelectInput";
 import { ProcessedFile, useMapper } from "./useMapper";
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent } from "react";
 import { MapperSelect } from "./MapperSelect";
 
 interface DummyInterface {
@@ -32,19 +32,23 @@ const FileInput = ({ id, label, processedFile, changeFile, deleteFile }: DummyIn
 };
 
 export const MapperPage = () => {
-  const { numberOfFiles, processedFiles, fileItems, fileMetadata, changeNumberOfFiles, changeFile, deleteFile } =
-    useMapper();
-  const [values, setValues] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    console.log(processedFiles);
-  }, [processedFiles]);
+  const {
+    numberOfFiles,
+    processedFiles,
+    fileItems,
+    metadata,
+    changeNumberOfFiles,
+    changeFile,
+    deleteFile,
+    values,
+    onSelectChange
+  } = useMapper();
 
   return (
     <Stack gap={1} sx={{ p: 2 }}>
       <SelectInput items={fileItems} value={numberOfFiles} onChange={changeNumberOfFiles} />
       <Stack gap={1}>
-        {fileMetadata.map(({ id, label }) => {
+        {metadata.map(({ id, label }) => {
           return (
             <FileInput
               key={id}
@@ -58,15 +62,15 @@ export const MapperPage = () => {
         })}
       </Stack>
       <Stack gap={1}>
-        {fileMetadata
+        {metadata
           .filter(({ id }) => processedFiles[id])
           .map(({ id }) => {
             return (
               <MapperSelect
                 key={id}
-                processedFile={processedFiles[id]}
+                items={processedFiles[id].items}
                 value={values[id]}
-                onChange={(e) => setValues((prev) => ({ ...prev, [id]: e.target.value }))}
+                onChange={(e) => onSelectChange(id, e.target.value)}
               />
             );
           })}
