@@ -48,7 +48,7 @@ export const KanbanItemModal = ({
           />
         </Stack>
       </Stack>
-      <Stack sx={{ flexDirection: "row" }}>
+      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
         <WButton sx={{ flex: 1 }} onClick={onDeleteButtonClick}>
           Delete
         </WButton>
