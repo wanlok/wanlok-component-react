@@ -47,3 +47,13 @@ REACT_APP_FIREBASE_APP_ID
 ```
 
 **Deployment:** `deploy.sh` builds the app, wipes the `wanlok.github.io` repo directory, copies the build output into it, and pushes. The app uses a hash router (`createHashRouter`) so all routes work as static files on GitHub Pages.
+
+## Conventions
+
+**Handler naming:** Local handler functions must match the prop name they are passed to. Example: `onCreateButtonClick={onCreateButtonClick}`, not `onCreateButtonClick={openCreateModal}`.
+
+**Variable naming:** Use full descriptive names, not abbreviations. Example: `column` not `col`, `project` not `p`. Exception: use single-letter counters (`i`, `j`, `k`) for index variables in map/filter callbacks, not prefixed variants like `ci` or `ii`.
+
+**Firebase writes:** Only call Firebase (e.g. `updateDoc`, `setDoc`) on explicit user actions like a Save button click. Never trigger writes on text change, blur, or other intermediate events — use local state to buffer edits until the user confirms.
+
+**Firestore field naming:** Use snake_case for all Firestore document field names (e.g. `created_at`, not `createdAt`). TypeScript interface properties that map directly to Firestore fields follow the same convention.
