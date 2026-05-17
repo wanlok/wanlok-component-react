@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Stack } from "@mui/material";
+import { Divider, Stack } from "@mui/material";
 import { WModal } from "../../components/WModal";
 import { WText } from "../../components/WText";
 import { KanbanProject } from "../../services/Types";
@@ -24,8 +24,9 @@ export const KanbanItemModal = ({
   return (
     <WModal open={true} onClose={onClose}>
       <WText text="Edit Task" editable={false} rightButtons={[]} />
+      <Divider />
       <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
-        <Stack sx={{ flex: 1 }}>
+        <Stack sx={{ flex: 1, gap: 1, p: 1 }}>
           <TextInput label="Name" value={name} onChange={setName} hideHelperText={true} inputPropsSx={{ flex: 1 }} />
           <TextInput
             label="Creation Date/Time"
@@ -40,6 +41,7 @@ export const KanbanItemModal = ({
             value={content}
             onChange={setContent}
             hideHelperText={true}
+            minRows={4}
             inputPropsSx={{ flex: 1 }}
           />
         </Stack>

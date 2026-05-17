@@ -50,6 +50,7 @@ export const TextInput = ({
   hideHelperText = false,
   tabAllowed = false,
   disabled = false,
+  minRows,
   inputPropsSx
 }: {
   label?: string;
@@ -59,6 +60,7 @@ export const TextInput = ({
   hideHelperText?: boolean;
   tabAllowed?: boolean;
   disabled?: boolean;
+  minRows?: number;
   inputPropsSx?: SxProps<Theme>;
 }) => {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -70,6 +72,7 @@ export const TextInput = ({
         placeholder={placeholder}
         value={value}
         multiline
+        minRows={minRows}
         disabled={disabled}
         InputProps={{
           sx: {
