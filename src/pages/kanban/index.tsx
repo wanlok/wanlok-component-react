@@ -100,17 +100,24 @@ export const Kanban = () => {
         )
       }
     >
-      <KanbanHeader project={selectedProject} onEditButtonClick={onEditButtonClick} onAddItemButtonClick={addItem} />
-      <KanbanLayout project={selectedProject} onDragStop={moveItem} onClick={(i, j) => setSelectedItem({ i, j })} />
+      <KanbanHeader
+        project={selectedProject}
+        onEditButtonClick={onEditButtonClick}
+        onAddItemButtonClick={addItem}
+        onDeleteItemButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
+      />
+      <KanbanLayout
+        project={selectedProject}
+        controlGroupState={controlGroupState}
+        onDragStop={moveItem}
+        onClick={(i, j) => setSelectedItem({ i, j })}
+        onDeleteItemClick={(i, j) => deleteItem(i, j)}
+      />
       {selectedProject && selectedItem && (
         <KanbanItemModal
           project={selectedProject}
           item={selectedItem}
           onItemChange={(name, content) => updateItem(selectedItem.i, selectedItem.j, name, content)}
-          onDeleteButtonClick={() => {
-            deleteItem(selectedItem.i, selectedItem.j);
-            setSelectedItem(null);
-          }}
           onClose={() => setSelectedItem(null)}
         />
       )}

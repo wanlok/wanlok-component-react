@@ -6,11 +6,13 @@ import { KanbanProject } from "../../services/Types";
 const Top = ({
   project,
   onEditButtonClick,
-  onAddItemButtonClick
+  onAddItemButtonClick,
+  onDeleteItemButtonClick
 }: {
   project: KanbanProject | undefined;
   onEditButtonClick: () => void;
   onAddItemButtonClick: () => void;
+  onDeleteItemButtonClick: () => void;
 }) => {
   return (
     <Stack sx={[topSx, { height: 55 }]}>
@@ -21,7 +23,8 @@ const Top = ({
           placeholder="Dummy"
           rightButtons={[
             { label: "Edit", onClick: onEditButtonClick },
-            { label: "Add Item", onClick: onAddItemButtonClick }
+            { label: "Add Item", onClick: onAddItemButtonClick },
+            { label: "Delete Item", onClick: onDeleteItemButtonClick }
           ]}
         />
       </Stack>
@@ -60,15 +63,24 @@ const Bottom = ({ project }: { project: KanbanProject | undefined }) => {
 export const KanbanHeader = ({
   project,
   onEditButtonClick,
-  onAddItemButtonClick
+  onAddItemButtonClick,
+  onDeleteItemButtonClick
 }: {
   project: KanbanProject | undefined;
   onEditButtonClick: () => void;
   onAddItemButtonClick: () => void;
+  onDeleteItemButtonClick: () => void;
 }) => {
   return (
     <LayoutHeader
-      top={<Top project={project} onEditButtonClick={onEditButtonClick} onAddItemButtonClick={onAddItemButtonClick} />}
+      top={
+        <Top
+          project={project}
+          onEditButtonClick={onEditButtonClick}
+          onAddItemButtonClick={onAddItemButtonClick}
+          onDeleteItemButtonClick={onDeleteItemButtonClick}
+        />
+      }
       bottom={<Bottom project={project} />}
     />
   );

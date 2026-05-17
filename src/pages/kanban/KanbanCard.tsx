@@ -3,6 +3,9 @@ import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
 import Draggable from "react-draggable";
 import { KanbanItem } from "../../services/Types";
 import { getDisplayDateTimeString } from "../../common/DateUtils";
+import { Stack } from "@mui/material";
+import { WIconButton } from "../../components/WButton";
+import CrossIcon from "../../assets/images/icons/cross.png";
 
 export const padding = 2;
 export const threshold = 4;
@@ -61,13 +64,17 @@ export const KanbanCard = ({
   stackRefs,
   item,
   onDragStop,
-  onClick
+  onClick,
+  controlGroupState,
+  onDeleteItemClick
 }: {
   stackRef: RefObject<HTMLDivElement>;
   stackRefs: RefObject<RefObject<HTMLDivElement>[]>;
   item: KanbanItem;
   onDragStop: (item: KanbanItem, columnOffset: number, rowOffset: number) => void;
   onClick: () => void;
+  controlGroupState: number;
+  onDeleteItemClick: () => void;
 }) => {
   const nodeRef = useRef<HTMLDivElement>(null);
   const startX = useRef(0);
@@ -79,6 +86,7 @@ export const KanbanCard = ({
     <Draggable
       nodeRef={nodeRef}
       handle=".drag-handle"
+      cancel=".drag-cancel"
       position={{ x: 0, y: 0 }}
       onStart={(_, { node: draggedNode }) => {
         startX.current = getX();
@@ -127,20 +135,28 @@ export const KanbanCard = ({
         }}
         className="drag-handle"
       >
-        <CardActionArea
-          onClick={() => {
-            if (!dragged.current) {
-              onClick();
-            }
-          }}
-        >
-          <CardContent sx={{ display: "flex", flexDirection: "column" }}>
-            <Typography variant="body1" sx={{ color: item.name ? "text.primary" : "text.disabled" }}>
-              {item.name || "No name"}
-            </Typography>
-            <Typography variant="body2">{getDisplayDateTimeString(new Date(item.created_at))}</Typography>
-          </CardContent>
-        </CardActionArea>
+        <Stack sx={{ flexDirection: "row" }}>
+          <CardActionArea
+            sx={{ flex: 1 }}
+            onClick={() => {
+              if (!dragged.current) {
+                onClick();
+              }
+            }}
+          >
+            <CardContent sx={{ display: "flex", flexDirection: "column" }}>
+              <Typography variant="body1" sx={{ color: item.name ? "text.primary" : "text.disabled" }}>
+                {item.name || "No name"}
+              </Typography>
+              <Typography variant="body2">{getDisplayDateTimeString(new Date(item.created_at))}</Typography>
+            </CardContent>
+          </CardActionArea>
+          <Stack>
+            {controlGroupState === 2 && (
+              <WIconButton icon={CrossIcon} iconSize={16} onClick={onDeleteItemClick} className="drag-cancel" />
+            )}
+          </Stack>
+        </Stack>
       </Card>
     </Draggable>
   );

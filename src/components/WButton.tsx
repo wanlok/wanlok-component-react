@@ -6,12 +6,14 @@ export const height = 40;
 export const WButton = ({
   children,
   color = "primary",
+  className,
   sx,
   onClick,
   rightIcon
 }: {
   children?: ReactNode;
   color?: ButtonOwnProps["color"];
+  className?: string;
   sx?: SxProps<Theme>;
   onClick?: () => void;
   rightIcon?: ReactNode;
@@ -22,6 +24,7 @@ export const WButton = ({
       variant="contained"
       disableElevation
       fullWidth={false}
+      className={className}
       sx={{
         height: height,
         minWidth: 0,
@@ -46,17 +49,20 @@ export const WIconButton = ({
   iconSize = 16,
   buttonSize = 48,
   onClick,
+  className,
   sx
 }: {
   icon: string;
   iconSize?: number;
   buttonSize?: number;
   onClick: () => void;
+  className?: string;
   sx?: SxProps<Theme>;
 }) => {
   return (
     <WButton
       onClick={onClick}
+      className={className}
       sx={{ backgroundColor: "transparent", p: 0, width: buttonSize, height: buttonSize, ...sx }}
     >
       <Box component="img" src={icon} alt="" sx={{ width: iconSize, height: iconSize }} />

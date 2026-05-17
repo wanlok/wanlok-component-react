@@ -36,12 +36,16 @@ const getColumns = (
 
 export const KanbanColumnLayout = ({
   project,
+  controlGroupState,
   onDragStop,
-  onClick
+  onClick,
+  onDeleteItemClick
 }: {
   project: KanbanProject;
+  controlGroupState: number;
   onDragStop: (columns: KanbanColumn[]) => void;
   onClick: (i: number, j: number) => void;
+  onDeleteItemClick: (i: number, j: number) => void;
 }) => {
   const stackRefs = useRef(project.columns.map(() => createRef<HTMLDivElement>()));
   const { height } = useWindowDimensions();
@@ -64,6 +68,8 @@ export const KanbanColumnLayout = ({
                       onDragStop(getColumns(project.columns, i, item, columnOffset, rowOffset))
                     }
                     onClick={() => onClick(i, j)}
+                    controlGroupState={controlGroupState}
+                    onDeleteItemClick={() => onDeleteItemClick(i, j)}
                   />
                 ))}
               </Stack>
@@ -77,12 +83,16 @@ export const KanbanColumnLayout = ({
 
 export const KanbanLayout = ({
   project,
+  controlGroupState,
   onDragStop,
-  onClick
+  onClick,
+  onDeleteItemClick
 }: {
   project: KanbanProject | undefined;
+  controlGroupState: number;
   onDragStop: (columns: KanbanColumn[]) => void;
   onClick: (i: number, j: number) => void;
+  onDeleteItemClick: (i: number, j: number) => void;
 }) => {
   if (!project) {
     return (
@@ -91,5 +101,14 @@ export const KanbanLayout = ({
       </>
     );
   }
-  return <KanbanColumnLayout key={project.id} project={project} onDragStop={onDragStop} onClick={onClick} />;
+  return (
+    <KanbanColumnLayout
+      key={project.id}
+      project={project}
+      controlGroupState={controlGroupState}
+      onDragStop={onDragStop}
+      onClick={onClick}
+      onDeleteItemClick={onDeleteItemClick}
+    />
+  );
 };
