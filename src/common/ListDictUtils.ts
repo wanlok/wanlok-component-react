@@ -26,12 +26,15 @@ export const toDict = <T, U = T>(list: T[], key: keyof T, mapper?: (item: T) => 
 };
 
 export const groupList = (list: any[], numberOfItemPerGroup: number) => {
-  return list.reduce((a, item, index) => {
-    const i = Math.floor(index / numberOfItemPerGroup);
-    if (!a[i]) {
-      a[i] = [];
-    }
-    a[i].push(item);
-    return a;
-  }, [] as Array<Array<any>>);
+  return list.reduce(
+    (a, item, index) => {
+      const i = Math.floor(index / numberOfItemPerGroup);
+      if (!a[i]) {
+        a[i] = [];
+      }
+      a[i].push(item);
+      return a;
+    },
+    [] as Array<Array<any>>
+  );
 };

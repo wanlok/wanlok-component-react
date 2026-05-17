@@ -61,7 +61,9 @@ export const useKanban = () => {
   };
 
   const updateProject = async (name: string, columnNames: string[]) => {
-    if (!kanban || !selectedProject) return;
+    if (!kanban || !selectedProject) {
+      return;
+    }
     const updatedProject = {
       ...selectedProject,
       name,
@@ -87,14 +89,21 @@ export const useKanban = () => {
     if (!kanban || !selectedProject) {
       return;
     }
-    const columns = [...selectedProject.columns];
-    columns[0].items.push({ id: uuidv4(), name: "", content: "", created_at: new Date().toISOString() });
-    updateDoc(docRef, { projects: [...kanban.projects] });
-    setSelectedProject({ ...selectedProject, columns });
+    const newItem = { id: uuidv4(), name: "", content: "", created_at: new Date().toISOString() };
+    const columns = selectedProject.columns.map((column, i) =>
+      i === 0 ? { ...column, items: [...column.items, newItem] } : column
+    );
+    const updatedProject = { ...selectedProject, columns };
+    const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
+    updateDoc(docRef, { projects });
+    setKanban({ ...kanban, projects });
+    setSelectedProject(updatedProject);
   };
 
   const deleteItem = (columnIndex: number, itemIndex: number) => {
-    if (!kanban || !selectedProject) return;
+    if (!kanban || !selectedProject) {
+      return;
+    }
     const columns = selectedProject.columns.map((column, i) =>
       i === columnIndex ? { ...column, items: column.items.filter((_, j) => j !== itemIndex) } : column
     );
@@ -106,7 +115,9 @@ export const useKanban = () => {
   };
 
   const updateItem = (columnIndex: number, itemIndex: number, name: string, content: string) => {
-    if (!kanban || !selectedProject) return;
+    if (!kanban || !selectedProject) {
+      return;
+    }
     const columns = selectedProject.columns.map((column, i) =>
       i === columnIndex
         ? { ...column, items: column.items.map((item, j) => (j === itemIndex ? { ...item, name, content } : item)) }
@@ -123,8 +134,11 @@ export const useKanban = () => {
     if (!kanban || !selectedProject) {
       return;
     }
-    updateDoc(docRef, { projects: [...kanban.projects] });
-    setSelectedProject({ ...selectedProject, columns });
+    const updatedProject = { ...selectedProject, columns };
+    const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
+    updateDoc(docRef, { projects });
+    setKanban({ ...kanban, projects });
+    setSelectedProject(updatedProject);
   };
 
   return {
