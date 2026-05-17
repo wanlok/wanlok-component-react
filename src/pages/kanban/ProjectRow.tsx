@@ -36,7 +36,16 @@ export const ProjectRow = ({
         sx={{ width: "24px", height: "24px" }}
       />
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
-        <Typography>{project.name}</Typography>
+        <Typography
+          sx={{
+            overflow: "hidden",
+            display: "-webkit-box",
+            WebkitBoxOrient: "vertical",
+            WebkitLineClamp: 1
+          }}
+        >
+          {project.name}
+        </Typography>
         <Typography>{getDisplayDateTimeString(new Date(project.created_at))}</Typography>
       </Stack>
       {mobileRow && (
