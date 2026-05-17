@@ -2,6 +2,7 @@ import { RefObject, useRef } from "react";
 import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
 import Draggable from "react-draggable";
 import { KanbanItem } from "../../services/Types";
+import { getDisplayDateTimeString } from "../../common/DateUtils";
 
 export const padding = 2;
 export const threshold = 4;
@@ -133,13 +134,9 @@ export const KanbanCard = ({
             }
           }}
         >
-          <CardContent>
+          <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
             <Typography>{item.name}</Typography>
-            <Typography>
-              Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the
-              industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and
-              scrambled it to make a type specimen book.
-            </Typography>
+            <Typography>{getDisplayDateTimeString(new Date(item.created_at))}</Typography>
           </CardContent>
         </CardActionArea>
       </Card>

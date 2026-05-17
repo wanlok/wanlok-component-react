@@ -47,7 +47,7 @@ export const useKanban = () => {
   const addProject = async (name: string, columnNames: string[]) => {
     const document = await getDoc(docRef);
     const columns = columnNames.map((name) => ({ name, items: [] }));
-    const project = { id: uuidv4(), name, columns };
+    const project = { id: uuidv4(), name, columns, created_at: new Date().toISOString() };
     let kanban;
     if (document.exists()) {
       const projects = document.data().projects ?? [];
@@ -58,6 +58,19 @@ export const useKanban = () => {
       await setDoc(docRef, kanban);
     }
     setKanban(kanban);
+  };
+
+  const updateProject = async (name: string, columnNames: string[]) => {
+    if (!kanban || !selectedProject) return;
+    const updatedProject = {
+      ...selectedProject,
+      name,
+      columns: selectedProject.columns.map((col, i) => ({ ...col, name: columnNames[i] ?? col.name }))
+    };
+    const projects = kanban.projects.map((p) => (p.id === selectedProject.id ? updatedProject : p));
+    await updateDoc(docRef, { projects });
+    setKanban({ ...kanban, projects });
+    setSelectedProject(updatedProject);
   };
 
   const deleteProject = async (project: KanbanProject) => {
@@ -76,9 +89,23 @@ export const useKanban = () => {
     }
     const columns = [...selectedProject.columns];
     const itemNumber = selectedProject.columns.reduce((sum, { items }) => sum + items.length, 1);
-    columns[0].items.push({ id: uuidv4(), name: `Item ${itemNumber}` });
+    columns[0].items.push({ id: uuidv4(), name: `Item ${itemNumber}`, content: "", created_at: new Date().toISOString() });
     updateDoc(docRef, { projects: [...kanban.projects] });
     setSelectedProject({ ...selectedProject, columns });
+  };
+
+  const updateItem = (columnIndex: number, itemIndex: number, name: string, content: string) => {
+    if (!kanban || !selectedProject) return;
+    const columns = selectedProject.columns.map((column, i) =>
+      i === columnIndex
+        ? { ...column, items: column.items.map((item, j) => (j === itemIndex ? { ...item, name, content } : item)) }
+        : column
+    );
+    const updatedProject = { ...selectedProject, columns };
+    const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
+    updateDoc(docRef, { projects });
+    setKanban({ ...kanban, projects });
+    setSelectedProject(updatedProject);
   };
 
   const moveItem = (columns: KanbanColumn[]) => {
@@ -89,5 +116,5 @@ export const useKanban = () => {
     setSelectedProject({ ...selectedProject, columns });
   };
 
-  return { kanban, selectedProject, addProject, deleteProject, openProject, addItem, moveItem };
+  return { kanban, selectedProject, addProject, updateProject, deleteProject, openProject, addItem, updateItem, moveItem };
 };

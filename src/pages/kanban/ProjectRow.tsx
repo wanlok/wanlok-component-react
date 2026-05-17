@@ -1,5 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { KanbanProject } from "../../services/Types";
+import { getDisplayDateTimeString } from "../../common/DateUtils";
 
 import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
@@ -35,7 +36,8 @@ export const ProjectRow = ({
         sx={{ width: "24px", height: "24px" }}
       />
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
-        <Typography variant="body1">{project.name}</Typography>
+        <Typography>{project.name}</Typography>
+        <Typography>{getDisplayDateTimeString(new Date(project.created_at))}</Typography>
       </Stack>
       {mobileRow && (
         <Box

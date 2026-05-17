@@ -49,6 +49,7 @@ export const TextInput = ({
   onChange,
   hideHelperText = false,
   tabAllowed = false,
+  disabled = false,
   inputPropsSx
 }: {
   label?: string;
@@ -57,6 +58,7 @@ export const TextInput = ({
   onChange: (value: string) => void;
   hideHelperText?: boolean;
   tabAllowed?: boolean;
+  disabled?: boolean;
   inputPropsSx?: SxProps<Theme>;
 }) => {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
@@ -68,6 +70,7 @@ export const TextInput = ({
         placeholder={placeholder}
         value={value}
         multiline
+        disabled={disabled}
         InputProps={{
           sx: {
             backgroundColor: "common.white",

@@ -8,11 +8,13 @@ export const Row = ({
   label,
   value,
   index,
+  disabled = false,
   onRowValueChange
 }: {
   label: string;
   value: string | string[];
   index: number;
+  disabled?: boolean;
   onRowValueChange: (index: number, value: string | string[]) => void;
 }) => {
   if (typeof value === "string") {
@@ -22,6 +24,7 @@ export const Row = ({
         value={value}
         onChange={(value) => onRowValueChange(index, value)}
         hideHelperText={true}
+        disabled={disabled}
         inputPropsSx={{ flex: 1 }}
       />
     );
@@ -48,23 +51,25 @@ export const Row = ({
 export const ProjectModal = ({
   open,
   onClose,
+  title,
   rows,
   onRowValueChange,
   onSaveButtonClick
 }: {
   open: boolean;
   onClose: () => void;
-  rows: { label: string; value: string | string[] }[];
+  title: string;
+  rows: { label: string; value: string | string[]; disabled?: boolean }[];
   onRowValueChange: (index: number, value: string | string[]) => void;
   onSaveButtonClick: () => void;
 }) => {
   return (
     <WModal open={open} onClose={onClose}>
-      <WText text="Attributes" editable={false} rightButtons={[]} />
+      <WText text={title} editable={false} rightButtons={[]} />
       <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
         <Stack sx={{ flex: 1 }}>
-          {rows.map(({ label, value }, i) => (
-            <Row key={`row-${i}`} label={label} value={value} index={i} onRowValueChange={onRowValueChange} />
+          {rows.map(({ label, value, disabled }, i) => (
+            <Row key={`row-${i}`} label={label} value={value} index={i} disabled={disabled} onRowValueChange={onRowValueChange} />
           ))}
         </Stack>
       </Stack>

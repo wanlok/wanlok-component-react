@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { getDisplayDateTimeString } from "../../common/DateUtils";
 import { useKanban } from "./useKanban";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
@@ -14,16 +15,50 @@ import { Stack } from "@mui/material";
 import { KanbanItemModal } from "./KanbanItemModal";
 
 export const Kanban = () => {
-  const { kanban, selectedProject, addProject, deleteProject, openProject, addItem, moveItem } = useKanban();
+  const {
+    kanban,
+    selectedProject,
+    addProject,
+    updateProject,
+    deleteProject,
+    openProject,
+    addItem,
+    updateItem,
+    moveItem
+  } = useKanban();
   const [controlGroupState, setControlGroupState] = useState(0);
   const [panelOpened, setPanelOpened] = useState(false);
-  const [kanbanItemModalOpened, setKanbanItemModalOpened] = useState(false);
+  const [selectedItem, setSelectedItem] = useState<{ i: number; j: number } | null>(null);
   const [opened, setOpened] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const [projectModalRows, setProjectModalRows] = useState([
+  const defaultProjectModalRows: { label: string; value: string | string[]; disabled?: boolean }[] = [
     { label: "Name", value: "" },
     { label: "Columns", value: ["To Do", "In Progress", "Ready To Deploy", "Done"] }
-  ]);
+  ];
+
+  const [projectModalRows, setProjectModalRows] = useState(defaultProjectModalRows);
+
+  const onCreateButtonClick = () => {
+    setProjectModalRows(defaultProjectModalRows);
+    setIsEditing(false);
+    setOpened(true);
+  };
+
+  const onEditButtonClick = () => {
+    if (!selectedProject) return;
+    setProjectModalRows([
+      { label: "Name", value: selectedProject.name },
+      {
+        label: "Creation Date/Time",
+        value: selectedProject.created_at ? getDisplayDateTimeString(new Date(selectedProject.created_at)) : "",
+        disabled: true
+      },
+      { label: "Columns", value: selectedProject.columns.map((c) => c.name) }
+    ]);
+    setIsEditing(true);
+    setOpened(true);
+  };
 
   return (
     <LayoutPanel
@@ -34,7 +69,7 @@ export const Kanban = () => {
         <>
           <ProjectHeader
             controlGroupState={controlGroupState}
-            onCreateButtonClick={() => setOpened(true)}
+            onCreateButtonClick={onCreateButtonClick}
             onDeleteButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
           />
           <WCardList
@@ -62,19 +97,20 @@ export const Kanban = () => {
         )
       }
     >
-      <KanbanHeader project={selectedProject} onAddItemButtonClick={addItem} />
-      <KanbanLayout
-        project={selectedProject}
-        onDragStop={moveItem}
-        onClick={(i, j) => {
-          console.log("clicked", i, j);
-          setKanbanItemModalOpened(true);
-        }}
-      />
-      <KanbanItemModal open={kanbanItemModalOpened} onClose={() => setKanbanItemModalOpened(false)} />
+      <KanbanHeader project={selectedProject} onEditButtonClick={onEditButtonClick} onAddItemButtonClick={addItem} />
+      <KanbanLayout project={selectedProject} onDragStop={moveItem} onClick={(i, j) => setSelectedItem({ i, j })} />
+      {selectedProject && selectedItem && (
+        <KanbanItemModal
+          project={selectedProject}
+          item={selectedItem}
+          onItemChange={(name, content) => updateItem(selectedItem.i, selectedItem.j, name, content)}
+          onClose={() => setSelectedItem(null)}
+        />
+      )}
       <ProjectModal
         open={opened}
         onClose={() => setOpened(false)}
+        title={isEditing ? "Edit Project" : "Create Project"}
         rows={projectModalRows}
         onRowValueChange={(i, value) => {
           const newProjectModalRows = [...projectModalRows];
@@ -83,9 +119,12 @@ export const Kanban = () => {
         }}
         onSaveButtonClick={() => {
           const name = projectModalRows[0].value as string;
-          const columns = projectModalRows[1].value as string[];
-          addProject(name, columns);
-          projectModalRows[0].value = "";
+          const columns = projectModalRows[projectModalRows.length - 1].value as string[];
+          if (isEditing) {
+            updateProject(name, columns);
+          } else {
+            addProject(name, columns);
+          }
           setOpened(false);
         }}
       />

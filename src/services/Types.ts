@@ -18,6 +18,8 @@ export interface ComponentFolder {
 export interface KanbanItem {
   id: string;
   name: string;
+  content: string;
+  created_at: string;
 }
 
 export interface KanbanColumn {
@@ -29,6 +31,7 @@ export interface KanbanProject {
   id: string;
   name: string;
   columns: KanbanColumn[];
+  created_at: string;
 }
 
 export interface Kanban {
