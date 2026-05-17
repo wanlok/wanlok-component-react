@@ -47,15 +47,17 @@ export const Kanban = () => {
   };
 
   const onEditButtonClick = () => {
-    if (!selectedProject) return;
+    if (!selectedProject) {
+      return;
+    }
     setProjectModalRows([
       { label: "Name", value: selectedProject.name },
       {
-        label: "Creation Date/Time",
+        label: "Created Date",
         value: selectedProject.created_at ? getDisplayDateTimeString(new Date(selectedProject.created_at)) : "",
         disabled: true
       },
-      { label: "Columns", value: selectedProject.columns.map((c) => c.name) }
+      { label: "Columns", value: selectedProject.columns.map((column) => column.name) }
     ]);
     setIsEditing(true);
     setOpened(true);
@@ -105,7 +107,10 @@ export const Kanban = () => {
           project={selectedProject}
           item={selectedItem}
           onItemChange={(name, content) => updateItem(selectedItem.i, selectedItem.j, name, content)}
-          onDeleteButtonClick={() => { deleteItem(selectedItem.i, selectedItem.j); setSelectedItem(null); }}
+          onDeleteButtonClick={() => {
+            deleteItem(selectedItem.i, selectedItem.j);
+            setSelectedItem(null);
+          }}
           onClose={() => setSelectedItem(null)}
         />
       )}

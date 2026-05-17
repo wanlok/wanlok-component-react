@@ -67,9 +67,12 @@ export const useKanban = () => {
     const updatedProject = {
       ...selectedProject,
       name,
-      columns: selectedProject.columns.map((col, i) => ({ ...col, name: columnNames[i] ?? col.name }))
+      columns: columnNames.map((columnName, i) => ({
+        ...(selectedProject.columns[i] ?? { items: [] }),
+        name: columnName
+      }))
     };
-    const projects = kanban.projects.map((p) => (p.id === selectedProject.id ? updatedProject : p));
+    const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
     await updateDoc(docRef, { projects });
     setKanban({ ...kanban, projects });
     setSelectedProject(updatedProject);

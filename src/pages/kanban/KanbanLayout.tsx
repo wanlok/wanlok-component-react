@@ -91,5 +91,5 @@ export const KanbanLayout = ({
       </>
     );
   }
-  return <KanbanColumnLayout project={project} onDragStop={onDragStop} onClick={onClick} />;
+  return <KanbanColumnLayout key={project.id} project={project} onDragStop={onDragStop} onClick={onClick} />;
 };

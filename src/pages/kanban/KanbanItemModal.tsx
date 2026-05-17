@@ -31,7 +31,7 @@ export const KanbanItemModal = ({
         <Stack sx={{ flex: 1, gap: 1, p: 1 }}>
           <TextInput label="Name" value={name} onChange={setName} hideHelperText={true} inputPropsSx={{ flex: 1 }} />
           <TextInput
-            label="Creation Date/Time"
+            label="Created Date"
             value={getDisplayDateTimeString(new Date(created_at))}
             onChange={() => {}}
             hideHelperText={true}
