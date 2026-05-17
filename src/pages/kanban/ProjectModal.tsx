@@ -5,6 +5,14 @@ import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { WButton } from "../../components/WButton";
 
+const defaultColumnNames: Record<number, string[]> = {
+  1: ["To Do"],
+  2: ["To Do", "Done"],
+  3: ["To Do", "In Progress", "Done"],
+  4: ["To Do", "In Progress", "Ready To Deploy", "Done"],
+  5: ["To Do", "In Progress", "In Review", "Ready To Deploy", "Done"]
+};
+
 export const ProjectModal = ({
   open,
   onClose,
@@ -47,12 +55,7 @@ export const ProjectModal = ({
                   }))}
                   value={String(value.length)}
                   onChange={(count) => {
-                    const newCount = parseInt(count);
-                    const newValues =
-                      newCount > value.length
-                        ? [...value, ...Array(newCount - value.length).fill("")]
-                        : value.slice(0, newCount);
-                    onRowValueChange(i, newValues);
+                    onRowValueChange(i, defaultColumnNames[parseInt(count)]);
                   }}
                 />
                 {value.map((v, j) => (
