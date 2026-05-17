@@ -66,7 +66,7 @@ export const TextInput = ({
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   return (
     <FormControl>
-      {label && <FormLabel>{label}</FormLabel>}
+      {label && <FormLabel sx={{ color: "text.primary", typography: "body2", mb: "4px" }}>{label}</FormLabel>}
       <TextField
         inputRef={inputRef}
         placeholder={placeholder}
