@@ -88,10 +88,21 @@ export const useKanban = () => {
       return;
     }
     const columns = [...selectedProject.columns];
-    const itemNumber = selectedProject.columns.reduce((sum, { items }) => sum + items.length, 1);
-    columns[0].items.push({ id: uuidv4(), name: `Item ${itemNumber}`, content: "", created_at: new Date().toISOString() });
+    columns[0].items.push({ id: uuidv4(), name: "", content: "", created_at: new Date().toISOString() });
     updateDoc(docRef, { projects: [...kanban.projects] });
     setSelectedProject({ ...selectedProject, columns });
+  };
+
+  const deleteItem = (columnIndex: number, itemIndex: number) => {
+    if (!kanban || !selectedProject) return;
+    const columns = selectedProject.columns.map((column, i) =>
+      i === columnIndex ? { ...column, items: column.items.filter((_, j) => j !== itemIndex) } : column
+    );
+    const updatedProject = { ...selectedProject, columns };
+    const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
+    updateDoc(docRef, { projects });
+    setKanban({ ...kanban, projects });
+    setSelectedProject(updatedProject);
   };
 
   const updateItem = (columnIndex: number, itemIndex: number, name: string, content: string) => {
@@ -116,5 +127,16 @@ export const useKanban = () => {
     setSelectedProject({ ...selectedProject, columns });
   };
 
-  return { kanban, selectedProject, addProject, updateProject, deleteProject, openProject, addItem, updateItem, moveItem };
+  return {
+    kanban,
+    selectedProject,
+    addProject,
+    updateProject,
+    deleteProject,
+    openProject,
+    addItem,
+    updateItem,
+    deleteItem,
+    moveItem
+  };
 };

@@ -24,6 +24,7 @@ export const Kanban = () => {
     openProject,
     addItem,
     updateItem,
+    deleteItem,
     moveItem
   } = useKanban();
   const [controlGroupState, setControlGroupState] = useState(0);
@@ -104,6 +105,7 @@ export const Kanban = () => {
           project={selectedProject}
           item={selectedItem}
           onItemChange={(name, content) => updateItem(selectedItem.i, selectedItem.j, name, content)}
+          onDeleteButtonClick={() => { deleteItem(selectedItem.i, selectedItem.j); setSelectedItem(null); }}
           onClose={() => setSelectedItem(null)}
         />
       )}

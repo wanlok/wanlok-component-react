@@ -11,11 +11,13 @@ export const KanbanItemModal = ({
   project,
   item,
   onItemChange,
+  onDeleteButtonClick,
   onClose
 }: {
   project: KanbanProject;
   item: { i: number; j: number };
   onItemChange: (name: string, content: string) => void;
+  onDeleteButtonClick: () => void;
   onClose: () => void;
 }) => {
   const { name: initialName, content: initialContent, created_at } = project.columns[item.i].items[item.j];
@@ -46,14 +48,20 @@ export const KanbanItemModal = ({
           />
         </Stack>
       </Stack>
-      <WButton
-        onClick={() => {
-          onItemChange(name, content);
-          onClose();
-        }}
-      >
-        Save
-      </WButton>
+      <Stack sx={{ flexDirection: "row" }}>
+        <WButton sx={{ flex: 1 }} onClick={onDeleteButtonClick}>
+          Delete
+        </WButton>
+        <WButton
+          sx={{ flex: 1 }}
+          onClick={() => {
+            onItemChange(name, content);
+            onClose();
+          }}
+        >
+          Save
+        </WButton>
+      </Stack>
     </WModal>
   );
 };
