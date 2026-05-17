@@ -122,8 +122,8 @@ export const KanbanCard = ({
       <Card
         ref={nodeRef}
         sx={{
-          boxShadow: 6,
-          borderRadius: 2
+          boxShadow: 3,
+          borderRadius: 1
         }}
         className="drag-handle"
       >
@@ -134,9 +134,9 @@ export const KanbanCard = ({
             }
           }}
         >
-          <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-            <Typography>{item.name}</Typography>
-            <Typography>{getDisplayDateTimeString(new Date(item.created_at))}</Typography>
+          <CardContent sx={{ display: "flex", flexDirection: "column" }}>
+            <Typography variant="body1">{item.name}</Typography>
+            <Typography variant="body2">{getDisplayDateTimeString(new Date(item.created_at))}</Typography>
           </CardContent>
         </CardActionArea>
       </Card>

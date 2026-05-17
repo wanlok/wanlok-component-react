@@ -45,8 +45,8 @@ const Bottom = ({ project }: { project: KanbanProject | undefined }) => {
               justifyContent: "center",
               backgroundColor: "common.black",
               color: "common.white",
-              borderTopLeftRadius: 16,
-              borderTopRightRadius: 16
+              borderTopLeftRadius: 8,
+              borderTopRightRadius: 8
             }}
           >
             <Typography variant="body1">{name}</Typography>
