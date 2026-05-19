@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
-import { LayoutHeader, topSx } from "../../components/LayoutHeader";
-import { WText } from "../../components/WText";
+import { LayoutHeader } from "../../components/LayoutHeader";
+import { WButton } from "../../components/WButton";
 import { KanbanProject } from "../../services/Types";
 
 const Top = ({
@@ -15,18 +15,20 @@ const Top = ({
   onDeleteItemButtonClick: () => void;
 }) => {
   return (
-    <Stack sx={[topSx, { height: 55 }]}>
-      <Stack sx={{ flex: 1 }}>
-        <WText
-          text={project?.name}
-          editable={false}
-          placeholder="Dummy"
-          rightButtons={[
-            { label: "Edit", onClick: onEditButtonClick },
-            { label: "Add Item", onClick: onAddItemButtonClick },
-            { label: "Delete Item", onClick: onDeleteItemButtonClick }
-          ]}
-        />
+    <Stack sx={{ flexDirection: "row", height: 48 }}>
+      <Stack sx={{ flex: 1, p: 1, justifyContent: "center" }}>
+        <Typography variant="body1">{project?.name}</Typography>
+      </Stack>
+      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+        <WButton sx={{ height: "100%" }} onClick={onEditButtonClick}>
+          Edit
+        </WButton>
+        <WButton sx={{ height: "100%" }} onClick={onAddItemButtonClick}>
+          Add Item
+        </WButton>
+        <WButton sx={{ height: "100%" }} onClick={onDeleteItemButtonClick}>
+          Delete Item
+        </WButton>
       </Stack>
     </Stack>
   );
