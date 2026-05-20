@@ -1,9 +1,8 @@
-import { Divider, Stack } from "@mui/material";
-import { WModal } from "../../components/WModal";
-import { WText } from "../../components/WText";
+import { Divider, Stack, Typography } from "@mui/material";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { WButton } from "../../components/WButton";
+import { WModal } from "../../components/WModal";
 
 const defaultColumnNames: Record<number, string[]> = {
   1: ["To Do"],
@@ -30,7 +29,9 @@ export const ProjectModal = ({
 }) => {
   return (
     <WModal open={open} onClose={onClose}>
-      <WText text={title} editable={false} rightButtons={[]} />
+      <Stack sx={{ px: 1, py: 2, pb: "12px" }}>
+        <Typography variant="h6">{title}</Typography>
+      </Stack>
       <Divider />
       <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
         <Stack sx={{ flex: 1, gap: 1, p: 1 }}>
