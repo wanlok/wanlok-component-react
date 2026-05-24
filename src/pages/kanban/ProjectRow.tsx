@@ -46,7 +46,7 @@ export const ProjectRow = ({
         >
           {project.name}
         </Typography>
-        <Typography>{getDisplayDateTimeString(new Date(project.created_at))}</Typography>
+        <Typography>{getDisplayDateTimeString(new Date(project.created_at))}, {project.columns.reduce((total, column) => total + column.items.length, 0)}</Typography>
       </Stack>
       {mobileRow && (
         <Box

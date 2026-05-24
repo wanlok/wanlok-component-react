@@ -40,7 +40,7 @@ const Bottom = ({ project }: { project: KanbanProject | undefined }) => {
   }
   return (
     <Stack sx={{ flex: 1, flexDirection: "row", gap: "1px" }}>
-      {project.columns.map(({ name }, i) => {
+      {project.columns.map(({ name, items }, i) => {
         return (
           <Stack
             key={`column-${i}`}
@@ -54,7 +54,10 @@ const Bottom = ({ project }: { project: KanbanProject | undefined }) => {
               borderTopRightRadius: 8
             }}
           >
-            <Typography variant="body1">{name}</Typography>
+            <Stack sx={{ flexDirection: "row", gap: 1, alignItems: "center" }}>
+              <Typography variant="body1">{name}</Typography>
+              <Typography variant="body2">({items.length})</Typography>
+            </Stack>
           </Stack>
         );
       })}
