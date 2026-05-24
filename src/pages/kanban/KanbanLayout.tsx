@@ -11,7 +11,7 @@ const getColumns = (
   columnOffset: number,
   rowOffset: number
 ) => {
-  const newColumns = [...columns];
+  const newColumns = columns.map((column) => ({ ...column, items: [...column.items] }));
   newColumns[i].items = newColumns[i].items.filter((item) => item !== draggedItem);
   let j;
   j = i + columnOffset;
@@ -103,7 +103,7 @@ export const KanbanLayout = ({
   }
   return (
     <KanbanColumnLayout
-      key={project.id}
+      key={`${project.id}-${project.columns.length}`}
       project={project}
       controlGroupState={controlGroupState}
       onDragStop={onDragStop}
