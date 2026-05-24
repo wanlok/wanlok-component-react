@@ -1,6 +1,6 @@
 import { CloudinaryFileInfo } from "./Types";
 
-const url = `https://api.cloudinary.com/v1_1/${process.env.REACT_APP_CLOUDINARY_CLOUD_NAME}/raw/upload`;
+const url = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`;
 
 export const uploadAndGetFileInfos = async (files: File[]) => {
   let fileInfos: { [key: string]: CloudinaryFileInfo } = {};
