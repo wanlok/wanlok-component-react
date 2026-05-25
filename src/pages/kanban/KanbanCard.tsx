@@ -145,7 +145,7 @@ export const KanbanCard = ({
             }}
           >
             <CardContent sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography variant="body1" sx={{ color: item.name ? "text.primary" : "text.disabled" }}>
+              <Typography variant="h6" sx={{ color: item.name ? "text.primary" : "text.disabled", fontWeight: "100" }}>
                 {item.name || "No name"}
               </Typography>
               <Typography variant="body2">{getDisplayDateTimeString(new Date(item.created_at))}</Typography>

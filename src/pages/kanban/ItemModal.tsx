@@ -9,7 +9,7 @@ import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateU
 const View = ({ kanbanItem, onEditButtonClick }: { kanbanItem: KanbanItem; onEditButtonClick: () => void }) => {
   return (
     <>
-      <Stack sx={{ p: 2, gap: 2 }}>
+      <Stack sx={{ p: 2, gap: 2, backgroundColor: "common.white" }}>
         <Typography variant="h6" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled", fontWeight: "100" }}>
           {kanbanItem.name || "No name"}
         </Typography>
@@ -45,7 +45,9 @@ const Edit = ({
   return (
     <>
       <Stack sx={{ px: 1, pt: 2, pb: "12px" }}>
-        <Typography variant="h6">Edit</Typography>
+        <Typography variant="h6" sx={{ fontWeight: "100" }}>
+          Edit
+        </Typography>
       </Stack>
       <Divider />
       <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>

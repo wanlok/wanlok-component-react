@@ -17,7 +17,9 @@ const Top = ({
   return (
     <Stack sx={{ flexDirection: "row", height: 48 }}>
       <Stack sx={{ flex: 1, p: 1, justifyContent: "center" }}>
-        <Typography variant="body1">{project?.name}</Typography>
+        <Typography variant="h6" sx={{ fontWeight: "100" }}>
+          {project?.name}
+        </Typography>
       </Stack>
       <Stack sx={{ flexDirection: "row", gap: "1px" }}>
         <WButton sx={{ height: "100%" }} onClick={onEditButtonClick}>
@@ -55,8 +57,12 @@ const Bottom = ({ project }: { project: KanbanProject | undefined }) => {
             }}
           >
             <Stack sx={{ flexDirection: "row", gap: 1, alignItems: "center" }}>
-              <Typography variant="body1">{name}</Typography>
-              <Typography variant="body2">({items.length})</Typography>
+              <Typography variant="h6" sx={{ fontWeight: "100" }}>
+                {name}
+              </Typography>
+              <Typography variant="body2" sx={{ mt: "-2px" }}>
+                ({items.length})
+              </Typography>
             </Stack>
           </Stack>
         );
