@@ -12,7 +12,7 @@ import { WIconButton } from "../../components/WButton";
 
 import CrossIcon from "../../assets/images/icons/cross.png";
 import { Stack } from "@mui/material";
-import { KanbanItemModal } from "./KanbanItemModal";
+import { ItemModal } from "./ItemModal";
 
 export const Kanban = () => {
   const {
@@ -114,7 +114,7 @@ export const Kanban = () => {
         onDeleteItemClick={(i, j) => deleteItem(i, j)}
       />
       {selectedProject && selectedItem && (
-        <KanbanItemModal
+        <ItemModal
           project={selectedProject}
           item={selectedItem}
           onItemChange={(name, content) => updateItem(selectedItem.i, selectedItem.j, name, content)}
