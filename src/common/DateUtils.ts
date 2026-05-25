@@ -18,6 +18,14 @@ export function getDisplayDateTimeString(date: Date) {
   return `${day}-${month}-${year} ${displayHours}:${minutes} ${period}`;
 }
 
+export function getDaysSinceString(date: Date) {
+  const days = Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60 * 24));
+  if (days === 0) {
+    return "Today";
+  }
+  return days === 1 ? "1 day ago" : `${days} days ago`;
+}
+
 export function getDateTimeString(date: Date) {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, "0");

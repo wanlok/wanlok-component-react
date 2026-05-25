@@ -4,17 +4,29 @@ import { WModal } from "../../components/WModal";
 import { KanbanItem, KanbanProject } from "../../services/Types";
 import { WButton } from "../../components/WButton";
 import { TextInput } from "../../components/TextInput";
-import { getDisplayDateTimeString } from "../../common/DateUtils";
+import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
 
 const View = ({ kanbanItem, onEditButtonClick }: { kanbanItem: KanbanItem; onEditButtonClick: () => void }) => {
   return (
     <>
-      <Stack sx={{ p: 2 }}>
-        <Typography variant="body1" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
+      <Stack sx={{ p: 2, gap: 2 }}>
+        <Typography variant="h6" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled", fontWeight: "100" }}>
           {kanbanItem.name || "No name"}
         </Typography>
-        <Typography variant="body2">{getDisplayDateTimeString(new Date(kanbanItem.created_at))}</Typography>
-        {kanbanItem.content && <Typography variant="body1">{kanbanItem.content}</Typography>}
+        <Divider />
+        <Stack sx={{ flexDirection: "row" }}>
+          <Typography variant="body2" sx={{ flex: 0.28, fontWeight: "600" }}>
+            Created Date
+          </Typography>
+          <Typography variant="body2" sx={{ flex: 0.72 }}>
+            {getDisplayDateTimeString(new Date(kanbanItem.created_at))} (
+            {getDaysSinceString(new Date(kanbanItem.created_at))})
+          </Typography>
+        </Stack>
+        <Divider />
+        <Typography variant="body1" sx={{ color: kanbanItem.content ? "text.primary" : "text.disabled" }}>
+          {kanbanItem.content || "No content"}
+        </Typography>
       </Stack>
       <WButton onClick={onEditButtonClick}>Edit</WButton>
     </>
@@ -33,7 +45,7 @@ const Edit = ({
   return (
     <>
       <Stack sx={{ px: 1, pt: 2, pb: "12px" }}>
-        <Typography variant="h6">Edit Task</Typography>
+        <Typography variant="h6">Edit</Typography>
       </Stack>
       <Divider />
       <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
