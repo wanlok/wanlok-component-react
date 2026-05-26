@@ -1,8 +1,13 @@
-import { createRef, Fragment, useRef } from "react";
-import { Divider, Stack, Typography } from "@mui/material";
+import { createRef, Fragment, useRef, useState } from "react";
+import { Box, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useWindowDimensions } from "../../common/useWindowDimension";
 import { KanbanColumn, KanbanItem, KanbanProject } from "../../services/Types";
 import { KanbanCard, padding } from "./KanbanCard";
+import { LayoutPanel } from "../../components/LayoutPanel";
+import { WCardList } from "../../components/WCardList";
+
+import UpIcon from "../../assets/images/icons/up.png";
+import DownIcon from "../../assets/images/icons/down.png";
 
 const getColumns = (
   columns: KanbanColumn[],
@@ -32,6 +37,89 @@ const getColumns = (
   }
   column.items.splice(j, 0, draggedItem);
   return newColumns;
+};
+
+const ColumnRow = ({ column, panelOpened }: { column: KanbanColumn; panelOpened?: boolean }) => {
+  const mobileRow = panelOpened === true || panelOpened === false;
+  return (
+    <Stack
+      sx={{
+        flexDirection: "row",
+        py: 2,
+        pl: 2,
+        pr: mobileRow ? 2 : 0,
+        gap: 2,
+        alignItems: "flex-start",
+        boxSizing: "border-box",
+        backgroundColor: mobileRow ? "background.default" : "transparent"
+      }}
+    >
+      <Stack sx={{ flexDirection: "row", flex: 1, gap: 1 }}>
+        <Typography>{column.name}</Typography>
+        <Typography variant="body2">({column.items.length})</Typography>
+      </Stack>
+      {mobileRow && (
+        <Box component="img" src={panelOpened ? UpIcon : DownIcon} alt="" sx={{ width: "16px", height: "16px" }} />
+      )}
+    </Stack>
+  );
+};
+
+const KanbanMobileLayout = ({
+  project,
+  controlGroupState,
+  onClick,
+  onDeleteItemClick
+}: {
+  project: KanbanProject;
+  controlGroupState: number;
+  onClick: (i: number, j: number) => void;
+  onDeleteItemClick: (i: number, j: number) => void;
+}) => {
+  const [selectedColumnIndex, setSelectedColumnIndex] = useState(0);
+  const [panelOpened, setPanelOpened] = useState(false);
+  const dummyRef = useRef<HTMLDivElement>(null);
+  const dummyRefs = useRef([dummyRef]);
+
+  const selectedColumn = project.columns[selectedColumnIndex];
+
+  return (
+    <LayoutPanel
+      panelOpened={panelOpened}
+      setPanelOpened={setPanelOpened}
+      width={200}
+      panel={
+        <WCardList
+          items={project.columns}
+          renderContent={(column) => <ColumnRow column={column} />}
+          onContentClick={(column) => {
+            setSelectedColumnIndex(project.columns.indexOf(column));
+            setPanelOpened(false);
+          }}
+          renderRightContent={() => <Stack />}
+        />
+      }
+      topChildren={<ColumnRow column={selectedColumn} panelOpened={panelOpened} />}
+    >
+      <Stack sx={{ flex: 1, overflowY: "auto" }}>
+        <Stack sx={{ p: padding, gap: 1 }}>
+          {selectedColumn.items.map((item, j) => (
+            <KanbanCard
+              key={item.id}
+              stackRef={dummyRef}
+              stackRefs={dummyRefs}
+              item={item}
+              onDragStop={() => {}}
+              onClick={() => onClick(selectedColumnIndex, j)}
+              controlGroupState={controlGroupState}
+              onDeleteItemClick={() => onDeleteItemClick(selectedColumnIndex, j)}
+              draggable={false}
+            />
+          ))}
+        </Stack>
+      </Stack>
+    </LayoutPanel>
+  );
 };
 
 export const KanbanColumnLayout = ({
@@ -94,6 +182,9 @@ export const KanbanLayout = ({
   onClick: (i: number, j: number) => void;
   onDeleteItemClick: (i: number, j: number) => void;
 }) => {
+  const { breakpoints } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
+
   if (!project) {
     return (
       <>
@@ -101,6 +192,19 @@ export const KanbanLayout = ({
       </>
     );
   }
+
+  if (mobile) {
+    return (
+      <KanbanMobileLayout
+        key={`${project.id}-${project.columns.length}`}
+        project={project}
+        controlGroupState={controlGroupState}
+        onClick={onClick}
+        onDeleteItemClick={onDeleteItemClick}
+      />
+    );
+  }
+
   return (
     <KanbanColumnLayout
       key={`${project.id}-${project.columns.length}`}

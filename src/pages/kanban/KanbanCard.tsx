@@ -66,7 +66,8 @@ export const KanbanCard = ({
   onDragStop,
   onClick,
   controlGroupState,
-  onDeleteItemClick
+  onDeleteItemClick,
+  draggable = true
 }: {
   stackRef: RefObject<HTMLDivElement>;
   stackRefs: RefObject<RefObject<HTMLDivElement>[]>;
@@ -75,6 +76,7 @@ export const KanbanCard = ({
   onClick: () => void;
   controlGroupState: number;
   onDeleteItemClick: () => void;
+  draggable?: boolean;
 }) => {
   const nodeRef = useRef<HTMLDivElement>(null);
   const startX = useRef(0);
@@ -87,6 +89,7 @@ export const KanbanCard = ({
       nodeRef={nodeRef}
       handle=".drag-handle"
       cancel=".drag-cancel"
+      disabled={!draggable}
       position={{ x: 0, y: 0 }}
       onStart={(_, { node: draggedNode }) => {
         startX.current = getX();
