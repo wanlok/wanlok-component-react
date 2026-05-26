@@ -6,6 +6,28 @@ import { WButton } from "../../components/WButton";
 import { TextInput } from "../../components/TextInput";
 import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
 
+const parseContent = (text: string) => {
+  const urlRegex = /https?:\/\/[^\s]+/g;
+  const parts: (string | JSX.Element)[] = [];
+  let lastIndex = 0;
+  let match;
+  while ((match = urlRegex.exec(text)) !== null) {
+    if (match.index > lastIndex) {
+      parts.push(text.slice(lastIndex, match.index));
+    }
+    parts.push(
+      <a key={match.index} href={match[0]} target="_blank" rel="noopener noreferrer">
+        {match[0]}
+      </a>
+    );
+    lastIndex = match.index + match[0].length;
+  }
+  if (lastIndex < text.length) {
+    parts.push(text.slice(lastIndex));
+  }
+  return parts;
+};
+
 const View = ({ kanbanItem, onEditButtonClick }: { kanbanItem: KanbanItem; onEditButtonClick: () => void }) => {
   return (
     <>
@@ -24,8 +46,12 @@ const View = ({ kanbanItem, onEditButtonClick }: { kanbanItem: KanbanItem; onEdi
           </Typography>
         </Stack>
         <Divider />
-        <Typography variant="body1" sx={{ color: kanbanItem.content ? "text.primary" : "text.disabled" }}>
-          {kanbanItem.content || "No content"}
+        <Typography
+          variant="body1"
+          component="div"
+          sx={{ color: kanbanItem.content ? "text.primary" : "text.disabled", whiteSpace: "pre-wrap" }}
+        >
+          {kanbanItem.content ? parseContent(kanbanItem.content) : "No content"}
         </Typography>
       </Stack>
       <WButton onClick={onEditButtonClick}>Edit</WButton>

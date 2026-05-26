@@ -2,7 +2,7 @@ import { RefObject, useRef } from "react";
 import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
 import Draggable from "react-draggable";
 import { KanbanItem } from "../../services/Types";
-import { getDisplayDateTimeString } from "../../common/DateUtils";
+import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
 import { Stack } from "@mui/material";
 import { WIconButton } from "../../components/WButton";
 import CrossIcon from "../../assets/images/icons/cross.png";
@@ -148,7 +148,9 @@ export const KanbanCard = ({
               <Typography variant="h6" sx={{ color: item.name ? "text.primary" : "text.disabled", fontWeight: "100" }}>
                 {item.name || "No name"}
               </Typography>
-              <Typography variant="body2">{getDisplayDateTimeString(new Date(item.created_at))}</Typography>
+              <Typography variant="body2">
+                {getDisplayDateTimeString(new Date(item.created_at))} ({getDaysSinceString(new Date(item.created_at))})
+              </Typography>
             </CardContent>
           </CardActionArea>
           <Stack>

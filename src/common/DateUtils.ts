@@ -23,7 +23,7 @@ export function getDaysSinceString(date: Date) {
   if (days === 0) {
     return "Today";
   }
-  return days === 1 ? "1 day ago" : `${days} days ago`;
+  return days === 1 ? "1 day" : `${days} days`;
 }
 
 export function getDateTimeString(date: Date) {
