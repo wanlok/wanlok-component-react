@@ -37,7 +37,7 @@ export const LayoutPanel = ({
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   return (
-    <Stack sx={{ height: "100%", flexDirection: "row" }}>
+    <Stack sx={{ height: "100%", flex: 1, flexDirection: "row" }}>
       {(!mobile || panelOpened) && (
         <LayoutDivider hideDivider={mobile} sx={mobile ? { flex: 1 } : { width }}>
           {mobile ? (

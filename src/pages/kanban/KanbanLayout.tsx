@@ -6,8 +6,8 @@ import { KanbanCard, padding } from "./KanbanCard";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
 
-import UpIcon from "../../assets/images/icons/up.png";
-import DownIcon from "../../assets/images/icons/down.png";
+import UpWhiteIcon from "../../assets/images/icons/up_white.png";
+import DownWhiteIcon from "../../assets/images/icons/down_white.png";
 
 const getColumns = (
   columns: KanbanColumn[],
@@ -42,25 +42,31 @@ const getColumns = (
 const ColumnRow = ({ column, panelOpened }: { column: KanbanColumn; panelOpened?: boolean }) => {
   const mobileRow = panelOpened === true || panelOpened === false;
   return (
-    <Stack
-      sx={{
-        flexDirection: "row",
-        py: 2,
-        pl: 2,
-        pr: mobileRow ? 2 : 0,
-        gap: 2,
-        alignItems: "flex-start",
-        boxSizing: "border-box",
-        backgroundColor: mobileRow ? "background.default" : "transparent"
-      }}
-    >
-      <Stack sx={{ flexDirection: "row", flex: 1, gap: 1 }}>
-        <Typography>{column.name}</Typography>
-        <Typography variant="body2">({column.items.length})</Typography>
+    <Stack sx={{ backgroundColor: "background.default" }}>
+      <Stack
+        sx={{
+          flexDirection: "row",
+          p: 2,
+          alignItems: "center",
+          backgroundColor: "common.black",
+          color: "common.white",
+          borderTopLeftRadius: 8,
+          borderTopRightRadius: 8
+        }}
+      >
+        <Stack sx={{ flexDirection: "row", flex: 1, gap: 1 }}>
+          <Typography>{column.name}</Typography>
+          <Typography variant="body2">({column.items.length})</Typography>
+        </Stack>
+        {mobileRow && (
+          <Box
+            component="img"
+            src={panelOpened ? UpWhiteIcon : DownWhiteIcon}
+            alt=""
+            sx={{ width: "16px", height: "16px" }}
+          />
+        )}
       </Stack>
-      {mobileRow && (
-        <Box component="img" src={panelOpened ? UpIcon : DownIcon} alt="" sx={{ width: "16px", height: "16px" }} />
-      )}
     </Stack>
   );
 };
@@ -91,7 +97,12 @@ const KanbanMobileLayout = ({
       panel={
         <WCardList
           items={project.columns}
-          renderContent={(column) => <ColumnRow column={column} />}
+          renderContent={(column) => (
+            <Stack sx={{ flexDirection: "row", gap: 1, ml: 7, py: 2, pr: 2 }}>
+              <Typography>{column.name}</Typography>
+              <Typography variant="body2">({column.items.length})</Typography>
+            </Stack>
+          )}
           onContentClick={(column) => {
             setSelectedColumnIndex(project.columns.indexOf(column));
             setPanelOpened(false);
