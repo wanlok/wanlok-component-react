@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode } from "react";
-import { Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Stack, SxProps, Theme, useMediaQuery, useTheme } from "@mui/material";
 import { LayoutDivider } from "./LayoutDivider";
 import { WCard } from "./WCardList";
 
@@ -25,6 +25,7 @@ export const LayoutPanel = ({
   width,
   panel,
   topChildren,
+  sx,
   children
 }: {
   panelOpened: boolean;
@@ -32,12 +33,13 @@ export const LayoutPanel = ({
   width: number;
   panel: ReactNode;
   topChildren?: ReactNode;
+  sx?: SxProps<Theme>;
   children?: ReactNode;
 }) => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   return (
-    <Stack sx={{ height: "100%", flex: 1, flexDirection: "row" }}>
+    <Stack sx={{ height: "100%", flex: 1, flexDirection: "row", ...sx }}>
       {(!mobile || panelOpened) && (
         <LayoutDivider hideDivider={mobile} sx={mobile ? { flex: 1 } : { width }}>
           {mobile ? (

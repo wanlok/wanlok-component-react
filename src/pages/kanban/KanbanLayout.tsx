@@ -111,6 +111,7 @@ const KanbanMobileLayout = ({
         />
       }
       topChildren={<ColumnRow column={selectedColumn} panelOpened={panelOpened} />}
+      sx={{ height: 0 }}
     >
       <Stack sx={{ flex: 1, overflowY: "auto" }}>
         <Stack sx={{ p: padding, gap: 1 }}>
