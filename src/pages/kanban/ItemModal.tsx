@@ -32,12 +32,12 @@ const View = ({ kanbanItem, onEditButtonClick }: { kanbanItem: KanbanItem; onEdi
   return (
     <>
       <Stack sx={{ p: 2, gap: 2, backgroundColor: "common.white" }}>
-        <Typography variant="h6" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled", fontWeight: "100" }}>
+        <Typography variant="h6" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
           {kanbanItem.name || "No name"}
         </Typography>
         <Divider />
         <Stack sx={{ flexDirection: "row" }}>
-          <Typography variant="body2" sx={{ flex: 0.28, fontWeight: "600" }}>
+          <Typography variant="body2" sx={{ flex: 0.28 }}>
             Created Date
           </Typography>
           <Typography variant="body2" sx={{ flex: 0.72 }}>
@@ -71,9 +71,7 @@ const Edit = ({
   return (
     <>
       <Stack sx={{ px: 1, pt: 2, pb: "12px" }}>
-        <Typography variant="h6" sx={{ fontWeight: "100" }}>
-          Edit
-        </Typography>
+        <Typography variant="h6">Edit</Typography>
       </Stack>
       <Divider />
       <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>

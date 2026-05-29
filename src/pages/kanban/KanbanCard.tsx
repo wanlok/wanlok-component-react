@@ -148,7 +148,7 @@ export const KanbanCard = ({
             }}
           >
             <CardContent sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography variant="h6" sx={{ color: item.name ? "text.primary" : "text.disabled", fontWeight: "100" }}>
+              <Typography variant="h6" sx={{ color: item.name ? "text.primary" : "text.disabled" }}>
                 {item.name || "No name"}
               </Typography>
               <Typography variant="body2">
