@@ -46,17 +46,20 @@ const Bottom = ({ project }: { project: KanbanProject | undefined }) => {
             key={`column-${i}`}
             sx={{
               flex: 1,
-              alignItems: "center",
+              px: 2,
               justifyContent: "center",
               backgroundColor: "common.black",
               color: "common.white",
               borderTopLeftRadius: 8,
-              borderTopRightRadius: 8
+              borderTopRightRadius: 8,
+              overflow: "hidden"
             }}
           >
-            <Stack sx={{ flexDirection: "row", gap: 1, alignItems: "center" }}>
-              <Typography variant="h6">{name}</Typography>
-              <Typography variant="body2" sx={{ mt: "-2px" }}>
+            <Stack sx={{ flexDirection: "row", gap: 1, alignItems: "center", justifyContent: "center" }}>
+              <Typography variant="h6" noWrap sx={{ minWidth: 0 }}>
+                {name}
+              </Typography>
+              <Typography variant="body2" sx={{ mt: "-2px", flexShrink: 0 }}>
                 ({items.length})
               </Typography>
             </Stack>
