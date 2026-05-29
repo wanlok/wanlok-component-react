@@ -26,7 +26,7 @@ export const Game = () => {
           ]}
         />
       )}
-      <Typography>{name}</Typography>
+      <Typography variant="body1">{name}</Typography>
       <FlashGamePlayer
         filePath={filePath}
         threshold={100}
@@ -47,11 +47,11 @@ export const Game = () => {
           }
         }}
       />
-      <Typography variant="h4">Scoreboard</Typography>
+      <Typography variant="h6">Scoreboard</Typography>
       {Object.entries(scores)
         .sort(([, scoreA], [, scoreB]) => scoreB - scoreA)
         .map(([name, score], index) => (
-          <Typography key={`scoreboard-${index}`}>
+          <Typography variant="body1" key={`scoreboard-${index}`}>
             {name} {score}
           </Typography>
         ))}

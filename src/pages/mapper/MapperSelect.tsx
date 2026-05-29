@@ -11,6 +11,7 @@ const Row = ({ item }: { item: Item | undefined }) => {
     <>
       <Box component="img" src={item.image_url} alt="" sx={{ width: iconSize, height: iconSize, mr: 1 }} />
       <Typography
+        variant="body1"
         noWrap
         sx={{
           width: "100%",

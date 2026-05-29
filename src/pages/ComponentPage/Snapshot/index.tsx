@@ -111,7 +111,7 @@ export const SnapshotList = ({
           <Card elevation={0} key={`snapshot-${i + 1}`} sx={{ borderRadius: 0 }}>
             <CardActionArea onClick={() => onSnapshotClick(snapshot)}>
               <CardContent>
-                <Typography variant="h5">{`Snapshot ${i + 1}`}</Typography>
+                <Typography variant="h6">{`Snapshot ${i + 1}`}</Typography>
                 <Typography variant="body2" sx={{ color: "text.secondary" }}>
                   Document Id: {snapshot.id}
                 </Typography>
@@ -164,7 +164,7 @@ export const SnapshotForm = ({
     <Stack sx={{ flexDirection: "column", flex: 1, overflowY: "auto" }}>
       <Stack>
         <Stack sx={{ p: 1, gap: 1 }}>
-          <Typography variant="h5">{snapshotIndex > -1 ? `Snapshot ${snapshotIndex + 1}` : "New Snapshot"}</Typography>
+          <Typography variant="h6">{snapshotIndex > -1 ? `Snapshot ${snapshotIndex + 1}` : "New Snapshot"}</Typography>
           <Divider />
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
             <WButton onClick={onNewButtonClick}>New</WButton>

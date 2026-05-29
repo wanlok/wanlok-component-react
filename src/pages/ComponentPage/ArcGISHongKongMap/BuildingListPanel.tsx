@@ -44,7 +44,7 @@ export const BuildingListPanel = ({
   return (
     <Grid container className={classes.container} sx={{ p: 2, backgroundColor: "background.default" }}>
       <Grid item xs={12} sm={12} md={12}>
-        <Typography variant="h5" component="h2" sx={{ mb: 2 }}>
+        <Typography variant="h6" component="h2" sx={{ mb: 2 }}>
           Building List ({buildings.length})
         </Typography>
         <input ref={inputRef} style={{ display: "none" }} type="file" onChange={load} />
@@ -61,7 +61,7 @@ export const BuildingListPanel = ({
         {buildings.map((building, index) => (
           <Card elevation={0} sx={{ mt: 2 }}>
             <CardContent>
-              <Typography>Building {index + 1}</Typography>
+              <Typography variant="body1">Building {index + 1}</Typography>
             </CardContent>
             <ButtonGroup disableElevation variant="contained" aria-label="Basic button group" fullWidth>
               <WButton onClick={() => onLocateBuildingButtonClick(building)}>Locate</WButton>

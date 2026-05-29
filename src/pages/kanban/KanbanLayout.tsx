@@ -55,7 +55,7 @@ const ColumnRow = ({ column, panelOpened }: { column: KanbanColumn; panelOpened?
         }}
       >
         <Stack sx={{ flexDirection: "row", flex: 1, gap: 1 }}>
-          <Typography>{column.name}</Typography>
+          <Typography variant="body1">{column.name}</Typography>
           <Typography variant="body2">({column.items.length})</Typography>
         </Stack>
         {mobileRow && (
@@ -99,7 +99,7 @@ const KanbanMobileLayout = ({
           items={project.columns}
           renderContent={(column) => (
             <Stack sx={{ flexDirection: "row", gap: 1, ml: 7, py: 2, pr: 2 }}>
-              <Typography>{column.name}</Typography>
+              <Typography variant="body1">{column.name}</Typography>
               <Typography variant="body2">({column.items.length})</Typography>
             </Stack>
           )}
@@ -200,7 +200,7 @@ export const KanbanLayout = ({
   if (!project) {
     return (
       <>
-        <Typography>No Project Selected</Typography>
+        <Typography variant="body1">No Project Selected</Typography>
       </>
     );
   }

@@ -26,7 +26,7 @@ export const TextCard = ({
   return (
     <Stack sx={{ position: "relative", width }}>
       <Stack sx={{ aspectRatio: "4/3", backgroundColor: "#FFDE21" }}>
-        <Typography sx={{ p: 2, whiteSpace: "pre-wrap" }}>{text}</Typography>
+        <Typography variant="body1" sx={{ p: 2, whiteSpace: "pre-wrap" }}>{text}</Typography>
       </Stack>
       {controlGroupState === 2 && (
         <ControlGroup

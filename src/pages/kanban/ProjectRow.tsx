@@ -37,6 +37,7 @@ export const ProjectRow = ({
       />
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
         <Typography
+          variant="body1"
           sx={{
             overflow: "hidden",
             display: "-webkit-box",
@@ -46,7 +47,7 @@ export const ProjectRow = ({
         >
           {project.name}
         </Typography>
-        <Typography>{getDisplayDateTimeString(new Date(project.created_at))}, {project.columns.reduce((total, column) => total + column.items.length, 0)}</Typography>
+        <Typography variant="body1">{getDisplayDateTimeString(new Date(project.created_at))}, {project.columns.reduce((total, column) => total + column.items.length, 0)}</Typography>
       </Stack>
       {mobileRow && (
         <Box

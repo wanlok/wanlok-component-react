@@ -16,7 +16,7 @@ const FileInput = ({ id, label, processedFile, changeFile, deleteFile }: DummyIn
   if (processedFile) {
     return (
       <Stack direction="row">
-        <Typography>{processedFile.name}</Typography>
+        <Typography variant="body1">{processedFile.name}</Typography>
         <Button variant="contained" onClick={() => deleteFile(id)}>
           Delete
         </Button>

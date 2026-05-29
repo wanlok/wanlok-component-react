@@ -27,7 +27,7 @@ export function AddPanel({
         backgroundColor: "background.default"
       }}
     >
-      <Typography variant="h5" component="h2">
+      <Typography variant="h6" component="h2">
         Map
       </Typography>
       <Grid item xs={12} sm={12} md={12}>

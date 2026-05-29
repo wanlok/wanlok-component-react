@@ -20,12 +20,12 @@ const DiscussionList = ({ discussion }: { discussion: Discussion }) => {
       {discussion.messages.map((message, i) => (
         <Stack key={`message-${i}`} sx={{ backgroundColor: "#EEEEEE", mt: i === 0 ? 0 : "1px", p: 2, gap: 1 }}>
           <Stack sx={{ flexDirection: "row" }}>
-            <Typography>{message.name}</Typography>
-            <Typography sx={{ flex: 1, textAlign: "right" }}>{new Date(message.timestamp).toLocaleString()}</Typography>
+            <Typography variant="body1">{message.name}</Typography>
+            <Typography variant="body1" sx={{ flex: 1, textAlign: "right" }}>{new Date(message.timestamp).toLocaleString()}</Typography>
           </Stack>
           <Stack>
             {message.lines.split("\n").map((line, j) => (
-              <Typography key={`message-${i}-line-${j}`}>{line.length > 0 ? line : <br />}</Typography>
+              <Typography variant="body1" key={`message-${i}-line-${j}`}>{line.length > 0 ? line : <br />}</Typography>
             ))}
             {message.lines.includes("https://www.youtube.com/") && <YouTubePreview message={message} />}
           </Stack>

@@ -49,7 +49,7 @@ export const Dummy2 = ({
         return (
           <Stack key={`attribute-${i}`} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
             <Stack sx={{ flex: 1 }}>
-              <Typography>{name}</Typography>
+              <Typography variant="body1">{name}</Typography>
             </Stack>
             <Stack sx={{ flex: 1 }}>
               <TextInput
