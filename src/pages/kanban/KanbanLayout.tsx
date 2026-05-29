@@ -56,7 +56,7 @@ const ColumnRow = ({ column, panelOpened }: { column: KanbanColumn; panelOpened?
       >
         <Stack sx={{ flexDirection: "row", flex: 1, gap: 1 }}>
           <Typography variant="body1">{column.name}</Typography>
-          <Typography variant="body2">({column.items.length})</Typography>
+          <Typography variant="body1">({column.items.length})</Typography>
         </Stack>
         {mobileRow && (
           <Box

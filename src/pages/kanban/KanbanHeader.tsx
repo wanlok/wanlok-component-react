@@ -56,12 +56,10 @@ const Bottom = ({ project }: { project: KanbanProject | undefined }) => {
             }}
           >
             <Stack sx={{ flexDirection: "row", gap: 1, alignItems: "center", justifyContent: "center" }}>
-              <Typography variant="h6" noWrap sx={{ minWidth: 0 }}>
+              <Typography variant="body1" noWrap>
                 {name}
               </Typography>
-              <Typography variant="body2" sx={{ mt: "-2px", flexShrink: 0 }}>
-                ({items.length})
-              </Typography>
+              <Typography variant="body1">({items.length})</Typography>
             </Stack>
           </Stack>
         );
