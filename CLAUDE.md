@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
-npm start          # Dev server at http://localhost:3000
+npm run dev        # Dev server at http://localhost:5173
 npm run build      # Production build to ./build
 npm test           # Run tests in watch mode
 npm test -- --testPathPattern=<file>  # Run a single test file
@@ -14,7 +14,7 @@ npm test -- --testPathPattern=<file>  # Run a single test file
 
 ## Architecture
 
-**Stack:** React 18 + TypeScript, Create React App, MUI v5, Firebase Firestore, react-router-dom v6 (hash router for GitHub Pages compatibility).
+**Stack:** React 18 + TypeScript, Vite, MUI v5, Firebase Firestore, react-router-dom v6 (hash router for GitHub Pages compatibility).
 
 **Routing:** `src/configs/routes.tsx` defines all routes. The top-level route renders `LayoutMenu` as the shell with nav icons on the left (desktop) or bottom (mobile). Child routes render into the `<Outlet>`. The `name` field on a route controls whether it appears in the nav.
 
