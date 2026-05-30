@@ -17,19 +17,21 @@ const Top = ({
   return (
     <Stack sx={{ flexDirection: "row", height: 48 }}>
       <Stack sx={{ flex: 1, p: 1, justifyContent: "center" }}>
-        <Typography variant="h6">{project?.name}</Typography>
+        <Typography variant="body1">{project?.name}</Typography>
       </Stack>
-      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-        <WButton sx={{ height: "100%" }} onClick={onEditButtonClick}>
-          Edit
-        </WButton>
-        <WButton sx={{ height: "100%" }} onClick={onAddItemButtonClick}>
-          Add Item
-        </WButton>
-        <WButton sx={{ height: "100%" }} onClick={onDeleteItemButtonClick}>
-          Delete Item
-        </WButton>
-      </Stack>
+      {project && (
+        <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+          <WButton sx={{ height: "100%" }} onClick={onEditButtonClick}>
+            Edit
+          </WButton>
+          <WButton sx={{ height: "100%" }} onClick={onAddItemButtonClick}>
+            Add Item
+          </WButton>
+          <WButton sx={{ height: "100%" }} onClick={onDeleteItemButtonClick}>
+            Delete Item
+          </WButton>
+        </Stack>
+      )}
     </Stack>
   );
 };

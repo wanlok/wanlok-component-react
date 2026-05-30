@@ -34,7 +34,7 @@ export const LayoutMenu = () => {
                     sx={[mobile ? { height: "70%" } : { width: "70%" }]}
                   />
                 )}
-                <Link to={route.path} key={`menu-link-${index}`}>
+                <Link to={route.path.replace(/\/:[\w]+\??$/, "")} key={`menu-link-${index}`}>
                   <WButton
                     sx={{
                       height: buttonHeight,

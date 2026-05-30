@@ -92,13 +92,7 @@ export const Kanban = () => {
           />
         </>
       }
-      topChildren={
-        selectedProject ? (
-          <ProjectRow project={selectedProject} selectedProject={selectedProject} panelOpened={panelOpened} />
-        ) : (
-          <></>
-        )
-      }
+      topChildren={<ProjectRow project={selectedProject} selectedProject={selectedProject} panelOpened={panelOpened} />}
     >
       <KanbanHeader
         project={selectedProject}

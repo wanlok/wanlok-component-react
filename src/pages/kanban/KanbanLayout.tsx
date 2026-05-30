@@ -199,9 +199,9 @@ export const KanbanLayout = ({
 
   if (!project) {
     return (
-      <>
+      <Stack sx={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
         <Typography variant="body1">No Project Selected</Typography>
-      </>
+      </Stack>
     );
   }
 

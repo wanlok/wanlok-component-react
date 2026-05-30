@@ -12,7 +12,7 @@ export const ProjectRow = ({
   selectedProject,
   panelOpened
 }: {
-  project: KanbanProject;
+  project?: KanbanProject;
   selectedProject?: KanbanProject;
   panelOpened?: boolean;
 }) => {
@@ -31,7 +31,7 @@ export const ProjectRow = ({
     >
       <Box
         component="img"
-        src={project.id === selectedProject?.id ? FolderSelectedIcon : FolderIcon}
+        src={project?.id === selectedProject?.id ? FolderSelectedIcon : FolderIcon}
         alt=""
         sx={{ width: "24px", height: "24px" }}
       />
@@ -45,9 +45,14 @@ export const ProjectRow = ({
             WebkitLineClamp: 1
           }}
         >
-          {project.name}
+          {project?.name ?? "No Project Selected"}
         </Typography>
-        <Typography variant="body1">{getDisplayDateTimeString(new Date(project.created_at))}, {project.columns.reduce((total, column) => total + column.items.length, 0)}</Typography>
+        {project && (
+          <Typography variant="body1">
+            {getDisplayDateTimeString(new Date(project.created_at))},{" "}
+            {project.columns.reduce((total, column) => total + column.items.length, 0)}
+          </Typography>
+        )}
       </Stack>
       {mobileRow && (
         <Box
