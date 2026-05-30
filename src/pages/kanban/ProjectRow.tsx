@@ -2,8 +2,8 @@ import { Box, Stack, Typography } from "@mui/material";
 import { KanbanProject } from "../../services/Types";
 import { getDisplayDateTimeString } from "../../common/DateUtils";
 
-import FolderIcon from "../../assets/images/icons/folder.png";
-import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
+import KanbanIcon from "../../assets/images/icons/kanban.png";
+import KanbanSelectedIcon from "../../assets/images/icons/kanban_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 
@@ -31,7 +31,7 @@ export const ProjectRow = ({
     >
       <Box
         component="img"
-        src={project?.id === selectedProject?.id ? FolderSelectedIcon : FolderIcon}
+        src={project && project.id === selectedProject?.id ? KanbanSelectedIcon : KanbanIcon}
         alt=""
         sx={{ width: "24px", height: "24px" }}
       />

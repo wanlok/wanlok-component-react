@@ -10,6 +10,8 @@ import FolderIcon from "../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../assets/images/icons/folder_selected.png";
 import DiscussionIcon from "../assets/images/icons/discussion.png";
 import DiscussionSelectedIcon from "../assets/images/icons/discussion_selected.png";
+import KanbanIcon from "../assets/images/icons/kanban.png";
+import KanbanSelectedIcon from "../assets/images/icons/kanban_selected.png";
 import { Kanban } from "../pages/kanban";
 import { BanknoteAPI } from "../pages/api/BanknoteAPI";
 import { MapperPage } from "../pages/mapper";
@@ -33,8 +35,8 @@ export const routes = [
         // ],
       },
       {
-        icon: FolderIcon,
-        icon_selected: FolderSelectedIcon,
+        icon: KanbanIcon,
+        icon_selected: KanbanSelectedIcon,
         name: "Kanban",
         path: "/kanban/:id?",
         element: <Kanban />
