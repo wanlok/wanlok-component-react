@@ -9,7 +9,8 @@ export interface ComponentFolder {
 export const folders: ComponentFolder[] = [
   { name: "Basic Inputs", id: "basic-inputs" },
   { name: "ArcGIS Hong Kong Map", id: "arcgis-hong-kong-map" },
-  { name: "Snapshot", id: "snapshot" }
+  { name: "Snapshot", id: "snapshot" },
+  { name: "Puzzle", id: "puzzle" }
 ];
 
 export const useComponentFolder = () => {
