@@ -3,6 +3,7 @@ import { Landing } from "../pages/landing";
 import { DiscussionPage } from "../pages/discussion";
 import { ComponentPage } from "../pages/ComponentPage";
 import { PDFPage } from "../pages/pdf";
+import { PDFSnapshotPage } from "../pages/pdf/PDFSnapshotPage";
 import { CollectionPage } from "../pages/collection";
 import WANLOKImage from "../assets/images/wanlok.png";
 import WANLOKImage2 from "../assets/images/wanlok_2.png";
@@ -12,6 +13,8 @@ import DiscussionIcon from "../assets/images/icons/discussion.png";
 import DiscussionSelectedIcon from "../assets/images/icons/discussion_selected.png";
 import KanbanIcon from "../assets/images/icons/kanban.png";
 import KanbanSelectedIcon from "../assets/images/icons/kanban_selected.png";
+import DocumentIcon from "../assets/images/icons/document.png";
+import DocumentSelectedIcon from "../assets/images/icons/document_selected.png";
 import { Kanban } from "../pages/kanban";
 import { BanknoteAPI } from "../pages/api/BanknoteAPI";
 import { MapperPage } from "../pages/mapper";
@@ -69,6 +72,13 @@ export const routes = [
         path: "/components/:id?",
         element: <ComponentPage />
         // children: [{ path: "/snapshot/:id2", element: <ComponentPage /> }]
+      },
+      {
+        icon: DocumentIcon,
+        icon_selected: DocumentSelectedIcon,
+        name: "PDF",
+        path: "/pdf",
+        element: <PDFPage />
       }
     ]
   },
@@ -77,16 +87,7 @@ export const routes = [
     element: <BanknoteAPI />
   },
   {
-    path: "/pdf",
-    element: <PDFPage />,
-    children: [
-      {
-        icon: FolderIcon,
-        icon_selected: FolderSelectedIcon,
-        name: "", // TODO: remove this name later
-        path: ":id",
-        element: <PDFPage />
-      }
-    ]
+    path: "/pdf/:id",
+    element: <PDFSnapshotPage />
   }
 ];
