@@ -3,7 +3,6 @@ import { Landing } from "../pages/landing";
 import { DiscussionPage } from "../pages/discussion";
 import { ComponentPage } from "../pages/ComponentPage";
 import { PDFPage } from "../pages/pdf";
-import { PDFSnapshotPage } from "../pages/pdf/PDFSnapshotPage";
 import { CollectionPage } from "../pages/collection";
 import WANLOKImage from "../assets/images/wanlok.png";
 import WANLOKImage2 from "../assets/images/wanlok_2.png";
@@ -86,8 +85,4 @@ export const routes = [
     path: "/api/banknotes",
     element: <BanknoteAPI />
   },
-  {
-    path: "/pdf/:id",
-    element: <PDFSnapshotPage />
-  }
 ];
