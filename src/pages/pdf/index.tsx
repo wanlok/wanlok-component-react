@@ -5,10 +5,7 @@ import { LayoutPanel } from "../../components/LayoutPanel";
 import { LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { PDFFile, usePDF } from "./usePDF";
 
-pdfjs.GlobalWorkerOptions.workerSrc = new URL(
-  "pdfjs-dist/build/pdf.worker.min.mjs",
-  import.meta.url
-).toString();
+pdfjs.GlobalWorkerOptions.workerSrc = new URL("pdfjs-dist/build/pdf.worker.min.mjs", import.meta.url).toString();
 
 const panelWidth = 300;
 
@@ -47,7 +44,12 @@ export const PDFPage = () => {
       width={panelWidth}
       panel={
         <Stack
-          sx={{ flex: 1, overflow: "hidden", outline: isDragOver ? "2px dashed" : "none", outlineColor: "primary.main" }}
+          sx={{
+            flex: 1,
+            overflow: "hidden",
+            outline: isDragOver ? "2px dashed" : "none",
+            outlineColor: "primary.main"
+          }}
           onDragEnter={onDragEnter}
           onDragOver={onDragOver}
           onDragLeave={onDragLeave}
