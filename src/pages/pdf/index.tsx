@@ -11,16 +11,21 @@ const panelWidth = 300;
 
 const PDFDocumentPreview = ({ file, thumbnailWidth }: { file: PDFFile; thumbnailWidth: number }) => {
   const [numPages, setNumPages] = useState(0);
+  const margin = 24;
+  const padding = 24;
+
   return (
     <Document file={file.file} onLoadSuccess={({ numPages }) => setNumPages(numPages)}>
       {Array.from({ length: numPages }, (_, i) => (
-        <Page
-          key={`${file.id}-page-${i}`}
-          pageNumber={i + 1}
-          width={thumbnailWidth}
-          renderAnnotationLayer={false}
-          renderTextLayer={false}
-        />
+        <Stack sx={{ border: "black solid 1px", alignItems: "center", m: `${margin}px`, py: `${padding}px` }}>
+          <Page
+            key={`${file.id}-page-${i}`}
+            pageNumber={i + 1}
+            width={thumbnailWidth - margin * 2 - padding * 2}
+            renderAnnotationLayer={false}
+            renderTextLayer={false}
+          />
+        </Stack>
       ))}
     </Document>
   );
