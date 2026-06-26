@@ -39,7 +39,7 @@ export const LayoutPanel = ({
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   return (
-    <Stack sx={{ height: "100%", flex: 1, flexDirection: "row", ...sx }}>
+    <Stack sx={{ height: "100%", flex: 1, flexDirection: "row", overflow: "hidden", ...sx }}>
       {(!mobile || panelOpened) && (
         <LayoutDivider hideDivider={mobile} sx={mobile ? { flex: 1 } : { width }}>
           {mobile ? (
@@ -48,7 +48,7 @@ export const LayoutPanel = ({
               {panel}
             </>
           ) : (
-            <Stack sx={{ flex: 1 }}>{panel}</Stack>
+            <Stack sx={{ flex: 1, height: "100%", overflow: "hidden" }}>{panel}</Stack>
           )}
         </LayoutDivider>
       )}
