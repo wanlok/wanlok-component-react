@@ -9,8 +9,13 @@ export interface PDFFile {
 
 export const usePDF = () => {
   const [files, setFiles] = useState<PDFFile[]>([]);
+  const [selectedFile, setSelectedFile] = useState<PDFFile | null>(null);
   const [isDragOver, setIsDragOver] = useState(false);
   const [dragCounter, setDragCounter] = useState(0);
+
+  const onFileClick = (file: PDFFile) => {
+    setSelectedFile((previous) => (previous?.id === file.id ? null : file));
+  };
 
   const onDragEnter = (event: DragEvent) => {
     event.preventDefault();
@@ -51,5 +56,5 @@ export const usePDF = () => {
     setFiles((previous) => [...previous, ...newFiles]);
   };
 
-  return { files, isDragOver, onDragEnter, onDragOver, onDragLeave, onDrop };
+  return { files, selectedFile, onFileClick, isDragOver, onDragEnter, onDragOver, onDragLeave, onDrop };
 };
