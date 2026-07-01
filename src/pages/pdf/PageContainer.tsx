@@ -58,8 +58,7 @@ const Document = ({
               borderWidth,
               borderStyle: "solid",
               borderColor: dragIndex === order ? "primary.main" : "black",
-              cursor: "grab",
-              opacity: dragIndex === order ? 0.5 : 1
+              cursor: "grab"
             }}
           >
             <Page pageNumber={pageNumber} width={itemWidth} renderAnnotationLayer={false} renderTextLayer={false} />
@@ -123,8 +122,8 @@ export const PageContainer = ({ files, selectedFile }: { files: PDFFile[]; selec
   const displayedFiles = selectedFile ? [selectedFile] : files;
 
   return (
-    <Stack ref={containerRef} sx={{ flex: 1, overflowY: "auto" }}>
-      <Stack sx={{ flexDirection: "row", flexWrap: "wrap" }}>
+    <Stack ref={containerRef} sx={{ flex: 1, overflowY: "auto", p: 4 }}>
+      <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: 4 }}>
         {displayedFiles.map((file) => (
           <Document
             key={file.id}
