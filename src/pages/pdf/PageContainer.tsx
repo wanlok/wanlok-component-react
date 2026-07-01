@@ -91,9 +91,11 @@ export const PageContainer = ({ files, selectedFile }: { files: PDFFile[]; selec
 
   const onFileLoad = useCallback((fileId: string, numPages: number) => {
     setPageOrder((prev) => {
-      const existing = prev.filter((p) => p.fileId !== fileId);
+      if (prev.some((p) => p.fileId === fileId)) {
+        return prev;
+      }
       const newPages = Array.from({ length: numPages }, (_, i) => ({ fileId, pageNumber: i + 1 }));
-      return [...existing, ...newPages];
+      return [...prev, ...newPages];
     });
   }, []);
 
