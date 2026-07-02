@@ -8,7 +8,6 @@ import FolderIcon from "../../assets/images/icons/folder.png";
 import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
-import { ArcGISHongKongMap } from "./ArcGISHongKongMap";
 import { Puzzle } from "./Puzzle";
 
 const FolderRow = ({
@@ -83,7 +82,6 @@ export const ComponentPage = () => {
         )
       }
     >
-      {selectedFolder?.id === "arcgis-hong-kong-map" && <ArcGISHongKongMap />}
       {selectedFolder?.id === "puzzle" && <Puzzle />}
     </LayoutPanel>
   );

@@ -7,7 +7,6 @@ export interface ComponentFolder {
 }
 
 export const folders: ComponentFolder[] = [
-  { name: "ArcGIS Hong Kong Map", id: "arcgis-hong-kong-map" },
   { name: "Puzzle", id: "puzzle" }
 ];
 
