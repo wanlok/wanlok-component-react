@@ -104,7 +104,6 @@ export const CollectionPage = () => {
     files,
     hyperlinks,
     steam,
-    texts,
     youTubeRegularVideos,
     youTubeShortVideos,
     addCollectionItems,
@@ -182,7 +181,6 @@ export const CollectionPage = () => {
         files={files}
         hyperlinks={hyperlinks}
         steam={steam}
-        texts={texts}
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
         controlGroupState={controlGroupState}

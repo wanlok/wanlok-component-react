@@ -1,17 +1,15 @@
 import { Stack, useMediaQuery, useTheme } from "@mui/material";
-import { CloudinaryFileInfo, serverUrl, TextItem, viewUrls } from "../../services/Types";
+import { CloudinaryFileInfo, serverUrl, viewUrls } from "../../services/Types";
 import { seperate } from "../../common/LayoutUtils";
 import { WChart } from "../../components/WChart";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
 import { WCarousel } from "../../components/WCarousel";
-import { TextCard } from "../../components/TextCard";
 
 export const CollectionList = ({
   charts,
   files,
   hyperlinks,
   steam,
-  texts,
   youTubeRegularVideos,
   youTubeShortVideos,
   controlGroupState,
@@ -24,7 +22,6 @@ export const CollectionList = ({
   files: [string, CloudinaryFileInfo][];
   hyperlinks: [string, string][];
   steam: [string, any][];
-  texts: [string, TextItem][];
   youTubeRegularVideos: [string, any][];
   youTubeShortVideos: [string, any][];
   controlGroupState: number;
@@ -118,22 +115,6 @@ export const CollectionList = ({
               onDeleteButtonClick={() => onDeleteButtonClick("steam", appId)}
               onLeftButtonClick={() => onLeftButtonClick("steam", appId)}
               onRightButtonClick={() => onRightButtonClick("steam", appId)}
-            />
-          ))}
-        </Stack>
-        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, texts) }}>
-          {texts.map(([id, { value }], i) => (
-            <TextCard
-              key={id}
-              text={value}
-              width={width}
-              leftMost={i === 0}
-              rightMost={i === texts.length - 1}
-              scrollHorizontally={false}
-              controlGroupState={controlGroupState}
-              onDeleteButtonClick={() => onDeleteButtonClick("texts", id)}
-              onLeftButtonClick={() => onLeftButtonClick("texts", id)}
-              onRightButtonClick={() => onRightButtonClick("texts", id)}
             />
           ))}
         </Stack>
