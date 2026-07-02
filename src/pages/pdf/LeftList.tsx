@@ -3,7 +3,7 @@ import { Stack, Typography } from "@mui/material";
 import { LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { PDFFile } from "./usePDF";
 
-const PDFFileRow = ({
+const Row = ({
   file,
   selectedFile,
   onFileClick
@@ -67,7 +67,7 @@ export const LeftList = ({
       />
       <Stack sx={{ flex: 1, overflowY: "auto", minHeight: 0 }}>
         {files.map((file) => (
-          <PDFFileRow key={file.id} file={file} selectedFile={selectedFile} onFileClick={onFileClick} />
+          <Row key={file.id} file={file} selectedFile={selectedFile} onFileClick={onFileClick} />
         ))}
       </Stack>
     </Stack>

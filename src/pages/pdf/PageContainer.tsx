@@ -14,19 +14,21 @@ const Document = ({
   file,
   itemWidth,
   pageOrder,
-  dragIndex,
+  hoverIndex,
   onFileLoad,
   onDragStart,
   onDragOver,
+  onDragEnd,
   onDrop
 }: {
   file: PDFFile;
   itemWidth: number;
   pageOrder: PageEntry[];
-  dragIndex: number | null;
+  hoverIndex: number | null;
   onFileLoad: (fileId: string, numPages: number) => void;
   onDragStart: (index: number) => void;
   onDragOver: (index: number) => void;
+  onDragEnd: () => void;
   onDrop: (index: number) => void;
 }) => {
   const [numPages, setNumPages] = useState(0);
@@ -51,13 +53,14 @@ const Document = ({
               e.preventDefault();
               onDragOver(order);
             }}
+            onDragEnd={onDragEnd}
             onDrop={() => onDrop(order)}
             sx={{
               order,
               width: itemWidth,
               borderWidth,
               borderStyle: "solid",
-              borderColor: dragIndex === order ? "primary.main" : "black",
+              borderColor: hoverIndex === order ? "primary.main" : "black",
               cursor: "grab"
             }}
           >
@@ -74,6 +77,7 @@ export const PageContainer = ({ files, selectedFile }: { files: PDFFile[]; selec
   const [containerWidth, setContainerWidth] = useState(0);
   const [pageOrder, setPageOrder] = useState<PageEntry[]>([]);
   const [dragIndex, setDragIndex] = useState<number | null>(null);
+  const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
   useEffect(() => {
     const node = containerRef.current;
@@ -103,10 +107,18 @@ export const PageContainer = ({ files, selectedFile }: { files: PDFFile[]; selec
     setDragIndex(index);
   };
 
-  const onDragOver = (_index: number) => {};
+  const onDragOver = (index: number) => {
+    setHoverIndex(index);
+  };
+
+  const onDragEnd = () => {
+    setDragIndex(null);
+    setHoverIndex(null);
+  };
 
   const onDrop = (targetIndex: number) => {
     if (dragIndex === null || dragIndex === targetIndex) {
+      setHoverIndex(null);
       return;
     }
     setPageOrder((prev) => {
@@ -116,6 +128,7 @@ export const PageContainer = ({ files, selectedFile }: { files: PDFFile[]; selec
       return next;
     });
     setDragIndex(null);
+    setHoverIndex(null);
   };
 
   const numColumns = Math.max(1, Math.floor(containerWidth / 150));
@@ -132,10 +145,11 @@ export const PageContainer = ({ files, selectedFile }: { files: PDFFile[]; selec
             file={file}
             itemWidth={itemWidth}
             pageOrder={pageOrder}
-            dragIndex={dragIndex}
+            hoverIndex={hoverIndex}
             onFileLoad={onFileLoad}
             onDragStart={onDragStart}
             onDragOver={onDragOver}
+            onDragEnd={onDragEnd}
             onDrop={onDrop}
           />
         ))}
