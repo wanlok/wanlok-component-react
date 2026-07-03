@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import { TextInput } from "./TextInput";
 import { WButton, WIconButton } from "./WButton";
@@ -17,26 +17,18 @@ interface IconButtonContent {
 }
 
 export const WText = ({
-  text = "",
-  editable = true,
   placeholder,
   rightButtons
 }: {
-  text?: string;
-  editable?: boolean;
   placeholder?: string;
   rightButtons: (LabelButtonContent | IconButtonContent)[];
 }) => {
-  const [value, setValue] = useState<string>(text);
+  const [value, setValue] = useState("");
   const [buttonHeight, setButtonHeight] = useState<number>();
   const [sufficientSpaces, setSufficientSpaces] = useState<boolean>(false);
   const sufficientSpacesHeightRef = useRef<number>();
 
   const stackRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    setValue(text);
-  }, [text]);
 
   useEffect(() => {
     const resizeObserver = new ResizeObserver(([entry]) => {
@@ -73,18 +65,12 @@ export const WText = ({
   return (
     <Stack ref={stackRef} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
       <Stack sx={{ flex: 1, p: 1 }}>
-        {editable ? (
-          <TextInput
-            placeholder={placeholder}
-            value={value}
-            onChange={(changedText) => setValue(changedText)}
-            hideHelperText={true}
-          />
-        ) : (
-          <Stack sx={{ justifyContent: "center", height: 39 }}>
-            <Typography variant="body1">{value}</Typography>
-          </Stack>
-        )}
+        <TextInput
+          placeholder={placeholder}
+          value={value}
+          onChange={(changedText) => setValue(changedText)}
+          hideHelperText={true}
+        />
       </Stack>
       <Stack sx={{ flexDirection: sufficientSpaces ? "column" : "row", gap: "1px" }}>
         {rightButtons.map((buttonContent, index) => {

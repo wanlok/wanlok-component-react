@@ -2,7 +2,6 @@ import { Stack, Typography } from "@mui/material";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { CloudinaryFileInfo, Folder } from "../../services/Types";
 import { WModal } from "../../components/WModal";
-import { WText } from "../../components/WText";
 import { TextInput } from "../../components/TextInput";
 import { WButton } from "../../components/WButton";
 
@@ -44,7 +43,11 @@ export const Dummy2 = ({
 
   return (
     <WModal open={collectionTypeId !== undefined} onClose={() => setCollectionTypeId(undefined)}>
-      <WText text="Attributes" editable={false} rightButtons={[]} />
+      <Stack sx={{ flexDirection: "row", height: 48 }}>
+        <Stack sx={{ flex: 1, p: 1, justifyContent: "center" }}>
+          <Typography variant="body1">Attributes</Typography>
+        </Stack>
+      </Stack>
       {selectedFolder?.attributes.map(({ name }, i) => {
         return (
           <Stack key={`attribute-${i}`} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>

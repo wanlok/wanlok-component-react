@@ -1,6 +1,5 @@
-import { Checkbox, Stack } from "@mui/material";
+import { Checkbox, Stack, Typography } from "@mui/material";
 import { TextInput } from "../../components/TextInput";
-import { WText } from "../../components/WText";
 import { SelectInput } from "../../components/SelectInput";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { WButton } from "../../components/WButton";
@@ -35,28 +34,31 @@ export const Dummy = ({
 
   return (
     <WModal open={open} onClose={() => setOpen(false)}>
-      <WText
-        text="Attributes"
-        editable={false}
-        rightButtons={[
-          {
-            label: "Add",
-            onClick: () => {
+      <Stack sx={{ flexDirection: "row", height: 48 }}>
+        <Stack sx={{ flex: 1, p: 1, justifyContent: "center" }}>
+          <Typography variant="body1">Attributes</Typography>
+        </Stack>
+        <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+          <WButton
+            onClick={() => {
               if (!attributes) {
                 return;
               }
               setAttributes([...attributes, { name: "", type: "text" }]);
-            }
-          },
-          {
-            label: "Delete",
-            onClick: () => {
+            }}
+          >
+            Add
+          </WButton>
+          <WButton
+            onClick={() => {
               setAttributes(attributes.filter((_, i) => !checkboxStatus.has(i)));
               setCheckboxStatus(new Set());
-            }
-          }
-        ]}
-      />
+            }}
+          >
+            Delete
+          </WButton>
+        </Stack>
+      </Stack>
       {attributes.map(({ name, type }, i) => {
         return (
           <Stack key={`attribute-${i}`} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
