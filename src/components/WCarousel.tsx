@@ -39,8 +39,8 @@ export const WCarousel = ({
       duration={0}
       height={height}
       indicators={false}
-      PrevIcon={<KeyboardArrowLeftIcon sx={{ fontSize: 16, color: "white" }} />}
-      NextIcon={<KeyboardArrowRightIcon sx={{ fontSize: 16, color: "white" }} />}
+      PrevIcon={<KeyboardArrowLeftIcon sx={{ fontSize: 16, color: "common.white" }} />}
+      NextIcon={<KeyboardArrowRightIcon sx={{ fontSize: 16, color: "common.white" }} />}
       navButtonsProps={{
         style: {
           backgroundColor: alpha(palette.common.black, 0.6),

@@ -45,7 +45,7 @@ export const ControlGroup = ({
       )}
       {!scrollHorizontally && mobile && onLeftButtonClick && (
         <WIconButton
-          icon={<KeyboardArrowUpIcon sx={{ color: "white" }} />}
+          icon={<KeyboardArrowUpIcon sx={{ color: "common.white" }} />}
           iconSize={16}
           onClick={onLeftButtonClick}
           sx={sx}
@@ -53,7 +53,7 @@ export const ControlGroup = ({
       )}
       {!scrollHorizontally && mobile && onRightButtonClick && (
         <WIconButton
-          icon={<KeyboardArrowDownIcon sx={{ color: "white" }} />}
+          icon={<KeyboardArrowDownIcon sx={{ color: "common.white" }} />}
           iconSize={16}
           onClick={onRightButtonClick}
           sx={sx}
@@ -61,7 +61,7 @@ export const ControlGroup = ({
       )}
       {(scrollHorizontally || !mobile) && onRightButtonClick && (
         <WIconButton
-          icon={<KeyboardArrowRightIcon sx={{ color: "white" }} />}
+          icon={<KeyboardArrowRightIcon sx={{ color: "common.white" }} />}
           iconSize={16}
           onClick={onRightButtonClick}
           sx={sx}
@@ -69,7 +69,7 @@ export const ControlGroup = ({
       )}
       {(scrollHorizontally || !mobile) && onLeftButtonClick && (
         <WIconButton
-          icon={<KeyboardArrowLeftIcon sx={{ color: "white" }} />}
+          icon={<KeyboardArrowLeftIcon sx={{ color: "common.white" }} />}
           iconSize={16}
           onClick={onLeftButtonClick}
           sx={sx}

@@ -1,14 +1,17 @@
 import { Stack, Typography } from "@mui/material";
 import { WChip } from "../../components/WChip";
 
-import { Folder as FolderIcon, FolderOutlined as FolderOutlinedIcon } from "@mui/icons-material";
+import {
+  Close as CloseIcon,
+  Folder as FolderIcon,
+  FolderOutlined as FolderOutlinedIcon,
+  SwapHoriz as SwapHorizIcon
+} from "@mui/icons-material";
 import ResetIcon from "../../assets/images/icons/reset.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import GreenCircleIcon from "../../assets/images/icons/green_circle.png";
 import RedCircleIcon from "../../assets/images/icons/red_circle.png";
-import { Close as CloseIcon } from "@mui/icons-material";
-import LeftRightIcon from "../../assets/images/icons/left_right.png";
 import { WIconButton } from "../../components/WButton";
 import { Folder } from "../../services/Types";
 import { SelectInput } from "../../components/SelectInput";
@@ -115,7 +118,7 @@ export const CollectionHeader = ({
               sx={{ backgroundColor: controlGroupState === 2 ? "primary.dark" : "primary.main" }}
             />
             <WIconButton
-              icon={LeftRightIcon}
+              icon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
               iconSize={24}
               onClick={onLeftRightButtonClick}
               sx={{ backgroundColor: controlGroupState === 3 ? "primary.dark" : "primary.main" }}
