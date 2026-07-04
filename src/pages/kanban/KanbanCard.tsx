@@ -5,7 +5,7 @@ import { KanbanItem } from "../../services/Types";
 import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
 import { Stack } from "@mui/material";
 import { WIconButton } from "../../components/WButton";
-import CrossIcon from "../../assets/images/icons/cross.png";
+import { Close as CloseIcon } from "@mui/icons-material";
 
 export const padding = 2;
 export const threshold = 4;
@@ -158,7 +158,7 @@ export const KanbanCard = ({
           </CardActionArea>
           <Stack>
             {controlGroupState === 2 && (
-              <WIconButton icon={CrossIcon} iconSize={16} onClick={onDeleteItemClick} className="drag-cancel" />
+              <WIconButton icon={<CloseIcon />} iconSize={16} onClick={onDeleteItemClick} className="drag-cancel" />
             )}
           </Stack>
         </Stack>

@@ -18,7 +18,7 @@ import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
 import DocumentSelectedIcon from "../../assets/images/icons/document_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
-import CrossIcon from "../../assets/images/icons/cross.png";
+import { Close as CloseIcon } from "@mui/icons-material";
 import HyperlinkIcon from "../../assets/images/icons/hyperlink.png";
 import SteamIcon from "../../assets/images/icons/steam.png";
 import YouTubeIcon from "../../assets/images/icons/youtube.png";
@@ -143,7 +143,7 @@ export const CollectionPage = () => {
             renderRightContent={(folder) => (
               <Stack sx={{}}>
                 {folderControlGroupState === 1 && (
-                  <WIconButton icon={CrossIcon} iconSize={16} onClick={() => deleteFolder(folder)} />
+                  <WIconButton icon={<CloseIcon />} iconSize={16} onClick={() => deleteFolder(folder)} />
                 )}
               </Stack>
             )}

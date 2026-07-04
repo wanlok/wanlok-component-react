@@ -3,7 +3,7 @@ import { LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { WIconButton } from "../../components/WButton";
 
 import AddIcon from "../../assets/images/icons/add.png";
-import CrossIcon from "../../assets/images/icons/cross.png";
+import { Close as CloseIcon } from "@mui/icons-material";
 
 export const ProjectHeader = ({
   controlGroupState,
@@ -30,7 +30,7 @@ export const ProjectHeader = ({
             sx={{ backgroundColor: "primary.main" }}
           />
           <WIconButton
-            icon={CrossIcon}
+            icon={<CloseIcon />}
             iconSize={16}
             onClick={onDeleteButtonClick}
             sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}

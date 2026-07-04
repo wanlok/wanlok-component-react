@@ -4,7 +4,7 @@ import UpWhiteIcon from "../assets/images/icons/up_white.png";
 import DownWhiteIcon from "../assets/images/icons/down_white.png";
 import LeftWhiteIcon from "../assets/images/icons/left_white.png";
 import RightWhiteIcon from "../assets/images/icons/right_white.png";
-import CrossWhiteIcon from "../assets/images/icons/cross_white.png";
+import { Close as CloseIcon } from "@mui/icons-material";
 import { Direction } from "../services/Types";
 
 export const ControlGroup = ({
@@ -33,7 +33,14 @@ export const ControlGroup = ({
       ]}
     >
       {onDetailsButtonClick && <WIconButton icon={""} iconSize={16} onClick={onDetailsButtonClick} sx={sx} />}
-      {onDeleteButtonClick && <WIconButton icon={CrossWhiteIcon} iconSize={16} onClick={onDeleteButtonClick} sx={sx} />}
+      {onDeleteButtonClick && (
+        <WIconButton
+          icon={<CloseIcon sx={{ color: "common.white" }} />}
+          iconSize={16}
+          onClick={onDeleteButtonClick}
+          sx={sx}
+        />
+      )}
       {!scrollHorizontally && mobile && onLeftButtonClick && (
         <WIconButton icon={UpWhiteIcon} iconSize={16} onClick={onLeftButtonClick} sx={sx} />
       )}

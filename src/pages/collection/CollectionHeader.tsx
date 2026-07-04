@@ -7,7 +7,7 @@ import UploadIcon from "../../assets/images/icons/upload.png";
 import DownloadIcon from "../../assets/images/icons/download.png";
 import GreenCircleIcon from "../../assets/images/icons/green_circle.png";
 import RedCircleIcon from "../../assets/images/icons/red_circle.png";
-import CrossIcon from "../../assets/images/icons/cross.png";
+import { Close as CloseIcon } from "@mui/icons-material";
 import LeftRightIcon from "../../assets/images/icons/left_right.png";
 import { WIconButton } from "../../components/WButton";
 import { Folder } from "../../services/Types";
@@ -44,7 +44,7 @@ export const FolderCollectionHeader = ({
         <Stack sx={{ flexDirection: "row", gap: 1 }}>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
             <WIconButton
-              icon={CrossIcon}
+              icon={<CloseIcon />}
               iconSize={16}
               onClick={onDeleteButtonClick}
               sx={{ backgroundColor: folderControlGroupState === 2 ? "primary.dark" : "primary.main" }}
@@ -109,7 +109,7 @@ export const CollectionHeader = ({
               sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
             />
             <WIconButton
-              icon={CrossIcon}
+              icon={<CloseIcon />}
               iconSize={16}
               onClick={onDeleteButtonClick}
               sx={{ backgroundColor: controlGroupState === 2 ? "primary.dark" : "primary.main" }}

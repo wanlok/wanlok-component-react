@@ -52,7 +52,7 @@ export const WIconButton = ({
   className,
   sx
 }: {
-  icon: string;
+  icon: string | ReactNode;
   iconSize?: number;
   buttonSize?: number;
   onClick: () => void;
@@ -65,7 +65,11 @@ export const WIconButton = ({
       className={className}
       sx={{ backgroundColor: "transparent", p: 0, width: buttonSize, height: buttonSize, ...sx }}
     >
-      <Box component="img" src={icon} alt="" sx={{ width: iconSize, height: iconSize }} />
+      {typeof icon === "string" ? (
+        <Box component="img" src={icon} alt="" sx={{ width: iconSize, height: iconSize }} />
+      ) : (
+        <Box sx={{ fontSize: iconSize, display: "flex", alignItems: "center" }}>{icon}</Box>
+      )}
     </WButton>
   );
 };

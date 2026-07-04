@@ -10,7 +10,7 @@ import { KanbanHeader } from "./KanbanHeader";
 import { KanbanLayout } from "./KanbanLayout";
 import { WIconButton } from "../../components/WButton";
 
-import CrossIcon from "../../assets/images/icons/cross.png";
+import { Close as CloseIcon } from "@mui/icons-material";
 import { Stack } from "@mui/material";
 import { ItemModal } from "./ItemModal";
 
@@ -85,7 +85,7 @@ export const Kanban = () => {
             renderRightContent={(project) => (
               <Stack>
                 {controlGroupState === 1 && (
-                  <WIconButton icon={CrossIcon} iconSize={16} onClick={() => deleteProject(project)} />
+                  <WIconButton icon={<CloseIcon />} iconSize={16} onClick={() => deleteProject(project)} />
                 )}
               </Stack>
             )}
