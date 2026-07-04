@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import { useEffect, useRef, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 import { TextInput } from "./TextInput";
 import { WButton, WIconButton } from "./WButton";
 
@@ -10,7 +10,7 @@ interface LabelButtonContent {
 }
 
 interface IconButtonContent {
-  icon: string;
+  icon: string | ReactNode;
   size: number;
   onClickWithText?: (text: string) => void;
   onClick?: () => void;

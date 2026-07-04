@@ -6,13 +6,13 @@ import { CollectionPage } from "../pages/collection";
 import WANLOKImage from "../assets/images/wanlok.png";
 import WANLOKImage2 from "../assets/images/wanlok_2.png";
 import {
+  Chat as ChatIcon,
+  ChatOutlined as ChatOutlinedIcon,
   Folder as FolderIcon,
   FolderOutlined as FolderOutlinedIcon,
   ViewKanban as KanbanIcon,
   ViewKanbanOutlined as KanbanOutlinedIcon
 } from "@mui/icons-material";
-import DiscussionIcon from "../assets/images/icons/discussion.png";
-import DiscussionSelectedIcon from "../assets/images/icons/discussion_selected.png";
 import { Kanban } from "../pages/kanban";
 import { BanknoteAPI } from "../pages/api/BanknoteAPI";
 
@@ -49,8 +49,8 @@ export const routes = [
         element: <CollectionPage />
       },
       {
-        icon: DiscussionIcon,
-        icon_selected: DiscussionSelectedIcon,
+        icon: <ChatOutlinedIcon sx={{ fontSize: 32 }} />,
+        icon_selected: <ChatIcon sx={{ fontSize: 32 }} />,
         name: "Discussion",
         path: "/discussion",
         element: <DiscussionPage />

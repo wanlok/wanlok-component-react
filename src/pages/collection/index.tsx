@@ -12,9 +12,8 @@ import { CollectionHeader, FolderCollectionHeader } from "./CollectionHeader";
 import { Dummy } from "./Dummy";
 import { Dummy2 } from "./Dummy2";
 import { CollectionPanelRow } from "./CollectionPanelRow";
-import { Close as CloseIcon } from "@mui/icons-material";
+import { Close as CloseIcon, Upload as UploadIcon } from "@mui/icons-material";
 import SendIcon from "../../assets/images/icons/send.png";
-import UploadIcon from "../../assets/images/icons/upload.png";
 
 export const CollectionPage = () => {
   const {
@@ -88,7 +87,9 @@ export const CollectionPage = () => {
           />
         </>
       }
-      topChildren={selectedFolder ? <CollectionPanelRow folder={selectedFolder} selectedFolder={selectedFolder} /> : <></>}
+      topChildren={
+        selectedFolder ? <CollectionPanelRow folder={selectedFolder} selectedFolder={selectedFolder} /> : <></>
+      }
     >
       <CollectionHeader
         folder={selectedFolder}
@@ -139,7 +140,7 @@ export const CollectionPage = () => {
             }
           },
           {
-            icon: UploadIcon,
+            icon: <UploadIcon sx={{ fontSize: 24 }} />,
             size: 18,
             onClick: async () => {
               const collectionId = getDocumentId(selectedFolder?.name);

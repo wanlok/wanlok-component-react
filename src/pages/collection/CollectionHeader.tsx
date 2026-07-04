@@ -3,13 +3,12 @@ import { WChip } from "../../components/WChip";
 
 import {
   Close as CloseIcon,
+  Download as DownloadIcon,
   Folder as FolderIcon,
-  FolderOutlined as FolderOutlinedIcon,
-  SwapHoriz as SwapHorizIcon
+  SwapHoriz as SwapHorizIcon,
+  Upload as UploadIcon
 } from "@mui/icons-material";
 import ResetIcon from "../../assets/images/icons/reset.png";
-import UploadIcon from "../../assets/images/icons/upload.png";
-import DownloadIcon from "../../assets/images/icons/download.png";
 import GreenCircleIcon from "../../assets/images/icons/green_circle.png";
 import RedCircleIcon from "../../assets/images/icons/red_circle.png";
 import { WIconButton } from "../../components/WButton";
@@ -55,13 +54,13 @@ export const FolderCollectionHeader = ({
           </Stack>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
             <WIconButton
-              icon={UploadIcon}
+              icon={<UploadIcon sx={{ fontSize: 24 }} />}
               iconSize={18}
               onClick={onUploadButtonClick}
               sx={{ backgroundColor: "primary.main" }}
             />
             <WIconButton
-              icon={DownloadIcon}
+              icon={<DownloadIcon sx={{ fontSize: 24 }} />}
               iconSize={18}
               onClick={onDownloadButtonClick}
               sx={{ backgroundColor: "primary.main" }}
@@ -134,7 +133,7 @@ export const CollectionHeader = ({
               />
             )}
             <WIconButton
-              icon={DownloadIcon}
+              icon={<DownloadIcon sx={{ fontSize: 24 }} />}
               iconSize={18}
               onClick={onDownloadButtonClick}
               sx={{ backgroundColor: "primary.main" }}
