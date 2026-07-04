@@ -1,10 +1,12 @@
 import { alpha, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { WIconButton } from "./WButton";
-import UpWhiteIcon from "../assets/images/icons/up_white.png";
-import DownWhiteIcon from "../assets/images/icons/down_white.png";
-import LeftWhiteIcon from "../assets/images/icons/left_white.png";
-import RightWhiteIcon from "../assets/images/icons/right_white.png";
-import { Close as CloseIcon } from "@mui/icons-material";
+import {
+  Close as CloseIcon,
+  KeyboardArrowDown as KeyboardArrowDownIcon,
+  KeyboardArrowLeft as KeyboardArrowLeftIcon,
+  KeyboardArrowRight as KeyboardArrowRightIcon,
+  KeyboardArrowUp as KeyboardArrowUpIcon
+} from "@mui/icons-material";
 import { Direction } from "../services/Types";
 
 export const ControlGroup = ({
@@ -42,16 +44,16 @@ export const ControlGroup = ({
         />
       )}
       {!scrollHorizontally && mobile && onLeftButtonClick && (
-        <WIconButton icon={UpWhiteIcon} iconSize={16} onClick={onLeftButtonClick} sx={sx} />
+        <WIconButton icon={<KeyboardArrowUpIcon sx={{ color: "white" }} />} iconSize={16} onClick={onLeftButtonClick} sx={sx} />
       )}
       {!scrollHorizontally && mobile && onRightButtonClick && (
-        <WIconButton icon={DownWhiteIcon} iconSize={16} onClick={onRightButtonClick} sx={sx} />
+        <WIconButton icon={<KeyboardArrowDownIcon sx={{ color: "white" }} />} iconSize={16} onClick={onRightButtonClick} sx={sx} />
       )}
       {(scrollHorizontally || !mobile) && onRightButtonClick && (
-        <WIconButton icon={RightWhiteIcon} iconSize={16} onClick={onRightButtonClick} sx={sx} />
+        <WIconButton icon={<KeyboardArrowRightIcon sx={{ color: "white" }} />} iconSize={16} onClick={onRightButtonClick} sx={sx} />
       )}
       {(scrollHorizontally || !mobile) && onLeftButtonClick && (
-        <WIconButton icon={LeftWhiteIcon} iconSize={16} onClick={onLeftButtonClick} sx={sx} />
+        <WIconButton icon={<KeyboardArrowLeftIcon sx={{ color: "white" }} />} iconSize={16} onClick={onLeftButtonClick} sx={sx} />
       )}
     </Stack>
   );

@@ -36,7 +36,7 @@ export const FolderCollectionHeader = ({
           <Typography variant="body1" sx={{ flex: 1 }}>
             Collections
           </Typography>
-          <WChip icon={<FolderIcon style={{ fontSize: "16px" }} />} label={`${numberOfFolders}`} />
+          <WChip icon={<FolderIcon sx={{ fontSize: 16 }} />} label={`${numberOfFolders}`} />
           <WChip icon={serverHealth ? GreenCircleIcon : RedCircleIcon} label={"Server"} />
         </Stack>
       }

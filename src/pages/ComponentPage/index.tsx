@@ -1,12 +1,15 @@
 import { useState } from "react";
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { ComponentFolder, folders, useComponentFolder } from "./useComponentFolder";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
 
-import { Folder as FolderIcon, FolderOutlined as FolderOutlinedIcon } from "@mui/icons-material";
-import UpIcon from "../../assets/images/icons/up.png";
-import DownIcon from "../../assets/images/icons/down.png";
+import {
+  Folder as FolderIcon,
+  FolderOutlined as FolderOutlinedIcon,
+  KeyboardArrowDown as KeyboardArrowDownIcon,
+  KeyboardArrowUp as KeyboardArrowUpIcon
+} from "@mui/icons-material";
 import { Puzzle } from "./Puzzle";
 
 const FolderRow = ({
@@ -23,6 +26,7 @@ const FolderRow = ({
     <Stack
       sx={{
         flexDirection: "row",
+        alignItems: "center",
         py: 2,
         pl: 2,
         pr: mobileRow ? 2 : 0,
@@ -39,14 +43,8 @@ const FolderRow = ({
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
         <Typography variant="body1">{folder.name}</Typography>
       </Stack>
-      {mobileRow && (
-        <Box
-          component="img"
-          src={panelOpened ? UpIcon : DownIcon}
-          alt=""
-          sx={{ width: "16px", height: "16px", mt: "4px" }}
-        />
-      )}
+      {mobileRow &&
+        (panelOpened ? <KeyboardArrowUpIcon sx={{ fontSize: 24 }} /> : <KeyboardArrowDownIcon sx={{ fontSize: 24 }} />)}
     </Stack>
   );
 };

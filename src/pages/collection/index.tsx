@@ -13,14 +13,17 @@ import { CollectionHeader, FolderCollectionHeader } from "./CollectionHeader";
 import { Dummy } from "./Dummy";
 import { Dummy2 } from "./Dummy2";
 
-import { Folder as FolderIcon, FolderOutlined as FolderOutlinedIcon } from "@mui/icons-material";
+import {
+  Close as CloseIcon,
+  Folder as FolderIcon,
+  FolderOutlined as FolderOutlinedIcon,
+  KeyboardArrowDown as KeyboardArrowDownIcon,
+  KeyboardArrowUp as KeyboardArrowUpIcon,
+  YouTube as YouTubeIcon
+} from "@mui/icons-material";
 import DocumentSelectedIcon from "../../assets/images/icons/document_selected.png";
-import UpIcon from "../../assets/images/icons/up.png";
-import DownIcon from "../../assets/images/icons/down.png";
-import { Close as CloseIcon } from "@mui/icons-material";
 import HyperlinkIcon from "../../assets/images/icons/hyperlink.png";
 import SteamIcon from "../../assets/images/icons/steam.png";
-import { YouTube as YouTubeIcon } from "@mui/icons-material";
 import SendIcon from "../../assets/images/icons/send.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 
@@ -39,6 +42,7 @@ const FolderRow = ({
     <Stack
       sx={{
         flexDirection: "row",
+        alignItems: "center",
         minHeight: (mobileRow ? 48 : 48 + 48 + 1) + "px",
         py: 2,
         pl: 2,
@@ -49,9 +53,9 @@ const FolderRow = ({
       }}
     >
       {folder === selectedFolder ? (
-        <FolderIcon style={{ fontSize: "24px" }} />
+        <FolderIcon sx={{ fontSize: 24 }} />
       ) : (
-        <FolderOutlinedIcon style={{ fontSize: "24px" }} />
+        <FolderOutlinedIcon sx={{ fontSize: 24 }} />
       )}
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
         <Typography variant="body1">{folder.name}</Typography>
@@ -62,26 +66,23 @@ const FolderRow = ({
             {steam > 0 && <WChip icon={SteamIcon} label={`${steam}`} />}
             {youtube_regular > 0 && youtube_shorts > 0 && (
               <WChip
-                icon={<YouTubeIcon style={{ fontSize: "20px", color: "black" }} />}
+                icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />}
                 label={`${youtube_shorts} + ${youtube_regular}`}
               />
             )}
             {youtube_regular === 0 && youtube_shorts > 0 && (
-              <WChip icon={<YouTubeIcon style={{ fontSize: "20px", color: "black" }} />} label={`${youtube_shorts}`} />
+              <WChip icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${youtube_shorts}`} />
             )}
             {youtube_regular > 0 && youtube_shorts === 0 && (
-              <WChip icon={<YouTubeIcon style={{ fontSize: "20px", color: "black" }} />} label={`${youtube_regular}`} />
+              <WChip icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${youtube_regular}`} />
             )}
           </Stack>
         )}
       </Stack>
       {mobileRow && (
-        <Box
-          component="img"
-          src={panelOpened ? UpIcon : DownIcon}
-          alt=""
-          sx={{ width: "16px", height: "16px", mt: "4px" }}
-        />
+        panelOpened
+          ? <KeyboardArrowUpIcon sx={{ fontSize: 16 }} />
+          : <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
       )}
     </Stack>
   );

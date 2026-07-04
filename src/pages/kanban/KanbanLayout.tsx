@@ -1,13 +1,12 @@
 import { createRef, Fragment, useRef, useState } from "react";
-import { Box, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { useWindowDimensions } from "../../common/useWindowDimension";
 import { KanbanColumn, KanbanItem, KanbanProject } from "../../services/Types";
 import { KanbanCard, padding } from "./KanbanCard";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
 
-import UpWhiteIcon from "../../assets/images/icons/up_white.png";
-import DownWhiteIcon from "../../assets/images/icons/down_white.png";
+import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from "@mui/icons-material";
 
 const getColumns = (
   columns: KanbanColumn[],
@@ -59,12 +58,9 @@ const ColumnRow = ({ column, panelOpened }: { column: KanbanColumn; panelOpened?
           <Typography variant="body1">({column.items.length})</Typography>
         </Stack>
         {mobileRow && (
-          <Box
-            component="img"
-            src={panelOpened ? UpWhiteIcon : DownWhiteIcon}
-            alt=""
-            sx={{ width: "16px", height: "16px" }}
-          />
+          panelOpened
+            ? <KeyboardArrowUpIcon sx={{ fontSize: 16, color: "white" }} />
+            : <KeyboardArrowDownIcon sx={{ fontSize: 16, color: "white" }} />
         )}
       </Stack>
     </Stack>

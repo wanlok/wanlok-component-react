@@ -2,9 +2,12 @@ import { Box, Stack, Typography } from "@mui/material";
 import { KanbanProject } from "../../services/Types";
 import { getDisplayDateTimeString } from "../../common/DateUtils";
 
-import { ViewKanban as KanbanIcon, ViewKanbanOutlined as KanbanOutlinedIcon } from "@mui/icons-material";
-import UpIcon from "../../assets/images/icons/up.png";
-import DownIcon from "../../assets/images/icons/down.png";
+import {
+  KeyboardArrowDown as KeyboardArrowDownIcon,
+  KeyboardArrowUp as KeyboardArrowUpIcon,
+  ViewKanban as KanbanIcon,
+  ViewKanbanOutlined as KanbanOutlinedIcon
+} from "@mui/icons-material";
 
 export const ProjectRow = ({
   project,
@@ -20,6 +23,7 @@ export const ProjectRow = ({
     <Stack
       sx={{
         flexDirection: "row",
+        alignItems: "center",
         py: 2,
         pl: 2,
         pr: mobileRow ? 2 : 0,
@@ -29,9 +33,9 @@ export const ProjectRow = ({
       }}
     >
       {project && project.id === selectedProject?.id ? (
-        <KanbanIcon style={{ fontSize: "24px" }} />
+        <KanbanIcon sx={{ fontSize: 24 }} />
       ) : (
-        <KanbanOutlinedIcon style={{ fontSize: "24px" }} />
+        <KanbanOutlinedIcon sx={{ fontSize: 24 }} />
       )}
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
         <Typography
@@ -53,12 +57,9 @@ export const ProjectRow = ({
         )}
       </Stack>
       {mobileRow && (
-        <Box
-          component="img"
-          src={panelOpened ? UpIcon : DownIcon}
-          alt=""
-          sx={{ width: "16px", height: "16px", mt: "4px" }}
-        />
+        panelOpened
+          ? <KeyboardArrowUpIcon sx={{ fontSize: 16 }} />
+          : <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
       )}
     </Stack>
   );

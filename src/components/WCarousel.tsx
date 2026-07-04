@@ -1,9 +1,8 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
-import { alpha, Box, Stack, SxProps, Theme, useTheme } from "@mui/material";
+import { alpha, Stack, SxProps, Theme, useTheme } from "@mui/material";
 import Carousel from "react-material-ui-carousel";
 import { groupList } from "../common/ListDictUtils";
-import LeftWhiteIcon from "../assets/images/icons/left_white.png";
-import RightWhiteIcon from "../assets/images/icons/right_white.png";
+import { KeyboardArrowLeft as KeyboardArrowLeftIcon, KeyboardArrowRight as KeyboardArrowRightIcon } from "@mui/icons-material";
 
 export const WCarousel = ({
   list,
@@ -40,8 +39,8 @@ export const WCarousel = ({
       duration={0}
       height={height}
       indicators={false}
-      PrevIcon={<Box component="img" src={LeftWhiteIcon} alt="" sx={{ width: 16, height: 16 }} />}
-      NextIcon={<Box component="img" src={RightWhiteIcon} alt="" sx={{ width: 16, height: 16 }} />}
+      PrevIcon={<KeyboardArrowLeftIcon sx={{ fontSize: 16, color: "white" }} />}
+      NextIcon={<KeyboardArrowRightIcon sx={{ fontSize: 16, color: "white" }} />}
       navButtonsProps={{
         style: {
           backgroundColor: alpha(palette.common.black, 0.6),
