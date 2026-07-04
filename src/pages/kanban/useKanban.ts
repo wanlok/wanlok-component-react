@@ -38,11 +38,16 @@ export const useKanban = () => {
   }, [docRef]);
 
   useEffect(() => {
-    const project = kanban?.projects.find((project) => project.id === id);
-    if (project) {
-      setSelectedProject(project);
+    const projects = kanban?.projects ?? [];
+    if (projects.length > 0) {
+      const project = projects.find((project) => project.id === id);
+      if (project) {
+        setSelectedProject(project);
+      } else {
+        openProject(projects[0]);
+      }
     }
-  }, [id, kanban]);
+  }, [id, kanban, openProject]);
 
   const addProject = async (name: string, columnNames: string[]) => {
     const document = await getDoc(docRef);

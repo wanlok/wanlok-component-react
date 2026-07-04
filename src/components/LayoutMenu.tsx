@@ -47,11 +47,14 @@ export const LayoutMenu = () => {
                     }}
                   >
                     {index === 0 ? (
-                      <img
-                        src={selected ? route.icon_selected : route.icon}
-                        alt=""
-                        style={{ width: "100%", height: "100%" }}
-                      />
+                      (() => {
+                        const icon = selected ? route.icon_selected : route.icon;
+                        return typeof icon === "string" ? (
+                          <img src={icon} alt="" style={{ width: "100%", height: "100%" }} />
+                        ) : (
+                          icon
+                        );
+                      })()
                     ) : (
                       <>
                         {(() => {

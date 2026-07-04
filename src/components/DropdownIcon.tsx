@@ -8,7 +8,7 @@ const iconSize = 40;
 
 export const DropdownIcon = ({ panelOpened }: { panelOpened: boolean }) => {
   return (
-    <Stack sx={{ justifyContent: "center" }}>
+    <Stack sx={{ justifyContent: "center", pr: 0.5 }}>
       {panelOpened ? (
         <KeyboardArrowUpIcon sx={{ fontSize: iconSize }} />
       ) : (

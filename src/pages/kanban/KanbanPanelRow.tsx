@@ -30,7 +30,7 @@ export const KanbanPanelRow = ({
           WebkitLineClamp: 1
         }}
       >
-        {project?.name ?? "No Project Selected"}
+        {project?.name}
       </Typography>
       {project && (
         <Typography variant="body1">

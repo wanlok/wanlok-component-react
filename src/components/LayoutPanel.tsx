@@ -10,6 +10,7 @@ export const LayoutPanel = ({
   width,
   panel,
   topChildren,
+  hideDropdownIcon = false,
   sx,
   children
 }: {
@@ -18,6 +19,7 @@ export const LayoutPanel = ({
   width: number;
   panel: ReactNode;
   topChildren?: ReactNode;
+  hideDropdownIcon?: boolean;
   sx?: SxProps<Theme>;
   children?: ReactNode;
 }) => {
@@ -32,7 +34,7 @@ export const LayoutPanel = ({
               <WCard onClick={() => setPanelOpened(!panelOpened)}>
                 <Stack sx={{ flexDirection: "row", alignItems: "center", backgroundColor: "background.default" }}>
                   <Stack sx={{ flex: 1 }}>{topChildren}</Stack>
-                  <DropdownIcon panelOpened={panelOpened} />
+                  {!hideDropdownIcon && <DropdownIcon panelOpened={panelOpened} />}
                 </Stack>
               </WCard>
               {panel}
@@ -48,7 +50,7 @@ export const LayoutPanel = ({
             <WCard onClick={() => setPanelOpened(!panelOpened)}>
               <Stack sx={{ flexDirection: "row", alignItems: "center", backgroundColor: "background.default" }}>
                 <Stack sx={{ flex: 1 }}>{topChildren}</Stack>
-                <DropdownIcon panelOpened={panelOpened} />
+                {!hideDropdownIcon && <DropdownIcon panelOpened={panelOpened} />}
               </Stack>
             </WCard>
           )}

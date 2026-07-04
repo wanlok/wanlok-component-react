@@ -5,11 +5,7 @@ import { KanbanColumn, KanbanItem, KanbanProject } from "../../services/Types";
 import { KanbanCard, padding } from "./KanbanCard";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
-
-import {
-  KeyboardArrowDown as KeyboardArrowDownIcon,
-  KeyboardArrowUp as KeyboardArrowUpIcon
-} from "@mui/icons-material";
+import { DropdownIcon } from "../../components/DropdownIcon";
 
 const getColumns = (
   columns: KanbanColumn[],
@@ -48,7 +44,8 @@ const ColumnRow = ({ column, panelOpened }: { column: KanbanColumn; panelOpened?
       <Stack
         sx={{
           flexDirection: "row",
-          p: 2,
+          py: 2,
+          pl: 2,
           alignItems: "center",
           backgroundColor: "common.black",
           color: "common.white",
@@ -60,12 +57,7 @@ const ColumnRow = ({ column, panelOpened }: { column: KanbanColumn; panelOpened?
           <Typography variant="body1">{column.name}</Typography>
           <Typography variant="body1">({column.items.length})</Typography>
         </Stack>
-        {mobileRow &&
-          (panelOpened ? (
-            <KeyboardArrowUpIcon sx={{ fontSize: 80, color: "white" }} />
-          ) : (
-            <KeyboardArrowDownIcon sx={{ fontSize: 80, color: "white" }} />
-          ))}
+        {mobileRow && <DropdownIcon panelOpened={panelOpened!} />}
       </Stack>
     </Stack>
   );
@@ -111,6 +103,7 @@ const KanbanMobileLayout = ({
         />
       }
       topChildren={<ColumnRow column={selectedColumn} panelOpened={panelOpened} />}
+      hideDropdownIcon
       sx={{ height: 0 }}
     >
       <Stack sx={{ flex: 1, overflowY: "auto" }}>
@@ -198,11 +191,7 @@ export const KanbanLayout = ({
   const mobile = useMediaQuery(breakpoints.down("md"));
 
   if (!project) {
-    return (
-      <Stack sx={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
-        <Typography variant="body1">No Project Selected</Typography>
-      </Stack>
-    );
+    return <></>;
   }
 
   if (mobile) {
