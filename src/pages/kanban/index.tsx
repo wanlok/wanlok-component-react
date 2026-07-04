@@ -4,7 +4,7 @@ import { useKanban } from "./useKanban";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
 import { ProjectHeader } from "./ProjectHeader";
-import { ProjectRow } from "./ProjectRow";
+import { KanbanPanelRow } from "./KanbanPanelRow";
 import { ProjectModal } from "./ProjectModal";
 import { KanbanHeader } from "./KanbanHeader";
 import { KanbanLayout } from "./KanbanLayout";
@@ -77,7 +77,7 @@ export const Kanban = () => {
           />
           <WCardList
             items={kanban?.projects ?? []}
-            renderContent={(project) => <ProjectRow project={project} selectedProject={selectedProject} />}
+            renderContent={(project) => <KanbanPanelRow project={project} selectedProject={selectedProject} />}
             onContentClick={(project) => {
               openProject(project);
               setPanelOpened(false);
@@ -92,7 +92,7 @@ export const Kanban = () => {
           />
         </>
       }
-      topChildren={<ProjectRow project={selectedProject} selectedProject={selectedProject} panelOpened={panelOpened} />}
+      topChildren={<KanbanPanelRow project={selectedProject} selectedProject={selectedProject} />}
     >
       <KanbanHeader
         project={selectedProject}

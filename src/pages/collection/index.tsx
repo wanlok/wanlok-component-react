@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { useCollection } from "./useCollection";
 import { WText } from "../../components/WText";
 import { WCardList } from "../../components/WCardList";
@@ -6,87 +6,15 @@ import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { WIconButton } from "../../components/WButton";
-import { WChip } from "../../components/WChip";
-import { Direction, Folder } from "../../services/Types";
+import { Direction } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
 import { CollectionHeader, FolderCollectionHeader } from "./CollectionHeader";
 import { Dummy } from "./Dummy";
 import { Dummy2 } from "./Dummy2";
-
-import {
-  Close as CloseIcon,
-  Folder as FolderIcon,
-  FolderOutlined as FolderOutlinedIcon,
-  KeyboardArrowDown as KeyboardArrowDownIcon,
-  KeyboardArrowUp as KeyboardArrowUpIcon,
-  YouTube as YouTubeIcon
-} from "@mui/icons-material";
-import DocumentSelectedIcon from "../../assets/images/icons/document_selected.png";
-import HyperlinkIcon from "../../assets/images/icons/hyperlink.png";
-import SteamIcon from "../../assets/images/icons/steam.png";
+import { CollectionPanelRow } from "./CollectionPanelRow";
+import { Close as CloseIcon } from "@mui/icons-material";
 import SendIcon from "../../assets/images/icons/send.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
-
-const FolderRow = ({
-  folder,
-  selectedFolder,
-  panelOpened
-}: {
-  folder: Folder;
-  selectedFolder?: Folder;
-  panelOpened?: boolean;
-}) => {
-  const { files, hyperlinks, steam, youtube_regular, youtube_shorts } = folder.counts;
-  const mobileRow = panelOpened === true || panelOpened === false;
-  return (
-    <Stack
-      sx={{
-        flexDirection: "row",
-        alignItems: "center",
-        minHeight: (mobileRow ? 48 : 48 + 48 + 1) + "px",
-        py: 2,
-        pl: 2,
-        pr: mobileRow ? 2 : 0,
-        gap: 2,
-        boxSizing: "border-box",
-        backgroundColor: mobileRow ? "background.default" : "transparent"
-      }}
-    >
-      {folder === selectedFolder ? (
-        <FolderIcon sx={{ fontSize: 24 }} />
-      ) : (
-        <FolderOutlinedIcon sx={{ fontSize: 24 }} />
-      )}
-      <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
-        <Typography variant="body1">{folder.name}</Typography>
-        {panelOpened === undefined && Object.values(folder.counts).some((count) => count > 0) && (
-          <Stack sx={{ flexDirection: "row", gap: 1 }}>
-            {files > 0 && <WChip icon={DocumentSelectedIcon} label={`${files}`} />}
-            {hyperlinks > 0 && <WChip icon={HyperlinkIcon} label={`${hyperlinks}`} />}
-            {steam > 0 && <WChip icon={SteamIcon} label={`${steam}`} />}
-            {youtube_regular > 0 && youtube_shorts > 0 && (
-              <WChip
-                icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />}
-                label={`${youtube_shorts} + ${youtube_regular}`}
-              />
-            )}
-            {youtube_regular === 0 && youtube_shorts > 0 && (
-              <WChip icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${youtube_shorts}`} />
-            )}
-            {youtube_regular > 0 && youtube_shorts === 0 && (
-              <WChip icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${youtube_regular}`} />
-            )}
-          </Stack>
-        )}
-      </Stack>
-      {mobileRow && (
-        panelOpened
-          ? <KeyboardArrowUpIcon sx={{ fontSize: 16 }} />
-          : <KeyboardArrowDownIcon sx={{ fontSize: 16 }} />
-      )}
-    </Stack>
-  );
-};
 
 export const CollectionPage = () => {
   const {
@@ -141,7 +69,7 @@ export const CollectionPage = () => {
           />
           <WCardList
             items={folders}
-            renderContent={(folder) => <FolderRow folder={folder} selectedFolder={selectedFolder} />}
+            renderContent={(folder) => <CollectionPanelRow folder={folder} selectedFolder={selectedFolder} showChips />}
             onContentClick={(folder) => {
               openFolder(folder);
               setPanelOpened(false);
@@ -160,13 +88,7 @@ export const CollectionPage = () => {
           />
         </>
       }
-      topChildren={
-        selectedFolder ? (
-          <FolderRow folder={selectedFolder} selectedFolder={selectedFolder} panelOpened={panelOpened} />
-        ) : (
-          <></>
-        )
-      }
+      topChildren={selectedFolder ? <CollectionPanelRow folder={selectedFolder} selectedFolder={selectedFolder} /> : <></>}
     >
       <CollectionHeader
         folder={selectedFolder}

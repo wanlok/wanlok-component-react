@@ -6,7 +6,10 @@ import { KanbanCard, padding } from "./KanbanCard";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
 
-import { KeyboardArrowDown as KeyboardArrowDownIcon, KeyboardArrowUp as KeyboardArrowUpIcon } from "@mui/icons-material";
+import {
+  KeyboardArrowDown as KeyboardArrowDownIcon,
+  KeyboardArrowUp as KeyboardArrowUpIcon
+} from "@mui/icons-material";
 
 const getColumns = (
   columns: KanbanColumn[],
@@ -57,11 +60,12 @@ const ColumnRow = ({ column, panelOpened }: { column: KanbanColumn; panelOpened?
           <Typography variant="body1">{column.name}</Typography>
           <Typography variant="body1">({column.items.length})</Typography>
         </Stack>
-        {mobileRow && (
-          panelOpened
-            ? <KeyboardArrowUpIcon sx={{ fontSize: 16, color: "white" }} />
-            : <KeyboardArrowDownIcon sx={{ fontSize: 16, color: "white" }} />
-        )}
+        {mobileRow &&
+          (panelOpened ? (
+            <KeyboardArrowUpIcon sx={{ fontSize: 80, color: "white" }} />
+          ) : (
+            <KeyboardArrowDownIcon sx={{ fontSize: 80, color: "white" }} />
+          ))}
       </Stack>
     </Stack>
   );

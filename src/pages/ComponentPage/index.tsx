@@ -1,51 +1,21 @@
 import { useState } from "react";
-import { Stack, Typography } from "@mui/material";
+import { Typography } from "@mui/material";
 import { ComponentFolder, folders, useComponentFolder } from "./useComponentFolder";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
-
-import {
-  Folder as FolderIcon,
-  FolderOutlined as FolderOutlinedIcon,
-  KeyboardArrowDown as KeyboardArrowDownIcon,
-  KeyboardArrowUp as KeyboardArrowUpIcon
-} from "@mui/icons-material";
+import { Folder as FolderIcon, FolderOutlined as FolderOutlinedIcon } from "@mui/icons-material";
+import { PanelRow } from "../../components/PanelRow";
 import { Puzzle } from "./Puzzle";
 
-const FolderRow = ({
-  folder,
-  selectedFolder,
-  panelOpened
-}: {
-  folder: ComponentFolder;
-  selectedFolder?: ComponentFolder;
-  panelOpened?: boolean;
-}) => {
-  const mobileRow = panelOpened === true || panelOpened === false;
+const FolderRow = ({ folder, selectedFolder }: { folder: ComponentFolder; selectedFolder?: ComponentFolder }) => {
   return (
-    <Stack
-      sx={{
-        flexDirection: "row",
-        alignItems: "center",
-        py: 2,
-        pl: 2,
-        pr: mobileRow ? 2 : 0,
-        gap: 2,
-        boxSizing: "border-box",
-        backgroundColor: mobileRow ? "background.default" : "transparent"
-      }}
+    <PanelRow
+      icon={
+        folder === selectedFolder ? <FolderIcon sx={{ fontSize: 24 }} /> : <FolderOutlinedIcon sx={{ fontSize: 24 }} />
+      }
     >
-      {folder === selectedFolder ? (
-        <FolderIcon style={{ fontSize: "24px" }} />
-      ) : (
-        <FolderOutlinedIcon style={{ fontSize: "24px" }} />
-      )}
-      <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
-        <Typography variant="body1">{folder.name}</Typography>
-      </Stack>
-      {mobileRow &&
-        (panelOpened ? <KeyboardArrowUpIcon sx={{ fontSize: 24 }} /> : <KeyboardArrowDownIcon sx={{ fontSize: 24 }} />)}
-    </Stack>
+      <Typography variant="body1">{folder.name}</Typography>
+    </PanelRow>
   );
 };
 
@@ -70,13 +40,7 @@ export const ComponentPage = () => {
           />
         </>
       }
-      topChildren={
-        selectedFolder ? (
-          <FolderRow folder={selectedFolder} selectedFolder={selectedFolder} panelOpened={panelOpened} />
-        ) : (
-          <></>
-        )
-      }
+      topChildren={selectedFolder ? <FolderRow folder={selectedFolder} selectedFolder={selectedFolder} /> : <></>}
     >
       {selectedFolder?.id === "puzzle" && <Puzzle />}
     </LayoutPanel>

@@ -44,16 +44,36 @@ export const ControlGroup = ({
         />
       )}
       {!scrollHorizontally && mobile && onLeftButtonClick && (
-        <WIconButton icon={<KeyboardArrowUpIcon sx={{ color: "white" }} />} iconSize={16} onClick={onLeftButtonClick} sx={sx} />
+        <WIconButton
+          icon={<KeyboardArrowUpIcon sx={{ color: "white" }} />}
+          iconSize={16}
+          onClick={onLeftButtonClick}
+          sx={sx}
+        />
       )}
       {!scrollHorizontally && mobile && onRightButtonClick && (
-        <WIconButton icon={<KeyboardArrowDownIcon sx={{ color: "white" }} />} iconSize={16} onClick={onRightButtonClick} sx={sx} />
+        <WIconButton
+          icon={<KeyboardArrowDownIcon sx={{ color: "white" }} />}
+          iconSize={16}
+          onClick={onRightButtonClick}
+          sx={sx}
+        />
       )}
       {(scrollHorizontally || !mobile) && onRightButtonClick && (
-        <WIconButton icon={<KeyboardArrowRightIcon sx={{ color: "white" }} />} iconSize={16} onClick={onRightButtonClick} sx={sx} />
+        <WIconButton
+          icon={<KeyboardArrowRightIcon sx={{ color: "white" }} />}
+          iconSize={16}
+          onClick={onRightButtonClick}
+          sx={sx}
+        />
       )}
       {(scrollHorizontally || !mobile) && onLeftButtonClick && (
-        <WIconButton icon={<KeyboardArrowLeftIcon sx={{ color: "white" }} />} iconSize={16} onClick={onLeftButtonClick} sx={sx} />
+        <WIconButton
+          icon={<KeyboardArrowLeftIcon sx={{ color: "white" }} />}
+          iconSize={16}
+          onClick={onLeftButtonClick}
+          sx={sx}
+        />
       )}
     </Stack>
   );

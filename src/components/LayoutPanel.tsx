@@ -2,22 +2,7 @@ import { Dispatch, ReactNode } from "react";
 import { Stack, SxProps, Theme, useMediaQuery, useTheme } from "@mui/material";
 import { LayoutDivider } from "./LayoutDivider";
 import { WCard } from "./WCardList";
-
-const Top = ({
-  opened,
-  setOpened,
-  children
-}: {
-  opened: boolean;
-  setOpened: Dispatch<React.SetStateAction<boolean>>;
-  children?: ReactNode;
-}) => {
-  return (
-    // <LayoutDivider>
-    <WCard onClick={() => setOpened(!opened)}>{children}</WCard>
-    // </LayoutDivider>
-  );
-};
+import { DropdownIcon } from "./DropdownIcon";
 
 export const LayoutPanel = ({
   panelOpened,
@@ -44,7 +29,12 @@ export const LayoutPanel = ({
         <LayoutDivider hideDivider={mobile} sx={mobile ? { flex: 1 } : { width }}>
           {mobile ? (
             <>
-              {<Top opened={panelOpened} setOpened={setPanelOpened} children={topChildren} />}
+              <WCard onClick={() => setPanelOpened(!panelOpened)}>
+                <Stack sx={{ flexDirection: "row", alignItems: "center", backgroundColor: "background.default" }}>
+                  <Stack sx={{ flex: 1 }}>{topChildren}</Stack>
+                  <DropdownIcon panelOpened={panelOpened} />
+                </Stack>
+              </WCard>
               {panel}
             </>
           ) : (
@@ -54,7 +44,14 @@ export const LayoutPanel = ({
       )}
       {!panelOpened && (
         <Stack sx={{ flex: 1 }}>
-          {mobile && <Top opened={panelOpened} setOpened={setPanelOpened} children={topChildren} />}
+          {mobile && (
+            <WCard onClick={() => setPanelOpened(!panelOpened)}>
+              <Stack sx={{ flexDirection: "row", alignItems: "center", backgroundColor: "background.default" }}>
+                <Stack sx={{ flex: 1 }}>{topChildren}</Stack>
+                <DropdownIcon panelOpened={panelOpened} />
+              </Stack>
+            </WCard>
+          )}
           {children}
         </Stack>
       )}
