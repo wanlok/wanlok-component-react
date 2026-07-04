@@ -11,9 +11,9 @@ import { CollectionList } from "./CollectionList";
 import { CollectionHeader, FolderCollectionHeader } from "./CollectionHeader";
 import { Dummy } from "./Dummy";
 import { Dummy2 } from "./Dummy2";
-import { CollectionPanelRow } from "./CollectionPanelRow";
-import { Close as CloseIcon, Upload as UploadIcon } from "@mui/icons-material";
-import SendIcon from "../../assets/images/icons/send.png";
+import { CollectionChips } from "./CollectionChips";
+import { PanelRow } from "../../components/PanelRow";
+import { Close as CloseIcon, Folder as FolderIcon, FolderOutlined as FolderOutlinedIcon, Send as SendIcon, Upload as UploadIcon } from "@mui/icons-material";
 
 export const CollectionPage = () => {
   const {
@@ -68,7 +68,14 @@ export const CollectionPage = () => {
           />
           <WCardList
             items={folders}
-            renderContent={(folder) => <CollectionPanelRow folder={folder} selectedFolder={selectedFolder} showChips />}
+            renderContent={(folder) => {
+              const Icon = folder === selectedFolder ? FolderIcon : FolderOutlinedIcon;
+              return (
+                <PanelRow icon={<Icon sx={{ fontSize: 24 }} />} title={folder.name}>
+                  <CollectionChips folder={folder} />
+                </PanelRow>
+              );
+            }}
             onContentClick={(folder) => {
               openFolder(folder);
               setPanelOpened(false);
@@ -88,7 +95,11 @@ export const CollectionPage = () => {
         </>
       }
       topChildren={
-        selectedFolder ? <CollectionPanelRow folder={selectedFolder} selectedFolder={selectedFolder} /> : <></>
+        selectedFolder ? (
+          <PanelRow icon={<FolderIcon sx={{ fontSize: 24 }} />} title={selectedFolder.name} />
+        ) : (
+          <></>
+        )
       }
     >
       <CollectionHeader
@@ -127,7 +138,7 @@ export const CollectionPage = () => {
         placeholder="Links"
         rightButtons={[
           {
-            icon: SendIcon,
+            icon: <SendIcon sx={{ fontSize: 22 }} />,
             size: 18,
             onClickWithText: async (text) => {
               const collectionId = getDocumentId(selectedFolder?.name);

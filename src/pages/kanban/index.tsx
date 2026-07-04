@@ -3,15 +3,20 @@ import { getDisplayDateTimeString } from "../../common/DateUtils";
 import { useKanban } from "./useKanban";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
+import { KanbanColumn } from "../../services/Types";
 import { ProjectHeader } from "./ProjectHeader";
-import { KanbanPanelRow } from "./KanbanPanelRow";
 import { ProjectModal } from "./ProjectModal";
 import { KanbanHeader } from "./KanbanHeader";
 import { KanbanLayout } from "./KanbanLayout";
 import { WIconButton } from "../../components/WButton";
 
-import { Close as CloseIcon } from "@mui/icons-material";
-import { Stack } from "@mui/material";
+import {
+  Close as CloseIcon,
+  ViewKanban as KanbanIcon,
+  ViewKanbanOutlined as KanbanOutlinedIcon
+} from "@mui/icons-material";
+import { Stack, Typography } from "@mui/material";
+import { PanelRow } from "../../components/PanelRow";
 import { ItemModal } from "./ItemModal";
 
 export const Kanban = () => {
@@ -77,7 +82,23 @@ export const Kanban = () => {
           />
           <WCardList
             items={kanban?.projects ?? []}
-            renderContent={(project) => <KanbanPanelRow project={project} selectedProject={selectedProject} />}
+            renderContent={(project) => {
+              const Icon = project.id === selectedProject?.id ? KanbanIcon : KanbanOutlinedIcon;
+              return (
+              <PanelRow
+                icon={<Icon sx={{ fontSize: 24 }} />}
+                title={project.name}
+              >
+                <Typography variant="body1">
+                  {getDisplayDateTimeString(new Date(project.created_at))},{" "}
+                  {project.columns.reduce(
+                    (total: number, column: KanbanColumn) => total + column.items.length,
+                    0
+                  )}
+                </Typography>
+              </PanelRow>
+              );
+            }}
             onContentClick={(project) => {
               openProject(project);
               setPanelOpened(false);
@@ -92,7 +113,7 @@ export const Kanban = () => {
           />
         </>
       }
-      topChildren={<KanbanPanelRow project={selectedProject} selectedProject={selectedProject} />}
+      topChildren={<PanelRow icon={<KanbanIcon sx={{ fontSize: 24 }} />} title={selectedProject?.name ?? ""} />}
     >
       <KanbanHeader
         project={selectedProject}

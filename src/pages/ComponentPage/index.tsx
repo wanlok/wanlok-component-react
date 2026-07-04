@@ -1,23 +1,12 @@
 import { useState } from "react";
-import { Typography } from "@mui/material";
-import { ComponentFolder, folders, useComponentFolder } from "./useComponentFolder";
+import { folders, useComponentFolder } from "./useComponentFolder";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
 import { Folder as FolderIcon, FolderOutlined as FolderOutlinedIcon } from "@mui/icons-material";
 import { PanelRow } from "../../components/PanelRow";
 import { Puzzle } from "./Puzzle";
 
-const FolderRow = ({ folder, selectedFolder }: { folder: ComponentFolder; selectedFolder?: ComponentFolder }) => {
-  return (
-    <PanelRow
-      icon={
-        folder === selectedFolder ? <FolderIcon sx={{ fontSize: 24 }} /> : <FolderOutlinedIcon sx={{ fontSize: 24 }} />
-      }
-    >
-      <Typography variant="body1">{folder.name}</Typography>
-    </PanelRow>
-  );
-};
+const iconSize = 24;
 
 export const ComponentPage = () => {
   const { selectedFolder, openFolder } = useComponentFolder();
@@ -31,7 +20,10 @@ export const ComponentPage = () => {
         <>
           <WCardList
             items={folders}
-            renderContent={(folder) => <FolderRow folder={folder} selectedFolder={selectedFolder} />}
+            renderContent={(folder) => {
+              const Icon = folder === selectedFolder ? FolderIcon : FolderOutlinedIcon;
+              return <PanelRow icon={<Icon sx={{ fontSize: iconSize }} />} title={folder.name} />;
+            }}
             onContentClick={(folder) => {
               openFolder(folder);
               setPanelOpened(false);
@@ -40,7 +32,9 @@ export const ComponentPage = () => {
           />
         </>
       }
-      topChildren={selectedFolder ? <FolderRow folder={selectedFolder} selectedFolder={selectedFolder} /> : <></>}
+      topChildren={
+        selectedFolder ? <PanelRow icon={<FolderIcon sx={{ fontSize: 24 }} />} title={selectedFolder.name} /> : <></>
+      }
     >
       {selectedFolder?.id === "puzzle" && <Puzzle />}
     </LayoutPanel>
