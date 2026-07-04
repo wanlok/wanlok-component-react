@@ -4,8 +4,7 @@ import { ComponentFolder, folders, useComponentFolder } from "./useComponentFold
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
 
-import FolderIcon from "../../assets/images/icons/folder.png";
-import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
+import { Folder as FolderIcon, FolderOutlined as FolderOutlinedIcon } from "@mui/icons-material";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import { Puzzle } from "./Puzzle";
@@ -32,12 +31,11 @@ const FolderRow = ({
         backgroundColor: mobileRow ? "background.default" : "transparent"
       }}
     >
-      <Box
-        component="img"
-        src={folder === selectedFolder ? FolderSelectedIcon : FolderIcon}
-        alt=""
-        sx={{ width: "24px", height: "24px" }}
-      />
+      {folder === selectedFolder ? (
+        <FolderIcon style={{ fontSize: "24px" }} />
+      ) : (
+        <FolderOutlinedIcon style={{ fontSize: "24px" }} />
+      )}
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
         <Typography variant="body1">{folder.name}</Typography>
       </Stack>

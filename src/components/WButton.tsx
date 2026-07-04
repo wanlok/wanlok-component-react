@@ -68,7 +68,7 @@ export const WIconButton = ({
       {typeof icon === "string" ? (
         <Box component="img" src={icon} alt="" sx={{ width: iconSize, height: iconSize }} />
       ) : (
-        <Box sx={{ fontSize: iconSize, display: "flex", alignItems: "center" }}>{icon}</Box>
+        icon
       )}
     </WButton>
   );

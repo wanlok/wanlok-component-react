@@ -2,8 +2,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import { KanbanProject } from "../../services/Types";
 import { getDisplayDateTimeString } from "../../common/DateUtils";
 
-import KanbanIcon from "../../assets/images/icons/kanban.png";
-import KanbanSelectedIcon from "../../assets/images/icons/kanban_selected.png";
+import { ViewKanban as KanbanIcon, ViewKanbanOutlined as KanbanOutlinedIcon } from "@mui/icons-material";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 
@@ -29,12 +28,11 @@ export const ProjectRow = ({
         backgroundColor: mobileRow ? "background.default" : "transparent"
       }}
     >
-      <Box
-        component="img"
-        src={project && project.id === selectedProject?.id ? KanbanSelectedIcon : KanbanIcon}
-        alt=""
-        sx={{ width: "24px", height: "24px" }}
-      />
+      {project && project.id === selectedProject?.id ? (
+        <KanbanIcon style={{ fontSize: "24px" }} />
+      ) : (
+        <KanbanOutlinedIcon style={{ fontSize: "24px" }} />
+      )}
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
         <Typography
           variant="body1"

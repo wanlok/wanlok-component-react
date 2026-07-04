@@ -2,8 +2,7 @@ import { Stack, Typography } from "@mui/material";
 import { LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { WIconButton } from "../../components/WButton";
 
-import AddIcon from "../../assets/images/icons/add.png";
-import { Close as CloseIcon } from "@mui/icons-material";
+import { Add as AddIcon, Close as CloseIcon } from "@mui/icons-material";
 
 export const ProjectHeader = ({
   controlGroupState,
@@ -24,7 +23,7 @@ export const ProjectHeader = ({
       bottom={
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
           <WIconButton
-            icon={AddIcon}
+            icon={<AddIcon sx={{ fontSize: 26 }} />}
             iconSize={16}
             onClick={onCreateButtonClick}
             sx={{ backgroundColor: "primary.main" }}

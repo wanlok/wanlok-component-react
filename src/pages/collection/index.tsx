@@ -13,15 +13,14 @@ import { CollectionHeader, FolderCollectionHeader } from "./CollectionHeader";
 import { Dummy } from "./Dummy";
 import { Dummy2 } from "./Dummy2";
 
-import FolderIcon from "../../assets/images/icons/folder.png";
-import FolderSelectedIcon from "../../assets/images/icons/folder_selected.png";
+import { Folder as FolderIcon, FolderOutlined as FolderOutlinedIcon } from "@mui/icons-material";
 import DocumentSelectedIcon from "../../assets/images/icons/document_selected.png";
 import UpIcon from "../../assets/images/icons/up.png";
 import DownIcon from "../../assets/images/icons/down.png";
 import { Close as CloseIcon } from "@mui/icons-material";
 import HyperlinkIcon from "../../assets/images/icons/hyperlink.png";
 import SteamIcon from "../../assets/images/icons/steam.png";
-import YouTubeIcon from "../../assets/images/icons/youtube.png";
+import { YouTube as YouTubeIcon } from "@mui/icons-material";
 import SendIcon from "../../assets/images/icons/send.png";
 import UploadIcon from "../../assets/images/icons/upload.png";
 
@@ -49,12 +48,11 @@ const FolderRow = ({
         backgroundColor: mobileRow ? "background.default" : "transparent"
       }}
     >
-      <Box
-        component="img"
-        src={folder === selectedFolder ? FolderSelectedIcon : FolderIcon}
-        alt=""
-        sx={{ width: "24px", height: "24px" }}
-      />
+      {folder === selectedFolder ? (
+        <FolderIcon style={{ fontSize: "24px" }} />
+      ) : (
+        <FolderOutlinedIcon style={{ fontSize: "24px" }} />
+      )}
       <Stack sx={{ flex: 1, gap: 1, pr: 2 }}>
         <Typography variant="body1">{folder.name}</Typography>
         {panelOpened === undefined && Object.values(folder.counts).some((count) => count > 0) && (
@@ -63,10 +61,17 @@ const FolderRow = ({
             {hyperlinks > 0 && <WChip icon={HyperlinkIcon} label={`${hyperlinks}`} />}
             {steam > 0 && <WChip icon={SteamIcon} label={`${steam}`} />}
             {youtube_regular > 0 && youtube_shorts > 0 && (
-              <WChip icon={YouTubeIcon} label={`${youtube_shorts} + ${youtube_regular}`} />
+              <WChip
+                icon={<YouTubeIcon style={{ fontSize: "20px", color: "black" }} />}
+                label={`${youtube_shorts} + ${youtube_regular}`}
+              />
             )}
-            {youtube_regular === 0 && youtube_shorts > 0 && <WChip icon={YouTubeIcon} label={`${youtube_shorts}`} />}
-            {youtube_regular > 0 && youtube_shorts === 0 && <WChip icon={YouTubeIcon} label={`${youtube_regular}`} />}
+            {youtube_regular === 0 && youtube_shorts > 0 && (
+              <WChip icon={<YouTubeIcon style={{ fontSize: "20px", color: "black" }} />} label={`${youtube_shorts}`} />
+            )}
+            {youtube_regular > 0 && youtube_shorts === 0 && (
+              <WChip icon={<YouTubeIcon style={{ fontSize: "20px", color: "black" }} />} label={`${youtube_regular}`} />
+            )}
           </Stack>
         )}
       </Stack>

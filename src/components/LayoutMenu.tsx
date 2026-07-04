@@ -1,4 +1,4 @@
-import { Divider, Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Box, Divider, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { Link, matchPath, Outlet, useLocation } from "react-router-dom";
 import { useWindowDimensions } from "../common/useWindowDimension";
 import { routes } from "../configs/routes";
@@ -54,11 +54,14 @@ export const LayoutMenu = () => {
                       />
                     ) : (
                       <>
-                        <img
-                          src={selected ? route.icon_selected : route.icon}
-                          alt=""
-                          style={{ width: 32, height: 32 }}
-                        />
+                        {(() => {
+                          const icon = selected ? route.icon_selected : route.icon;
+                          return typeof icon === "string" ? (
+                            <img src={icon} alt="" style={{ width: 32, height: 32 }} />
+                          ) : (
+                            icon
+                          );
+                        })()}
                         {route.name}
                       </>
                     )}
