@@ -44,7 +44,6 @@ const ColumnRow = ({ column, panelOpened }: { column: KanbanColumn; panelOpened?
       <Stack
         sx={{
           flexDirection: "row",
-          py: 2,
           pl: 2,
           alignItems: "center",
           backgroundColor: "common.black",
@@ -53,7 +52,7 @@ const ColumnRow = ({ column, panelOpened }: { column: KanbanColumn; panelOpened?
           borderTopRightRadius: 8
         }}
       >
-        <Stack sx={{ flexDirection: "row", flex: 1, gap: 1 }}>
+        <Stack sx={{ flexDirection: "row", flex: 1, gap: 1, py: 2 }}>
           <Typography variant="body1">{column.name}</Typography>
           <Typography variant="body1">({column.items.length})</Typography>
         </Stack>

@@ -13,7 +13,13 @@ import { Dummy } from "./Dummy";
 import { Dummy2 } from "./Dummy2";
 import { CollectionChips } from "./CollectionChips";
 import { PanelRow } from "../../components/PanelRow";
-import { Close as CloseIcon, Folder as FolderIcon, FolderOutlined as FolderOutlinedIcon, Send as SendIcon, Upload as UploadIcon } from "@mui/icons-material";
+import {
+  Close as CloseIcon,
+  Folder as FolderIcon,
+  FolderOutlined as FolderOutlinedIcon,
+  Send as SendIcon,
+  Upload as UploadIcon
+} from "@mui/icons-material";
 
 export const CollectionPage = () => {
   const {
@@ -95,11 +101,7 @@ export const CollectionPage = () => {
         </>
       }
       topChildren={
-        selectedFolder ? (
-          <PanelRow icon={<FolderIcon sx={{ fontSize: 24 }} />} title={selectedFolder.name} />
-        ) : (
-          <></>
-        )
+        selectedFolder ? <PanelRow icon={<FolderIcon sx={{ fontSize: 24 }} />} title={selectedFolder.name} /> : <></>
       }
     >
       <CollectionHeader
@@ -151,7 +153,7 @@ export const CollectionPage = () => {
             }
           },
           {
-            icon: <UploadIcon sx={{ fontSize: 24 }} />,
+            icon: <UploadIcon sx={{ fontSize: 26 }} />,
             size: 18,
             onClick: async () => {
               const collectionId = getDocumentId(selectedFolder?.name);

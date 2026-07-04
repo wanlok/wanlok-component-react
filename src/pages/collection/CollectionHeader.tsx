@@ -54,13 +54,13 @@ export const FolderCollectionHeader = ({
           </Stack>
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
             <WIconButton
-              icon={<UploadIcon sx={{ fontSize: 24 }} />}
+              icon={<UploadIcon sx={{ fontSize: 26 }} />}
               iconSize={18}
               onClick={onUploadButtonClick}
               sx={{ backgroundColor: "primary.main" }}
             />
             <WIconButton
-              icon={<DownloadIcon sx={{ fontSize: 24 }} />}
+              icon={<DownloadIcon sx={{ fontSize: 26 }} />}
               iconSize={18}
               onClick={onDownloadButtonClick}
               sx={{ backgroundColor: "primary.main" }}
@@ -133,7 +133,7 @@ export const CollectionHeader = ({
               />
             )}
             <WIconButton
-              icon={<DownloadIcon sx={{ fontSize: 24 }} />}
+              icon={<DownloadIcon sx={{ fontSize: 26 }} />}
               iconSize={18}
               onClick={onDownloadButtonClick}
               sx={{ backgroundColor: "primary.main" }}
