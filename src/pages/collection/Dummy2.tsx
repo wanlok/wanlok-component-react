@@ -37,8 +37,11 @@ export const Dummy2 = ({
   const [attributes, setAttributes] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
-    if (collectionTypeId) {
-      const { type, id } = collectionTypeId;
+    if (!collectionTypeId) {
+      setAttributes({});
+      return;
+    }
+    const { type, id } = collectionTypeId;
       const findItem = () => {
         if (type === "charts") {
           return charts.find(([itemId]) => itemId === id);
@@ -70,7 +73,6 @@ export const Dummy2 = ({
       } else {
         setAttributes({});
       }
-    }
   }, [charts, files, hyperlinks, steam, youTubeRegularVideos, youTubeShortVideos, collectionTypeId]);
 
   return (
@@ -106,6 +108,7 @@ export const Dummy2 = ({
           if (collectionTypeId) {
             const { type, id } = collectionTypeId;
             await updateCollectionAttributes(type, id, attributes);
+            setCollectionTypeId(undefined);
           }
         }}
       >

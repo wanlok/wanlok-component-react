@@ -60,7 +60,7 @@ const Bottom = ({
         <WButton onClick={onDeleteButtonClick} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}>
           Delete
         </WButton>
-        <WButton onClick={onRearrangeButtonClick} rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}>
+        <WButton disabled={Boolean(selectedCategory)} onClick={onRearrangeButtonClick} rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}>
           Rearrange
         </WButton>
         {!resetButtonHidden && (

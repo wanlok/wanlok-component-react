@@ -12,6 +12,7 @@ export const WButton = ({
   children,
   color = "primary",
   className,
+  disabled,
   sx,
   onClick,
   leftIcon,
@@ -20,6 +21,7 @@ export const WButton = ({
   children?: ReactNode;
   color?: ButtonOwnProps["color"];
   className?: string;
+  disabled?: boolean;
   sx?: SxProps<Theme>;
   onClick?: () => void;
   leftIcon?: ReactNode;
@@ -31,6 +33,7 @@ export const WButton = ({
       variant="contained"
       disableElevation
       fullWidth={false}
+      disabled={disabled}
       className={className}
       sx={{
         minWidth: 0,
