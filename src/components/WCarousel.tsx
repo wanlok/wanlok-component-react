@@ -1,8 +1,12 @@
 import { ReactNode, useEffect, useRef, useState } from "react";
 import { alpha, Stack, SxProps, Theme, useTheme } from "@mui/material";
-import Carousel from "react-material-ui-carousel";
+import CarouselLib from "react-material-ui-carousel";
+const Carousel = (CarouselLib as unknown as { default: typeof CarouselLib }).default ?? CarouselLib;
 import { groupList } from "../common/ListDictUtils";
-import { KeyboardArrowLeft as KeyboardArrowLeftIcon, KeyboardArrowRight as KeyboardArrowRightIcon } from "@mui/icons-material";
+import {
+  KeyboardArrowLeft as KeyboardArrowLeftIcon,
+  KeyboardArrowRight as KeyboardArrowRightIcon
+} from "@mui/icons-material";
 
 export const WCarousel = ({
   list,
@@ -39,14 +43,14 @@ export const WCarousel = ({
       duration={0}
       height={height}
       indicators={false}
-      PrevIcon={<KeyboardArrowLeftIcon sx={{ fontSize: 16, color: "common.white" }} />}
-      NextIcon={<KeyboardArrowRightIcon sx={{ fontSize: 16, color: "common.white" }} />}
+      PrevIcon={<KeyboardArrowLeftIcon sx={{ fontSize: 32, color: "common.white" }} />}
+      NextIcon={<KeyboardArrowRightIcon sx={{ fontSize: 32, color: "common.white" }} />}
       navButtonsProps={{
         style: {
           backgroundColor: alpha(palette.common.black, 0.6),
           borderRadius: 0,
-          width: 48,
-          height: 48,
+          width: 55,
+          height: 55,
           marginTop: -4,
           marginLeft: 0,
           marginRight: 0
@@ -57,8 +61,8 @@ export const WCarousel = ({
           top: "50%",
           transform: "translateY(-50%)",
           right: 1,
-          width: 48,
-          height: 48
+          width: 55,
+          height: 55
         }
       }}
       navButtonsAlwaysVisible={true}

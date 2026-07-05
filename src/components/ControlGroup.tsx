@@ -51,22 +51,22 @@ export const ControlGroup = ({
       )}
       {!scrollHorizontally && mobile && onLeftButtonClick && (
         <WButton onClick={onLeftButtonClick} sx={sx}>
-          <KeyboardArrowUpIcon sx={{ fontSize: 24, color: "common.white" }} />
+          <KeyboardArrowUpIcon sx={{ fontSize: 32, color: "common.white" }} />
         </WButton>
       )}
       {!scrollHorizontally && mobile && onRightButtonClick && (
         <WButton onClick={onRightButtonClick} sx={sx}>
-          <KeyboardArrowDownIcon sx={{ fontSize: 24, color: "common.white" }} />
+          <KeyboardArrowDownIcon sx={{ fontSize: 32, color: "common.white" }} />
         </WButton>
       )}
       {(scrollHorizontally || !mobile) && onRightButtonClick && (
         <WButton onClick={onRightButtonClick} sx={sx}>
-          <KeyboardArrowRightIcon sx={{ fontSize: 24, color: "common.white" }} />
+          <KeyboardArrowRightIcon sx={{ fontSize: 32, color: "common.white" }} />
         </WButton>
       )}
       {(scrollHorizontally || !mobile) && onLeftButtonClick && (
         <WButton onClick={onLeftButtonClick} sx={sx}>
-          <KeyboardArrowLeftIcon sx={{ fontSize: 24, color: "common.white" }} />
+          <KeyboardArrowLeftIcon sx={{ fontSize: 32, color: "common.white" }} />
         </WButton>
       )}
     </Stack>
