@@ -23,6 +23,9 @@ const Top = ({ folder }: { folder: Folder | undefined }) => (
 const Bottom = ({
   resetButtonHidden,
   controlGroupState,
+  items,
+  selectedCategory,
+  onCategoryChange,
   onAttributeButtonClick,
   onEditAttributesButtonClick,
   onDeleteButtonClick,
@@ -32,6 +35,9 @@ const Bottom = ({
 }: {
   resetButtonHidden: boolean;
   controlGroupState: number;
+  items: { label: string; value: string }[];
+  selectedCategory: string;
+  onCategoryChange: (value: string) => void;
   onAttributeButtonClick: () => void;
   onEditAttributesButtonClick: () => void;
   onDeleteButtonClick: () => void;
@@ -41,7 +47,7 @@ const Bottom = ({
 }) => (
   <Stack sx={[bottomSx]}>
     <Stack sx={{ flex: 1, justifyContent: "center", p: 1 }}>
-      <SelectInput items={[{ label: "Test", value: "test" }]} value={"test"} onChange={() => {}} />
+      <SelectInput items={items} value={selectedCategory} onChange={onCategoryChange} />
     </Stack>
     <Stack sx={{ flexDirection: "row", gap: 1 }}>
       <Stack sx={{ flexDirection: "row", gap: "1px" }}>
@@ -75,6 +81,9 @@ export const RightHeader = ({
   folder,
   resetButtonHidden,
   controlGroupState,
+  items,
+  selectedCategory,
+  onCategoryChange,
   onAttributeButtonClick,
   onEditAttributesButtonClick,
   onDeleteButtonClick,
@@ -86,6 +95,9 @@ export const RightHeader = ({
   folder: Folder | undefined;
   resetButtonHidden: boolean;
   controlGroupState: number;
+  items: { label: string; value: string }[];
+  selectedCategory: string;
+  onCategoryChange: (value: string) => void;
   onAttributeButtonClick: () => void;
   onEditAttributesButtonClick: () => void;
   onDeleteButtonClick: () => void;
@@ -102,6 +114,9 @@ export const RightHeader = ({
         <Bottom
           resetButtonHidden={resetButtonHidden}
           controlGroupState={controlGroupState}
+          items={items}
+          selectedCategory={selectedCategory}
+          onCategoryChange={onCategoryChange}
           onAttributeButtonClick={onAttributeButtonClick}
           onEditAttributesButtonClick={onEditAttributesButtonClick}
           onDeleteButtonClick={onDeleteButtonClick}

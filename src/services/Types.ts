@@ -73,7 +73,7 @@ export interface SteamInfo {
   imageUrl: string;
 }
 
-export interface YouTubeOEmbed {
+export interface YouTubeOEmbed extends ParentInfo {
   title: string;
   author_name: string;
   author_url: string;

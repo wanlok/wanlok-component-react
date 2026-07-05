@@ -1,5 +1,5 @@
 import { useCollection } from "./useCollection";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { Dummy } from "./Dummy";
@@ -48,6 +48,28 @@ export const CollectionPage = () => {
   const [controlGroupState, setControlGroupState] = useState(0);
   const [open2, setOpen2] = useState(false);
   const [collectionTypeId, setCollectionTypeId] = useState<{ type: string; id: string } | undefined>(undefined);
+  const [selectedCategory, setSelectedCategory] = useState("");
+
+  useEffect(() => {
+    setSelectedCategory("");
+  }, [selectedFolder?.name]);
+
+  const categoryItems = [
+    { label: "All", value: "" },
+    ...[
+      ...new Set(
+        [
+          ...files.map(([, item]) => item.attributes?.["Category"]),
+          ...youTubeRegularVideos.map(([, item]) => item.attributes?.["Category"]),
+          ...youTubeShortVideos.map(([, item]) => item.attributes?.["Category"])
+        ].filter((v): v is string => Boolean(v))
+      )
+    ].map((category) => ({ label: category, value: category }))
+  ];
+
+  const filteredFiles = selectedCategory ? files.filter(([, item]) => item.attributes?.["Category"] === selectedCategory) : files;
+  const filteredYouTubeRegularVideos = selectedCategory ? youTubeRegularVideos.filter(([, item]) => item.attributes?.["Category"] === selectedCategory) : youTubeRegularVideos;
+  const filteredYouTubeShortVideos = selectedCategory ? youTubeShortVideos.filter(([, item]) => item.attributes?.["Category"] === selectedCategory) : youTubeShortVideos;
 
   return (
     <LayoutPanel
@@ -86,6 +108,9 @@ export const CollectionPage = () => {
         folder={selectedFolder}
         resetButtonHidden={!isFolderSorted()}
         controlGroupState={controlGroupState}
+        items={categoryItems}
+        selectedCategory={selectedCategory}
+        onCategoryChange={setSelectedCategory}
         onAttributeButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
         onEditAttributesButtonClick={() => {
           setControlGroupState(2);
@@ -103,11 +128,11 @@ export const CollectionPage = () => {
       <RightContent
         isLoading={isCollectionLoading}
         charts={charts}
-        files={files}
+        files={filteredFiles}
         hyperlinks={hyperlinks}
         steam={steam}
-        youTubeRegularVideos={youTubeRegularVideos}
-        youTubeShortVideos={youTubeShortVideos}
+        youTubeRegularVideos={filteredYouTubeRegularVideos}
+        youTubeShortVideos={filteredYouTubeShortVideos}
         controlGroupState={controlGroupState}
         selectedFolder={selectedFolder}
         setCollectionTypeId={setCollectionTypeId}
@@ -127,7 +152,12 @@ export const CollectionPage = () => {
         updateFolderAttributes={updateFolderAttributes}
       />
       <Dummy2
+        charts={charts}
         files={files}
+        hyperlinks={hyperlinks}
+        steam={steam}
+        youTubeRegularVideos={youTubeRegularVideos}
+        youTubeShortVideos={youTubeShortVideos}
         collectionTypeId={collectionTypeId}
         setCollectionTypeId={setCollectionTypeId}
         selectedFolder={selectedFolder}

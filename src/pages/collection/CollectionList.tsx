@@ -1,5 +1,5 @@
 import { Stack, useMediaQuery, useTheme } from "@mui/material";
-import { CloudinaryFileInfo, serverUrl, viewUrls } from "../../services/Types";
+import { ChartItem, CloudinaryFileInfo, serverUrl, SteamInfo, viewUrls, YouTubeOEmbed } from "../../services/Types";
 import { seperate } from "../../common/LayoutUtils";
 import { WChart } from "../../components/WChart";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
@@ -18,12 +18,12 @@ export const CollectionList = ({
   onLeftButtonClick,
   onRightButtonClick
 }: {
-  charts: [string, any][];
+  charts: [string, ChartItem][];
   files: [string, CloudinaryFileInfo][];
   hyperlinks: [string, string][];
-  steam: [string, any][];
-  youTubeRegularVideos: [string, any][];
-  youTubeShortVideos: [string, any][];
+  steam: [string, SteamInfo][];
+  youTubeRegularVideos: [string, YouTubeOEmbed][];
+  youTubeShortVideos: [string, YouTubeOEmbed][];
   controlGroupState: number;
   onDetailsButtonClick: (type: string, id: string) => void;
   onDeleteButtonClick: (type: string, id: string) => void;

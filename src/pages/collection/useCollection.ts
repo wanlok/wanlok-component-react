@@ -106,16 +106,17 @@ export const useCollection = (
     }
   ) => {
     if (collectionDocument && isCollectionKey(type)) {
+      const newCollectionDocument = { ...collectionDocument };
       if (type === "files") {
-        let newCollectionDocument = { ...collectionDocument };
-        newCollectionDocument.files[id] = {
-          ...collectionDocument.files[id],
-          attributes
-        };
-        const docRef = doc(db, collectionName, documentId!);
-        await updateDoc(docRef, newCollectionDocument);
-        setCollectionDocument(newCollectionDocument);
+        newCollectionDocument.files = { ...collectionDocument.files, [id]: { ...collectionDocument.files[id], attributes } };
+      } else if (type === "youtube_regular") {
+        newCollectionDocument.youtube_regular = { ...collectionDocument.youtube_regular, [id]: { ...collectionDocument.youtube_regular[id], attributes } };
+      } else if (type === "youtube_shorts") {
+        newCollectionDocument.youtube_shorts = { ...collectionDocument.youtube_shorts, [id]: { ...collectionDocument.youtube_shorts[id], attributes } };
       }
+      const docRef = doc(db, collectionName, documentId!);
+      await updateDoc(docRef, newCollectionDocument);
+      setCollectionDocument(newCollectionDocument);
     }
   };
 
@@ -193,7 +194,7 @@ export const useCollection = (
   };
 
   return {
-    isLoading: collectionDocument === undefined || collectionDocument === null,
+    isLoading: collectionDocument === null,
     charts: toList(collectionDocument?.charts, collectionSequences?.charts),
     files: toList(collectionDocument?.files, collectionSequences?.files),
     hyperlinks: toList(collectionDocument?.hyperlinks, collectionSequences?.hyperlinks),

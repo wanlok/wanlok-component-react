@@ -1,18 +1,28 @@
 import { Stack, Typography } from "@mui/material";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { CloudinaryFileInfo, Folder } from "../../services/Types";
+import { ChartItem, CloudinaryFileInfo, Folder, SteamInfo, YouTubeOEmbed } from "../../services/Types";
 import { WModal } from "../../components/WModal";
 import { TextInput } from "../../components/TextInput";
 import { WButton } from "../../components/WButton";
 
 export const Dummy2 = ({
+  charts,
   files,
+  hyperlinks,
+  steam,
+  youTubeRegularVideos,
+  youTubeShortVideos,
   collectionTypeId,
   setCollectionTypeId,
   selectedFolder,
   updateCollectionAttributes
 }: {
+  charts: [string, ChartItem][];
   files: [string, CloudinaryFileInfo][];
+  hyperlinks: [string, string][];
+  steam: [string, SteamInfo][];
+  youTubeRegularVideos: [string, YouTubeOEmbed][];
+  youTubeShortVideos: [string, YouTubeOEmbed][];
   collectionTypeId: { type: string; id: string } | undefined;
   setCollectionTypeId: Dispatch<SetStateAction<{ type: string; id: string } | undefined>>;
   selectedFolder?: Folder;
@@ -29,17 +39,39 @@ export const Dummy2 = ({
   useEffect(() => {
     if (collectionTypeId) {
       const { type, id } = collectionTypeId;
-      if (type === "files") {
-        const file = files.find(([fileId, _]) => fileId === id);
-        if (file) {
-          const [, fileInfo] = file;
-          if (fileInfo.attributes) {
-            setAttributes(fileInfo.attributes);
-          }
+      const findItem = () => {
+        if (type === "charts") {
+          return charts.find(([itemId]) => itemId === id);
         }
+        if (type === "files") {
+          return files.find(([itemId]) => itemId === id);
+        }
+        if (type === "hyperlinks") {
+          return hyperlinks.find(([itemId]) => itemId === id);
+        }
+        if (type === "steam") {
+          return steam.find(([itemId]) => itemId === id);
+        }
+        if (type === "youtube_regular") {
+          return youTubeRegularVideos.find(([itemId]) => itemId === id);
+        }
+        if (type === "youtube_shorts") {
+          return youTubeShortVideos.find(([itemId]) => itemId === id);
+        }
+      };
+      const item = findItem();
+      if (item) {
+        const value = item[1];
+        if (typeof value !== "string" && "attributes" in value) {
+          setAttributes(value.attributes ?? {});
+        } else {
+          setAttributes({});
+        }
+      } else {
+        setAttributes({});
       }
     }
-  }, [files, collectionTypeId]);
+  }, [charts, files, hyperlinks, steam, youTubeRegularVideos, youTubeShortVideos, collectionTypeId]);
 
   return (
     <WModal open={collectionTypeId !== undefined} onClose={() => setCollectionTypeId(undefined)}>
