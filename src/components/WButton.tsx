@@ -2,7 +2,12 @@ import { Button, ButtonOwnProps, SxProps, Theme } from "@mui/material";
 import { ReactNode } from "react";
 
 export const height = 40;
-export const iconButtonSx = { width: 55, height: 55, p: 0, background: "transparent" };
+export const iconButtonSx = {
+  width: 55,
+  height: 55,
+  p: 0,
+  background: "transparent"
+};
 
 export const WButton = ({
   children,

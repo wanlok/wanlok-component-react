@@ -27,7 +27,11 @@ export const ControlGroup = ({
 }) => {
   const { breakpoints, palette } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
-  const sx = { ...iconButtonSx, backgroundColor: alpha(palette.common.black, 0.6) };
+  const sx = {
+    ...iconButtonSx,
+    backgroundColor: alpha(palette.common.black, 0.6),
+    "&:hover": { backgroundColor: alpha(palette.common.black, 0.6) }
+  };
   return (
     <Stack
       sx={[
