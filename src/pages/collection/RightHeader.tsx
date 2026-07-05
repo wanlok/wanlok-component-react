@@ -2,9 +2,9 @@ import { Stack, Typography } from "@mui/material";
 import {
   Close as CloseIcon,
   Download as DownloadIcon,
-  Edit as EditIcon,
   LowPriority as LowPriorityIcon,
-  SwapHoriz as SwapHorizIcon
+  SwapHoriz as SwapHorizIcon,
+  ViewList as ViewListIcon
 } from "@mui/icons-material";
 import { WButton } from "../../components/WButton";
 import { Folder } from "../../services/Types";
@@ -22,7 +22,7 @@ const Top = ({ folder }: { folder: Folder | undefined }) => (
 const Bottom = ({
   resetButtonHidden,
   controlGroupState,
-  onInfoButtonClick,
+  onAttributeButtonClick,
   onDeleteButtonClick,
   onLeftRightButtonClick,
   onResetButtonClick,
@@ -30,7 +30,7 @@ const Bottom = ({
 }: {
   resetButtonHidden: boolean;
   controlGroupState: number;
-  onInfoButtonClick: () => void;
+  onAttributeButtonClick: () => void;
   onDeleteButtonClick: () => void;
   onLeftRightButtonClick: () => void;
   onResetButtonClick: () => void;
@@ -43,9 +43,9 @@ const Bottom = ({
     <Stack sx={{ flexDirection: "row", gap: 1 }}>
       <Stack sx={{ flexDirection: "row", gap: "1px" }}>
         <WButton
-          onClick={onInfoButtonClick}
+          onClick={onAttributeButtonClick}
           sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
-          rightIcon={<EditIcon sx={{ fontSize: 18 }} />}
+          rightIcon={<ViewListIcon sx={{ fontSize: 24 }} />}
         >
           Attributes
         </WButton>
@@ -89,7 +89,7 @@ export const RightHeader = ({
   folder,
   resetButtonHidden,
   controlGroupState,
-  onInfoButtonClick,
+  onAttributeButtonClick,
   onDeleteButtonClick,
   onLeftRightButtonClick,
   onResetButtonClick,
@@ -99,7 +99,7 @@ export const RightHeader = ({
   folder: Folder | undefined;
   resetButtonHidden: boolean;
   controlGroupState: number;
-  onInfoButtonClick: () => void;
+  onAttributeButtonClick: () => void;
   onDeleteButtonClick: () => void;
   onLeftRightButtonClick: () => void;
   onResetButtonClick: () => void;
@@ -114,7 +114,7 @@ export const RightHeader = ({
         <Bottom
           resetButtonHidden={resetButtonHidden}
           controlGroupState={controlGroupState}
-          onInfoButtonClick={onInfoButtonClick}
+          onAttributeButtonClick={onAttributeButtonClick}
           onDeleteButtonClick={onDeleteButtonClick}
           onLeftRightButtonClick={onLeftRightButtonClick}
           onResetButtonClick={onResetButtonClick}

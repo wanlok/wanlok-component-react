@@ -86,7 +86,7 @@ export const CollectionPage = () => {
         folder={selectedFolder}
         resetButtonHidden={!isFolderSorted()}
         controlGroupState={controlGroupState}
-        onInfoButtonClick={() => setOpen2(true)}
+        onAttributeButtonClick={() => setOpen2(true)}
         onDeleteButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
         onLeftRightButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
         onResetButtonClick={resetFolderSequences}

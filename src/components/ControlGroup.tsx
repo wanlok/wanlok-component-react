@@ -2,7 +2,7 @@ import { alpha, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { iconButtonSx, WButton } from "./WButton";
 import {
   Close as CloseIcon,
-  Edit as EditIcon,
+  ViewList as ViewListIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
   KeyboardArrowRight as KeyboardArrowRightIcon,
@@ -41,7 +41,7 @@ export const ControlGroup = ({
     >
       {onDetailsButtonClick && (
         <WButton onClick={onDetailsButtonClick} sx={sx}>
-          <EditIcon sx={{ fontSize: 18, color: "common.white" }} />
+          <ViewListIcon sx={{ fontSize: 24, color: "common.white" }} />
         </WButton>
       )}
       {onDeleteButtonClick && (
