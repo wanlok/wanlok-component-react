@@ -86,9 +86,13 @@ export const CollectionPage = () => {
         folder={selectedFolder}
         resetButtonHidden={!isFolderSorted()}
         controlGroupState={controlGroupState}
-        onAttributeButtonClick={() => setOpen2(true)}
-        onDeleteButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
-        onLeftRightButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
+        onAttributeButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
+        onEditAttributesButtonClick={() => {
+          setControlGroupState(2);
+          setOpen2(true);
+        }}
+        onDeleteButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
+        onLeftRightButtonClick={() => setControlGroupState(controlGroupState === 4 ? 0 : 4)}
         onResetButtonClick={resetFolderSequences}
         onDownloadButtonClick={() => {
           if (selectedFolder) {
@@ -115,7 +119,10 @@ export const CollectionPage = () => {
       />
       <Dummy
         open={open2}
-        setOpen={setOpen2}
+        setOpen={(value) => {
+          setOpen2(value);
+          setControlGroupState(0);
+        }}
         selectedFolder={selectedFolder}
         updateFolderAttributes={updateFolderAttributes}
       />

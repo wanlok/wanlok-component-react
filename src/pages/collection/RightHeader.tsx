@@ -2,6 +2,7 @@ import { Stack, Typography } from "@mui/material";
 import {
   Close as CloseIcon,
   Download as DownloadIcon,
+  Edit as EditIcon,
   LowPriority as LowPriorityIcon,
   SwapHoriz as SwapHorizIcon,
   ViewList as ViewListIcon
@@ -23,6 +24,7 @@ const Bottom = ({
   resetButtonHidden,
   controlGroupState,
   onAttributeButtonClick,
+  onEditAttributesButtonClick,
   onDeleteButtonClick,
   onLeftRightButtonClick,
   onResetButtonClick,
@@ -31,6 +33,7 @@ const Bottom = ({
   resetButtonHidden: boolean;
   controlGroupState: number;
   onAttributeButtonClick: () => void;
+  onEditAttributesButtonClick: () => void;
   onDeleteButtonClick: () => void;
   onLeftRightButtonClick: () => void;
   onResetButtonClick: () => void;
@@ -44,39 +47,38 @@ const Bottom = ({
       <Stack sx={{ flexDirection: "row", gap: "1px" }}>
         <WButton
           onClick={onAttributeButtonClick}
-          sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
           rightIcon={<ViewListIcon sx={{ fontSize: 24 }} />}
+          sx={{ borderBottom: controlGroupState === 1 ? "black solid 4px" : "none" }}
         >
           Attributes
         </WButton>
         <WButton
+          onClick={onEditAttributesButtonClick}
+          sx={{ borderBottom: controlGroupState === 2 ? "black solid 4px" : "none" }}
+          rightIcon={<EditIcon sx={{ fontSize: 18 }} />}
+        >
+          Edit Attributes
+        </WButton>
+        <WButton
           onClick={onDeleteButtonClick}
-          sx={{ backgroundColor: controlGroupState === 2 ? "primary.dark" : "primary.main" }}
+          sx={{ borderBottom: controlGroupState === 3 ? "black solid 4px" : "none" }}
           rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
         >
           Delete
         </WButton>
         <WButton
           onClick={onLeftRightButtonClick}
-          sx={{ backgroundColor: controlGroupState === 3 ? "primary.dark" : "primary.main" }}
+          sx={{ borderBottom: controlGroupState === 4 ? "black solid 4px" : "none" }}
           rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
         >
           Rearrange
         </WButton>
         {!resetButtonHidden && (
-          <WButton
-            onClick={onResetButtonClick}
-            sx={{ backgroundColor: "primary.main" }}
-            rightIcon={<LowPriorityIcon sx={{ fontSize: 24 }} />}
-          >
+          <WButton onClick={onResetButtonClick} rightIcon={<LowPriorityIcon sx={{ fontSize: 24 }} />}>
             Reset
           </WButton>
         )}
-        <WButton
-          onClick={onDownloadButtonClick}
-          sx={{ backgroundColor: "primary.main" }}
-          rightIcon={<DownloadIcon sx={{ fontSize: 24 }} />}
-        >
+        <WButton onClick={onDownloadButtonClick} rightIcon={<DownloadIcon sx={{ fontSize: 24 }} />}>
           Download
         </WButton>
       </Stack>
@@ -90,6 +92,7 @@ export const RightHeader = ({
   resetButtonHidden,
   controlGroupState,
   onAttributeButtonClick,
+  onEditAttributesButtonClick,
   onDeleteButtonClick,
   onLeftRightButtonClick,
   onResetButtonClick,
@@ -100,6 +103,7 @@ export const RightHeader = ({
   resetButtonHidden: boolean;
   controlGroupState: number;
   onAttributeButtonClick: () => void;
+  onEditAttributesButtonClick: () => void;
   onDeleteButtonClick: () => void;
   onLeftRightButtonClick: () => void;
   onResetButtonClick: () => void;
@@ -115,6 +119,7 @@ export const RightHeader = ({
           resetButtonHidden={resetButtonHidden}
           controlGroupState={controlGroupState}
           onAttributeButtonClick={onAttributeButtonClick}
+          onEditAttributesButtonClick={onEditAttributesButtonClick}
           onDeleteButtonClick={onDeleteButtonClick}
           onLeftRightButtonClick={onLeftRightButtonClick}
           onResetButtonClick={onResetButtonClick}
