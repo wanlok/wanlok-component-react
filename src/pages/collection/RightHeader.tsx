@@ -27,7 +27,7 @@ const Bottom = ({
   selectedCategory,
   onCategoryChange,
   onAttributeButtonClick,
-  onEditAttributesButtonClick,
+  onEditAttributeButtonClick,
   onDeleteButtonClick,
   onRearrangeButtonClick,
   onResetButtonClick,
@@ -39,7 +39,7 @@ const Bottom = ({
   selectedCategory: string;
   onCategoryChange: (value: string) => void;
   onAttributeButtonClick: () => void;
-  onEditAttributesButtonClick: () => void;
+  onEditAttributeButtonClick: () => void;
   onDeleteButtonClick: () => void;
   onRearrangeButtonClick: () => void;
   onResetButtonClick: () => void;
@@ -54,7 +54,7 @@ const Bottom = ({
         <WButton onClick={onAttributeButtonClick} rightIcon={<ViewListIcon sx={{ fontSize: 24 }} />}>
           Attributes
         </WButton>
-        <WButton onClick={onEditAttributesButtonClick} rightIcon={<EditIcon sx={{ fontSize: 18 }} />}>
+        <WButton onClick={onEditAttributeButtonClick} rightIcon={<EditIcon sx={{ fontSize: 18 }} />}>
           Edit Attributes
         </WButton>
         <WButton onClick={onDeleteButtonClick} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}>
@@ -85,7 +85,7 @@ export const RightHeader = ({
   selectedCategory,
   onCategoryChange,
   onAttributeButtonClick,
-  onEditAttributesButtonClick,
+  onEditAttributeButtonClick,
   onDeleteButtonClick,
   onRearrangeButtonClick,
   onResetButtonClick,
@@ -99,7 +99,7 @@ export const RightHeader = ({
   selectedCategory: string;
   onCategoryChange: (value: string) => void;
   onAttributeButtonClick: () => void;
-  onEditAttributesButtonClick: () => void;
+  onEditAttributeButtonClick: () => void;
   onDeleteButtonClick: () => void;
   onRearrangeButtonClick: () => void;
   onResetButtonClick: () => void;
@@ -118,7 +118,7 @@ export const RightHeader = ({
           selectedCategory={selectedCategory}
           onCategoryChange={onCategoryChange}
           onAttributeButtonClick={onAttributeButtonClick}
-          onEditAttributesButtonClick={onEditAttributesButtonClick}
+          onEditAttributeButtonClick={onEditAttributeButtonClick}
           onDeleteButtonClick={onDeleteButtonClick}
           onRearrangeButtonClick={onRearrangeButtonClick}
           onResetButtonClick={onResetButtonClick}

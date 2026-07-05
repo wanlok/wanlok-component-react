@@ -133,7 +133,7 @@ export const CollectionPage = () => {
           }
         }}
         onAttributeButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
-        onEditAttributesButtonClick={() => {
+        onEditAttributeButtonClick={() => {
           setControlGroupState(2);
           setOpen2(true);
         }}
