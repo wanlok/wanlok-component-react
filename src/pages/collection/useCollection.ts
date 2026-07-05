@@ -25,16 +25,19 @@ export const useCollection = (
   collectionSequences?: CollectionSequences,
   updateFolderSequences?: (type: string, sequences: string[]) => void
 ) => {
-  const [collectionDocument, setCollectionDocument] = useState<CollectionDocument>();
+  const [collectionDocument, setCollectionDocument] = useState<CollectionDocument | null | undefined>(undefined);
 
   useEffect(() => {
-    const fetchCollectionDocument = async (id?: string) => {
-      if (id) {
-        const docRef = doc(db, collectionName, id);
+    if (documentId) {
+      setCollectionDocument(null);
+      const fetchCollectionDocument = async () => {
+        const docRef = doc(db, collectionName, documentId);
         setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | undefined);
-      }
-    };
-    fetchCollectionDocument(documentId);
+      };
+      fetchCollectionDocument();
+    } else {
+      setCollectionDocument(undefined);
+    }
   }, [documentId]);
 
   const addCollectionItems = async (collectionId: string, text: string) => {
@@ -190,6 +193,7 @@ export const useCollection = (
   };
 
   return {
+    isLoading: collectionDocument === undefined || collectionDocument === null,
     charts: toList(collectionDocument?.charts, collectionSequences?.charts),
     files: toList(collectionDocument?.files, collectionSequences?.files),
     hyperlinks: toList(collectionDocument?.hyperlinks, collectionSequences?.hyperlinks),

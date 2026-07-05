@@ -1,21 +1,20 @@
 import { useCollection } from "./useCollection";
-import { WText } from "../../components/WText";
 import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
-import { Direction } from "../../services/Types";
-import { CollectionList } from "./CollectionList";
-import { CollectionHeader } from "./CollectionHeader";
-import { CollectionPanel } from "./CollectionPanel";
 import { Dummy } from "./Dummy";
 import { Dummy2 } from "./Dummy2";
+import { LeftContent } from "./LeftContent";
+import { LeftHeader } from "./LeftHeader";
 import { PanelRow } from "../../components/PanelRow";
-import { Folder as FolderIcon, Send as SendIcon, Upload as UploadIcon } from "@mui/icons-material";
+import { RightContent } from "./RightContent";
+import { RightHeader } from "./RightHeader";
+import { Folder as FolderIcon } from "@mui/icons-material";
 
 export const CollectionPage = () => {
   const {
     serverHealth,
-    isLoading,
+    isLoading: isFolderLoading,
     folders,
     selectedFolder,
     addFolder,
@@ -31,6 +30,7 @@ export const CollectionPage = () => {
     downloadFolders
   } = useFolder();
   const {
+    isLoading: isCollectionLoading,
     charts,
     files,
     hyperlinks,
@@ -44,6 +44,7 @@ export const CollectionPage = () => {
     deleteCollectionItem
   } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolderSequences);
   const [panelOpened, setPanelOpened] = useState(false);
+  const [folderControlGroupState, setFolderControlGroupState] = useState(0);
   const [controlGroupState, setControlGroupState] = useState(0);
   const [open2, setOpen2] = useState(false);
   const [collectionTypeId, setCollectionTypeId] = useState<{ type: string; id: string } | undefined>(undefined);
@@ -54,24 +55,34 @@ export const CollectionPage = () => {
       setPanelOpened={setPanelOpened}
       width={300}
       panel={
-        <CollectionPanel
-          isLoading={isLoading}
-          folders={folders}
-          selectedFolder={selectedFolder}
-          serverHealth={serverHealth}
-          setPanelOpened={setPanelOpened}
-          openFolder={openFolder}
-          deleteFolder={deleteFolder}
-          uploadFolders={uploadFolders}
-          downloadFolders={downloadFolders}
-          addFolder={addFolder}
-        />
+        <>
+          <LeftHeader
+            isLoading={isFolderLoading}
+            numberOfFolders={folders.length}
+            serverHealth={serverHealth}
+            folderControlGroupState={folderControlGroupState}
+            onDeleteButtonClick={() => setFolderControlGroupState(folderControlGroupState === 1 ? 0 : 1)}
+            onUploadButtonClick={uploadFolders}
+            onDownloadButtonClick={downloadFolders}
+          />
+          <LeftContent
+            isLoading={isFolderLoading}
+            folders={folders}
+            selectedFolder={selectedFolder}
+            folderControlGroupState={folderControlGroupState}
+            setPanelOpened={setPanelOpened}
+            openFolder={openFolder}
+            deleteFolder={deleteFolder}
+            addFolder={addFolder}
+          />
+        </>
       }
       topChildren={
         selectedFolder ? <PanelRow icon={<FolderIcon sx={{ fontSize: 24 }} />} title={selectedFolder.name} /> : <></>
       }
     >
-      <CollectionHeader
+      <RightHeader
+        isLoading={isCollectionLoading}
         folder={selectedFolder}
         resetButtonHidden={!isFolderSorted()}
         controlGroupState={controlGroupState}
@@ -85,7 +96,8 @@ export const CollectionPage = () => {
           }
         }}
       />
-      <CollectionList
+      <RightContent
+        isLoading={isCollectionLoading}
         charts={charts}
         files={files}
         hyperlinks={hyperlinks}
@@ -93,44 +105,13 @@ export const CollectionPage = () => {
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
         controlGroupState={controlGroupState}
-        onDetailsButtonClick={(type, id) => setCollectionTypeId({ type, id })}
-        onDeleteButtonClick={async (type, id) => {
-          const counts = await deleteCollectionItem(type, id);
-          if (counts) {
-            await updateFolderCounts(counts);
-          }
-        }}
-        onLeftButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.left)}
-        onRightButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.right)}
-      />
-      <WText
-        placeholder="Add Links or Upload Files"
-        rightButtons={[
-          {
-            icon: <SendIcon sx={{ fontSize: 20 }} />,
-            onClickWithText: async (text) => {
-              const collectionId = getDocumentId(selectedFolder?.name);
-              if (collectionId) {
-                const counts = await addCollectionItems(collectionId, text);
-                if (counts) {
-                  await updateFolderCounts(counts);
-                }
-              }
-            }
-          },
-          {
-            icon: <UploadIcon sx={{ fontSize: 24 }} />,
-            onClick: async () => {
-              const collectionId = getDocumentId(selectedFolder?.name);
-              if (collectionId) {
-                const counts = await addCollectionFiles(collectionId);
-                if (counts) {
-                  await updateFolderCounts(counts);
-                }
-              }
-            }
-          }
-        ]}
+        selectedFolder={selectedFolder}
+        setCollectionTypeId={setCollectionTypeId}
+        deleteCollectionItem={deleteCollectionItem}
+        updateFolderCounts={updateFolderCounts}
+        updateCollectionSequences={updateCollectionSequences}
+        addCollectionItems={addCollectionItems}
+        addCollectionFiles={addCollectionFiles}
       />
       <Dummy
         open={open2}

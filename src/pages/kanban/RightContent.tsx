@@ -1,5 +1,6 @@
 import { createRef, Fragment, useRef, useState } from "react";
 import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { LayoutLoading } from "../../components/LayoutLoading";
 import { useWindowDimensions } from "../../common/useWindowDimension";
 import { KanbanColumn, KanbanItem, KanbanProject } from "../../services/Types";
 import { KanbanCard, padding } from "./KanbanCard";
@@ -173,13 +174,15 @@ export const KanbanColumnLayout = ({
   );
 };
 
-export const KanbanLayout = ({
+export const RightContent = ({
+  isLoading,
   project,
   controlGroupState,
   onDragStop,
   onClick,
   onDeleteItemClick
 }: {
+  isLoading: boolean;
   project: KanbanProject | undefined;
   controlGroupState: number;
   onDragStop: (columns: KanbanColumn[]) => void;
@@ -188,6 +191,10 @@ export const KanbanLayout = ({
 }) => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
+
+  if (isLoading) {
+    return <LayoutLoading />;
+  }
 
   if (!project) {
     return <></>;

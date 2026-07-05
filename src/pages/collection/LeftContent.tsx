@@ -1,5 +1,6 @@
-import { Dispatch, SetStateAction, useState } from "react";
+import { Dispatch, SetStateAction } from "react";
 import { Stack } from "@mui/material";
+import { LayoutLoading } from "../../components/LayoutLoading";
 import {
   Add as AddIcon,
   Close as CloseIcon,
@@ -11,45 +12,32 @@ import { WCardList } from "../../components/WCardList";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { WText } from "../../components/WText";
 import { PanelRow } from "../../components/PanelRow";
-import { FolderCollectionHeader } from "./CollectionHeader";
 import { CollectionChips } from "./CollectionChips";
 
-export const CollectionPanel = ({
+export const LeftContent = ({
   isLoading,
   folders,
   selectedFolder,
-  serverHealth,
+  folderControlGroupState,
   setPanelOpened,
   openFolder,
   deleteFolder,
-  uploadFolders,
-  downloadFolders,
   addFolder
 }: {
   isLoading: boolean;
   folders: Folder[];
   selectedFolder: Folder | undefined;
-  serverHealth: boolean | undefined;
+  folderControlGroupState: number;
   setPanelOpened: Dispatch<SetStateAction<boolean>>;
   openFolder: (folder: Folder) => void;
   deleteFolder: (folder: Folder) => Promise<void>;
-  uploadFolders: () => Promise<void>;
-  downloadFolders: () => Promise<void>;
   addFolder: (name: string) => Promise<void>;
 }) => {
-  const [folderControlGroupState, setFolderControlGroupState] = useState(0);
-
+  if (isLoading) {
+    return <LayoutLoading />;
+  }
   return (
     <>
-      <FolderCollectionHeader
-        isLoading={isLoading}
-        numberOfFolders={folders.length}
-        serverHealth={serverHealth}
-        folderControlGroupState={folderControlGroupState}
-        onDeleteButtonClick={() => setFolderControlGroupState(folderControlGroupState === 1 ? 0 : 1)}
-        onUploadButtonClick={uploadFolders}
-        onDownloadButtonClick={downloadFolders}
-      />
       <WCardList
         items={folders}
         renderContent={(folder) => {

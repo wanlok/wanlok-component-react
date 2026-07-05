@@ -2,25 +2,18 @@ import { useState } from "react";
 import { getDisplayDateTimeString } from "../../common/DateUtils";
 import { useKanban } from "./useKanban";
 import { LayoutPanel } from "../../components/LayoutPanel";
-import { WCardList } from "../../components/WCardList";
-import { KanbanColumn } from "../../services/Types";
-import { ProjectHeader } from "./ProjectHeader";
 import { ProjectModal } from "./ProjectModal";
-import { KanbanHeader } from "./KanbanHeader";
-import { KanbanLayout } from "./KanbanLayout";
-import { iconButtonSx, WButton } from "../../components/WButton";
-
-import {
-  Close as CloseIcon,
-  ViewKanban as KanbanIcon,
-  ViewKanbanOutlined as KanbanOutlinedIcon
-} from "@mui/icons-material";
-import { Stack, Typography } from "@mui/material";
+import { RightHeader } from "./RightHeader";
+import { RightContent } from "./RightContent";
+import { ViewKanban as KanbanIcon } from "@mui/icons-material";
 import { PanelRow } from "../../components/PanelRow";
 import { ItemModal } from "./ItemModal";
+import { LeftContent } from "./LeftContent";
+import { LeftHeader } from "./LeftHeader";
 
 export const Kanban = () => {
   const {
+    isLoading,
     kanban,
     selectedProject,
     addProject,
@@ -75,49 +68,34 @@ export const Kanban = () => {
       width={300}
       panel={
         <>
-          <ProjectHeader
+          <LeftHeader
+            isLoading={isLoading}
             controlGroupState={controlGroupState}
             onAddButtonClick={onAddButtonClick}
             onDeleteButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
           />
-          <WCardList
-            items={kanban?.projects ?? []}
-            renderContent={(project) => {
-              const Icon = project.id === selectedProject?.id ? KanbanIcon : KanbanOutlinedIcon;
-              return (
-                <PanelRow icon={<Icon sx={{ fontSize: 24 }} />} title={project.name}>
-                  <Typography variant="body1">
-                    {getDisplayDateTimeString(new Date(project.created_at))},{" "}
-                    {project.columns.reduce((total: number, column: KanbanColumn) => total + column.items.length, 0)}
-                  </Typography>
-                </PanelRow>
-              );
-            }}
-            onContentClick={(project) => {
-              openProject(project);
-              setPanelOpened(false);
-            }}
-            renderRightContent={(project) => (
-              <Stack>
-                {controlGroupState === 1 && (
-                  <WButton onClick={() => deleteProject(project)} sx={iconButtonSx}>
-                    <CloseIcon sx={{ fontSize: 24 }} />
-                  </WButton>
-                )}
-              </Stack>
-            )}
+          <LeftContent
+            isLoading={isLoading}
+            kanban={kanban}
+            selectedProject={selectedProject}
+            controlGroupState={controlGroupState}
+            setPanelOpened={setPanelOpened}
+            openProject={openProject}
+            deleteProject={deleteProject}
           />
         </>
       }
       topChildren={<PanelRow icon={<KanbanIcon sx={{ fontSize: 24 }} />} title={selectedProject?.name ?? ""} />}
     >
-      <KanbanHeader
+      <RightHeader
+        isLoading={isLoading}
         project={selectedProject}
         onEditButtonClick={onEditButtonClick}
         onAddItemButtonClick={addItem}
         onDeleteItemButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
       />
-      <KanbanLayout
+      <RightContent
+        isLoading={isLoading}
         project={selectedProject}
         controlGroupState={controlGroupState}
         onDragStop={moveItem}

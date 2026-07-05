@@ -150,6 +150,7 @@ export const useKanban = () => {
   };
 
   return {
+    isLoading: kanban === undefined,
     kanban,
     selectedProject,
     addProject,

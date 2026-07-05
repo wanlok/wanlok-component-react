@@ -70,28 +70,28 @@ const Bottom = ({ project }: { project: KanbanProject | undefined }) => {
   );
 };
 
-export const KanbanHeader = ({
+export const RightHeader = ({
+  isLoading,
   project,
   onEditButtonClick,
   onAddItemButtonClick,
   onDeleteItemButtonClick
 }: {
+  isLoading: boolean;
   project: KanbanProject | undefined;
   onEditButtonClick: () => void;
   onAddItemButtonClick: () => void;
   onDeleteItemButtonClick: () => void;
-}) => {
-  return (
-    <LayoutHeader
-      top={
-        <Top
-          project={project}
-          onEditButtonClick={onEditButtonClick}
-          onAddItemButtonClick={onAddItemButtonClick}
-          onDeleteItemButtonClick={onDeleteItemButtonClick}
-        />
-      }
-      bottom={<Bottom project={project} />}
-    />
-  );
-};
+}) => (
+  <LayoutHeader
+    top={
+      <Top
+        project={project}
+        onEditButtonClick={onEditButtonClick}
+        onAddItemButtonClick={onAddItemButtonClick}
+        onDeleteItemButtonClick={onDeleteItemButtonClick}
+      />
+    }
+    bottom={isLoading ? <></> : <Bottom project={project} />}
+  />
+);
