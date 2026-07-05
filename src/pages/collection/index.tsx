@@ -57,7 +57,7 @@ export const CollectionPage = () => {
   const uncategorisedValue = "__uncategorised__";
 
   const hasUncategorised = [...files, ...youTubeRegularVideos, ...youTubeShortVideos].some(
-    ([, item]) => !item.attributes?.["Category"]
+    ([, item]) => !item.attributes?.["category"]
   );
 
   useEffect(() => {
@@ -72,9 +72,9 @@ export const CollectionPage = () => {
     ...[
       ...new Set(
         [
-          ...files.map(([, item]) => item.attributes?.["Category"]),
-          ...youTubeRegularVideos.map(([, item]) => item.attributes?.["Category"]),
-          ...youTubeShortVideos.map(([, item]) => item.attributes?.["Category"])
+          ...files.map(([, item]) => item.attributes?.["category"]),
+          ...youTubeRegularVideos.map(([, item]) => item.attributes?.["category"]),
+          ...youTubeShortVideos.map(([, item]) => item.attributes?.["category"])
         ].filter((v): v is string => Boolean(v))
       )
     ].sort().map((category) => ({ label: category, value: category }))
@@ -83,9 +83,9 @@ export const CollectionPage = () => {
   const matchesCategory = (category: string | undefined) =>
     selectedCategory === uncategorisedValue ? !category : category === selectedCategory;
 
-  const filteredFiles = selectedCategory ? files.filter(([, item]) => matchesCategory(item.attributes?.["Category"])) : files;
-  const filteredYouTubeRegularVideos = selectedCategory ? youTubeRegularVideos.filter(([, item]) => matchesCategory(item.attributes?.["Category"])) : youTubeRegularVideos;
-  const filteredYouTubeShortVideos = selectedCategory ? youTubeShortVideos.filter(([, item]) => matchesCategory(item.attributes?.["Category"])) : youTubeShortVideos;
+  const filteredFiles = selectedCategory ? files.filter(([, item]) => matchesCategory(item.attributes?.["category"])) : files;
+  const filteredYouTubeRegularVideos = selectedCategory ? youTubeRegularVideos.filter(([, item]) => matchesCategory(item.attributes?.["category"])) : youTubeRegularVideos;
+  const filteredYouTubeShortVideos = selectedCategory ? youTubeShortVideos.filter(([, item]) => matchesCategory(item.attributes?.["category"])) : youTubeShortVideos;
 
   return (
     <LayoutPanel
