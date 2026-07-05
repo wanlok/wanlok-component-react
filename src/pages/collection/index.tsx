@@ -92,7 +92,7 @@ export const CollectionPage = () => {
           setOpen2(true);
         }}
         onDeleteButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
-        onLeftRightButtonClick={() => setControlGroupState(controlGroupState === 4 ? 0 : 4)}
+        onRearrangeButtonClick={() => setControlGroupState(controlGroupState === 4 ? 0 : 4)}
         onResetButtonClick={resetFolderSequences}
         onDownloadButtonClick={() => {
           if (selectedFolder) {

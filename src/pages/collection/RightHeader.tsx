@@ -26,7 +26,7 @@ const Bottom = ({
   onAttributeButtonClick,
   onEditAttributesButtonClick,
   onDeleteButtonClick,
-  onLeftRightButtonClick,
+  onRearrangeButtonClick,
   onResetButtonClick,
   onDownloadButtonClick
 }: {
@@ -35,7 +35,7 @@ const Bottom = ({
   onAttributeButtonClick: () => void;
   onEditAttributesButtonClick: () => void;
   onDeleteButtonClick: () => void;
-  onLeftRightButtonClick: () => void;
+  onRearrangeButtonClick: () => void;
   onResetButtonClick: () => void;
   onDownloadButtonClick: () => void;
 }) => (
@@ -45,32 +45,16 @@ const Bottom = ({
     </Stack>
     <Stack sx={{ flexDirection: "row", gap: 1 }}>
       <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-        <WButton
-          onClick={onAttributeButtonClick}
-          rightIcon={<ViewListIcon sx={{ fontSize: 24 }} />}
-          sx={{ borderBottom: controlGroupState === 1 ? "black solid 4px" : "none" }}
-        >
+        <WButton onClick={onAttributeButtonClick} rightIcon={<ViewListIcon sx={{ fontSize: 24 }} />}>
           Attributes
         </WButton>
-        <WButton
-          onClick={onEditAttributesButtonClick}
-          sx={{ borderBottom: controlGroupState === 2 ? "black solid 4px" : "none" }}
-          rightIcon={<EditIcon sx={{ fontSize: 18 }} />}
-        >
+        <WButton onClick={onEditAttributesButtonClick} rightIcon={<EditIcon sx={{ fontSize: 18 }} />}>
           Edit Attributes
         </WButton>
-        <WButton
-          onClick={onDeleteButtonClick}
-          sx={{ borderBottom: controlGroupState === 3 ? "black solid 4px" : "none" }}
-          rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
-        >
+        <WButton onClick={onDeleteButtonClick} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}>
           Delete
         </WButton>
-        <WButton
-          onClick={onLeftRightButtonClick}
-          sx={{ borderBottom: controlGroupState === 4 ? "black solid 4px" : "none" }}
-          rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
-        >
+        <WButton onClick={onRearrangeButtonClick} rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}>
           Rearrange
         </WButton>
         {!resetButtonHidden && (
@@ -94,7 +78,7 @@ export const RightHeader = ({
   onAttributeButtonClick,
   onEditAttributesButtonClick,
   onDeleteButtonClick,
-  onLeftRightButtonClick,
+  onRearrangeButtonClick,
   onResetButtonClick,
   onDownloadButtonClick
 }: {
@@ -105,7 +89,7 @@ export const RightHeader = ({
   onAttributeButtonClick: () => void;
   onEditAttributesButtonClick: () => void;
   onDeleteButtonClick: () => void;
-  onLeftRightButtonClick: () => void;
+  onRearrangeButtonClick: () => void;
   onResetButtonClick: () => void;
   onDownloadButtonClick: () => void;
 }) => (
@@ -121,7 +105,7 @@ export const RightHeader = ({
           onAttributeButtonClick={onAttributeButtonClick}
           onEditAttributesButtonClick={onEditAttributesButtonClick}
           onDeleteButtonClick={onDeleteButtonClick}
-          onLeftRightButtonClick={onLeftRightButtonClick}
+          onRearrangeButtonClick={onRearrangeButtonClick}
           onResetButtonClick={onResetButtonClick}
           onDownloadButtonClick={onDownloadButtonClick}
         />
