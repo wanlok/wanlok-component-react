@@ -46,28 +46,28 @@ export const LayoutMenu = () => {
                       backgroundColor: "transparent"
                     }}
                   >
-                    {index === 0 ? (
-                      (() => {
-                        const icon = selected ? route.icon_selected : route.icon;
-                        return typeof icon === "string" ? (
-                          <img src={icon} alt="" style={{ width: "100%", height: "100%" }} />
+                    {(() => {
+                      const icon = selected ? route.icon_selected : route.icon;
+                      const renderedIcon =
+                        typeof icon === "string" ? (
+                          <Box
+                            component="img"
+                            src={icon}
+                            alt=""
+                            sx={{ width: index === 0 ? "100%" : 32, height: index === 0 ? "100%" : 32 }}
+                          />
                         ) : (
                           icon
                         );
-                      })()
-                    ) : (
-                      <>
-                        {(() => {
-                          const icon = selected ? route.icon_selected : route.icon;
-                          return typeof icon === "string" ? (
-                            <img src={icon} alt="" style={{ width: 32, height: 32 }} />
-                          ) : (
-                            icon
-                          );
-                        })()}
-                        {route.name}
-                      </>
-                    )}
+                      return index === 0 ? (
+                        renderedIcon
+                      ) : (
+                        <>
+                          {renderedIcon}
+                          {route.name}
+                        </>
+                      );
+                    })()}
                   </WButton>
                 </Link>
               </Fragment>

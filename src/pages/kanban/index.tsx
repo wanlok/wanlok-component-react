@@ -8,7 +8,7 @@ import { ProjectHeader } from "./ProjectHeader";
 import { ProjectModal } from "./ProjectModal";
 import { KanbanHeader } from "./KanbanHeader";
 import { KanbanLayout } from "./KanbanLayout";
-import { WIconButton } from "../../components/WButton";
+import { iconButtonSx, WButton } from "../../components/WButton";
 
 import {
   Close as CloseIcon,
@@ -85,18 +85,12 @@ export const Kanban = () => {
             renderContent={(project) => {
               const Icon = project.id === selectedProject?.id ? KanbanIcon : KanbanOutlinedIcon;
               return (
-              <PanelRow
-                icon={<Icon sx={{ fontSize: 24 }} />}
-                title={project.name}
-              >
-                <Typography variant="body1">
-                  {getDisplayDateTimeString(new Date(project.created_at))},{" "}
-                  {project.columns.reduce(
-                    (total: number, column: KanbanColumn) => total + column.items.length,
-                    0
-                  )}
-                </Typography>
-              </PanelRow>
+                <PanelRow icon={<Icon sx={{ fontSize: 24 }} />} title={project.name}>
+                  <Typography variant="body1">
+                    {getDisplayDateTimeString(new Date(project.created_at))},{" "}
+                    {project.columns.reduce((total: number, column: KanbanColumn) => total + column.items.length, 0)}
+                  </Typography>
+                </PanelRow>
               );
             }}
             onContentClick={(project) => {
@@ -106,7 +100,9 @@ export const Kanban = () => {
             renderRightContent={(project) => (
               <Stack>
                 {controlGroupState === 1 && (
-                  <WIconButton icon={<CloseIcon />} iconSize={16} onClick={() => deleteProject(project)} />
+                  <WButton onClick={() => deleteProject(project)} sx={iconButtonSx}>
+                    <CloseIcon sx={{ fontSize: 24 }} />
+                  </WButton>
                 )}
               </Stack>
             )}

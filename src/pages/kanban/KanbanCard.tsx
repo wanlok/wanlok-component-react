@@ -4,7 +4,7 @@ import Draggable from "react-draggable";
 import { KanbanItem } from "../../services/Types";
 import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
 import { Stack } from "@mui/material";
-import { WIconButton } from "../../components/WButton";
+import { iconButtonSx, WButton } from "../../components/WButton";
 import { Close as CloseIcon } from "@mui/icons-material";
 
 export const padding = 2;
@@ -158,7 +158,13 @@ export const KanbanCard = ({
           </CardActionArea>
           <Stack>
             {controlGroupState === 2 && (
-              <WIconButton icon={<CloseIcon />} iconSize={16} onClick={onDeleteItemClick} className="drag-cancel" />
+              <WButton
+                onClick={onDeleteItemClick}
+                className="drag-cancel"
+                sx={iconButtonSx}
+              >
+                <CloseIcon sx={{ fontSize: 24 }} />
+              </WButton>
             )}
           </Stack>
         </Stack>

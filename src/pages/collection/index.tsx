@@ -1,29 +1,21 @@
-import { Stack } from "@mui/material";
 import { useCollection } from "./useCollection";
 import { WText } from "../../components/WText";
-import { WCardList } from "../../components/WCardList";
 import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
-import { WIconButton } from "../../components/WButton";
 import { Direction } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
-import { CollectionHeader, FolderCollectionHeader } from "./CollectionHeader";
+import { CollectionHeader } from "./CollectionHeader";
+import { CollectionPanel } from "./CollectionPanel";
 import { Dummy } from "./Dummy";
 import { Dummy2 } from "./Dummy2";
-import { CollectionChips } from "./CollectionChips";
 import { PanelRow } from "../../components/PanelRow";
-import {
-  Close as CloseIcon,
-  Folder as FolderIcon,
-  FolderOutlined as FolderOutlinedIcon,
-  Send as SendIcon,
-  Upload as UploadIcon
-} from "@mui/icons-material";
+import { Folder as FolderIcon, Send as SendIcon, Upload as UploadIcon } from "@mui/icons-material";
 
 export const CollectionPage = () => {
   const {
     serverHealth,
+    isLoading,
     folders,
     selectedFolder,
     addFolder,
@@ -52,7 +44,6 @@ export const CollectionPage = () => {
     deleteCollectionItem
   } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolderSequences);
   const [panelOpened, setPanelOpened] = useState(false);
-  const [folderControlGroupState, setFolderControlGroupState] = useState(0);
   const [controlGroupState, setControlGroupState] = useState(0);
   const [open2, setOpen2] = useState(false);
   const [collectionTypeId, setCollectionTypeId] = useState<{ type: string; id: string } | undefined>(undefined);
@@ -63,42 +54,18 @@ export const CollectionPage = () => {
       setPanelOpened={setPanelOpened}
       width={300}
       panel={
-        <>
-          <FolderCollectionHeader
-            numberOfFolders={folders.length}
-            serverHealth={serverHealth}
-            folderControlGroupState={folderControlGroupState}
-            onDeleteButtonClick={() => setFolderControlGroupState(folderControlGroupState === 1 ? 0 : 1)}
-            onUploadButtonClick={uploadFolders}
-            onDownloadButtonClick={downloadFolders}
-          />
-          <WCardList
-            items={folders}
-            renderContent={(folder) => {
-              const Icon = folder === selectedFolder ? FolderIcon : FolderOutlinedIcon;
-              return (
-                <PanelRow icon={<Icon sx={{ fontSize: 24 }} />} title={folder.name}>
-                  <CollectionChips folder={folder} />
-                </PanelRow>
-              );
-            }}
-            onContentClick={(folder) => {
-              openFolder(folder);
-              setPanelOpened(false);
-            }}
-            renderRightContent={(folder) => (
-              <Stack sx={{}}>
-                {folderControlGroupState === 1 && (
-                  <WIconButton icon={<CloseIcon />} iconSize={16} onClick={() => deleteFolder(folder)} />
-                )}
-              </Stack>
-            )}
-          />
-          <WText
-            placeholder="New Folder"
-            rightButtons={[{ label: "Add", onClickWithText: (text) => addFolder(text) }]}
-          />
-        </>
+        <CollectionPanel
+          isLoading={isLoading}
+          folders={folders}
+          selectedFolder={selectedFolder}
+          serverHealth={serverHealth}
+          setPanelOpened={setPanelOpened}
+          openFolder={openFolder}
+          deleteFolder={deleteFolder}
+          uploadFolders={uploadFolders}
+          downloadFolders={downloadFolders}
+          addFolder={addFolder}
+        />
       }
       topChildren={
         selectedFolder ? <PanelRow icon={<FolderIcon sx={{ fontSize: 24 }} />} title={selectedFolder.name} /> : <></>
@@ -140,8 +107,8 @@ export const CollectionPage = () => {
         placeholder="Links"
         rightButtons={[
           {
-            icon: <SendIcon sx={{ fontSize: 22 }} />,
-            size: 18,
+            leftIcon: <SendIcon sx={{ fontSize: 22 }} />,
+            text: "Send",
             onClickWithText: async (text) => {
               const collectionId = getDocumentId(selectedFolder?.name);
               if (collectionId) {
@@ -153,8 +120,8 @@ export const CollectionPage = () => {
             }
           },
           {
-            icon: <UploadIcon sx={{ fontSize: 26 }} />,
-            size: 18,
+            leftIcon: <UploadIcon sx={{ fontSize: 24 }} />,
+            text: "Upload",
             onClick: async () => {
               const collectionId = getDocumentId(selectedFolder?.name);
               if (collectionId) {

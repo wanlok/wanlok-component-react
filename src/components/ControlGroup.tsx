@@ -1,7 +1,8 @@
 import { alpha, Stack, useMediaQuery, useTheme } from "@mui/material";
-import { WIconButton } from "./WButton";
+import { iconButtonSx, WButton } from "./WButton";
 import {
   Close as CloseIcon,
+  Edit as EditIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
   KeyboardArrowRight as KeyboardArrowRightIcon,
@@ -26,7 +27,7 @@ export const ControlGroup = ({
 }) => {
   const { breakpoints, palette } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
-  const sx = { backgroundColor: alpha(palette.common.black, 0.6) };
+  const sx = { ...iconButtonSx, backgroundColor: alpha(palette.common.black, 0.6) };
   return (
     <Stack
       sx={[
@@ -34,46 +35,35 @@ export const ControlGroup = ({
         direction === Direction.left ? { left: 0 } : { right: 0 }
       ]}
     >
-      {onDetailsButtonClick && <WIconButton icon={""} iconSize={16} onClick={onDetailsButtonClick} sx={sx} />}
+      {onDetailsButtonClick && (
+        <WButton onClick={onDetailsButtonClick} sx={sx}>
+          <EditIcon sx={{ fontSize: 18, color: "common.white" }} />
+        </WButton>
+      )}
       {onDeleteButtonClick && (
-        <WIconButton
-          icon={<CloseIcon sx={{ color: "common.white" }} />}
-          iconSize={16}
-          onClick={onDeleteButtonClick}
-          sx={sx}
-        />
+        <WButton onClick={onDeleteButtonClick} sx={sx}>
+          <CloseIcon sx={{ fontSize: 24, color: "common.white" }} />
+        </WButton>
       )}
       {!scrollHorizontally && mobile && onLeftButtonClick && (
-        <WIconButton
-          icon={<KeyboardArrowUpIcon sx={{ color: "common.white" }} />}
-          iconSize={16}
-          onClick={onLeftButtonClick}
-          sx={sx}
-        />
+        <WButton onClick={onLeftButtonClick} sx={sx}>
+          <KeyboardArrowUpIcon sx={{ fontSize: 24, color: "common.white" }} />
+        </WButton>
       )}
       {!scrollHorizontally && mobile && onRightButtonClick && (
-        <WIconButton
-          icon={<KeyboardArrowDownIcon sx={{ color: "common.white" }} />}
-          iconSize={16}
-          onClick={onRightButtonClick}
-          sx={sx}
-        />
+        <WButton onClick={onRightButtonClick} sx={sx}>
+          <KeyboardArrowDownIcon sx={{ fontSize: 24, color: "common.white" }} />
+        </WButton>
       )}
       {(scrollHorizontally || !mobile) && onRightButtonClick && (
-        <WIconButton
-          icon={<KeyboardArrowRightIcon sx={{ color: "common.white" }} />}
-          iconSize={16}
-          onClick={onRightButtonClick}
-          sx={sx}
-        />
+        <WButton onClick={onRightButtonClick} sx={sx}>
+          <KeyboardArrowRightIcon sx={{ fontSize: 24, color: "common.white" }} />
+        </WButton>
       )}
       {(scrollHorizontally || !mobile) && onLeftButtonClick && (
-        <WIconButton
-          icon={<KeyboardArrowLeftIcon sx={{ color: "common.white" }} />}
-          iconSize={16}
-          onClick={onLeftButtonClick}
-          sx={sx}
-        />
+        <WButton onClick={onLeftButtonClick} sx={sx}>
+          <KeyboardArrowLeftIcon sx={{ fontSize: 24, color: "common.white" }} />
+        </WButton>
       )}
     </Stack>
   );

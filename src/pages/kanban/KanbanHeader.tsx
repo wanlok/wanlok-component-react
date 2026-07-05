@@ -15,7 +15,7 @@ const Top = ({
   onDeleteItemButtonClick: () => void;
 }) => {
   return (
-    <Stack sx={{ flexDirection: "row", height: 48 }}>
+    <Stack sx={{ flexDirection: "row", height: 45 }}>
       <Stack sx={{ flex: 1, p: 1, justifyContent: "center" }}>
         <Typography variant="body1">{project?.name}</Typography>
       </Stack>

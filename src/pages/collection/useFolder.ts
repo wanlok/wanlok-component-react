@@ -46,7 +46,7 @@ export const useFolder = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [serverHealth, setServerHealth] = useState<boolean>();
-  const [folderDocument, setFolderDocument] = useState<FolderDocument>();
+  const [folderDocument, setFolderDocument] = useState<FolderDocument | null | undefined>(undefined);
   const [selectedFolder, setSelectedFolder] = useState<Folder>();
   const { addCollectionItems, deleteCollection, getCollectionUrls } = useCollection();
 
@@ -56,7 +56,7 @@ export const useFolder = () => {
     };
     const fetchFolderDocument = async () => {
       const docRef = doc(db, collectionName, documentId);
-      setFolderDocument((await getDoc(docRef)).data() as FolderDocument | undefined);
+      setFolderDocument(((await getDoc(docRef)).data() as FolderDocument) ?? null);
     };
     fetchServerHealth();
     fetchFolderDocument();
@@ -262,7 +262,8 @@ export const useFolder = () => {
 
   return {
     serverHealth,
-    folders: folderDocument ? folderDocument?.folders : [],
+    isLoading: folderDocument === undefined,
+    folders: folderDocument?.folders ?? [],
     selectedFolder,
     addFolder,
     updateFolderAttributes,

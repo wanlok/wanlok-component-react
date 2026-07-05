@@ -1,7 +1,6 @@
 import { Stack, Typography } from "@mui/material";
-import { LayoutHeader, topSx } from "../../components/LayoutHeader";
-import { WIconButton } from "../../components/WButton";
-
+import { bottomSx, LayoutHeader, topSx } from "../../components/LayoutHeader";
+import { WButton } from "../../components/WButton";
 import { Add as AddIcon, Close as CloseIcon } from "@mui/icons-material";
 
 export const ProjectHeader = ({
@@ -16,24 +15,26 @@ export const ProjectHeader = ({
   return (
     <LayoutHeader
       top={
-        <Stack sx={[topSx, { px: 1 }]}>
+        <Stack sx={[topSx, { alignItems: "center", px: 2 }]}>
           <Typography variant="body1">Kanban</Typography>
         </Stack>
       }
       bottom={
-        <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          <WIconButton
-            icon={<AddIcon sx={{ fontSize: 26 }} />}
-            iconSize={16}
+        <Stack sx={[bottomSx, { gap: "1px" }]}>
+          <WButton
             onClick={onCreateButtonClick}
             sx={{ backgroundColor: "primary.main" }}
-          />
-          <WIconButton
-            icon={<CloseIcon />}
-            iconSize={16}
+            leftIcon={<AddIcon sx={{ fontSize: 24 }} />}
+          >
+            Create
+          </WButton>
+          <WButton
             onClick={onDeleteButtonClick}
             sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
-          />
+            leftIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+          >
+            Delete
+          </WButton>
         </Stack>
       }
     />

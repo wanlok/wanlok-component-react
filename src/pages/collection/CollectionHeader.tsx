@@ -1,29 +1,22 @@
 import { Stack, Typography } from "@mui/material";
-import { WChip } from "../../components/WChip";
-
 import {
   Close as CloseIcon,
   Download as DownloadIcon,
-  Folder as FolderIcon,
-  SwapHoriz as SwapHorizIcon,
-  Upload as UploadIcon
+  Edit as EditIcon,
+  LowPriority as LowPriorityIcon,
+  SwapHoriz as SwapHorizIcon
 } from "@mui/icons-material";
-import ResetIcon from "../../assets/images/icons/reset.png";
-import GreenCircleIcon from "../../assets/images/icons/green_circle.png";
-import RedCircleIcon from "../../assets/images/icons/red_circle.png";
-import { WIconButton } from "../../components/WButton";
+import { WButton } from "../../components/WButton";
 import { Folder } from "../../services/Types";
 import { SelectInput } from "../../components/SelectInput";
-import { LayoutHeader, topSx } from "../../components/LayoutHeader";
+import { bottomSx, LayoutHeader, topSx } from "../../components/LayoutHeader";
 
 export const FolderCollectionHeader = ({
-  numberOfFolders,
-  serverHealth,
+  isLoading,
   folderControlGroupState,
-  onDeleteButtonClick,
-  onUploadButtonClick,
-  onDownloadButtonClick
+  onDeleteButtonClick
 }: {
+  isLoading: boolean;
   numberOfFolders: number;
   serverHealth: boolean | undefined;
   folderControlGroupState: number;
@@ -34,39 +27,24 @@ export const FolderCollectionHeader = ({
   return (
     <LayoutHeader
       top={
-        <Stack sx={[topSx, { px: 1 }]}>
-          <Typography variant="body1" sx={{ flex: 1 }}>
-            Collections
-          </Typography>
-          <WChip icon={<FolderIcon sx={{ fontSize: 16 }} />} label={`${numberOfFolders}`} />
-          <WChip icon={serverHealth ? GreenCircleIcon : RedCircleIcon} label={"Server"} />
+        <Stack sx={[topSx, { alignItems: "center", px: 2 }]}>
+          <Typography variant="body1">Collections</Typography>
         </Stack>
       }
       bottom={
-        <Stack sx={{ flexDirection: "row", gap: 1 }}>
-          <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-            <WIconButton
-              icon={<CloseIcon />}
-              iconSize={16}
+        isLoading ? (
+          <></>
+        ) : (
+          <Stack sx={[bottomSx, { gap: "1px" }]}>
+            <WButton
               onClick={onDeleteButtonClick}
               sx={{ backgroundColor: folderControlGroupState === 2 ? "primary.dark" : "primary.main" }}
-            />
+              leftIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+            >
+              Delete
+            </WButton>
           </Stack>
-          <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-            <WIconButton
-              icon={<UploadIcon sx={{ fontSize: 26 }} />}
-              iconSize={18}
-              onClick={onUploadButtonClick}
-              sx={{ backgroundColor: "primary.main" }}
-            />
-            <WIconButton
-              icon={<DownloadIcon sx={{ fontSize: 26 }} />}
-              iconSize={18}
-              onClick={onDownloadButtonClick}
-              sx={{ backgroundColor: "primary.main" }}
-            />
-          </Stack>
-        </Stack>
+        )
       }
     />
   );
@@ -94,50 +72,57 @@ export const CollectionHeader = ({
   return (
     <LayoutHeader
       top={
-        <Stack sx={[topSx, { px: 1 }]}>
+        <Stack sx={[topSx, { alignItems: "center", px: 2 }]}>
           <Typography variant="body1" sx={{ flex: 1 }}>
             {folder ? folder.name : ""}
           </Typography>
-          <SelectInput items={[{ label: "Test", value: "test" }]} value={"test"} onChange={(value: string) => {}} />
         </Stack>
       }
       bottom={
-        <Stack sx={{ flexDirection: "row", gap: 1 }}>
-          <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-            <WIconButton
-              icon={""}
-              iconSize={16}
-              onClick={onInfoButtonClick}
-              sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
-            />
-            <WIconButton
-              icon={<CloseIcon />}
-              iconSize={16}
-              onClick={onDeleteButtonClick}
-              sx={{ backgroundColor: controlGroupState === 2 ? "primary.dark" : "primary.main" }}
-            />
-            <WIconButton
-              icon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
-              iconSize={24}
-              onClick={onLeftRightButtonClick}
-              sx={{ backgroundColor: controlGroupState === 3 ? "primary.dark" : "primary.main" }}
-            />
+        <Stack sx={[bottomSx]}>
+          <Stack sx={{ flex: 1, justifyContent: "center", p: 1 }}>
+            <SelectInput items={[{ label: "Test", value: "test" }]} value={"test"} onChange={() => {}} />
           </Stack>
-          <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-            {!resetButtonHidden && (
-              <WIconButton
-                icon={ResetIcon}
-                iconSize={20}
-                onClick={onResetButtonClick}
+          <Stack sx={{ flexDirection: "row", gap: 1 }}>
+            <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+              <WButton
+                onClick={onInfoButtonClick}
+                sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
+                leftIcon={<EditIcon sx={{ fontSize: 18 }} />}
+              >
+                Edit Attributes
+              </WButton>
+              <WButton
+                onClick={onDeleteButtonClick}
+                sx={{ backgroundColor: controlGroupState === 2 ? "primary.dark" : "primary.main" }}
+                leftIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+              >
+                Delete
+              </WButton>
+              <WButton
+                onClick={onLeftRightButtonClick}
+                sx={{ backgroundColor: controlGroupState === 3 ? "primary.dark" : "primary.main" }}
+                leftIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
+              >
+                Rearrange
+              </WButton>
+              {!resetButtonHidden && (
+                <WButton
+                  onClick={onResetButtonClick}
+                  sx={{ backgroundColor: "primary.main" }}
+                  leftIcon={<LowPriorityIcon sx={{ fontSize: 24 }} />}
+                >
+                  Reset
+                </WButton>
+              )}
+              <WButton
+                onClick={onDownloadButtonClick}
                 sx={{ backgroundColor: "primary.main" }}
-              />
-            )}
-            <WIconButton
-              icon={<DownloadIcon sx={{ fontSize: 26 }} />}
-              iconSize={18}
-              onClick={onDownloadButtonClick}
-              sx={{ backgroundColor: "primary.main" }}
-            />
+                leftIcon={<DownloadIcon sx={{ fontSize: 24 }} />}
+              >
+                Download
+              </WButton>
+            </Stack>
           </Stack>
         </Stack>
       }

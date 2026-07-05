@@ -1,17 +1,12 @@
 import { Stack } from "@mui/material";
 import { ReactNode, useEffect, useRef, useState } from "react";
+
 import { TextInput } from "./TextInput";
-import { WButton, WIconButton } from "./WButton";
+import { WButton } from "./WButton";
 
-interface LabelButtonContent {
-  label: string;
-  onClickWithText?: (text: string) => void;
-  onClick?: () => void;
-}
-
-interface IconButtonContent {
-  icon: string | ReactNode;
-  size: number;
+interface ButtonContent {
+  leftIcon?: ReactNode;
+  text: string;
   onClickWithText?: (text: string) => void;
   onClick?: () => void;
 }
@@ -21,7 +16,7 @@ export const WText = ({
   rightButtons
 }: {
   placeholder?: string;
-  rightButtons: (LabelButtonContent | IconButtonContent)[];
+  rightButtons: ButtonContent[];
 }) => {
   const [value, setValue] = useState("");
   const [buttonHeight, setButtonHeight] = useState<number>();
@@ -73,39 +68,19 @@ export const WText = ({
         />
       </Stack>
       <Stack sx={{ flexDirection: sufficientSpaces ? "column" : "row", gap: "1px" }}>
-        {rightButtons.map((buttonContent, index) => {
-          let children;
-          if ("label" in buttonContent) {
-            const { label, onClick, onClickWithText } = buttonContent;
-            children = (
-              <WButton
-                sx={{ height: buttonHeight }}
-                key={`right-button-${index}`}
-                onClick={() => {
-                  onClick && onClick();
-                  onClickWithText && getText(onClickWithText);
-                }}
-              >
-                {label}
-              </WButton>
-            );
-          } else {
-            const { icon, size, onClick, onClickWithText } = buttonContent;
-            children = (
-              <WIconButton
-                sx={{ height: buttonHeight, backgroundColor: "primary.main" }}
-                key={`right-button-${index}`}
-                icon={icon}
-                iconSize={size}
-                onClick={() => {
-                  onClick && onClick();
-                  onClickWithText && getText(onClickWithText);
-                }}
-              />
-            );
-          }
-          return children;
-        })}
+        {rightButtons.map(({ leftIcon, text, onClick, onClickWithText }, index) => (
+          <WButton
+            sx={{ height: buttonHeight }}
+            key={`right-button-${index}`}
+            leftIcon={leftIcon}
+            onClick={() => {
+              onClick && onClick();
+              onClickWithText && getText(onClickWithText);
+            }}
+          >
+            {text}
+          </WButton>
+        ))}
       </Stack>
     </Stack>
   );

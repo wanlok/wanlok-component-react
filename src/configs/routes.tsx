@@ -16,6 +16,8 @@ import {
 import { Kanban } from "../pages/kanban";
 import { BanknoteAPI } from "../pages/api/BanknoteAPI";
 
+const iconSize = 32;
+
 export const routes = [
   {
     path: "/",
@@ -35,29 +37,29 @@ export const routes = [
         // ],
       },
       {
-        icon: <KanbanOutlinedIcon sx={{ fontSize: 36 }} />,
-        icon_selected: <KanbanIcon sx={{ fontSize: 36 }} />,
+        icon: <KanbanOutlinedIcon sx={{ fontSize: iconSize }} />,
+        icon_selected: <KanbanIcon sx={{ fontSize: iconSize }} />,
         name: "Kanban",
         path: "/kanban/:id?",
         element: <Kanban />
       },
       {
-        icon: <FolderOutlinedIcon sx={{ fontSize: 32 }} />,
-        icon_selected: <FolderIcon sx={{ fontSize: 32 }} />,
+        icon: <FolderOutlinedIcon sx={{ fontSize: iconSize }} />,
+        icon_selected: <FolderIcon sx={{ fontSize: iconSize }} />,
         name: "Collections",
         path: "/collections/:id?",
         element: <CollectionPage />
       },
       {
-        icon: <ChatOutlinedIcon sx={{ fontSize: 32 }} />,
-        icon_selected: <ChatIcon sx={{ fontSize: 32 }} />,
+        icon: <ChatOutlinedIcon sx={{ fontSize: iconSize }} />,
+        icon_selected: <ChatIcon sx={{ fontSize: iconSize }} />,
         name: "Discussion",
         path: "/discussion",
         element: <DiscussionPage />
       },
       {
-        icon: <FolderOutlinedIcon sx={{ fontSize: 32 }} />,
-        icon_selected: <FolderIcon sx={{ fontSize: 32 }} />,
+        icon: <FolderOutlinedIcon sx={{ fontSize: iconSize }} />,
+        icon_selected: <FolderIcon sx={{ fontSize: iconSize }} />,
         name: "Components",
         path: "/components/:id?",
         element: <ComponentPage />

@@ -18,7 +18,7 @@ export const Game = () => {
           placeholder="Name"
           rightButtons={[
             {
-              label: "Start Game",
+              text: "Start Game",
               onClickWithText: (text) => {
                 startGame(text);
               }
