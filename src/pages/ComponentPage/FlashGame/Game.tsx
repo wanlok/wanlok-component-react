@@ -2,6 +2,7 @@ import { useRef } from "react";
 import { useGame } from "./useGame";
 import { Stack, Typography } from "@mui/material";
 import { WText } from "../../../components/WText";
+import { PlayArrow as PlayArrowIcon } from "@mui/icons-material";
 import { FlashGamePlayer } from "../../../components/FlashGamePlayer";
 
 import statusEndImage from "./End.png";
@@ -18,7 +19,7 @@ export const Game = () => {
           placeholder="Name"
           rightButtons={[
             {
-              text: "Start Game",
+              icon: <PlayArrowIcon sx={{ fontSize: 24 }} />,
               onClickWithText: (text) => {
                 startGame(text);
               }

@@ -1,6 +1,11 @@
 import { Dispatch, SetStateAction, useState } from "react";
 import { Stack } from "@mui/material";
-import { Close as CloseIcon, Folder as FolderIcon, FolderOutlined as FolderOutlinedIcon } from "@mui/icons-material";
+import {
+  Add as AddIcon,
+  Close as CloseIcon,
+  Folder as FolderIcon,
+  FolderOutlined as FolderOutlinedIcon
+} from "@mui/icons-material";
 import { Folder } from "../../services/Types";
 import { WCardList } from "../../components/WCardList";
 import { iconButtonSx, WButton } from "../../components/WButton";
@@ -69,7 +74,10 @@ export const CollectionPanel = ({
           </Stack>
         )}
       />
-      <WText placeholder="New Folder" rightButtons={[{ text: "Add", onClickWithText: (text) => addFolder(text) }]} />
+      <WText
+        placeholder="Add Folder"
+        rightButtons={[{ icon: <AddIcon sx={{ fontSize: 24 }} />, onClickWithText: addFolder }]}
+      />
     </>
   );
 };

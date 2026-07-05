@@ -5,19 +5,12 @@ import { TextInput } from "./TextInput";
 import { WButton } from "./WButton";
 
 interface ButtonContent {
-  leftIcon?: ReactNode;
-  text: string;
+  icon: ReactNode;
   onClickWithText?: (text: string) => void;
   onClick?: () => void;
 }
 
-export const WText = ({
-  placeholder,
-  rightButtons
-}: {
-  placeholder?: string;
-  rightButtons: ButtonContent[];
-}) => {
+export const WText = ({ placeholder, rightButtons }: { placeholder?: string; rightButtons: ButtonContent[] }) => {
   const [value, setValue] = useState("");
   const [buttonHeight, setButtonHeight] = useState<number>();
   const [sufficientSpaces, setSufficientSpaces] = useState<boolean>(false);
@@ -68,17 +61,16 @@ export const WText = ({
         />
       </Stack>
       <Stack sx={{ flexDirection: sufficientSpaces ? "column" : "row", gap: "1px" }}>
-        {rightButtons.map(({ leftIcon, text, onClick, onClickWithText }, index) => (
+        {rightButtons.map(({ icon, onClick, onClickWithText }, index) => (
           <WButton
-            sx={{ height: buttonHeight }}
             key={`right-button-${index}`}
-            leftIcon={leftIcon}
+            sx={{ width: buttonHeight, height: buttonHeight, p: 0 }}
             onClick={() => {
               onClick && onClick();
               onClickWithText && getText(onClickWithText);
             }}
           >
-            {text}
+            {icon}
           </WButton>
         ))}
       </Stack>

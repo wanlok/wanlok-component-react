@@ -5,11 +5,11 @@ import { Add as AddIcon, Close as CloseIcon } from "@mui/icons-material";
 
 export const ProjectHeader = ({
   controlGroupState,
-  onCreateButtonClick,
+  onAddButtonClick,
   onDeleteButtonClick
 }: {
   controlGroupState: number;
-  onCreateButtonClick: () => void;
+  onAddButtonClick: () => void;
   onDeleteButtonClick: () => void;
 }) => {
   return (
@@ -22,16 +22,16 @@ export const ProjectHeader = ({
       bottom={
         <Stack sx={[bottomSx, { gap: "1px" }]}>
           <WButton
-            onClick={onCreateButtonClick}
+            onClick={onAddButtonClick}
             sx={{ backgroundColor: "primary.main" }}
-            leftIcon={<AddIcon sx={{ fontSize: 24 }} />}
+            rightIcon={<AddIcon sx={{ fontSize: 24 }} />}
           >
-            Create
+            Add
           </WButton>
           <WButton
             onClick={onDeleteButtonClick}
             sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
-            leftIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+            rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
           >
             Delete
           </WButton>

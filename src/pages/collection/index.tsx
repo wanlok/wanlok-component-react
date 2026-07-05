@@ -104,11 +104,10 @@ export const CollectionPage = () => {
         onRightButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.right)}
       />
       <WText
-        placeholder="Links"
+        placeholder="Add Links or Upload Files"
         rightButtons={[
           {
-            leftIcon: <SendIcon sx={{ fontSize: 22 }} />,
-            text: "Send",
+            icon: <SendIcon sx={{ fontSize: 20 }} />,
             onClickWithText: async (text) => {
               const collectionId = getDocumentId(selectedFolder?.name);
               if (collectionId) {
@@ -120,8 +119,7 @@ export const CollectionPage = () => {
             }
           },
           {
-            leftIcon: <UploadIcon sx={{ fontSize: 24 }} />,
-            text: "Upload",
+            icon: <UploadIcon sx={{ fontSize: 24 }} />,
             onClick: async () => {
               const collectionId = getDocumentId(selectedFolder?.name);
               if (collectionId) {

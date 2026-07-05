@@ -39,7 +39,7 @@ export const FolderCollectionHeader = ({
             <WButton
               onClick={onDeleteButtonClick}
               sx={{ backgroundColor: folderControlGroupState === 2 ? "primary.dark" : "primary.main" }}
-              leftIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+              rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
             >
               Delete
             </WButton>
@@ -88,21 +88,21 @@ export const CollectionHeader = ({
               <WButton
                 onClick={onInfoButtonClick}
                 sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
-                leftIcon={<EditIcon sx={{ fontSize: 18 }} />}
+                rightIcon={<EditIcon sx={{ fontSize: 18 }} />}
               >
-                Edit Attributes
+                Attributes
               </WButton>
               <WButton
                 onClick={onDeleteButtonClick}
                 sx={{ backgroundColor: controlGroupState === 2 ? "primary.dark" : "primary.main" }}
-                leftIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+                rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
               >
                 Delete
               </WButton>
               <WButton
                 onClick={onLeftRightButtonClick}
                 sx={{ backgroundColor: controlGroupState === 3 ? "primary.dark" : "primary.main" }}
-                leftIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
+                rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
               >
                 Rearrange
               </WButton>
@@ -110,7 +110,7 @@ export const CollectionHeader = ({
                 <WButton
                   onClick={onResetButtonClick}
                   sx={{ backgroundColor: "primary.main" }}
-                  leftIcon={<LowPriorityIcon sx={{ fontSize: 24 }} />}
+                  rightIcon={<LowPriorityIcon sx={{ fontSize: 24 }} />}
                 >
                   Reset
                 </WButton>
@@ -118,7 +118,7 @@ export const CollectionHeader = ({
               <WButton
                 onClick={onDownloadButtonClick}
                 sx={{ backgroundColor: "primary.main" }}
-                leftIcon={<DownloadIcon sx={{ fontSize: 24 }} />}
+                rightIcon={<DownloadIcon sx={{ fontSize: 24 }} />}
               >
                 Download
               </WButton>

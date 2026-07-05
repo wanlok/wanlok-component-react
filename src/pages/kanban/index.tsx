@@ -45,7 +45,7 @@ export const Kanban = () => {
 
   const [projectModalRows, setProjectModalRows] = useState(defaultProjectModalRows);
 
-  const onCreateButtonClick = () => {
+  const onAddButtonClick = () => {
     setProjectModalRows(defaultProjectModalRows);
     setIsEditing(false);
     setOpened(true);
@@ -77,7 +77,7 @@ export const Kanban = () => {
         <>
           <ProjectHeader
             controlGroupState={controlGroupState}
-            onCreateButtonClick={onCreateButtonClick}
+            onAddButtonClick={onAddButtonClick}
             onDeleteButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
           />
           <WCardList
