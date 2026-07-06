@@ -22,10 +22,14 @@ npm test -- --testPathPattern=<file>  # Run a single test file
 - `index.tsx` — presentational component, receives all state/handlers from the hook
 - `useXxx.ts` — all state, Firebase reads/writes, and business logic
 
+**Panel page structure:** Pages with a left/right panel layout (collection, kanban) further split into four components:
+- `LeftHeader.tsx` / `RightHeader.tsx` — header bars for each side, rendered via `LayoutHeader`
+- `LeftContent.tsx` / `RightContent.tsx` — scrollable content for each side
+
 **Firebase Firestore layout:**
 - `configs/kanban` — single document holding all kanban projects and their columns/items
 - `configs/folders` — single document holding all collection folders with metadata (attributes, counts, sequences)
-- `collections/<folder-id>` — one document per folder containing its items, keyed by content ID, across types: `charts`, `files`, `hyperlinks`, `steam`, `texts`, `youtube_regular`, `youtube_shorts`
+- `collections/<folder-id>` — one document per folder containing its items, keyed by content ID, across types: `charts`, `files`, `hyperlinks`, `steam`, `youtube_regular`, `youtube_shorts`
 - `discussions/<YYYYMMDD>` — one document per day with an array of chat messages; uses `onSnapshot` for real-time updates
 
 **Collection item ordering:** Firestore stores collection items as dicts (`{ [id]: item }`). Display order is maintained separately as a `sequences: string[]` per type inside the folder document. `toList()` in `src/common/ListDictUtils.ts` merges a dict with its sequence array to produce a stable ordered list.
@@ -33,8 +37,14 @@ npm test -- --testPathPattern=<file>  # Run a single test file
 **Shared code:**
 - `src/services/Types.ts` — all shared TypeScript types/interfaces and app-wide constants (`serverUrl`, `viewUrls`, `regex`)
 - `src/common/` — pure utility functions (date, string, count, file, layout, sorting, etc.)
-- `src/services/` — external API integrations (Steam, YouTube oEmbed, Cloudinary image upload, server health check, text/hyperlink/chart parsing)
-- `src/components/` — reusable UI components prefixed with `W` (e.g. `WModal`, `WButton`, `WChart`) and layout primitives (`LayoutMenu`, `LayoutPanel`, `LayoutHeader`)
+- `src/services/` — external API integrations (Steam, YouTube oEmbed, Cloudinary image upload, server health check, hyperlink/chart parsing)
+- `src/components/` — reusable UI components prefixed with `W` (e.g. `WModal`, `WButton`, `WChart`) and layout primitives (`LayoutMenu`, `LayoutPanel`, `LayoutHeader`, `PanelRow`, `DropdownIcon`)
+
+**Icons:** Use MUI icons from `@mui/icons-material` — no PNG icon imports. `WButton` accepts `leftIcon` and `rightIcon` props (pass a MUI icon element). Use the exported `iconButtonSx` constant from `WButton.tsx` for icon-only square buttons.
+
+**LayoutHeader:** Exports `topSx` (`height: 45`) and `bottomSx` (`height: 55`) for consistent header row styling. Hidden on mobile — do not put mobile-critical controls inside it.
+
+**PanelRow:** Shared component for panel list items — takes `icon` (MUI icon element), `title` (string), and optional `children` for secondary content below the title.
 
 **Environment variables** (Firebase config, set in `.env`):
 ```
