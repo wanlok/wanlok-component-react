@@ -42,37 +42,37 @@ export const Dummy2 = ({
       return;
     }
     const { type, id } = collectionTypeId;
-      const findItem = () => {
-        if (type === "charts") {
-          return charts.find(([itemId]) => itemId === id);
-        }
-        if (type === "files") {
-          return files.find(([itemId]) => itemId === id);
-        }
-        if (type === "hyperlinks") {
-          return hyperlinks.find(([itemId]) => itemId === id);
-        }
-        if (type === "steam") {
-          return steam.find(([itemId]) => itemId === id);
-        }
-        if (type === "youtube_regular") {
-          return youTubeRegularVideos.find(([itemId]) => itemId === id);
-        }
-        if (type === "youtube_shorts") {
-          return youTubeShortVideos.find(([itemId]) => itemId === id);
-        }
-      };
-      const item = findItem();
-      if (item) {
-        const value = item[1];
-        if (typeof value !== "string" && "attributes" in value) {
-          setAttributes(value.attributes ?? {});
-        } else {
-          setAttributes({});
-        }
+    const findItem = () => {
+      if (type === "charts") {
+        return charts.find(([itemId]) => itemId === id);
+      }
+      if (type === "files") {
+        return files.find(([itemId]) => itemId === id);
+      }
+      if (type === "hyperlinks") {
+        return hyperlinks.find(([itemId]) => itemId === id);
+      }
+      if (type === "steam") {
+        return steam.find(([itemId]) => itemId === id);
+      }
+      if (type === "youtube_regular") {
+        return youTubeRegularVideos.find(([itemId]) => itemId === id);
+      }
+      if (type === "youtube_shorts") {
+        return youTubeShortVideos.find(([itemId]) => itemId === id);
+      }
+    };
+    const item = findItem();
+    if (item) {
+      const value = item[1];
+      if (typeof value !== "string" && "attributes" in value) {
+        setAttributes(value.attributes ?? {});
       } else {
         setAttributes({});
       }
+    } else {
+      setAttributes({});
+    }
   }, [charts, files, hyperlinks, steam, youTubeRegularVideos, youTubeShortVideos, collectionTypeId]);
 
   return (

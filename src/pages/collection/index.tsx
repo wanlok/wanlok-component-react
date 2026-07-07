@@ -2,7 +2,7 @@ import { useCollection } from "./useCollection";
 import { useEffect, useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
-import { Dummy } from "./Dummy";
+import { EditAttributeModal } from "./EditAttributeModal";
 import { Dummy2 } from "./Dummy2";
 import { LeftContent } from "./LeftContent";
 import { LeftHeader } from "./LeftHeader";
@@ -163,10 +163,10 @@ export const CollectionPage = () => {
         addCollectionItems={addCollectionItems}
         addCollectionFiles={addCollectionFiles}
       />
-      <Dummy
+      <EditAttributeModal
         open={open2}
-        setOpen={(value) => {
-          setOpen2(value);
+        onClose={() => {
+          setOpen2(false);
           setControlGroupState(0);
         }}
         selectedFolder={selectedFolder}
