@@ -1,7 +1,6 @@
 import { createRef, Fragment, useRef, useState } from "react";
 import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { LayoutLoading } from "../../components/LayoutLoading";
-import { useWindowDimensions } from "../../common/useWindowDimension";
 import { KanbanColumn, KanbanItem, KanbanProject } from "../../services/Types";
 import { KanbanCard, padding } from "./KanbanCard";
 import { LayoutPanel } from "../../components/LayoutPanel";
@@ -141,7 +140,6 @@ export const KanbanColumnLayout = ({
   onDeleteItemClick: (i: number, j: number) => void;
 }) => {
   const stackRefs = useRef(project.columns.map(() => createRef<HTMLDivElement>()));
-  const { height } = useWindowDimensions();
   return (
     <Stack sx={{ flex: 1, flexDirection: "row", overflow: "hidden" }}>
       {project.columns.map(({ name, items }, i) => {
@@ -149,7 +147,7 @@ export const KanbanColumnLayout = ({
         return (
           <Fragment key={name}>
             {i !== 0 && <Divider orientation="vertical" />}
-            <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto", height: height - 100 }}>
+            <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto", height: "calc(100dvh - 100px)" }}>
               <Stack sx={{ p: padding, gap: 1 }}>
                 {items.map((item, j) => (
                   <KanbanCard

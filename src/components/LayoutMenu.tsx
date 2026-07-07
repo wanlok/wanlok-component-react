@@ -1,6 +1,5 @@
 import { Box, Divider, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { Link, matchPath, Outlet, useLocation } from "react-router-dom";
-import { useWindowDimensions } from "../common/useWindowDimension";
 import { routes } from "../configs/routes";
 import { WButton } from "./WButton";
 import { Fragment } from "react/jsx-runtime";
@@ -11,16 +10,13 @@ const buttonHeight = 100;
 export const LayoutMenu = () => {
   const { pathname } = useLocation();
   const { breakpoints } = useTheme();
-  const { height } = useWindowDimensions();
   const mobile = useMediaQuery(breakpoints.down("md"));
-
-  const contentHeight = height - (mobile ? buttonHeight : 0);
 
   const mainRoute = routes.find((route) => route.element?.type === LayoutMenu);
   const filteredRoutes = mainRoute?.children?.filter((child) => child.name !== undefined) ?? [];
 
   return (
-    <Stack sx={{ flexDirection: mobile ? "column" : "row", height }}>
+    <Stack sx={{ flexDirection: mobile ? "column" : "row", height: "100dvh" }}>
       <LayoutDivider>
         <Stack sx={{ flexDirection: mobile ? "row" : "column", overflowX: "auto", alignItems: "center" }}>
           {filteredRoutes.map((route, index) => {
@@ -75,8 +71,8 @@ export const LayoutMenu = () => {
           })}
         </Stack>
       </LayoutDivider>
-      <Stack sx={[{ flex: 1, height: contentHeight, overflow: "auto" }]}>
-        <Outlet context={[contentHeight]} />
+      <Stack sx={{ flex: 1, height: mobile ? `calc(100dvh - ${buttonHeight}px)` : "100dvh", overflow: "auto" }}>
+        <Outlet />
       </Stack>
     </Stack>
   );
