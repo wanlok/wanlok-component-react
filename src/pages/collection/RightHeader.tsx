@@ -76,7 +76,7 @@ const Bottom = ({
               disabled={Boolean(selectedCategory)}
               onClick={onRearrangeButtonClick}
               rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
-              sx={controlGroupState === 3 ? { borderBottom: "black solid 4px" } : {}}
+              sx={controlGroupState === 3 && !resetButtonHidden ? { borderBottom: "black solid 4px" } : {}}
             >
               Rearrange
             </WButton>
