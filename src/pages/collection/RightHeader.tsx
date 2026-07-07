@@ -52,26 +52,35 @@ const Bottom = ({
       </Stack>
       <Stack sx={{ flexDirection: "row", gap: 1 }}>
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          {controlGroupState === 1 && (
-            <WButton onClick={onEditAttributeButtonClick} sx={{ ...iconButtonSx, backgroundColor: "common.black" }}>
-              <EditIcon sx={{ fontSize: 18, color: "common.white" }} />
+          <Stack sx={{ flexDirection: "row" }}>
+            {controlGroupState === 1 && (
+              <WButton onClick={onEditAttributeButtonClick} sx={{ ...iconButtonSx, backgroundColor: "common.black" }}>
+                <EditIcon sx={{ fontSize: 18, color: "common.white" }} />
+              </WButton>
+            )}
+            <WButton
+              onClick={onAttributeButtonClick}
+              rightIcon={<ViewListIcon sx={{ fontSize: 24 }} />}
+              sx={controlGroupState === 1 ? { borderBottom: "black solid 4px" } : {}}
+            >
+              Attributes
             </WButton>
-          )}
-          <WButton onClick={onAttributeButtonClick} rightIcon={<ViewListIcon sx={{ fontSize: 24 }} />}>
-            Attributes
-          </WButton>
-          {controlGroupState === 3 && !resetButtonHidden && (
-            <WButton onClick={onResetButtonClick} sx={{ ...iconButtonSx, backgroundColor: "common.black" }}>
-              <UndoIcon sx={{ fontSize: 20, color: "common.white" }} />
+          </Stack>
+          <Stack sx={{ flexDirection: "row" }}>
+            {controlGroupState === 3 && !resetButtonHidden && (
+              <WButton onClick={onResetButtonClick} sx={{ ...iconButtonSx, backgroundColor: "common.black" }}>
+                <UndoIcon sx={{ fontSize: 20, color: "common.white" }} />
+              </WButton>
+            )}
+            <WButton
+              disabled={Boolean(selectedCategory)}
+              onClick={onRearrangeButtonClick}
+              rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
+              sx={controlGroupState === 3 ? { borderBottom: "black solid 4px" } : {}}
+            >
+              Rearrange
             </WButton>
-          )}
-          <WButton
-            disabled={Boolean(selectedCategory)}
-            onClick={onRearrangeButtonClick}
-            rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
-          >
-            Rearrange
-          </WButton>
+          </Stack>
           <WButton onClick={onDeleteButtonClick} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}>
             Delete
           </WButton>
