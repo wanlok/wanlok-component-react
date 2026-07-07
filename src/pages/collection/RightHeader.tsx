@@ -61,7 +61,7 @@ const Bottom = ({
             <WButton
               onClick={onAttributeButtonClick}
               rightIcon={<ViewListIcon sx={{ fontSize: 24 }} />}
-              sx={controlGroupState === 1 ? { borderBottom: "black solid 4px" } : {}}
+              sx={controlGroupState === 1 ? { pt: "4px", borderBottom: "black solid 4px" } : {}}
             >
               Attributes
             </WButton>
@@ -76,7 +76,7 @@ const Bottom = ({
               disabled={Boolean(selectedCategory)}
               onClick={onRearrangeButtonClick}
               rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
-              sx={controlGroupState === 3 && !resetButtonHidden ? { borderBottom: "black solid 4px" } : {}}
+              sx={controlGroupState === 3 && !resetButtonHidden ? { pt: "4px", borderBottom: "black solid 4px" } : {}}
             >
               Rearrange
             </WButton>
