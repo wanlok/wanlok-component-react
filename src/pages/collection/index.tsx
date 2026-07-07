@@ -128,17 +128,16 @@ export const CollectionPage = () => {
         selectedCategory={selectedCategory}
         onCategoryChange={(value) => {
           setSelectedCategory(value);
-          if (value && controlGroupState === 4) {
+          if (value && controlGroupState === 3) {
             setControlGroupState(0);
           }
         }}
         onAttributeButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
         onEditAttributeButtonClick={() => {
-          setControlGroupState(2);
           setOpen2(true);
         }}
-        onDeleteButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
-        onRearrangeButtonClick={() => setControlGroupState(controlGroupState === 4 ? 0 : 4)}
+        onDeleteButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
+        onRearrangeButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
         onResetButtonClick={resetFolderSequences}
         onDownloadButtonClick={() => {
           if (selectedFolder) {
@@ -167,7 +166,6 @@ export const CollectionPage = () => {
         open={open2}
         onClose={() => {
           setOpen2(false);
-          setControlGroupState(0);
         }}
         selectedFolder={selectedFolder}
         updateFolderAttributes={updateFolderAttributes}

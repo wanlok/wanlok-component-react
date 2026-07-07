@@ -4,8 +4,7 @@ import { ReactNode } from "react";
 export const iconButtonSx = {
   width: 55,
   height: 55,
-  p: 0,
-  background: "transparent"
+  p: 0
 };
 
 export const WButton = ({

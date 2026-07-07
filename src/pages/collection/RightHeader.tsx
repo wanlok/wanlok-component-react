@@ -3,11 +3,11 @@ import {
   Close as CloseIcon,
   Download as DownloadIcon,
   Edit as EditIcon,
-  LowPriority as LowPriorityIcon,
+  Undo as UndoIcon,
   SwapHoriz as SwapHorizIcon,
   ViewList as ViewListIcon
 } from "@mui/icons-material";
-import { WButton } from "../../components/WButton";
+import { iconButtonSx, WButton } from "../../components/WButton";
 import { Folder } from "../../services/Types";
 import { SelectInput } from "../../components/SelectInput";
 import { bottomSx, LayoutHeader, topSx } from "../../components/LayoutHeader";
@@ -44,37 +44,45 @@ const Bottom = ({
   onRearrangeButtonClick: () => void;
   onResetButtonClick: () => void;
   onDownloadButtonClick: () => void;
-}) => (
-  <Stack sx={[bottomSx]}>
-    <Stack sx={{ flex: 1, justifyContent: "center", p: 1 }}>
-      <SelectInput items={items} value={selectedCategory} onChange={onCategoryChange} />
-    </Stack>
-    <Stack sx={{ flexDirection: "row", gap: 1 }}>
-      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-        <WButton onClick={onAttributeButtonClick} rightIcon={<ViewListIcon sx={{ fontSize: 24 }} />}>
-          Attributes
-        </WButton>
-        <WButton onClick={onEditAttributeButtonClick} rightIcon={<EditIcon sx={{ fontSize: 18 }} />}>
-          Edit Attributes
-        </WButton>
-        <WButton onClick={onDeleteButtonClick} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}>
-          Delete
-        </WButton>
-        <WButton disabled={Boolean(selectedCategory)} onClick={onRearrangeButtonClick} rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}>
-          Rearrange
-        </WButton>
-        {!resetButtonHidden && (
-          <WButton onClick={onResetButtonClick} rightIcon={<LowPriorityIcon sx={{ fontSize: 24 }} />}>
-            Reset
+}) => {
+  return (
+    <Stack sx={[bottomSx]}>
+      <Stack sx={{ flex: 1, justifyContent: "center", p: 1 }}>
+        <SelectInput items={items} value={selectedCategory} onChange={onCategoryChange} />
+      </Stack>
+      <Stack sx={{ flexDirection: "row", gap: 1 }}>
+        <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+          {controlGroupState === 1 && (
+            <WButton onClick={onEditAttributeButtonClick} sx={{ ...iconButtonSx, backgroundColor: "common.black" }}>
+              <EditIcon sx={{ fontSize: 18, color: "common.white" }} />
+            </WButton>
+          )}
+          <WButton onClick={onAttributeButtonClick} rightIcon={<ViewListIcon sx={{ fontSize: 24 }} />}>
+            Attributes
           </WButton>
-        )}
-        <WButton onClick={onDownloadButtonClick} rightIcon={<DownloadIcon sx={{ fontSize: 24 }} />}>
-          Download
-        </WButton>
+          {controlGroupState === 3 && !resetButtonHidden && (
+            <WButton onClick={onResetButtonClick} sx={{ ...iconButtonSx, backgroundColor: "common.black" }}>
+              <UndoIcon sx={{ fontSize: 20, color: "common.white" }} />
+            </WButton>
+          )}
+          <WButton
+            disabled={Boolean(selectedCategory)}
+            onClick={onRearrangeButtonClick}
+            rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
+          >
+            Rearrange
+          </WButton>
+          <WButton onClick={onDeleteButtonClick} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}>
+            Delete
+          </WButton>
+          <WButton onClick={onDownloadButtonClick} rightIcon={<DownloadIcon sx={{ fontSize: 24 }} />}>
+            Download
+          </WButton>
+        </Stack>
       </Stack>
     </Stack>
-  </Stack>
-);
+  );
+};
 
 export const RightHeader = ({
   isLoading,
