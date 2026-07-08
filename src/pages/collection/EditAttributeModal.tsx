@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { WButton } from "../../components/WButton";
 import { CollectionAttributes, Folder } from "../../services/Types";
 import { WModal } from "../../components/WModal";
-import { Add as AddIcon, Close as CloseIcon, Edit as EditIcon } from "@mui/icons-material";
+import { Add as AddIcon, Close as CloseIcon, Edit as EditIcon, Save as SaveIcon } from "@mui/icons-material";
 
 const options = [
   { label: "Text", value: "text" },
@@ -51,15 +51,17 @@ export const EditAttributeModal = ({
         >
           Add
         </WButton>
-        <WButton
-          onClick={() => {
-            setAttributes(attributes.filter((_, i) => !checkboxStatus.has(i)));
-            setCheckboxStatus(new Set());
-          }}
-          rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
-        >
-          Delete
-        </WButton>
+        {checkboxStatus.size > 0 && (
+          <WButton
+            onClick={() => {
+              setAttributes(attributes.filter((_, i) => !checkboxStatus.has(i)));
+              setCheckboxStatus(new Set());
+            }}
+            rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+          >
+            {`Delete ${checkboxStatus.size} ${checkboxStatus.size === 1 ? "Row" : "Rows"}`}
+          </WButton>
+        )}
       </Stack>
       <Stack sx={{ p: 2, gap: "1px", backgroundColor: "common.white" }}>
         {attributes.map(({ name, type }, i) => {
@@ -77,7 +79,11 @@ export const EditAttributeModal = ({
                 }}
               >
                 <Checkbox
-                  sx={{ p: 0, color: "divider", "&.Mui-checked": { color: "common.black" } }}
+                  sx={{
+                    p: 0,
+                    color: "divider",
+                    "&.Mui-checked": { color: "common.black" }
+                  }}
                   checked={checkboxStatus.has(i)}
                   onChange={(event) => {
                     const newCheckboxStatus = new Set(checkboxStatus);
@@ -126,6 +132,7 @@ export const EditAttributeModal = ({
           onClose();
         }}
         sx={{ height: 55 }}
+        rightIcon={<SaveIcon sx={{ fontSize: 24 }} />}
       >
         Save
       </WButton>
