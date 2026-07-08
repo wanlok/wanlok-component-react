@@ -27,11 +27,11 @@ export const EditAttributeModal = ({
   const [checkboxStatus, setCheckboxStatus] = useState(new Set<number>());
 
   useEffect(() => {
-    if (selectedFolder) {
+    if (open && selectedFolder) {
       setAttributes([...selectedFolder.attributes.map((attribute) => ({ ...attribute }))]);
       setCheckboxStatus(new Set());
     }
-  }, [selectedFolder]);
+  }, [open, selectedFolder]);
 
   return (
     <WModal open={open} onClose={onClose}>
