@@ -61,14 +61,16 @@ export const EditAttributeModal = ({
           Delete
         </WButton>
       </Stack>
-      <Stack sx={{ p: 2, gap: 1, backgroundColor: "common.white" }}>
+      <Stack sx={{ p: 2, gap: "1px", backgroundColor: "common.white" }}>
         {attributes.map(({ name, type }, i) => {
           return (
             <Stack key={`attribute-${i}`} sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
               <Stack
                 sx={{
-                  height: 39,
-                  width: 39,
+                  flex: 1,
+                  flexDirection: "row",
+                  p: 1,
+                  gap: 1,
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: "background.default"
@@ -87,32 +89,32 @@ export const EditAttributeModal = ({
                     setCheckboxStatus(newCheckboxStatus);
                   }}
                 />
-              </Stack>
-              <Stack sx={{ flex: 1, backgrondColor: "background.default" }}>
-                <TextInput
-                  value={name}
-                  onChange={(value) => {
-                    const newAttributes = [...attributes];
-                    newAttributes[i].name = value;
-                    setAttributes(newAttributes);
-                  }}
-                  hideHelperText={true}
-                  inputPropsSx={{ flex: 1 }}
-                />
-              </Stack>
-              <Stack sx={{ flex: 1 }}>
-                <SelectInput
-                  items={options}
-                  value={type}
-                  onChange={(value: string) => {
-                    if (value !== "text" && value !== "number") {
-                      return;
-                    }
-                    const newAttributes = [...attributes];
-                    newAttributes[i].type = value;
-                    setAttributes(newAttributes);
-                  }}
-                />
+                <Stack sx={{ flex: 1 }}>
+                  <TextInput
+                    value={name}
+                    onChange={(value) => {
+                      const newAttributes = [...attributes];
+                      newAttributes[i].name = value;
+                      setAttributes(newAttributes);
+                    }}
+                    hideHelperText={true}
+                    inputPropsSx={{ flex: 1 }}
+                  />
+                </Stack>
+                <Stack sx={{ flex: 1 }}>
+                  <SelectInput
+                    items={options}
+                    value={type}
+                    onChange={(value: string) => {
+                      if (value !== "text" && value !== "number") {
+                        return;
+                      }
+                      const newAttributes = [...attributes];
+                      newAttributes[i].type = value;
+                      setAttributes(newAttributes);
+                    }}
+                  />
+                </Stack>
               </Stack>
             </Stack>
           );
