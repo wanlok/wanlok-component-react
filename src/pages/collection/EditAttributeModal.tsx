@@ -1,10 +1,11 @@
-import { Checkbox, Divider, Stack, Typography } from "@mui/material";
+import { Checkbox, Stack, Typography } from "@mui/material";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { useEffect, useState } from "react";
 import { WButton } from "../../components/WButton";
 import { CollectionAttributes, Folder } from "../../services/Types";
 import { WModal } from "../../components/WModal";
+import { Add as AddIcon, Close as CloseIcon, Edit as EditIcon } from "@mui/icons-material";
 
 const options = [
   { label: "Text", value: "text" },
@@ -34,47 +35,52 @@ export const EditAttributeModal = ({
 
   return (
     <WModal open={open} onClose={onClose}>
-      <Stack sx={{ p: 2 }}>
+      <Stack sx={{ flexDirection: "row", alignItems: "center", p: 2, gap: 1 }}>
+        <EditIcon sx={{ fontSize: 18, mt: "-2px" }} />
         <Typography>Edit Attributes</Typography>
       </Stack>
-      <Divider />
-      <Stack sx={{ py: 2, pr: 2, gap: 2 }}>
-        <Stack sx={{ flexDirection: "row", gap: "1px", height: 55, justifyContent: "flex-end" }}>
-          <WButton
-            onClick={() => {
-              if (!attributes) {
-                return;
-              }
-              setAttributes([...attributes, { name: "", type: "text" }]);
-            }}
-          >
-            Add
-          </WButton>
-          <WButton
-            onClick={() => {
-              setAttributes(attributes.filter((_, i) => !checkboxStatus.has(i)));
-              setCheckboxStatus(new Set());
-            }}
-          >
-            Delete
-          </WButton>
-        </Stack>
+      <Stack sx={{ flexDirection: "row", gap: "1px", height: 55 }}>
+        <WButton
+          onClick={() => {
+            if (!attributes) {
+              return;
+            }
+            setAttributes([...attributes, { name: "", type: "text" }]);
+          }}
+          rightIcon={<AddIcon sx={{ fontSize: 24 }} />}
+        >
+          Add
+        </WButton>
+        <WButton
+          onClick={() => {
+            setAttributes(attributes.filter((_, i) => !checkboxStatus.has(i)));
+            setCheckboxStatus(new Set());
+          }}
+          rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+        >
+          Delete
+        </WButton>
+      </Stack>
+      <Stack sx={{ p: 2, gap: 2, backgroundColor: "common.white" }}>
         <Stack>
           {attributes.map(({ name, type }, i) => {
             return (
-              <Stack key={`attribute-${i}`} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
-                <Checkbox
-                  checked={checkboxStatus.has(i)}
-                  onChange={(event) => {
-                    const newCheckboxStatus = new Set(checkboxStatus);
-                    if (event.target.checked) {
-                      newCheckboxStatus.add(i);
-                    } else {
-                      newCheckboxStatus.delete(i);
-                    }
-                    setCheckboxStatus(newCheckboxStatus);
-                  }}
-                />
+              <Stack key={`attribute-${i}`} sx={{ flexDirection: "row", alignItems: "center" }}>
+                <Stack sx={{ pr: 2 }}>
+                  <Checkbox
+                    sx={{ p: 0 }}
+                    checked={checkboxStatus.has(i)}
+                    onChange={(event) => {
+                      const newCheckboxStatus = new Set(checkboxStatus);
+                      if (event.target.checked) {
+                        newCheckboxStatus.add(i);
+                      } else {
+                        newCheckboxStatus.delete(i);
+                      }
+                      setCheckboxStatus(newCheckboxStatus);
+                    }}
+                  />
+                </Stack>
                 <Stack sx={{ flex: 1 }}>
                   <TextInput
                     value={name}

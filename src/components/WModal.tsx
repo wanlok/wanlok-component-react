@@ -1,9 +1,18 @@
-import { Modal, Stack } from "@mui/material";
+import { alpha, Modal, Stack, useTheme } from "@mui/material";
 import { ReactNode } from "react";
 
 export const WModal = ({ open, onClose, children }: { open: boolean; onClose: () => void; children?: ReactNode }) => {
+  const { palette } = useTheme();
   return (
-    <Modal open={open} onClose={onClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
+    <Modal
+      open={open}
+      onClose={onClose}
+      slotProps={{
+        backdrop: { sx: { backgroundColor: alpha(palette.common.white, 0.8) } }
+      }}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+    >
       <Stack
         sx={{
           position: "absolute",
@@ -11,7 +20,10 @@ export const WModal = ({ open, onClose, children }: { open: boolean; onClose: ()
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 400,
-          backgroundColor: "background.default"
+          backgroundColor: "background.default",
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderColor: "divider"
         }}
       >
         {children}
