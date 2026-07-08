@@ -8,7 +8,7 @@ export const WModal = ({ open, onClose, children }: { open: boolean; onClose: ()
       open={open}
       onClose={onClose}
       slotProps={{
-        backdrop: { sx: { backgroundColor: alpha(palette.common.white, 0.8) } }
+        backdrop: { sx: { backgroundColor: alpha(palette.common.black, 0.8) } }
       }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -20,10 +20,7 @@ export const WModal = ({ open, onClose, children }: { open: boolean; onClose: ()
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 400,
-          backgroundColor: "background.default",
-          borderWidth: 1,
-          borderStyle: "solid",
-          borderColor: "divider"
+          backgroundColor: "background.default"
         }}
       >
         {children}
