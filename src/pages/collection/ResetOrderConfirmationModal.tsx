@@ -14,9 +14,12 @@ export const ResetOrderConfirmationModal = ({
 }) => {
   return (
     <WModal open={open} onClose={onClose} titleIcon={<UndoIcon sx={{ fontSize: 24 }} />} title="Reset Order">
-      <Stack sx={{ p: 2, gap: "1px", backgroundColor: "common.white" }}>
-        <Typography variant="body1" sx={{ lineHeight: 2 }}>
+      <Stack sx={{ p: 2, gap: 2, backgroundColor: "common.white" }}>
+        <Typography variant="body1" sx={{ lineHeight: 1.5 }}>
           Are you sure you want to reset the arranged order?
+        </Typography>
+        <Typography variant="body1" sx={{ lineHeight: 1.5 }}>
+          Please note that items will be arranged in a random order.
         </Typography>
       </Stack>
       <Stack sx={{ flexDirection: "row", height: 55, gap: "1px" }}>
