@@ -4,6 +4,7 @@ import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { EditAttributeModal } from "./EditAttributeModal";
 import { AttributeModal } from "./AttributeModal";
+import { ResetOrderConfirmationModal } from "./ResetOrderConfirmationModal";
 import { LeftContent } from "./LeftContent";
 import { LeftHeader } from "./LeftHeader";
 import { PanelRow } from "../../components/PanelRow";
@@ -47,6 +48,7 @@ export const CollectionPage = () => {
   const [folderControlGroupState, setFolderControlGroupState] = useState(0);
   const [controlGroupState, setControlGroupState] = useState(0);
   const [editAttributeModalOpen, setEditAttributeModalOpen] = useState(false);
+  const [undoRearrangeModalOpen, setUndoRearrangeModalOpen] = useState(false);
   const [collectionTypeId, setCollectionTypeId] = useState<{ type: string; id: string } | undefined>(undefined);
   const [selectedCategory, setSelectedCategory] = useState("");
 
@@ -144,7 +146,7 @@ export const CollectionPage = () => {
         onEditAttributeButtonClick={() => setEditAttributeModalOpen(true)}
         onDeleteButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
         onRearrangeButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
-        onResetButtonClick={resetFolderSequences}
+        onResetButtonClick={() => setUndoRearrangeModalOpen(true)}
         onDownloadButtonClick={() => {
           if (selectedFolder) {
             downloadFolder(selectedFolder);
@@ -185,6 +187,11 @@ export const CollectionPage = () => {
         setCollectionTypeId={setCollectionTypeId}
         selectedFolder={selectedFolder}
         updateCollectionAttributes={updateCollectionAttributes}
+      />
+      <ResetOrderConfirmationModal
+        open={undoRearrangeModalOpen}
+        onClose={() => setUndoRearrangeModalOpen(false)}
+        onConfirm={resetFolderSequences}
       />
     </LayoutPanel>
   );

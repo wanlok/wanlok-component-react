@@ -1,0 +1,39 @@
+import { Stack, Typography } from "@mui/material";
+import { Close as CloseIcon, Done as DoneIcon, Undo as UndoIcon } from "@mui/icons-material";
+import { WModal } from "../../components/WModal";
+import { WButton } from "../../components/WButton";
+
+export const ResetOrderConfirmationModal = ({
+  open,
+  onClose,
+  onConfirm
+}: {
+  open: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+}) => {
+  return (
+    <WModal open={open} onClose={onClose} titleIcon={<UndoIcon sx={{ fontSize: 24 }} />} title="Reset Order">
+      <Stack sx={{ p: 2, gap: "1px", backgroundColor: "common.white" }}>
+        <Typography variant="body1" sx={{ lineHeight: 2 }}>
+          Are you sure you want to reset the arranged order?
+        </Typography>
+      </Stack>
+      <Stack sx={{ flexDirection: "row", height: 55, gap: "1px" }}>
+        <WButton
+          onClick={() => {
+            onConfirm();
+            onClose();
+          }}
+          rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
+          sx={{ flex: 1 }}
+        >
+          Confirm
+        </WButton>
+        <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
+          Cancel
+        </WButton>
+      </Stack>
+    </WModal>
+  );
+};
