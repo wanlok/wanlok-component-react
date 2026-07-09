@@ -1,11 +1,12 @@
-import { Checkbox, Stack, Typography } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { useEffect, useState } from "react";
 import { WButton } from "../../components/WButton";
 import { CollectionAttributes, Folder } from "../../services/Types";
+import { WCheckbox } from "../../components/WCheckbox";
 import { WModal } from "../../components/WModal";
-import { Add as AddIcon, Close as CloseIcon, Edit as EditIcon, Save as SaveIcon } from "@mui/icons-material";
+import { Add as AddIcon, Close as CloseIcon, Done as DoneIcon, Edit as EditIcon } from "@mui/icons-material";
 
 const options = [
   { label: "Text", value: "text" },
@@ -35,9 +36,11 @@ export const EditAttributeModal = ({
 
   return (
     <WModal open={open} onClose={onClose}>
-      <Stack sx={{ flexDirection: "row", alignItems: "center", p: 2, gap: 1 }}>
-        <EditIcon sx={{ fontSize: 18, mt: "-2px" }} />
-        <Typography>Edit Attributes</Typography>
+      <Stack sx={{ flexDirection: "row" }}>
+        <Stack sx={{ flexDirection: "row", flex: 1, alignItems: "center", p: 2, gap: 1 }}>
+          <EditIcon sx={{ fontSize: 18, mt: "-2px" }} />
+          <Typography sx={{ flex: 1 }}>Edit Attributes</Typography>
+        </Stack>
       </Stack>
       <Stack sx={{ flexDirection: "row", gap: "1px", height: 55 }}>
         <WButton
@@ -49,7 +52,7 @@ export const EditAttributeModal = ({
           }}
           rightIcon={<AddIcon sx={{ fontSize: 24 }} />}
         >
-          Add
+          Add Row
         </WButton>
         {checkboxStatus.size > 0 && (
           <WButton
@@ -78,16 +81,11 @@ export const EditAttributeModal = ({
                   backgroundColor: "background.default"
                 }}
               >
-                <Checkbox
-                  sx={{
-                    p: 0,
-                    color: "divider",
-                    "&.Mui-checked": { color: "common.black" }
-                  }}
+                <WCheckbox
                   checked={checkboxStatus.has(i)}
-                  onChange={(event) => {
+                  onChange={(checked) => {
                     const newCheckboxStatus = new Set(checkboxStatus);
-                    if (event.target.checked) {
+                    if (checked) {
                       newCheckboxStatus.add(i);
                     } else {
                       newCheckboxStatus.delete(i);
@@ -126,16 +124,21 @@ export const EditAttributeModal = ({
           );
         })}
       </Stack>
-      <WButton
-        onClick={async () => {
-          await updateFolderAttributes(attributes);
-          onClose();
-        }}
-        sx={{ height: 55 }}
-        rightIcon={<SaveIcon sx={{ fontSize: 24 }} />}
-      >
-        Save
-      </WButton>
+      <Stack sx={{ flexDirection: "row", height: 55, gap: "1px" }}>
+        <WButton
+          onClick={async () => {
+            await updateFolderAttributes(attributes);
+            onClose();
+          }}
+          rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
+          sx={{ flex: 1 }}
+        >
+          Save
+        </WButton>
+        <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
+          Cancel
+        </WButton>
+      </Stack>
     </WModal>
   );
 };

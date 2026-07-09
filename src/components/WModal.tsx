@@ -1,12 +1,25 @@
 import { alpha, Modal, Stack, useTheme } from "@mui/material";
 import { ReactNode } from "react";
 
-export const WModal = ({ open, onClose, children }: { open: boolean; onClose: () => void; children?: ReactNode }) => {
+export const WModal = ({
+  open,
+  onClose,
+  children
+}: {
+  open: boolean;
+  onClose: () => void;
+  children?: ReactNode;
+}) => {
   const { palette } = useTheme();
   return (
     <Modal
       open={open}
-      onClose={onClose}
+      onClose={(_, reason) => {
+        if (reason === "backdropClick") {
+          return;
+        }
+        onClose();
+      }}
       slotProps={{
         backdrop: { sx: { backgroundColor: alpha(palette.common.black, 0.8) } }
       }}
