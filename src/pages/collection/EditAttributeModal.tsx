@@ -68,7 +68,10 @@ export const EditAttributeModal = ({
       <Stack sx={{ p: 2, gap: "1px", backgroundColor: "common.white" }}>
         {attributes.map(({ name, type }, i) => {
           return (
-            <Stack key={`attribute-${i}`} sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
+            <Stack
+              key={`attribute-${i}`}
+              sx={{ flexDirection: "row", alignItems: "center", gap: 1, borderLeft: "#DDDDDD solid 4px" }}
+            >
               <Stack
                 sx={{
                   flex: 1,

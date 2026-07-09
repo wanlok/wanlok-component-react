@@ -86,7 +86,10 @@ export const AttributeModal = ({
       <Stack sx={{ p: 2, gap: "1px", backgroundColor: "common.white" }}>
         {selectedFolder?.attributes.map(({ name }, i) => {
           return (
-            <Stack key={`attribute-${i}`} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
+            <Stack
+              key={`attribute-${i}`}
+              sx={{ flexDirection: "row", backgroundColor: "background.default", borderLeft: "#DDDDDD solid 4px" }}
+            >
               <Stack sx={{ flex: 1, justifyContent: "center", px: 2 }}>
                 <Typography variant="body1">{name}</Typography>
               </Stack>

@@ -19,7 +19,7 @@ export const ResetOrderConfirmationModal = ({
           Are you sure you want to reset the arranged order?
         </Typography>
         <Typography variant="body1" sx={{ lineHeight: 1.5 }}>
-          Please note that items will be arranged in a random order.
+          Please note that items will be arranged in a random order after reset.
         </Typography>
       </Stack>
       <Stack sx={{ flexDirection: "row", height: 55, gap: "1px" }}>
