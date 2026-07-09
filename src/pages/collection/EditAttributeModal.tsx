@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { useEffect, useState } from "react";
@@ -35,13 +35,12 @@ export const EditAttributeModal = ({
   }, [open, selectedFolder]);
 
   return (
-    <WModal open={open} onClose={onClose}>
-      <Stack sx={{ flexDirection: "row" }}>
-        <Stack sx={{ flexDirection: "row", flex: 1, alignItems: "center", p: 2, gap: 1 }}>
-          <EditIcon sx={{ fontSize: 18, mt: "-2px" }} />
-          <Typography sx={{ flex: 1 }}>Edit Attributes</Typography>
-        </Stack>
-      </Stack>
+    <WModal
+      open={open}
+      onClose={onClose}
+      titleIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
+      title="Edit Attributes"
+    >
       <Stack sx={{ flexDirection: "row", gap: "1px", height: 55 }}>
         <WButton
           onClick={() => {

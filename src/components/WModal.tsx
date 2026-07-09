@@ -1,13 +1,17 @@
-import { alpha, Modal, Stack, useTheme } from "@mui/material";
+import { alpha, Modal, Stack, Typography, useTheme } from "@mui/material";
 import { ReactNode } from "react";
 
 export const WModal = ({
   open,
   onClose,
+  titleIcon,
+  title,
   children
 }: {
   open: boolean;
   onClose: () => void;
+  titleIcon?: ReactNode;
+  title?: string;
   children?: ReactNode;
 }) => {
   const { palette } = useTheme();
@@ -36,6 +40,14 @@ export const WModal = ({
           backgroundColor: "background.default"
         }}
       >
+        {(titleIcon || title) && (
+          <Stack sx={{ flexDirection: "row" }}>
+            <Stack sx={{ flexDirection: "row", flex: 1, alignItems: "center", p: 2, gap: 1 }}>
+              {titleIcon}
+              {title && <Typography sx={{ flex: 1 }}>{title}</Typography>}
+            </Stack>
+          </Stack>
+        )}
         {children}
       </Stack>
     </Modal>

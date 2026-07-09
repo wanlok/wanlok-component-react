@@ -1,4 +1,5 @@
 import { Stack, Typography } from "@mui/material";
+import { Close as CloseIcon, Done as DoneIcon, ViewList as ViewListIcon } from "@mui/icons-material";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ChartItem, CloudinaryFileInfo, Folder, SteamInfo, YouTubeOEmbed } from "../../services/Types";
 import { WModal } from "../../components/WModal";
@@ -76,44 +77,57 @@ export const AttributeModal = ({
   }, [charts, files, hyperlinks, steam, youTubeRegularVideos, youTubeShortVideos, collectionTypeId]);
 
   return (
-    <WModal open={collectionTypeId !== undefined} onClose={() => setCollectionTypeId(undefined)}>
-      <Stack sx={{ flexDirection: "row", height: 48 }}>
-        <Stack sx={{ flex: 1, p: 1, justifyContent: "center" }}>
-          <Typography variant="body1">Attributes</Typography>
-        </Stack>
+    <WModal
+      open={collectionTypeId !== undefined}
+      onClose={() => setCollectionTypeId(undefined)}
+      titleIcon={<ViewListIcon sx={{ fontSize: 24 }} />}
+      title="Attributes"
+    >
+      <Stack sx={{ p: 2, gap: "1px", backgroundColor: "common.white" }}>
+        {selectedFolder?.attributes.map(({ name }, i) => {
+          return (
+            <Stack key={`attribute-${i}`} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
+              <Stack sx={{ flex: 1, justifyContent: "center", px: 2 }}>
+                <Typography variant="body1">{name}</Typography>
+              </Stack>
+              <Stack sx={{ flex: 1, p: 1 }}>
+                <TextInput
+                  value={attributes[name]}
+                  onChange={(value) => {
+                    const newAttributes = { ...attributes };
+                    newAttributes[name] = value;
+                    setAttributes(newAttributes);
+                  }}
+                  hideHelperText={true}
+                  inputPropsSx={{ flex: 1 }}
+                />
+              </Stack>
+            </Stack>
+          );
+        })}
       </Stack>
-      {selectedFolder?.attributes.map(({ name }, i) => {
-        return (
-          <Stack key={`attribute-${i}`} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
-            <Stack sx={{ flex: 1 }}>
-              <Typography variant="body1">{name}</Typography>
-            </Stack>
-            <Stack sx={{ flex: 1 }}>
-              <TextInput
-                value={attributes[name]}
-                onChange={(value) => {
-                  const newAttributes = { ...attributes };
-                  newAttributes[name] = value;
-                  setAttributes(newAttributes);
-                }}
-                hideHelperText={true}
-                inputPropsSx={{ flex: 1 }}
-              />
-            </Stack>
-          </Stack>
-        );
-      })}
-      <WButton
-        onClick={async () => {
-          if (collectionTypeId) {
-            const { type, id } = collectionTypeId;
-            await updateCollectionAttributes(type, id, attributes);
-            setCollectionTypeId(undefined);
-          }
-        }}
-      >
-        Save
-      </WButton>
+      <Stack sx={{ flexDirection: "row", height: 55, gap: "1px" }}>
+        <WButton
+          onClick={async () => {
+            if (collectionTypeId) {
+              const { type, id } = collectionTypeId;
+              await updateCollectionAttributes(type, id, attributes);
+              setCollectionTypeId(undefined);
+            }
+          }}
+          rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
+          sx={{ flex: 1 }}
+        >
+          Save
+        </WButton>
+        <WButton
+          onClick={() => setCollectionTypeId(undefined)}
+          rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+          sx={{ flex: 1 }}
+        >
+          Cancel
+        </WButton>
+      </Stack>
     </WModal>
   );
 };
