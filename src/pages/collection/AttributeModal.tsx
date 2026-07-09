@@ -5,7 +5,7 @@ import { WModal } from "../../components/WModal";
 import { TextInput } from "../../components/TextInput";
 import { WButton } from "../../components/WButton";
 
-export const Dummy2 = ({
+export const AttributeModal = ({
   charts,
   files,
   hyperlinks,
