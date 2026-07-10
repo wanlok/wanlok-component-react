@@ -82,8 +82,32 @@ export const AttributeModal = ({
       onClose={() => setCollectionTypeId(undefined)}
       titleIcon={<ViewListIcon sx={{ fontSize: 24 }} />}
       title="Attributes"
+      bottom={
+        <>
+          <WButton
+            onClick={async () => {
+              if (collectionTypeId) {
+                const { type, id } = collectionTypeId;
+                await updateCollectionAttributes(type, id, attributes);
+                setCollectionTypeId(undefined);
+              }
+            }}
+            rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
+            sx={{ flex: 1 }}
+          >
+            Save
+          </WButton>
+          <WButton
+            onClick={() => setCollectionTypeId(undefined)}
+            rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+            sx={{ flex: 1 }}
+          >
+            Cancel
+          </WButton>
+        </>
+      }
     >
-      <Stack sx={{ p: 2, gap: "1px", backgroundColor: "common.white" }}>
+      <Stack sx={{ gap: "1px" }}>
         {selectedFolder?.attributes.map(({ name }, i) => {
           return (
             <Stack
@@ -108,28 +132,6 @@ export const AttributeModal = ({
             </Stack>
           );
         })}
-      </Stack>
-      <Stack sx={{ flexDirection: "row", height: 55, gap: "1px" }}>
-        <WButton
-          onClick={async () => {
-            if (collectionTypeId) {
-              const { type, id } = collectionTypeId;
-              await updateCollectionAttributes(type, id, attributes);
-              setCollectionTypeId(undefined);
-            }
-          }}
-          rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
-          sx={{ flex: 1 }}
-        >
-          Save
-        </WButton>
-        <WButton
-          onClick={() => setCollectionTypeId(undefined)}
-          rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
-          sx={{ flex: 1 }}
-        >
-          Cancel
-        </WButton>
       </Stack>
     </WModal>
   );

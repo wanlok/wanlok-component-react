@@ -1,4 +1,5 @@
-import { Divider, Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
+import { Close as CloseIcon, Done as DoneIcon } from "@mui/icons-material";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { WButton } from "../../components/WButton";
@@ -28,17 +29,26 @@ export const ProjectModal = ({
   onSaveButtonClick: () => void;
 }) => {
   return (
-    <WModal open={open} onClose={onClose}>
-      <Stack sx={{ px: 1, py: 2, pb: "12px" }}>
-        <Typography variant="h6">{title}</Typography>
-      </Stack>
-      <Divider />
-      <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
-        <Stack sx={{ flex: 1, gap: 1, p: 1 }}>
-          {rows.map(({ label, value, disabled }, i) =>
-            typeof value === "string" ? (
+    <WModal
+      open={open}
+      onClose={onClose}
+      title={title}
+      bottom={
+        <>
+          <WButton onClick={onSaveButtonClick} rightIcon={<DoneIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
+            Save
+          </WButton>
+          <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
+            Cancel
+          </WButton>
+        </>
+      }
+    >
+      <Stack sx={{ gap: 1 }}>
+        {rows.map(({ label, value, disabled }, i) => (
+          <Stack key={`row-${i}`} sx={{ backgroundColor: "background.default", p: 1, borderLeft: "#DDDDDD solid 4px" }}>
+            {typeof value === "string" ? (
               <TextInput
-                key={`row-${i}`}
                 label={label}
                 value={value}
                 onChange={(v) => onRowValueChange(i, v)}
@@ -47,7 +57,7 @@ export const ProjectModal = ({
                 inputPropsSx={{ flex: 1 }}
               />
             ) : (
-              <Stack key={`row-${i}`} sx={{ gap: 1 }}>
+              <Stack sx={{ gap: 1 }}>
                 <SelectInput
                   label="Number of Columns"
                   items={Array.from({ length: 5 }, (_, i) => ({
@@ -74,11 +84,10 @@ export const ProjectModal = ({
                   />
                 ))}
               </Stack>
-            )
-          )}
-        </Stack>
+            )}
+          </Stack>
+        ))}
       </Stack>
-      <WButton onClick={onSaveButtonClick}>Save</WButton>
     </WModal>
   );
 };

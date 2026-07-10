@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { Divider, Stack, Typography } from "@mui/material";
+import { Close as CloseIcon, Done as DoneIcon, Edit as EditIcon, ViewList as ViewListIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
-import { KanbanItem, KanbanProject } from "../../services/Types";
+import { KanbanProject } from "../../services/Types";
 import { WButton } from "../../components/WButton";
 import { TextInput } from "../../components/TextInput";
 import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
@@ -28,54 +29,63 @@ const parseContent = (text: string) => {
   return parts;
 };
 
-const View = ({ kanbanItem, onEditButtonClick }: { kanbanItem: KanbanItem; onEditButtonClick: () => void }) => {
-  return (
-    <>
-      <Stack sx={{ p: 2, gap: 2, backgroundColor: "common.white" }}>
-        <Typography variant="h6" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
-          {kanbanItem.name || "No name"}
-        </Typography>
-        <Divider />
-        <Stack sx={{ flexDirection: "row" }}>
-          <Typography variant="body2" sx={{ flex: 0.28 }}>
-            Created Date
-          </Typography>
-          <Typography variant="body2" sx={{ flex: 0.72 }}>
-            {getDisplayDateTimeString(new Date(kanbanItem.created_at))} (
-            {getDaysSinceString(new Date(kanbanItem.created_at))})
-          </Typography>
-        </Stack>
-        <Divider />
-        <Typography
-          variant="body1"
-          component="div"
-          sx={{ color: kanbanItem.content ? "text.primary" : "text.disabled", whiteSpace: "pre-wrap" }}
-        >
-          {kanbanItem.content ? parseContent(kanbanItem.content) : "No content"}
-        </Typography>
-      </Stack>
-      <WButton onClick={onEditButtonClick}>Edit</WButton>
-    </>
-  );
-};
-
-const Edit = ({
-  kanbanItem,
-  onSaveButtonClick
+export const ItemModal = ({
+  project,
+  item,
+  onItemChange,
+  onClose
 }: {
-  kanbanItem: KanbanItem;
-  onSaveButtonClick: (name: string, content: string) => void;
+  project: KanbanProject;
+  item: { i: number; j: number };
+  onItemChange: (name: string, content: string) => void;
+  onClose: () => void;
 }) => {
+  const kanbanItem = project.columns[item.i].items[item.j];
+  const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(kanbanItem.name);
   const [content, setContent] = useState(kanbanItem.content);
+
   return (
-    <>
-      <Stack sx={{ px: 1, pt: 2, pb: "12px" }}>
-        <Typography variant="h6">Edit</Typography>
-      </Stack>
-      <Divider />
-      <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
-        <Stack sx={{ flex: 1, gap: 1, p: 1 }}>
+    <WModal
+      open={true}
+      onClose={onClose}
+      titleIcon={<ViewListIcon sx={{ fontSize: 24 }} />}
+      title={isEditing ? "Edit Item" : "View Item"}
+      bottom={
+        isEditing ? (
+          <>
+            <WButton
+              onClick={() => {
+                onItemChange(name, content);
+                setIsEditing(false);
+              }}
+              rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
+              sx={{ flex: 1 }}
+            >
+              Save
+            </WButton>
+            <WButton
+              onClick={() => setIsEditing(false)}
+              rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+              sx={{ flex: 1 }}
+            >
+              Cancel
+            </WButton>
+          </>
+        ) : (
+          <>
+            <WButton onClick={() => setIsEditing(true)} rightIcon={<EditIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
+              Edit
+            </WButton>
+            <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
+              Close
+            </WButton>
+          </>
+        )
+      }
+    >
+      {isEditing ? (
+        <Stack sx={{ gap: 1 }}>
           <TextInput label="Name" value={name} onChange={setName} hideHelperText={true} inputPropsSx={{ flex: 1 }} />
           <TextInput
             label="Created Date"
@@ -94,37 +104,30 @@ const Edit = ({
             inputPropsSx={{ flex: 1 }}
           />
         </Stack>
-      </Stack>
-      <WButton onClick={() => onSaveButtonClick(name, content)}>Save</WButton>
-    </>
-  );
-};
-
-export const ItemModal = ({
-  project,
-  item,
-  onItemChange,
-  onClose
-}: {
-  project: KanbanProject;
-  item: { i: number; j: number };
-  onItemChange: (name: string, content: string) => void;
-  onClose: () => void;
-}) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const kanbanItem = project.columns[item.i].items[item.j];
-  return (
-    <WModal open={true} onClose={onClose}>
-      {isEditing ? (
-        <Edit
-          kanbanItem={kanbanItem}
-          onSaveButtonClick={(name, content) => {
-            onItemChange(name, content);
-            setIsEditing(false);
-          }}
-        />
       ) : (
-        <View kanbanItem={kanbanItem} onEditButtonClick={() => setIsEditing(true)} />
+        <Stack sx={{ gap: 2 }}>
+          <Typography variant="h6" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
+            {kanbanItem.name || "No name"}
+          </Typography>
+          <Divider />
+          <Stack sx={{ flexDirection: "row" }}>
+            <Typography variant="body2" sx={{ flex: 0.28 }}>
+              Created Date
+            </Typography>
+            <Typography variant="body2" sx={{ flex: 0.72 }}>
+              {getDisplayDateTimeString(new Date(kanbanItem.created_at))} (
+              {getDaysSinceString(new Date(kanbanItem.created_at))})
+            </Typography>
+          </Stack>
+          <Divider />
+          <Typography
+            variant="body1"
+            component="div"
+            sx={{ color: kanbanItem.content ? "text.primary" : "text.disabled", whiteSpace: "pre-wrap" }}
+          >
+            {kanbanItem.content ? parseContent(kanbanItem.content) : "No content"}
+          </Typography>
+        </Stack>
       )}
     </WModal>
   );

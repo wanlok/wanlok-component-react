@@ -40,32 +40,51 @@ export const EditAttributeModal = ({
       onClose={onClose}
       titleIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
       title="Edit Attributes"
-    >
-      <Stack sx={{ flexDirection: "row", gap: "1px", height: 55 }}>
-        <WButton
-          onClick={() => {
-            if (!attributes) {
-              return;
-            }
-            setAttributes([...attributes, { name: "", type: "text" }]);
-          }}
-          rightIcon={<AddIcon sx={{ fontSize: 24 }} />}
-        >
-          Add Row
-        </WButton>
-        {checkboxStatus.size > 0 && (
+      top={
+        <>
           <WButton
             onClick={() => {
-              setAttributes(attributes.filter((_, i) => !checkboxStatus.has(i)));
-              setCheckboxStatus(new Set());
+              if (!attributes) {
+                return;
+              }
+              setAttributes([...attributes, { name: "", type: "text" }]);
             }}
-            rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+            rightIcon={<AddIcon sx={{ fontSize: 24 }} />}
           >
-            {`Delete ${checkboxStatus.size} ${checkboxStatus.size === 1 ? "Row" : "Rows"}`}
+            Add Row
           </WButton>
-        )}
-      </Stack>
-      <Stack sx={{ p: 2, gap: "1px", backgroundColor: "common.white" }}>
+          {checkboxStatus.size > 0 && (
+            <WButton
+              onClick={() => {
+                setAttributes(attributes.filter((_, i) => !checkboxStatus.has(i)));
+                setCheckboxStatus(new Set());
+              }}
+              rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+            >
+              {`Delete ${checkboxStatus.size} ${checkboxStatus.size === 1 ? "Row" : "Rows"}`}
+            </WButton>
+          )}
+        </>
+      }
+      bottom={
+        <>
+          <WButton
+            onClick={async () => {
+              await updateFolderAttributes(attributes);
+              onClose();
+            }}
+            rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
+            sx={{ flex: 1 }}
+          >
+            Save
+          </WButton>
+          <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
+            Cancel
+          </WButton>
+        </>
+      }
+    >
+      <Stack sx={{ gap: "1px" }}>
         {attributes.map(({ name, type }, i) => {
           return (
             <Stack
@@ -125,21 +144,6 @@ export const EditAttributeModal = ({
             </Stack>
           );
         })}
-      </Stack>
-      <Stack sx={{ flexDirection: "row", height: 55, gap: "1px" }}>
-        <WButton
-          onClick={async () => {
-            await updateFolderAttributes(attributes);
-            onClose();
-          }}
-          rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
-          sx={{ flex: 1 }}
-        >
-          Save
-        </WButton>
-        <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
-          Cancel
-        </WButton>
       </Stack>
     </WModal>
   );

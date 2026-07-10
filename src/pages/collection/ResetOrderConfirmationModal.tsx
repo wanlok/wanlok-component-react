@@ -13,29 +13,36 @@ export const ResetOrderConfirmationModal = ({
   onConfirm: () => void;
 }) => {
   return (
-    <WModal open={open} onClose={onClose} titleIcon={<UndoIcon sx={{ fontSize: 24 }} />} title="Reset Order">
-      <Stack sx={{ p: 2, gap: 2, backgroundColor: "common.white" }}>
+    <WModal
+      open={open}
+      onClose={onClose}
+      titleIcon={<UndoIcon sx={{ fontSize: 24 }} />}
+      title="Reset Order"
+      bottom={
+        <>
+          <WButton
+            onClick={() => {
+              onConfirm();
+              onClose();
+            }}
+            rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
+            sx={{ flex: 1 }}
+          >
+            Confirm
+          </WButton>
+          <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
+            Cancel
+          </WButton>
+        </>
+      }
+    >
+      <Stack sx={{ gap: 2 }}>
         <Typography variant="body1" sx={{ lineHeight: 1.5 }}>
           Are you sure you want to reset the arranged order?
         </Typography>
         <Typography variant="body1" sx={{ lineHeight: 1.5 }}>
           Please note that items will be arranged in a random order after reset.
         </Typography>
-      </Stack>
-      <Stack sx={{ flexDirection: "row", height: 55, gap: "1px" }}>
-        <WButton
-          onClick={() => {
-            onConfirm();
-            onClose();
-          }}
-          rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
-          sx={{ flex: 1 }}
-        >
-          Confirm
-        </WButton>
-        <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
-          Cancel
-        </WButton>
       </Stack>
     </WModal>
   );
