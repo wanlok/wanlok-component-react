@@ -1,9 +1,8 @@
 import { Stack } from "@mui/material";
-import { Close as CloseIcon, Done as DoneIcon } from "@mui/icons-material";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
-import { WButton } from "../../components/WButton";
 import { WModal } from "../../components/WModal";
+import { YesNoButtons } from "../../components/YesNoButtons";
 
 const defaultColumnNames: Record<number, string[]> = {
   1: ["To Do"],
@@ -33,16 +32,7 @@ export const ProjectModal = ({
       open={open}
       onClose={onClose}
       title={title}
-      bottom={
-        <>
-          <WButton onClick={onSaveButtonClick} rightIcon={<DoneIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
-            Save
-          </WButton>
-          <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
-            Cancel
-          </WButton>
-        </>
-      }
+      bottom={<YesNoButtons yesLabel="Save" onYesClick={onSaveButtonClick} noLabel="Cancel" onNoClick={onClose} />}
     >
       <Stack sx={{ gap: 1 }}>
         {rows.map(({ label, value, disabled }, i) => (

@@ -1,7 +1,7 @@
 import { Stack, Typography } from "@mui/material";
-import { Close as CloseIcon, Done as DoneIcon, Undo as UndoIcon } from "@mui/icons-material";
+import { Undo as UndoIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
-import { WButton } from "../../components/WButton";
+import { YesNoButtons } from "../../components/YesNoButtons";
 
 export const ResetOrderConfirmationModal = ({
   open,
@@ -19,21 +19,13 @@ export const ResetOrderConfirmationModal = ({
       titleIcon={<UndoIcon sx={{ fontSize: 24 }} />}
       title="Reset Order"
       bottom={
-        <>
-          <WButton
-            onClick={() => {
-              onConfirm();
-              onClose();
-            }}
-            rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
-            sx={{ flex: 1 }}
-          >
-            Confirm
-          </WButton>
-          <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
-            Cancel
-          </WButton>
-        </>
+        <YesNoButtons
+          onYesClick={() => {
+            onConfirm();
+            onClose();
+          }}
+          onNoClick={onClose}
+        />
       }
     >
       <Stack sx={{ gap: 2 }}>

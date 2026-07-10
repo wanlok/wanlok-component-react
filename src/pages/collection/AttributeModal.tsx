@@ -1,10 +1,10 @@
 import { Stack, Typography } from "@mui/material";
-import { Close as CloseIcon, Done as DoneIcon, ViewList as ViewListIcon } from "@mui/icons-material";
+import { ViewList as ViewListIcon } from "@mui/icons-material";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ChartItem, CloudinaryFileInfo, Folder, SteamInfo, YouTubeOEmbed } from "../../services/Types";
 import { WModal } from "../../components/WModal";
 import { TextInput } from "../../components/TextInput";
-import { WButton } from "../../components/WButton";
+import { YesNoButtons } from "../../components/YesNoButtons";
 
 export const AttributeModal = ({
   charts,
@@ -83,28 +83,18 @@ export const AttributeModal = ({
       titleIcon={<ViewListIcon sx={{ fontSize: 24 }} />}
       title="Attributes"
       bottom={
-        <>
-          <WButton
-            onClick={async () => {
-              if (collectionTypeId) {
-                const { type, id } = collectionTypeId;
-                await updateCollectionAttributes(type, id, attributes);
-                setCollectionTypeId(undefined);
-              }
-            }}
-            rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
-            sx={{ flex: 1 }}
-          >
-            Save
-          </WButton>
-          <WButton
-            onClick={() => setCollectionTypeId(undefined)}
-            rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
-            sx={{ flex: 1 }}
-          >
-            Cancel
-          </WButton>
-        </>
+        <YesNoButtons
+          yesLabel="Save"
+          onYesClick={async () => {
+            if (collectionTypeId) {
+              const { type, id } = collectionTypeId;
+              await updateCollectionAttributes(type, id, attributes);
+              setCollectionTypeId(undefined);
+            }
+          }}
+          noLabel="Cancel"
+          onNoClick={() => setCollectionTypeId(undefined)}
+        />
       }
     >
       <Stack sx={{ gap: "1px" }}>

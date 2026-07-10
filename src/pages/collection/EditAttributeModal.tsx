@@ -6,7 +6,8 @@ import { WButton } from "../../components/WButton";
 import { CollectionAttributes, Folder } from "../../services/Types";
 import { WCheckbox } from "../../components/WCheckbox";
 import { WModal } from "../../components/WModal";
-import { Add as AddIcon, Close as CloseIcon, Done as DoneIcon, Edit as EditIcon } from "@mui/icons-material";
+import { YesNoButtons } from "../../components/YesNoButtons";
+import { Add as AddIcon, Close as CloseIcon, Edit as EditIcon } from "@mui/icons-material";
 
 const options = [
   { label: "Text", value: "text" },
@@ -67,21 +68,15 @@ export const EditAttributeModal = ({
         </>
       }
       bottom={
-        <>
-          <WButton
-            onClick={async () => {
-              await updateFolderAttributes(attributes);
-              onClose();
-            }}
-            rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
-            sx={{ flex: 1 }}
-          >
-            Save
-          </WButton>
-          <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
-            Cancel
-          </WButton>
-        </>
+        <YesNoButtons
+          yesLabel="Save"
+          onYesClick={async () => {
+            await updateFolderAttributes(attributes);
+            onClose();
+          }}
+          noLabel="Cancel"
+          onNoClick={onClose}
+        />
       }
     >
       <Stack sx={{ gap: "1px" }}>

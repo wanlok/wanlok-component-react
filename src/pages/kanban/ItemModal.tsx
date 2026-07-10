@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Divider, Stack, Typography } from "@mui/material";
-import { Close as CloseIcon, Done as DoneIcon, Edit as EditIcon, ViewList as ViewListIcon } from "@mui/icons-material";
+import { Close as CloseIcon, Edit as EditIcon, ViewList as ViewListIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
 import { KanbanProject } from "../../services/Types";
 import { WButton } from "../../components/WButton";
+import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
 import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
 
@@ -53,31 +54,25 @@ export const ItemModal = ({
       title={isEditing ? "Edit Item" : "View Item"}
       bottom={
         isEditing ? (
-          <>
-            <WButton
-              onClick={() => {
-                onItemChange(name, content);
-                setIsEditing(false);
-              }}
-              rightIcon={<DoneIcon sx={{ fontSize: 24 }} />}
-              sx={{ flex: 1 }}
-            >
-              Save
-            </WButton>
-            <WButton
-              onClick={() => setIsEditing(false)}
-              rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
-              sx={{ flex: 1 }}
-            >
-              Cancel
-            </WButton>
-          </>
+          <YesNoButtons
+            yesLabel="Save"
+            onYesClick={() => {
+              onItemChange(name, content);
+              setIsEditing(false);
+            }}
+            noLabel="Cancel"
+            onNoClick={() => setIsEditing(false)}
+          />
         ) : (
           <>
-            <WButton onClick={() => setIsEditing(true)} rightIcon={<EditIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
+            <WButton
+              onClick={() => setIsEditing(true)}
+              rightIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
+              sx={{ flex: 1 }}
+            >
               Edit
             </WButton>
-            <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} sx={{ flex: 1 }}>
+            <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
               Close
             </WButton>
           </>
