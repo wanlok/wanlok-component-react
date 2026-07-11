@@ -1,4 +1,4 @@
-import { alpha, Modal, Stack, Tab, Tabs, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { alpha, Divider, Modal, Stack, Tab, Tabs, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { iconButtonSx, WButton } from "./WButton";
 import { ReactElement, ReactNode, useState } from "react";
@@ -68,7 +68,7 @@ export const WModal = ({
           maxHeight: mobile ? undefined : "80vh",
           overflow: "hidden",
           gap: mobile && right ? 0 : "1px",
-          backgroundColor: mobile && right ? "background.default" : undefined
+          backgroundColor: mobile && right ? "common.white" : undefined
         }}
       >
         {mobile && right ? (
@@ -81,11 +81,12 @@ export const WModal = ({
                 sx={{
                   flex: 1,
                   "& .MuiTab-root": {
+                    p: 2,
                     backgroundColor: "common.white",
                     color: "text.primary",
                     textTransform: "none",
-                    minHeight: "unset",
-                    py: 2
+                    minHeight: 55,
+                    justifyContent: "flex-start"
                   },
                   "& .MuiTab-root.Mui-selected": {
                     backgroundColor: "background.default",
@@ -97,8 +98,9 @@ export const WModal = ({
                 <Tab icon={panelProps.titleIcon} iconPosition="start" label={panelProps.title ?? "Main"} />
                 <Tab icon={rightIcon} iconPosition="start" label={rightTitle ?? "More"} />
               </Tabs>
-              <WButton onClick={onClose} sx={{ ...iconButtonSx, backgroundColor: "common.black" }}>
-                <CloseIcon sx={{ fontSize: 24, color: "common.white" }} />
+              <Divider orientation="vertical" flexItem />
+              <WButton onClick={onClose} sx={{ ...iconButtonSx, backgroundColor: "transparent" }}>
+                <CloseIcon sx={{ fontSize: 24 }} />
               </WButton>
             </Stack>
             <Stack sx={{ flex: 1, overflow: "hidden", display: tab === 0 ? "flex" : "none" }}>

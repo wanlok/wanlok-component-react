@@ -59,22 +59,10 @@ export const ItemModal = ({
       onClose={onClose}
       titleIcon={<AssignmentIcon sx={{ fontSize: 24 }} />}
       title={isEditing ? "Edit Task" : "Task"}
-      top={
-        <Stack sx={[bottomSx, { gap: "1px" }]}>
-          {isEditing ? undefined : (
-            <WButton
-              onClick={() => setIsEditing(true)}
-              rightIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
-              sx={{ flex: 1 }}
-            >
-              Edit
-            </WButton>
-          )}
-        </Stack>
-      }
+      top={<Stack sx={[bottomSx, { gap: "1px" }]} />}
       bottom={
         <Stack sx={[bottomSx, { flex: 1, gap: "1px" }]}>
-          {isEditing && (
+          {isEditing ? (
             <YesNoButtons
               yesLabel="Save"
               onYesClick={() => {
@@ -84,6 +72,14 @@ export const ItemModal = ({
               noLabel="Cancel"
               onNoClick={() => setIsEditing(false)}
             />
+          ) : (
+            <WButton
+              onClick={() => setIsEditing(true)}
+              rightIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
+              sx={{ flex: 1 }}
+            >
+              Edit
+            </WButton>
           )}
         </Stack>
       }
