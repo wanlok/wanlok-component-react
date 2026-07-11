@@ -2,11 +2,32 @@ import { useState } from "react";
 import { Divider, Stack, Typography } from "@mui/material";
 import { Close as CloseIcon, Edit as EditIcon, ViewList as ViewListIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
-import { KanbanProject } from "../../services/Types";
+import { KanbanProject, Message } from "../../services/Types";
 import { WButton } from "../../components/WButton";
 import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
 import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
+import { WText } from "../../components/WText";
+import { Send as SendIcon } from "@mui/icons-material";
+
+const DiscussionContent = ({ messages }: { messages: Message[] }) => (
+  <Stack sx={{ gap: 1 }}>
+    {messages.length === 0 ? (
+      <Typography variant="body2" sx={{ color: "text.disabled" }}>
+        No messages yet
+      </Typography>
+    ) : (
+      messages.map((message, i) => (
+        <Stack key={i} sx={{ gap: 0.5 }}>
+          <Typography variant="caption" sx={{ color: "text.secondary" }}>
+            {getDisplayDateTimeString(new Date(message.created_at))}
+          </Typography>
+          <Typography variant="body2">{message.text}</Typography>
+        </Stack>
+      ))
+    )}
+  </Stack>
+);
 
 const parseContent = (text: string) => {
   const urlRegex = /https?:\/\/[^\s]+/g;
@@ -34,11 +55,13 @@ export const ItemModal = ({
   project,
   item,
   onItemChange,
+  onAddMessage,
   onClose
 }: {
   project: KanbanProject;
   item: { i: number; j: number };
   onItemChange: (name: string, content: string) => void;
+  onAddMessage: (text: string) => void;
   onClose: () => void;
 }) => {
   const kanbanItem = project.columns[item.i].items[item.j];
@@ -78,6 +101,19 @@ export const ItemModal = ({
           </>
         )
       }
+      right={{
+        titleIcon: <ViewListIcon sx={{ fontSize: 24 }} />,
+        title: "Discussion",
+        bottom: (
+          <Stack sx={{ flex: 1 }}>
+            <WText
+              placeholder="Add a comment"
+              rightButtons={[{ icon: <SendIcon sx={{ fontSize: 20 }} />, onClickWithText: (text) => onAddMessage(text) }]}
+            />
+          </Stack>
+        ),
+        children: <DiscussionContent messages={kanbanItem.messages} />
+      }}
     >
       {isEditing ? (
         <Stack sx={{ gap: 1 }}>

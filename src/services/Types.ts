@@ -15,11 +15,17 @@ export interface ComponentFolder {
   name: string;
 }
 
+export interface Message {
+  text: string;
+  created_at: string;
+}
+
 export interface KanbanItem {
   id: string;
   name: string;
   content: string;
   created_at: string;
+  messages: Message[];
 }
 
 export interface KanbanColumn {

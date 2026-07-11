@@ -97,7 +97,7 @@ export const useKanban = () => {
     if (!kanban || !selectedProject) {
       return;
     }
-    const newItem = { id: uuidv4(), name: "", content: "", created_at: new Date().toISOString() };
+    const newItem = { id: uuidv4(), name: "", content: "", created_at: new Date().toISOString(), messages: [] };
     const columns = selectedProject.columns.map((column, i) =>
       i === 0 ? { ...column, items: [...column.items, newItem] } : column
     );
@@ -149,6 +149,28 @@ export const useKanban = () => {
     setSelectedProject(updatedProject);
   };
 
+  const addMessage = (columnIndex: number, itemIndex: number, text: string) => {
+    if (!kanban || !selectedProject) {
+      return;
+    }
+    const message = { text, created_at: new Date().toISOString() };
+    const columns = selectedProject.columns.map((column, i) =>
+      i === columnIndex
+        ? {
+            ...column,
+            items: column.items.map((item, j) =>
+              j === itemIndex ? { ...item, messages: [...item.messages, message] } : item
+            )
+          }
+        : column
+    );
+    const updatedProject = { ...selectedProject, columns };
+    const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
+    updateDoc(docRef, { projects });
+    setKanban({ ...kanban, projects });
+    setSelectedProject(updatedProject);
+  };
+
   return {
     isLoading: kanban === undefined,
     kanban,
@@ -160,6 +182,7 @@ export const useKanban = () => {
     addItem,
     updateItem,
     deleteItem,
-    moveItem
+    moveItem,
+    addMessage
   };
 };
