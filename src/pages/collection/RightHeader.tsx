@@ -11,6 +11,7 @@ import { iconButtonSx, WButton } from "../../components/WButton";
 import { Folder } from "../../services/Types";
 import { SelectInput } from "../../components/SelectInput";
 import { bottomSx, LayoutHeader, topSx } from "../../components/LayoutHeader";
+import { StyledContainer } from "../../components/StyledContainer";
 
 const Top = ({ folder }: { folder: Folder | undefined }) => (
   <Stack sx={[topSx, { alignItems: "center", px: 2 }]}>
@@ -47,9 +48,9 @@ const Bottom = ({
 }) => {
   return (
     <Stack sx={[bottomSx]}>
-      <Stack sx={{ flex: 1, justifyContent: "center", p: 1 }}>
+      <StyledContainer sx={{ flex: 1, p: 1 }}>
         <SelectInput items={items} value={selectedCategory} onChange={onCategoryChange} />
-      </Stack>
+      </StyledContainer>
       <Stack sx={{ flexDirection: "row", gap: 1 }}>
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
           <Stack sx={{ flexDirection: "row" }}>

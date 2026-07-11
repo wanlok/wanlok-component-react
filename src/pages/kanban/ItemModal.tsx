@@ -1,70 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Divider, Stack, Typography } from "@mui/material";
-import {
-  Assignment as AssignmentIcon,
-  Chat as ChatIcon,
-  Close as CloseIcon,
-  Edit as EditIcon
-} from "@mui/icons-material";
+import { Assignment as AssignmentIcon, Edit as EditIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
-import { KanbanProject, Message } from "../../services/Types";
-import { iconButtonSx, WButton } from "../../components/WButton";
+import { KanbanProject } from "../../services/Types";
+import { WButton } from "../../components/WButton";
 import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
 import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
-import { WText } from "../../components/WText";
-import { Send as SendIcon } from "@mui/icons-material";
 import { StyledContainer } from "../../components/StyledContainer";
+import { Discussion } from "../../components/Discussion";
 import { bottomSx } from "../../components/LayoutHeader";
-
-const MessageContainer = ({
-  messages,
-  isDeletingMessages,
-  onDeleteMessage
-}: {
-  messages: Message[];
-  isDeletingMessages: boolean;
-  onDeleteMessage: (messageIndex: number) => void;
-}) => {
-  const stackRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const scrollable = stackRef.current?.parentElement;
-    if (scrollable) {
-      scrollable.scrollTo({ top: scrollable.scrollHeight, behavior: "smooth" });
-    }
-  }, [messages.length]);
-
-  return (
-    <Stack ref={stackRef} sx={{ gap: 1 }}>
-      {messages.length === 0 ? (
-        <Typography variant="body2" sx={{ color: "text.disabled" }}>
-          No messages
-        </Typography>
-      ) : (
-        messages.map((message, i) => (
-          <StyledContainer key={i} sx={{ flexDirection: "row" }}>
-            <Stack sx={{ flex: 1, p: 2 }}>
-              <Typography variant="body1" sx={{ flex: 1 }}>
-                {message.text}
-              </Typography>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {getDisplayDateTimeString(new Date(message.created_at))}
-              </Typography>
-            </Stack>
-            <Stack>
-              {isDeletingMessages && (
-                <WButton onClick={() => onDeleteMessage(i)} sx={iconButtonSx}>
-                  <CloseIcon sx={{ fontSize: 24 }} />
-                </WButton>
-              )}
-            </Stack>
-          </StyledContainer>
-        ))
-      )}
-    </Stack>
-  );
-};
 
 const parseContent = (text: string) => {
   const urlRegex = /https?:\/\/[^\s]+/g;
@@ -99,13 +44,12 @@ export const ItemModal = ({
   project: KanbanProject;
   item: { i: number; j: number };
   onItemChange: (name: string, content: string) => void;
-  onAddMessage: (text: string) => void;
+  onAddMessage: (name: string, text: string) => void;
   onDeleteMessage: (messageIndex: number) => void;
   onClose: () => void;
 }) => {
   const kanbanItem = project.columns[item.i].items[item.j];
   const [isEditing, setIsEditing] = useState(false);
-  const [isDeletingMessages, setIsDeletingMessages] = useState(false);
   const [name, setName] = useState(kanbanItem.name);
   const [content, setContent] = useState(kanbanItem.content);
 
@@ -113,60 +57,39 @@ export const ItemModal = ({
     <WModal
       open={true}
       onClose={onClose}
-      titleIcon={isEditing ? <AssignmentIcon sx={{ fontSize: 24 }} /> : undefined}
-      title={isEditing ? "Edit Item" : undefined}
-      bottom={
-        isEditing ? (
-          <YesNoButtons
-            yesLabel="Save"
-            onYesClick={() => {
-              onItemChange(name, content);
-              setIsEditing(false);
-            }}
-            noLabel="Cancel"
-            onNoClick={() => setIsEditing(false)}
-          />
-        ) : (
-          <WButton
-            onClick={() => setIsEditing(true)}
-            rightIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
-            sx={{ flex: 1 }}
-          >
-            Edit
-          </WButton>
-        )
-      }
-      right={{
-        titleIcon: <ChatIcon sx={{ fontSize: 24 }} />,
-        title: `Discussion (${kanbanItem.messages.length} ${kanbanItem.messages.length === 1 ? "Message" : "Messages"})`,
-        top: isEditing ? (
-          <Stack sx={[bottomSx, { gap: "1px" }]}>
+      titleIcon={<AssignmentIcon sx={{ fontSize: 24 }} />}
+      title={isEditing ? "Edit Task" : "Task"}
+      top={
+        <Stack sx={[bottomSx, { gap: "1px" }]}>
+          {isEditing ? undefined : (
             <WButton
-              onClick={() => setIsDeletingMessages(!isDeletingMessages)}
-              rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
+              onClick={() => setIsEditing(true)}
+              rightIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
+              sx={{ flex: 1 }}
             >
-              Delete
+              Edit
             </WButton>
-          </Stack>
-        ) : undefined,
-        bottom: isEditing ? undefined : (
-          <Stack sx={{ flex: 1 }}>
-            <WText
-              placeholder="Add a comment"
-              rightButtons={[
-                { icon: <SendIcon sx={{ fontSize: 20 }} />, onClickWithText: (text) => onAddMessage(text) }
-              ]}
+          )}
+        </Stack>
+      }
+      bottom={
+        <Stack sx={[bottomSx, { flex: 1, gap: "1px" }]}>
+          {isEditing && (
+            <YesNoButtons
+              yesLabel="Save"
+              onYesClick={() => {
+                onItemChange(name, content);
+                setIsEditing(false);
+              }}
+              noLabel="Cancel"
+              onNoClick={() => setIsEditing(false)}
             />
-          </Stack>
-        ),
-        children: (
-          <MessageContainer
-            messages={kanbanItem.messages}
-            isDeletingMessages={isDeletingMessages}
-            onDeleteMessage={onDeleteMessage}
-          />
-        )
-      }}
+          )}
+        </Stack>
+      }
+      right={
+        <Discussion messages={kanbanItem.messages} onAddMessage={onAddMessage} onDeleteMessage={onDeleteMessage} />
+      }
     >
       {isEditing ? (
         <Stack sx={{ gap: 1 }}>
@@ -197,7 +120,7 @@ export const ItemModal = ({
       ) : (
         <Stack sx={{ gap: 2 }}>
           <Stack>
-            <Typography variant="h6" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
+            <Typography variant="body1" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
               {kanbanItem.name || "No name"}
             </Typography>
             <Typography variant="body2" sx={{ color: "text.secondary" }}>

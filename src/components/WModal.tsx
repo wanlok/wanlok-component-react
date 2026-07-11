@@ -9,7 +9,7 @@ type PanelProps = {
   children?: ReactNode;
 };
 
-const ModalPanel = ({ titleIcon, title, top, bottom, children }: PanelProps) => (
+export const WModalContent = ({ titleIcon, title, top, bottom, children }: PanelProps) => (
   <Stack sx={{ flex: 1, overflow: "hidden", backgroundColor: "background.default" }}>
     {(titleIcon || title) && (
       <Stack sx={{ flexDirection: "row", flexShrink: 0 }}>
@@ -33,7 +33,7 @@ export const WModal = ({
 }: {
   open: boolean;
   onClose: () => void;
-  right?: PanelProps;
+  right?: ReactNode;
 } & PanelProps) => {
   const { palette, breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
@@ -62,8 +62,8 @@ export const WModal = ({
           gap: "1px"
         }}
       >
-        <ModalPanel {...panelProps} />
-        {right && <ModalPanel {...right} />}
+        <WModalContent {...panelProps} />
+        {right}
       </Stack>
     </Modal>
   );

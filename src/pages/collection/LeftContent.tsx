@@ -11,6 +11,7 @@ import { Folder } from "../../services/Types";
 import { WCardList } from "../../components/WCardList";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { WText } from "../../components/WText";
+import { StyledContainer } from "../../components/StyledContainer";
 import { PanelRow } from "../../components/PanelRow";
 import { CollectionChips } from "./CollectionChips";
 
@@ -62,10 +63,12 @@ export const LeftContent = ({
           </Stack>
         )}
       />
-      <WText
-        placeholder="Add Folder"
-        rightButtons={[{ icon: <AddIcon sx={{ fontSize: 24 }} />, onClickWithText: addFolder }]}
-      />
+      <StyledContainer>
+        <WText
+          placeholder="Add Folder"
+          rightButtons={[{ icon: <AddIcon sx={{ fontSize: 24 }} />, onClickWithText: addFolder }]}
+        />
+      </StyledContainer>
     </>
   );
 };

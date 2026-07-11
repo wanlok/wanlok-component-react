@@ -109,7 +109,7 @@ export const Kanban = () => {
           project={selectedProject}
           item={selectedItem}
           onItemChange={(name, content) => updateItem(selectedItem.i, selectedItem.j, name, content)}
-          onAddMessage={(text) => addMessage(selectedItem.i, selectedItem.j, text)}
+          onAddMessage={(name, text) => addMessage(selectedItem.i, selectedItem.j, name, text)}
           onDeleteMessage={(messageIndex) => deleteMessage(selectedItem.i, selectedItem.j, messageIndex)}
           onClose={() => setSelectedItem(null)}
         />

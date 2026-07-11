@@ -149,11 +149,11 @@ export const useKanban = () => {
     setSelectedProject(updatedProject);
   };
 
-  const addMessage = (columnIndex: number, itemIndex: number, text: string) => {
+  const addMessage = (columnIndex: number, itemIndex: number, name: string, text: string) => {
     if (!kanban || !selectedProject) {
       return;
     }
-    const message = { text, created_at: new Date().toISOString() };
+    const message = { name, text, created_at: new Date().toISOString() };
     const columns = selectedProject.columns.map((column, i) =>
       i === columnIndex
         ? {

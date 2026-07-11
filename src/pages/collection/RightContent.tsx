@@ -2,6 +2,7 @@ import { LayoutLoading } from "../../components/LayoutLoading";
 import { ChartItem, CloudinaryFileInfo, CollectionCounts, Direction, Folder, SteamInfo, YouTubeOEmbed } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
 import { WText } from "../../components/WText";
+import { StyledContainer } from "../../components/StyledContainer";
 import { getDocumentId } from "./useFolder";
 import { Send as SendIcon, Upload as UploadIcon } from "@mui/icons-material";
 
@@ -61,35 +62,37 @@ export const RightContent = ({
         onLeftButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.left)}
         onRightButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.right)}
       />
-      <WText
-        placeholder="Add Links or Upload Files"
-        rightButtons={[
-          {
-            icon: <SendIcon sx={{ fontSize: 20 }} />,
-            onClickWithText: async (text) => {
-              const collectionId = getDocumentId(selectedFolder?.name);
-              if (collectionId) {
-                const counts = await addCollectionItems(collectionId, text);
-                if (counts) {
-                  await updateFolderCounts(counts);
+      <StyledContainer>
+        <WText
+          placeholder="Add Links or Upload Files"
+          rightButtons={[
+            {
+              icon: <SendIcon sx={{ fontSize: 20 }} />,
+              onClickWithText: async (text) => {
+                const collectionId = getDocumentId(selectedFolder?.name);
+                if (collectionId) {
+                  const counts = await addCollectionItems(collectionId, text);
+                  if (counts) {
+                    await updateFolderCounts(counts);
+                  }
+                }
+              }
+            },
+            {
+              icon: <UploadIcon sx={{ fontSize: 24 }} />,
+              onClick: async () => {
+                const collectionId = getDocumentId(selectedFolder?.name);
+                if (collectionId) {
+                  const counts = await addCollectionFiles(collectionId);
+                  if (counts) {
+                    await updateFolderCounts(counts);
+                  }
                 }
               }
             }
-          },
-          {
-            icon: <UploadIcon sx={{ fontSize: 24 }} />,
-            onClick: async () => {
-              const collectionId = getDocumentId(selectedFolder?.name);
-              if (collectionId) {
-                const counts = await addCollectionFiles(collectionId);
-                if (counts) {
-                  await updateFolderCounts(counts);
-                }
-              }
-            }
-          }
-        ]}
-      />
+          ]}
+        />
+      </StyledContainer>
     </>
   );
 };

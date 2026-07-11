@@ -16,6 +16,7 @@ export interface ComponentFolder {
 }
 
 export interface Message {
+  name: string;
   text: string;
   created_at: string;
 }
