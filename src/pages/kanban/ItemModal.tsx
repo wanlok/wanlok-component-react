@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Divider, Stack, Typography } from "@mui/material";
-import { Close as CloseIcon, Edit as EditIcon, ViewList as ViewListIcon } from "@mui/icons-material";
+import { Chat as ChatIcon, Close as CloseIcon, Edit as EditIcon, ViewList as ViewListIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
 import { KanbanProject, Message } from "../../services/Types";
 import { WButton } from "../../components/WButton";
@@ -102,7 +102,7 @@ export const ItemModal = ({
         )
       }
       right={{
-        titleIcon: <ViewListIcon sx={{ fontSize: 24 }} />,
+        titleIcon: <ChatIcon sx={{ fontSize: 24 }} />,
         title: "Discussion",
         bottom: (
           <Stack sx={{ flex: 1 }}>

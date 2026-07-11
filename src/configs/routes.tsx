@@ -1,13 +1,10 @@
 import { LayoutMenu } from "../components/LayoutMenu";
 import { Landing } from "../pages/landing";
-import { DiscussionPage } from "../pages/discussion";
 import { ComponentPage } from "../pages/ComponentPage";
 import { CollectionPage } from "../pages/collection";
 import WANLOKImage from "../assets/images/wanlok.png";
 import WANLOKImage2 from "../assets/images/wanlok_2.png";
 import {
-  Chat as ChatIcon,
-  ChatOutlined as ChatOutlinedIcon,
   Folder as FolderIcon,
   FolderOutlined as FolderOutlinedIcon,
   ViewKanban as KanbanIcon,
@@ -49,13 +46,6 @@ export const routes = [
         name: "Collections",
         path: "/collections/:id?",
         element: <CollectionPage />
-      },
-      {
-        icon: <ChatOutlinedIcon sx={{ fontSize: iconSize }} />,
-        icon_selected: <ChatIcon sx={{ fontSize: iconSize }} />,
-        name: "Discussion",
-        path: "/discussion",
-        element: <DiscussionPage />
       },
       {
         icon: <FolderOutlinedIcon sx={{ fontSize: iconSize }} />,
