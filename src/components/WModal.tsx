@@ -73,33 +73,34 @@ export const WModal = ({
       >
         {mobile && right ? (
           <>
-            <Stack sx={{ flexDirection: "row", justifyContent: "flex-end", backgroundColor: "common.black" }}>
-              <WButton onClick={onClose} sx={{ ...iconButtonSx, backgroundColor: "transparent" }}>
+            <Stack sx={{ flexDirection: "row", alignItems: "center" }}>
+              <Tabs
+                value={tab}
+                variant="fullWidth"
+                onChange={(_, value) => setTab(value)}
+                sx={{
+                  flex: 1,
+                  "& .MuiTab-root": {
+                    backgroundColor: "common.white",
+                    color: "text.primary",
+                    textTransform: "none",
+                    minHeight: "unset",
+                    py: 2
+                  },
+                  "& .MuiTab-root.Mui-selected": {
+                    backgroundColor: "background.default",
+                    color: "text.primary"
+                  },
+                  "& .MuiTabs-indicator": { display: "none" }
+                }}
+              >
+                <Tab icon={panelProps.titleIcon} iconPosition="start" label={panelProps.title ?? "Main"} />
+                <Tab icon={rightIcon} iconPosition="start" label={rightTitle ?? "More"} />
+              </Tabs>
+              <WButton onClick={onClose} sx={{ ...iconButtonSx, backgroundColor: "common.black" }}>
                 <CloseIcon sx={{ fontSize: 24, color: "common.white" }} />
               </WButton>
             </Stack>
-            <Tabs
-              value={tab}
-              variant="fullWidth"
-              onChange={(_, value) => setTab(value)}
-              sx={{
-                "& .MuiTab-root": {
-                  backgroundColor: "common.white",
-                  color: "text.primary",
-                  textTransform: "none",
-                  minHeight: "unset",
-                  py: 2
-                },
-                "& .MuiTab-root.Mui-selected": {
-                  backgroundColor: "background.default",
-                  color: "text.primary"
-                },
-                "& .MuiTabs-indicator": { display: "none" }
-              }}
-            >
-              <Tab icon={panelProps.titleIcon} iconPosition="start" label={panelProps.title ?? "Main"} />
-              <Tab icon={rightIcon} iconPosition="start" label={rightTitle ?? "More"} />
-            </Tabs>
             <Stack sx={{ flex: 1, overflow: "hidden", display: tab === 0 ? "flex" : "none" }}>
               <WModalContent {...panelProps} title={undefined} titleIcon={undefined} />
             </Stack>
