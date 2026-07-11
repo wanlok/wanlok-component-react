@@ -59,7 +59,14 @@ export const ItemModal = ({
       onClose={onClose}
       titleIcon={<AssignmentIcon sx={{ fontSize: 24 }} />}
       title={isEditing ? "Edit Task" : "Task"}
-      top={<Stack sx={[bottomSx, { gap: "1px" }]} />}
+      top={
+        <Stack sx={{ flex: 1, p: 2 }}>
+          <Typography variant="body1">
+            Created at {getDisplayDateTimeString(new Date(kanbanItem.created_at))} (
+            {getDaysSinceString(new Date(kanbanItem.created_at))})
+          </Typography>
+        </Stack>
+      }
       bottom={
         <Stack sx={[bottomSx, { flex: 1, gap: "1px" }]}>
           {isEditing ? (
@@ -96,16 +103,6 @@ export const ItemModal = ({
           </StyledContainer>
           <StyledContainer sx={{ p: 1 }}>
             <TextInput
-              label="Created Date"
-              value={getDisplayDateTimeString(new Date(kanbanItem.created_at))}
-              onChange={() => {}}
-              hideHelperText={true}
-              inputPropsSx={{ flex: 1 }}
-              disabled={true}
-            />
-          </StyledContainer>
-          <StyledContainer sx={{ p: 1 }}>
-            <TextInput
               label="Content"
               value={content}
               onChange={setContent}
@@ -117,15 +114,9 @@ export const ItemModal = ({
         </Stack>
       ) : (
         <Stack sx={{ gap: 2 }}>
-          <Stack>
-            <Typography variant="body1" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
-              {kanbanItem.name || "No name"}
-            </Typography>
-            <Typography variant="body2" sx={{ color: "text.secondary" }}>
-              {getDisplayDateTimeString(new Date(kanbanItem.created_at))} (
-              {getDaysSinceString(new Date(kanbanItem.created_at))})
-            </Typography>
-          </Stack>
+          <Typography variant="body1" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
+            {kanbanItem.name || "No name"}
+          </Typography>
           <Divider />
           <Typography
             variant="body1"
