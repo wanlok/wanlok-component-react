@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Divider, Stack, Typography } from "@mui/material";
-import { Assignment as AssignmentIcon, Edit as EditIcon } from "@mui/icons-material";
+import { Assignment as AssignmentIcon, Chat as ChatIcon, Edit as EditIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
 import { KanbanProject } from "../../services/Types";
 import { WButton } from "../../components/WButton";
@@ -90,6 +90,8 @@ export const ItemModal = ({
       right={
         <Discussion messages={kanbanItem.messages} onAddMessage={onAddMessage} onDeleteMessage={onDeleteMessage} />
       }
+      rightTitle="Discussion"
+      rightIcon={<ChatIcon sx={{ fontSize: 24 }} />}
     >
       {isEditing ? (
         <Stack sx={{ gap: 1 }}>

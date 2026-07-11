@@ -1,8 +1,8 @@
-import { alpha, Modal, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { ReactNode } from "react";
+import { alpha, Modal, Stack, Tab, Tabs, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { ReactElement, ReactNode, useState } from "react";
 
 type PanelProps = {
-  titleIcon?: ReactNode;
+  titleIcon?: ReactElement;
   title?: string;
   top?: ReactNode;
   bottom?: ReactNode;
@@ -29,14 +29,20 @@ export const WModal = ({
   open,
   onClose,
   right,
+  rightTitle,
+  rightIcon,
   ...panelProps
 }: {
   open: boolean;
   onClose: () => void;
   right?: ReactNode;
+  rightTitle?: string;
+  rightIcon?: ReactElement;
 } & PanelProps) => {
   const { palette, breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
+  const [tab, setTab] = useState(0);
+
   return (
     <Modal
       open={open}
@@ -53,17 +59,48 @@ export const WModal = ({
           top: "50%",
           left: "50%",
           transform: "translate(-50%, -50%)",
-          flexDirection: "row",
+          flexDirection: mobile && right ? "column" : "row",
           width: mobile ? "100vw" : right !== undefined ? 800 : 400,
           height: mobile ? "100dvh" : undefined,
           minHeight: mobile ? undefined : "40vh",
           maxHeight: mobile ? undefined : "80vh",
           overflow: "hidden",
-          gap: "1px"
+          gap: mobile && right ? 0 : "1px",
+          backgroundColor: mobile && right ? "background.default" : undefined
         }}
       >
-        <WModalContent {...panelProps} />
-        {right}
+        {mobile && right ? (
+          <>
+            <Tabs
+              value={tab}
+              variant="fullWidth"
+              onChange={(_, value) => setTab(value)}
+              sx={{
+                "& .MuiTab-root": {
+                  backgroundColor: "common.white",
+                  color: "text.primary",
+                  textTransform: "none",
+                  minHeight: "unset",
+                  py: 2
+                },
+                "& .MuiTab-root.Mui-selected": { backgroundColor: "background.default" },
+                "& .MuiTabs-indicator": { display: "none" }
+              }}
+            >
+              <Tab icon={panelProps.titleIcon} iconPosition="start" label={panelProps.title ?? "Main"} />
+              <Tab icon={rightIcon} iconPosition="start" label={rightTitle ?? "More"} />
+            </Tabs>
+            <Stack sx={{ flex: 1, overflow: "hidden", display: tab === 0 ? "flex" : "none" }}>
+              <WModalContent {...panelProps} title={undefined} titleIcon={undefined} />
+            </Stack>
+            <Stack sx={{ flex: 1, overflow: "hidden", display: tab === 1 ? "flex" : "none" }}>{right}</Stack>
+          </>
+        ) : (
+          <>
+            <WModalContent {...panelProps} />
+            {right}
+          </>
+        )}
       </Stack>
     </Modal>
   );

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Stack, Typography } from "@mui/material";
+import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Chat as ChatIcon, Close as CloseIcon, Send as SendIcon } from "@mui/icons-material";
 import { Message } from "../services/Types";
 import { WModalContent } from "./WModal";
@@ -19,6 +19,8 @@ export const Discussion = ({
   onAddMessage: (name: string, text: string) => void;
   onDeleteMessage: (messageIndex: number) => void;
 }) => {
+  const { breakpoints } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
   const [isDeletingMessages, setIsDeletingMessages] = useState(false);
   const [name, setName] = useState("");
   const stackRef = useRef<HTMLDivElement>(null);
@@ -32,8 +34,8 @@ export const Discussion = ({
 
   return (
     <WModalContent
-      titleIcon={<ChatIcon sx={{ fontSize: 24 }} />}
-      title={`Discussion (${messages.length} ${messages.length === 1 ? "Message" : "Messages"})`}
+      titleIcon={mobile ? undefined : <ChatIcon sx={{ fontSize: 24 }} />}
+      title={mobile ? undefined : `Discussion (${messages.length} ${messages.length === 1 ? "Message" : "Messages"})`}
       top={
         <Stack sx={[bottomSx, { flex: 1, gap: "1px" }]}>
           <StyledContainer sx={{ flex: 1, p: 1 }}>
