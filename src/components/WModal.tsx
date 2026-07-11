@@ -1,4 +1,6 @@
 import { alpha, Modal, Stack, Tab, Tabs, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Close as CloseIcon } from "@mui/icons-material";
+import { iconButtonSx, WButton } from "./WButton";
 import { ReactElement, ReactNode, useState } from "react";
 
 type PanelProps = {
@@ -71,6 +73,11 @@ export const WModal = ({
       >
         {mobile && right ? (
           <>
+            <Stack sx={{ flexDirection: "row", justifyContent: "flex-end", backgroundColor: "common.black" }}>
+              <WButton onClick={onClose} sx={{ ...iconButtonSx, backgroundColor: "transparent" }}>
+                <CloseIcon sx={{ fontSize: 24, color: "common.white" }} />
+              </WButton>
+            </Stack>
             <Tabs
               value={tab}
               variant="fullWidth"
@@ -83,7 +90,10 @@ export const WModal = ({
                   minHeight: "unset",
                   py: 2
                 },
-                "& .MuiTab-root.Mui-selected": { backgroundColor: "background.default" },
+                "& .MuiTab-root.Mui-selected": {
+                  backgroundColor: "background.default",
+                  color: "text.primary"
+                },
                 "& .MuiTabs-indicator": { display: "none" }
               }}
             >
