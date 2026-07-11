@@ -40,12 +40,7 @@ export const WModal = ({
   return (
     <Modal
       open={open}
-      onClose={(_, reason) => {
-        if (reason === "backdropClick") {
-          return;
-        }
-        onClose();
-      }}
+      onClose={onClose}
       slotProps={{
         backdrop: { sx: { backgroundColor: alpha(palette.common.black, 0.8) } }
       }}
@@ -61,6 +56,7 @@ export const WModal = ({
           flexDirection: "row",
           width: mobile ? "100vw" : right !== undefined ? 800 : 400,
           height: mobile ? "100dvh" : undefined,
+          minHeight: mobile ? undefined : "40vh",
           maxHeight: mobile ? undefined : "80vh",
           overflow: "hidden",
           gap: "1px"

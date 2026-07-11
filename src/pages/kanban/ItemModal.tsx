@@ -4,7 +4,6 @@ import {
   Assignment as AssignmentIcon,
   Chat as ChatIcon,
   Close as CloseIcon,
-  Delete as DeleteIcon,
   Edit as EditIcon
 } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
@@ -16,6 +15,7 @@ import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateU
 import { WText } from "../../components/WText";
 import { Send as SendIcon } from "@mui/icons-material";
 import { StyledContainer } from "../../components/StyledContainer";
+import { bottomSx } from "../../components/LayoutHeader";
 
 const MessageContainer = ({
   messages,
@@ -39,17 +39,17 @@ const MessageContainer = ({
     <Stack ref={stackRef} sx={{ gap: 1 }}>
       {messages.length === 0 ? (
         <Typography variant="body2" sx={{ color: "text.disabled" }}>
-          No messages yet
+          No messages
         </Typography>
       ) : (
         messages.map((message, i) => (
           <StyledContainer key={i} sx={{ flexDirection: "row" }}>
-            <Stack sx={{ flex: 1, p: 2, gap: 1 }}>
-              <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                {getDisplayDateTimeString(new Date(message.created_at))}
-              </Typography>
+            <Stack sx={{ flex: 1, p: 2 }}>
               <Typography variant="body1" sx={{ flex: 1 }}>
                 {message.text}
+              </Typography>
+              <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                {getDisplayDateTimeString(new Date(message.created_at))}
               </Typography>
             </Stack>
             <Stack>
@@ -113,8 +113,8 @@ export const ItemModal = ({
     <WModal
       open={true}
       onClose={onClose}
-      titleIcon={<AssignmentIcon sx={{ fontSize: 24 }} />}
-      title={isEditing ? "Edit Item" : "View Item"}
+      titleIcon={isEditing ? <AssignmentIcon sx={{ fontSize: 24 }} /> : undefined}
+      title={isEditing ? "Edit Item" : undefined}
       bottom={
         isEditing ? (
           <YesNoButtons
@@ -127,34 +127,29 @@ export const ItemModal = ({
             onNoClick={() => setIsEditing(false)}
           />
         ) : (
-          <>
-            <WButton
-              onClick={() => setIsEditing(true)}
-              rightIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
-              sx={{ flex: 1 }}
-            >
-              Edit
-            </WButton>
-            <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
-              Close
-            </WButton>
-          </>
+          <WButton
+            onClick={() => setIsEditing(true)}
+            rightIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
+            sx={{ flex: 1 }}
+          >
+            Edit
+          </WButton>
         )
       }
       right={{
         titleIcon: <ChatIcon sx={{ fontSize: 24 }} />,
         title: `Discussion (${kanbanItem.messages.length} ${kanbanItem.messages.length === 1 ? "Message" : "Messages"})`,
-        top: (
-          <>
+        top: isEditing ? (
+          <Stack sx={[bottomSx, { gap: "1px" }]}>
             <WButton
               onClick={() => setIsDeletingMessages(!isDeletingMessages)}
-              rightIcon={<DeleteIcon sx={{ fontSize: 24 }} />}
+              rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
             >
               Delete
             </WButton>
-          </>
-        ),
-        bottom: (
+          </Stack>
+        ) : undefined,
+        bottom: isEditing ? undefined : (
           <Stack sx={{ flex: 1 }}>
             <WText
               placeholder="Add a comment"
@@ -175,35 +170,37 @@ export const ItemModal = ({
     >
       {isEditing ? (
         <Stack sx={{ gap: 1 }}>
-          <TextInput label="Name" value={name} onChange={setName} hideHelperText={true} inputPropsSx={{ flex: 1 }} />
-          <TextInput
-            label="Created Date"
-            value={getDisplayDateTimeString(new Date(kanbanItem.created_at))}
-            onChange={() => {}}
-            hideHelperText={true}
-            inputPropsSx={{ flex: 1 }}
-            disabled={true}
-          />
-          <TextInput
-            label="Content"
-            value={content}
-            onChange={setContent}
-            hideHelperText={true}
-            minRows={4}
-            inputPropsSx={{ flex: 1 }}
-          />
+          <StyledContainer sx={{ p: 1 }}>
+            <TextInput label="Name" value={name} onChange={setName} hideHelperText={true} inputPropsSx={{ flex: 1 }} />
+          </StyledContainer>
+          <StyledContainer sx={{ p: 1 }}>
+            <TextInput
+              label="Created Date"
+              value={getDisplayDateTimeString(new Date(kanbanItem.created_at))}
+              onChange={() => {}}
+              hideHelperText={true}
+              inputPropsSx={{ flex: 1 }}
+              disabled={true}
+            />
+          </StyledContainer>
+          <StyledContainer sx={{ p: 1 }}>
+            <TextInput
+              label="Content"
+              value={content}
+              onChange={setContent}
+              hideHelperText={true}
+              minRows={4}
+              inputPropsSx={{ flex: 1 }}
+            />
+          </StyledContainer>
         </Stack>
       ) : (
         <Stack sx={{ gap: 2 }}>
-          <Typography variant="h6" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
-            {kanbanItem.name || "No name"}
-          </Typography>
-          <Divider />
-          <Stack sx={{ flexDirection: "row" }}>
-            <Typography variant="body2" sx={{ flex: 0.28 }}>
-              Created Date
+          <Stack>
+            <Typography variant="h6" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
+              {kanbanItem.name || "No name"}
             </Typography>
-            <Typography variant="body2" sx={{ flex: 0.72 }}>
+            <Typography variant="body2" sx={{ color: "text.secondary" }}>
               {getDisplayDateTimeString(new Date(kanbanItem.created_at))} (
               {getDaysSinceString(new Date(kanbanItem.created_at))})
             </Typography>
