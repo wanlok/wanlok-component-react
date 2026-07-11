@@ -86,6 +86,7 @@ export const WModal = ({
                     color: "text.primary",
                     textTransform: "none",
                     minHeight: 55,
+                    fontSize: 16,
                     justifyContent: "flex-start"
                   },
                   "& .MuiTab-root.Mui-selected": {
