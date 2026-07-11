@@ -98,7 +98,7 @@ export const WModal = ({
                 <Tab icon={panelProps.titleIcon} iconPosition="start" label={panelProps.title ?? "Main"} />
                 <Tab icon={rightIcon} iconPosition="start" label={rightTitle ?? "More"} />
               </Tabs>
-              <Divider orientation="vertical" flexItem />
+              <Divider orientation="vertical" flexItem sx={{ my: 1 }} />
               <WButton onClick={onClose} sx={{ ...iconButtonSx, backgroundColor: "transparent" }}>
                 <CloseIcon sx={{ fontSize: 24 }} />
               </WButton>
