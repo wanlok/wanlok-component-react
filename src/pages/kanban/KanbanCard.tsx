@@ -148,7 +148,7 @@ export const KanbanCard = ({
             }}
           >
             <CardContent sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography variant="h6" sx={{ color: item.name ? "text.primary" : "text.disabled" }}>
+              <Typography variant="body1" sx={{ color: item.name ? "text.primary" : "text.disabled" }}>
                 {item.name || "No name"}
               </Typography>
               <Typography variant="body2">
@@ -158,11 +158,7 @@ export const KanbanCard = ({
           </CardActionArea>
           <Stack>
             {controlGroupState === 2 && (
-              <WButton
-                onClick={onDeleteItemClick}
-                className="drag-cancel"
-                sx={iconButtonSx}
-              >
+              <WButton onClick={onDeleteItemClick} className="drag-cancel" sx={iconButtonSx}>
                 <CloseIcon sx={{ fontSize: 24 }} />
               </WButton>
             )}
