@@ -171,6 +171,29 @@ export const useKanban = () => {
     setSelectedProject(updatedProject);
   };
 
+  const deleteMessage = (columnIndex: number, itemIndex: number, messageIndex: number) => {
+    if (!kanban || !selectedProject) {
+      return;
+    }
+    const columns = selectedProject.columns.map((column, i) =>
+      i === columnIndex
+        ? {
+            ...column,
+            items: column.items.map((item, j) =>
+              j === itemIndex
+                ? { ...item, messages: item.messages.filter((_, k) => k !== messageIndex) }
+                : item
+            )
+          }
+        : column
+    );
+    const updatedProject = { ...selectedProject, columns };
+    const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
+    updateDoc(docRef, { projects });
+    setKanban({ ...kanban, projects });
+    setSelectedProject(updatedProject);
+  };
+
   return {
     isLoading: kanban === undefined,
     kanban,
@@ -183,6 +206,7 @@ export const useKanban = () => {
     updateItem,
     deleteItem,
     moveItem,
-    addMessage
+    addMessage,
+    deleteMessage
   };
 };

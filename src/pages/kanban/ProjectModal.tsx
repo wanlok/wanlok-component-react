@@ -1,4 +1,5 @@
 import { Stack } from "@mui/material";
+import { StyledContainer } from "../../components/StyledContainer";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { WModal } from "../../components/WModal";
@@ -36,7 +37,7 @@ export const ProjectModal = ({
     >
       <Stack sx={{ gap: 1 }}>
         {rows.map(({ label, value, disabled }, i) => (
-          <Stack key={`row-${i}`} sx={{ backgroundColor: "background.default", p: 1, borderLeft: "#DDDDDD solid 4px" }}>
+          <StyledContainer key={`row-${i}`} sx={{ p: 1 }}>
             {typeof value === "string" ? (
               <TextInput
                 label={label}
@@ -75,7 +76,7 @@ export const ProjectModal = ({
                 ))}
               </Stack>
             )}
-          </Stack>
+          </StyledContainer>
         ))}
       </Stack>
     </WModal>

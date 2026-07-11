@@ -1,4 +1,5 @@
 import { Stack } from "@mui/material";
+import { StyledContainer } from "../../components/StyledContainer";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { useEffect, useState } from "react";
@@ -82,10 +83,7 @@ export const EditAttributeModal = ({
       <Stack sx={{ gap: "1px" }}>
         {attributes.map(({ name, type }, i) => {
           return (
-            <Stack
-              key={`attribute-${i}`}
-              sx={{ flexDirection: "row", alignItems: "center", gap: 1, borderLeft: "#DDDDDD solid 4px" }}
-            >
+            <StyledContainer key={`attribute-${i}`} sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
               <Stack
                 sx={{
                   flex: 1,
@@ -136,7 +134,7 @@ export const EditAttributeModal = ({
                   />
                 </Stack>
               </Stack>
-            </Stack>
+            </StyledContainer>
           );
         })}
       </Stack>

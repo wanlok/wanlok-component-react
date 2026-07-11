@@ -24,7 +24,8 @@ export const Kanban = () => {
     updateItem,
     deleteItem,
     moveItem,
-    addMessage
+    addMessage,
+    deleteMessage
   } = useKanban();
   const [controlGroupState, setControlGroupState] = useState(0);
   const [panelOpened, setPanelOpened] = useState(false);
@@ -109,6 +110,7 @@ export const Kanban = () => {
           item={selectedItem}
           onItemChange={(name, content) => updateItem(selectedItem.i, selectedItem.j, name, content)}
           onAddMessage={(text) => addMessage(selectedItem.i, selectedItem.j, text)}
+          onDeleteMessage={(messageIndex) => deleteMessage(selectedItem.i, selectedItem.j, messageIndex)}
           onClose={() => setSelectedItem(null)}
         />
       )}

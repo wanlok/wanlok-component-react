@@ -1,4 +1,5 @@
 import { Stack, Typography } from "@mui/material";
+import { StyledContainer } from "../../components/StyledContainer";
 import { ViewList as ViewListIcon } from "@mui/icons-material";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { ChartItem, CloudinaryFileInfo, Folder, SteamInfo, YouTubeOEmbed } from "../../services/Types";
@@ -100,10 +101,7 @@ export const AttributeModal = ({
       <Stack sx={{ gap: "1px" }}>
         {selectedFolder?.attributes.map(({ name }, i) => {
           return (
-            <Stack
-              key={`attribute-${i}`}
-              sx={{ flexDirection: "row", backgroundColor: "background.default", borderLeft: "#DDDDDD solid 4px" }}
-            >
+            <StyledContainer key={`attribute-${i}`} sx={{ flexDirection: "row" }}>
               <Stack sx={{ flex: 1, justifyContent: "center", px: 2 }}>
                 <Typography variant="body1">{name}</Typography>
               </Stack>
@@ -119,7 +117,7 @@ export const AttributeModal = ({
                   inputPropsSx={{ flex: 1 }}
                 />
               </Stack>
-            </Stack>
+            </StyledContainer>
           );
         })}
       </Stack>
