@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Divider, Stack, Typography } from "@mui/material";
+import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Assignment as AssignmentIcon, Chat as ChatIcon, Edit as EditIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
 import { KanbanProject } from "../../services/Types";
@@ -48,6 +48,8 @@ export const ItemModal = ({
   onDeleteMessage: (messageIndex: number) => void;
   onClose: () => void;
 }) => {
+  const { breakpoints } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
   const kanbanItem = project.columns[item.i].items[item.j];
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(kanbanItem.name);
@@ -91,10 +93,20 @@ export const ItemModal = ({
         </Stack>
       }
       right={
-        <Discussion messages={kanbanItem.messages} onAddMessage={onAddMessage} onDeleteMessage={onDeleteMessage} />
+        <Discussion
+          titleIcon={mobile ? undefined : <ChatIcon sx={{ fontSize: 24 }} />}
+          title={
+            mobile
+              ? undefined
+              : `Discussion (${kanbanItem.messages.length} ${kanbanItem.messages.length === 1 ? "Message" : "Messages"})`
+          }
+          messages={kanbanItem.messages}
+          onAddMessage={onAddMessage}
+          onDeleteMessage={onDeleteMessage}
+        />
       }
-      rightTitle="Discussion"
       rightIcon={<ChatIcon sx={{ fontSize: 24 }} />}
+      rightTitle="Discussion"
     >
       {isEditing ? (
         <Stack sx={{ gap: 1 }}>

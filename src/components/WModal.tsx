@@ -31,15 +31,15 @@ export const WModal = ({
   open,
   onClose,
   right,
-  rightTitle,
   rightIcon,
+  rightTitle,
   ...panelProps
 }: {
   open: boolean;
   onClose: () => void;
   right?: ReactNode;
-  rightTitle?: string;
   rightIcon?: ReactElement;
+  rightTitle?: string;
 } & PanelProps) => {
   const { palette, breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));

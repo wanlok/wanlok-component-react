@@ -1,6 +1,6 @@
-import { useEffect, useRef, useState } from "react";
-import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { Chat as ChatIcon, Close as CloseIcon, Send as SendIcon } from "@mui/icons-material";
+import { ReactElement, useEffect, useRef, useState } from "react";
+import { Stack, Typography } from "@mui/material";
+import { Close as CloseIcon, Send as SendIcon } from "@mui/icons-material";
 import { Message } from "../services/Types";
 import { WModalContent } from "./WModal";
 import { iconButtonSx, WButton } from "./WButton";
@@ -11,31 +11,35 @@ import { getDisplayDateTimeString } from "../common/DateUtils";
 import { bottomSx } from "./LayoutHeader";
 
 export const Discussion = ({
+  titleIcon,
+  title,
   messages,
   onAddMessage,
   onDeleteMessage
 }: {
+  titleIcon?: ReactElement;
+  title?: string;
   messages: Message[];
   onAddMessage: (name: string, text: string) => void;
   onDeleteMessage: (messageIndex: number) => void;
 }) => {
-  const { breakpoints } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("md"));
   const [isDeletingMessages, setIsDeletingMessages] = useState(false);
   const [name, setName] = useState("");
   const stackRef = useRef<HTMLDivElement>(null);
+  const numberOfMessagesRef = useRef(messages.length);
 
   useEffect(() => {
     const scrollable = stackRef.current?.parentElement;
-    if (scrollable) {
+    if (scrollable && messages.length > numberOfMessagesRef.current) {
       scrollable.scrollTo({ top: scrollable.scrollHeight, behavior: "smooth" });
     }
+    numberOfMessagesRef.current = messages.length;
   }, [messages.length]);
 
   return (
     <WModalContent
-      titleIcon={mobile ? undefined : <ChatIcon sx={{ fontSize: 24 }} />}
-      title={mobile ? undefined : `Discussion (${messages.length} ${messages.length === 1 ? "Message" : "Messages"})`}
+      titleIcon={titleIcon}
+      title={title}
       top={
         <Stack sx={[bottomSx, { flex: 1, gap: "1px" }]}>
           <StyledContainer sx={{ flex: 1, p: 1 }}>
@@ -54,7 +58,13 @@ export const Discussion = ({
           <WText
             placeholder="Add a message"
             rightButtons={[
-              { icon: <SendIcon sx={{ fontSize: 20 }} />, onClickWithText: (text) => onAddMessage(name, text) }
+              {
+                icon: <SendIcon sx={{ fontSize: 20 }} />,
+                onClickWithText: (text) => {
+                  setIsDeletingMessages(false);
+                  onAddMessage(name, text);
+                }
+              }
             ]}
           />
         </StyledContainer>
