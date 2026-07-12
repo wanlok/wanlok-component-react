@@ -112,7 +112,7 @@ export const ItemModal = ({
       rightTitle="Discussion"
     >
       {isEditing ? (
-        <Stack sx={{ gap: 1 }}>
+        <Stack sx={{ gap: 1, p: 2 }}>
           <StyledContainer sx={{ p: 1 }}>
             <TextInput label="Name" value={name} onChange={setName} hideHelperText={true} inputPropsSx={{ flex: 1 }} />
           </StyledContainer>
@@ -128,7 +128,7 @@ export const ItemModal = ({
           </StyledContainer>
         </Stack>
       ) : (
-        <Stack sx={{ gap: 2 }}>
+        <Stack sx={{ gap: 2, p: 2 }}>
           <Typography variant="body1" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
             {kanbanItem.name || "No name"}
           </Typography>

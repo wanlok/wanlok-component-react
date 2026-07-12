@@ -22,7 +22,7 @@ export const WModalContent = ({ titleIcon, title, top, bottom, children }: Panel
       </Stack>
     )}
     {top && <Stack sx={{ flexDirection: "row", height: 55, gap: "1px", flexShrink: 0 }}>{top}</Stack>}
-    <Stack sx={{ flex: 1, overflow: "auto", p: 2, backgroundColor: "common.white" }}>{children}</Stack>
+    <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>{children}</Stack>
     {bottom && <Stack sx={{ flexDirection: "row", minHeight: 55, gap: "1px", flexShrink: 0 }}>{bottom}</Stack>}
   </Stack>
 );

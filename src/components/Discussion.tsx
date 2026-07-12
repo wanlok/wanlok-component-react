@@ -1,5 +1,5 @@
-import { ReactElement, useEffect, useRef, useState } from "react";
-import { Stack, Typography } from "@mui/material";
+import { Fragment, ReactElement, useEffect, useRef, useState } from "react";
+import { Divider, Stack, Typography } from "@mui/material";
 import { Close as CloseIcon, Refresh as RefreshIcon, Send as SendIcon } from "@mui/icons-material";
 import { Message } from "../services/Types";
 import { WModalContent } from "./WModal";
@@ -7,6 +7,37 @@ import { iconButtonSx, WButton } from "./WButton";
 import { WText } from "./WText";
 import { StyledContainer } from "./StyledContainer";
 import { getDisplayDateTimeString } from "../common/DateUtils";
+
+export const Row = ({
+  message,
+  isDeletingMessages,
+  onDeleteMessage
+}: {
+  message: Message;
+  isDeletingMessages: boolean;
+  onDeleteMessage: () => void;
+}) => (
+  <Stack sx={{ flexDirection: "row" }}>
+    <Stack sx={{ flex: 1, p: 2, gap: 1 }}>
+      <Stack sx={{ flexDirection: "row" }}>
+        <Typography variant="body2" sx={{ flex: 1 }}>
+          {message.name}
+        </Typography>
+        <Typography variant="body2">{getDisplayDateTimeString(new Date(message.created_at))}</Typography>
+      </Stack>
+      <Typography variant="body1" sx={{ flex: 1, whiteSpace: "pre-wrap" }}>
+        {message.text}
+      </Typography>
+    </Stack>
+    {isDeletingMessages && (
+      <Stack>
+        <WButton onClick={onDeleteMessage} sx={iconButtonSx}>
+          <CloseIcon sx={{ fontSize: 24 }} />
+        </WButton>
+      </Stack>
+    )}
+  </Stack>
+);
 
 export const Discussion = ({
   titleIcon,
@@ -51,13 +82,13 @@ export const Discussion = ({
             }}
             rightButtons={[
               {
+                icon: <RefreshIcon sx={{ fontSize: 24 }} />,
+                onClick: onRefresh
+              },
+              {
                 icon: <CloseIcon sx={{ fontSize: 24 }} />,
                 title: "Delete",
                 onClick: () => setIsDeletingMessages(!isDeletingMessages)
-              },
-              {
-                icon: <RefreshIcon sx={{ fontSize: 24 }} />,
-                onClick: onRefresh
               }
             ]}
           />
@@ -80,31 +111,23 @@ export const Discussion = ({
         </StyledContainer>
       }
     >
-      <Stack ref={stackRef} sx={{ gap: 1 }}>
+      <Stack ref={stackRef}>
         {messages.length === 0 ? (
-          <Typography variant="body1" sx={{ color: "text.disabled" }}>
-            No messages
-          </Typography>
+          <Stack sx={{ p: 2 }}>
+            <Typography variant="body1" sx={{ color: "text.disabled" }}>
+              No messages
+            </Typography>
+          </Stack>
         ) : (
           messages.map((message, i) => (
-            <StyledContainer key={i} sx={{ flexDirection: "row" }}>
-              <Stack sx={{ flex: 1, p: 2 }}>
-                <Typography variant="body2">{message.name}</Typography>
-                <Typography variant="body1" sx={{ flex: 1 }}>
-                  {message.text}
-                </Typography>
-                <Typography variant="body2" sx={{ color: "text.secondary" }}>
-                  {getDisplayDateTimeString(new Date(message.created_at))}
-                </Typography>
-              </Stack>
-              <Stack>
-                {isDeletingMessages && (
-                  <WButton onClick={() => onDeleteMessage(i)} sx={iconButtonSx}>
-                    <CloseIcon sx={{ fontSize: 24 }} />
-                  </WButton>
-                )}
-              </Stack>
-            </StyledContainer>
+            <Fragment key={i}>
+              {i > 0 && <Divider />}
+              <Row
+                message={message}
+                isDeletingMessages={isDeletingMessages}
+                onDeleteMessage={() => onDeleteMessage(i)}
+              />
+            </Fragment>
           ))
         )}
       </Stack>
