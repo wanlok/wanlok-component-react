@@ -1,5 +1,5 @@
-import { Fragment, ReactElement, useEffect, useRef, useState } from "react";
-import { Divider, Stack, Typography } from "@mui/material";
+import { ReactElement, useEffect, useRef, useState } from "react";
+import { Stack, Typography } from "@mui/material";
 import { Close as CloseIcon, Refresh as RefreshIcon, Send as SendIcon } from "@mui/icons-material";
 import { Message } from "../services/Types";
 import { WModalContent } from "./WModal";
@@ -17,7 +17,7 @@ export const Row = ({
   isDeletingMessages: boolean;
   onDeleteMessage: () => void;
 }) => (
-  <Stack sx={{ flexDirection: "row" }}>
+  <Stack sx={{ flexDirection: "row", backgroundColor: "common.white" }}>
     <Stack sx={{ flex: 1, p: 2, gap: 1 }}>
       <Stack sx={{ flexDirection: "row" }}>
         <Typography variant="body2" sx={{ flex: 1 }}>
@@ -111,23 +111,21 @@ export const Discussion = ({
         </StyledContainer>
       }
     >
-      <Stack ref={stackRef}>
+      <Stack ref={stackRef} sx={{ backgroundColor: "background.default", gap: 0.5 }}>
         {messages.length === 0 ? (
-          <Stack sx={{ p: 2 }}>
+          <Stack sx={{ p: 2, backgroundColor: "common.white" }}>
             <Typography variant="body1" sx={{ color: "text.disabled" }}>
               No messages
             </Typography>
           </Stack>
         ) : (
           messages.map((message, i) => (
-            <Fragment key={i}>
-              {i > 0 && <Divider />}
-              <Row
-                message={message}
-                isDeletingMessages={isDeletingMessages}
-                onDeleteMessage={() => onDeleteMessage(i)}
-              />
-            </Fragment>
+            <Row
+              key={i}
+              message={message}
+              isDeletingMessages={isDeletingMessages}
+              onDeleteMessage={() => onDeleteMessage(i)}
+            />
           ))
         )}
       </Stack>
