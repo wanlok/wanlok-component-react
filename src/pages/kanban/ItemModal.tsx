@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Assignment as AssignmentIcon, Chat as ChatIcon, Edit as EditIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
 import { KanbanProject } from "../../services/Types";
@@ -152,10 +152,11 @@ export const ItemModal = ({
             </StyledContainer>
           </>
         ) : (
-          <>
+          <Stack sx={{ gap: 2 }}>
             <Typography variant="body1" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
               {kanbanItem.name || "No name"}
             </Typography>
+            <Divider />
             <Typography
               variant="body1"
               component="div"
@@ -163,7 +164,7 @@ export const ItemModal = ({
             >
               {kanbanItem.content ? parseContent(kanbanItem.content) : "No content"}
             </Typography>
-          </>
+          </Stack>
         )}
       </Stack>
     </WModal>
