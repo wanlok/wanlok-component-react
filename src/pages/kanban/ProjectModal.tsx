@@ -35,7 +35,7 @@ export const ProjectModal = ({
       title={title}
       bottom={<YesNoButtons yesLabel="Save" onYesClick={onSaveButtonClick} noLabel="Cancel" onNoClick={onClose} />}
     >
-      <Stack sx={{ gap: 1 }}>
+      <Stack sx={{ gap: 1, p: 2 }}>
         {rows.map(({ label, value, disabled }, i) => (
           <StyledContainer key={`row-${i}`} sx={{ p: 1 }}>
             {typeof value === "string" ? (

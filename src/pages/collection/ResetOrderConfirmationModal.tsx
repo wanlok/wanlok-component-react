@@ -28,7 +28,7 @@ export const ResetOrderConfirmationModal = ({
         />
       }
     >
-      <Stack sx={{ gap: 2 }}>
+      <Stack sx={{ gap: 2, p: 2 }}>
         <Typography variant="body1" sx={{ lineHeight: 1.5 }}>
           Are you sure you want to reset the arranged order?
         </Typography>

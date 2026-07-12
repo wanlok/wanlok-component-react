@@ -98,7 +98,7 @@ export const AttributeModal = ({
         />
       }
     >
-      <Stack sx={{ gap: "1px" }}>
+      <Stack sx={{ gap: "1px", p: 2 }}>
         {selectedFolder?.attributes.map(({ name }, i) => {
           return (
             <StyledContainer key={`attribute-${i}`} sx={{ flexDirection: "row" }}>

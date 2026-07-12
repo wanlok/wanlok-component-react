@@ -80,7 +80,7 @@ export const EditAttributeModal = ({
         />
       }
     >
-      <Stack sx={{ gap: "1px" }}>
+      <Stack sx={{ gap: "1px", p: 2 }}>
         {attributes.map(({ name, type }, i) => {
           return (
             <StyledContainer key={`attribute-${i}`} sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
