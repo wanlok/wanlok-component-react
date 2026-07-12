@@ -110,7 +110,7 @@ export const ItemModal = ({
           {getDaysSinceString(new Date(kanbanItem.created_at))})
         </Typography>
       </Stack>
-      <Stack sx={{ gap: 1, px: 2 }}>
+      <Stack sx={{ gap: 1, px: 2, pb: 2 }}>
         {isEditing ? (
           <>
             <StyledContainer sx={{ p: 1 }}>
