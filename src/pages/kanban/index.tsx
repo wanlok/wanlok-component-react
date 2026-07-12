@@ -24,6 +24,7 @@ export const Kanban = () => {
     updateItem,
     deleteItem,
     moveItem,
+    refreshKanban,
     addMessage,
     deleteMessage
   } = useKanban();
@@ -109,6 +110,7 @@ export const Kanban = () => {
           project={selectedProject}
           item={selectedItem}
           onItemChange={(name, content) => updateItem(selectedItem.i, selectedItem.j, name, content)}
+          onRefresh={refreshKanban}
           onAddMessage={(name, text) => addMessage(selectedItem.i, selectedItem.j, name, text)}
           onDeleteMessage={(messageIndex) => deleteMessage(selectedItem.i, selectedItem.j, messageIndex)}
           onClose={() => setSelectedItem(null)}

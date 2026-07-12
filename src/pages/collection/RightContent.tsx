@@ -1,5 +1,13 @@
 import { LayoutLoading } from "../../components/LayoutLoading";
-import { ChartItem, CloudinaryFileInfo, CollectionCounts, Direction, Folder, SteamInfo, YouTubeOEmbed } from "../../services/Types";
+import {
+  ChartItem,
+  CloudinaryFileInfo,
+  CollectionCounts,
+  Direction,
+  Folder,
+  SteamInfo,
+  YouTubeOEmbed
+} from "../../services/Types";
 import { CollectionList } from "./CollectionList";
 import { WText } from "../../components/WText";
 import { StyledContainer } from "../../components/StyledContainer";

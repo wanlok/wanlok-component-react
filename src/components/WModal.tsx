@@ -64,8 +64,8 @@ export const WModal = ({
           flexDirection: mobile && right ? "column" : "row",
           width: mobile ? "100vw" : right !== undefined ? 800 : 400,
           height: mobile ? "100dvh" : undefined,
-          minHeight: mobile ? undefined : "40vh",
-          maxHeight: mobile ? undefined : "80vh",
+          minHeight: "80vh",
+          maxHeight: "100vh",
           overflow: "hidden",
           gap: mobile && right ? 0 : "1px",
           backgroundColor: mobile && right ? "common.white" : undefined

@@ -37,6 +37,7 @@ export const ItemModal = ({
   project,
   item,
   onItemChange,
+  onRefresh,
   onAddMessage,
   onDeleteMessage,
   onClose
@@ -44,6 +45,7 @@ export const ItemModal = ({
   project: KanbanProject;
   item: { i: number; j: number };
   onItemChange: (name: string, content: string) => void;
+  onRefresh: () => void;
   onAddMessage: (name: string, text: string) => void;
   onDeleteMessage: (messageIndex: number) => void;
   onClose: () => void;
@@ -101,6 +103,7 @@ export const ItemModal = ({
               : `Discussion (${kanbanItem.messages.length} ${kanbanItem.messages.length === 1 ? "Message" : "Messages"})`
           }
           messages={kanbanItem.messages}
+          onRefresh={onRefresh}
           onAddMessage={onAddMessage}
           onDeleteMessage={onDeleteMessage}
         />

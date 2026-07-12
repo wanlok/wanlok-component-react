@@ -1,30 +1,30 @@
 import { ReactElement, useEffect, useRef, useState } from "react";
 import { Stack, Typography } from "@mui/material";
-import { Close as CloseIcon, Send as SendIcon } from "@mui/icons-material";
+import { Close as CloseIcon, Refresh as RefreshIcon, Send as SendIcon } from "@mui/icons-material";
 import { Message } from "../services/Types";
 import { WModalContent } from "./WModal";
 import { iconButtonSx, WButton } from "./WButton";
 import { WText } from "./WText";
-import { TextInput } from "./TextInput";
 import { StyledContainer } from "./StyledContainer";
 import { getDisplayDateTimeString } from "../common/DateUtils";
-import { bottomSx } from "./LayoutHeader";
 
 export const Discussion = ({
   titleIcon,
   title,
   messages,
+  onRefresh,
   onAddMessage,
   onDeleteMessage
 }: {
   titleIcon?: ReactElement;
   title?: string;
   messages: Message[];
+  onRefresh: () => void;
   onAddMessage: (name: string, text: string) => void;
   onDeleteMessage: (messageIndex: number) => void;
 }) => {
   const [isDeletingMessages, setIsDeletingMessages] = useState(false);
-  const [name, setName] = useState("");
+  const [name, setName] = useState(() => localStorage.getItem("discussion_name") ?? "");
   const stackRef = useRef<HTMLDivElement>(null);
   const numberOfMessagesRef = useRef(messages.length);
 
@@ -41,17 +41,27 @@ export const Discussion = ({
       titleIcon={titleIcon}
       title={title}
       top={
-        <Stack sx={[bottomSx, { flex: 1, gap: "1px" }]}>
-          <StyledContainer sx={{ flex: 1, p: 1 }}>
-            <TextInput placeholder="Your name" value={name} onChange={setName} hideHelperText={true} />
-          </StyledContainer>
-          <WButton
-            onClick={() => setIsDeletingMessages(!isDeletingMessages)}
-            rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
-          >
-            Delete
-          </WButton>
-        </Stack>
+        <StyledContainer sx={{ flex: 1 }}>
+          <WText
+            placeholder="Your name"
+            initialValue={name}
+            onChange={(value) => {
+              setName(value);
+              localStorage.setItem("discussion_name", value);
+            }}
+            rightButtons={[
+              {
+                icon: <CloseIcon sx={{ fontSize: 24 }} />,
+                title: "Delete",
+                onClick: () => setIsDeletingMessages(!isDeletingMessages)
+              },
+              {
+                icon: <RefreshIcon sx={{ fontSize: 24 }} />,
+                onClick: onRefresh
+              }
+            ]}
+          />
+        </StyledContainer>
       }
       bottom={
         <StyledContainer sx={{ flex: 1 }}>

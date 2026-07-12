@@ -37,6 +37,10 @@ export const useKanban = () => {
     fetchKanban();
   }, [docRef]);
 
+  const refreshKanban = async () => {
+    setKanban((await getDoc(docRef)).data() as Kanban | undefined);
+  };
+
   useEffect(() => {
     const projects = kanban?.projects ?? [];
     if (projects.length > 0) {
@@ -206,6 +210,7 @@ export const useKanban = () => {
     updateItem,
     deleteItem,
     moveItem,
+    refreshKanban,
     addMessage,
     deleteMessage
   };

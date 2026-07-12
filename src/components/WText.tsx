@@ -6,12 +6,23 @@ import { WButton } from "./WButton";
 
 interface ButtonContent {
   icon: ReactNode;
+  title?: string;
   onClickWithText?: (text: string) => void;
   onClick?: () => void;
 }
 
-export const WText = ({ placeholder, rightButtons }: { placeholder?: string; rightButtons: ButtonContent[] }) => {
-  const [value, setValue] = useState("");
+export const WText = ({
+  placeholder,
+  initialValue,
+  onChange,
+  rightButtons
+}: {
+  placeholder?: string;
+  initialValue?: string;
+  onChange?: (value: string) => void;
+  rightButtons: ButtonContent[];
+}) => {
+  const [value, setValue] = useState(initialValue ?? "");
   const [buttonHeight, setButtonHeight] = useState<number>();
   const [sufficientSpaces, setSufficientSpaces] = useState<boolean>(false);
   const sufficientSpacesHeightRef = useRef<number>();
@@ -34,7 +45,9 @@ export const WText = ({ placeholder, rightButtons }: { placeholder?: string; rig
           setSufficientSpaces(false);
         }
       } else {
-        setButtonHeight(height);
+        if (height > 0) {
+          setButtonHeight(height);
+        }
       }
     });
     if (stackRef.current) {
@@ -51,26 +64,27 @@ export const WText = ({ placeholder, rightButtons }: { placeholder?: string; rig
   };
 
   return (
-    <Stack ref={stackRef} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
+    <Stack ref={stackRef} sx={{ flexDirection: "row", height: "100%", backgroundColor: "background.default" }}>
       <Stack sx={{ flex: 1, p: 1 }}>
         <TextInput
           placeholder={placeholder}
           value={value}
-          onChange={(changedText) => setValue(changedText)}
+          onChange={(changedText) => { setValue(changedText); onChange?.(changedText); }}
           hideHelperText={true}
         />
       </Stack>
       <Stack sx={{ flexDirection: sufficientSpaces ? "column" : "row", gap: "1px" }}>
-        {rightButtons.map(({ icon, onClick, onClickWithText }, index) => (
+        {rightButtons.map(({ icon, title, onClick, onClickWithText }, index) => (
           <WButton
             key={`right-button-${index}`}
-            sx={{ width: buttonHeight, height: buttonHeight, p: 0 }}
+            rightIcon={icon}
+            sx={{ width: title ? undefined : buttonHeight, height: buttonHeight, p: title ? undefined : 0 }}
             onClick={() => {
               onClick && onClick();
               onClickWithText && getText(onClickWithText);
             }}
           >
-            {icon}
+            {title}
           </WButton>
         ))}
       </Stack>
