@@ -10,6 +10,7 @@ import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateU
 import { StyledContainer } from "../../components/StyledContainer";
 import { Discussion } from "../../components/Discussion";
 import { bottomSx } from "../../components/LayoutHeader";
+import { SelectInput } from "../../components/SelectInput";
 
 const parseContent = (text: string) => {
   const urlRegex = /https?:\/\/[^\s]+/g;
@@ -37,6 +38,7 @@ export const ItemModal = ({
   project,
   item,
   onItemChange,
+  onMoveItem,
   onRefresh,
   onAddMessage,
   onDeleteMessage,
@@ -45,6 +47,7 @@ export const ItemModal = ({
   project: KanbanProject;
   item: { i: number; j: number };
   onItemChange: (name: string, content: string) => void;
+  onMoveItem: (targetColumnIndex: number) => void;
   onRefresh: () => void;
   onAddMessage: (name: string, text: string) => void;
   onDeleteMessage: (messageIndex: number) => void;
@@ -56,6 +59,7 @@ export const ItemModal = ({
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(kanbanItem.name);
   const [content, setContent] = useState(kanbanItem.content);
+  const [selectedColumn, setSelectedColumn] = useState(String(item.i));
 
   return (
     <WModal
@@ -63,7 +67,21 @@ export const ItemModal = ({
       onClose={onClose}
       titleIcon={<AssignmentIcon sx={{ fontSize: 24 }} />}
       title={isEditing ? "Edit Task" : "Task"}
-      top={<></>}
+      top={
+        <StyledContainer sx={{ flex: 1, p: 1 }}>
+          <SelectInput
+            items={project.columns.map((column, i) => ({ label: column.name, value: String(i) }))}
+            value={selectedColumn}
+            onChange={(value) => {
+              const targetColumnIndex = Number(value);
+              if (targetColumnIndex !== item.i) {
+                setSelectedColumn(value);
+                onMoveItem(targetColumnIndex);
+              }
+            }}
+          />
+        </StyledContainer>
+      }
       bottom={
         <Stack sx={[bottomSx, { flex: 1, gap: "1px" }]}>
           {isEditing ? (

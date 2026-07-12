@@ -64,7 +64,7 @@ export const WText = ({
   };
 
   return (
-    <Stack ref={stackRef} sx={{ flexDirection: "row", height: "100%", backgroundColor: "background.default" }}>
+    <Stack ref={stackRef} sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
       <Stack sx={{ flex: 1, p: 1 }}>
         <TextInput
           placeholder={placeholder}

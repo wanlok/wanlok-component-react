@@ -110,6 +110,21 @@ export const Kanban = () => {
           project={selectedProject}
           item={selectedItem}
           onItemChange={(name, content) => updateItem(selectedItem.i, selectedItem.j, name, content)}
+          onMoveItem={(targetColumnIndex) => {
+            const kanbanItem = selectedProject.columns[selectedItem.i].items[selectedItem.j];
+            const newTargetItemIndex = selectedProject.columns[targetColumnIndex].items.length;
+            const columns = selectedProject.columns.map((column, i) => {
+              if (i === selectedItem.i) {
+                return { ...column, items: column.items.filter((_, j) => j !== selectedItem.j) };
+              }
+              if (i === targetColumnIndex) {
+                return { ...column, items: [...column.items, kanbanItem] };
+              }
+              return column;
+            });
+            moveItem(columns);
+            setSelectedItem({ i: targetColumnIndex, j: newTargetItemIndex });
+          }}
           onRefresh={refreshKanban}
           onAddMessage={(name, text) => addMessage(selectedItem.i, selectedItem.j, name, text)}
           onDeleteMessage={(messageIndex) => deleteMessage(selectedItem.i, selectedItem.j, messageIndex)}

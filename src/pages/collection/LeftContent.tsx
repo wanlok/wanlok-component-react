@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import { Stack } from "@mui/material";
 import { LayoutLoading } from "../../components/LayoutLoading";
 import {
@@ -10,7 +10,7 @@ import {
 import { Folder } from "../../services/Types";
 import { WCardList } from "../../components/WCardList";
 import { iconButtonSx, WButton } from "../../components/WButton";
-import { WText } from "../../components/WText";
+import { TextInput } from "../../components/TextInput";
 import { StyledContainer } from "../../components/StyledContainer";
 import { PanelRow } from "../../components/PanelRow";
 import { CollectionChips } from "./CollectionChips";
@@ -34,6 +34,8 @@ export const LeftContent = ({
   deleteFolder: (folder: Folder) => Promise<void>;
   addFolder: (name: string) => Promise<void>;
 }) => {
+  const [folderName, setFolderName] = useState("");
+
   if (isLoading) {
     return <LayoutLoading />;
   }
@@ -63,12 +65,22 @@ export const LeftContent = ({
           </Stack>
         )}
       />
-      <StyledContainer>
-        <WText
-          placeholder="Add Folder"
-          rightButtons={[{ icon: <AddIcon sx={{ fontSize: 24 }} />, onClickWithText: addFolder }]}
-        />
-      </StyledContainer>
+      <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
+        <StyledContainer sx={{ flex: 1, p: 1 }}>
+          <TextInput placeholder="Add Folder" value={folderName} onChange={setFolderName} hideHelperText={true} />
+        </StyledContainer>
+        <WButton
+          onClick={() => {
+            if (folderName && folderName.trim().length > 0) {
+              addFolder(folderName);
+              setFolderName("");
+            }
+          }}
+          sx={iconButtonSx}
+        >
+          <AddIcon sx={{ fontSize: 24 }} />
+        </WButton>
+      </Stack>
     </>
   );
 };
