@@ -74,7 +74,7 @@ export const Discussion = ({
       top={
         <StyledContainer sx={{ flex: 1 }}>
           <WText
-            placeholder="Your name"
+            placeholder="Name"
             initialValue={name}
             onChange={(value) => {
               setName(value);

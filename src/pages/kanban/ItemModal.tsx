@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Assignment as AssignmentIcon, Chat as ChatIcon, Edit as EditIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
 import { KanbanProject } from "../../services/Types";
@@ -63,14 +63,7 @@ export const ItemModal = ({
       onClose={onClose}
       titleIcon={<AssignmentIcon sx={{ fontSize: 24 }} />}
       title={isEditing ? "Edit Task" : "Task"}
-      top={
-        <Stack sx={{ flex: 1, p: 2 }}>
-          <Typography variant="body1">
-            Created at {getDisplayDateTimeString(new Date(kanbanItem.created_at))} (
-            {getDaysSinceString(new Date(kanbanItem.created_at))})
-          </Typography>
-        </Stack>
-      }
+      top={<></>}
       bottom={
         <Stack sx={[bottomSx, { flex: 1, gap: "1px" }]}>
           {isEditing ? (
@@ -111,36 +104,50 @@ export const ItemModal = ({
       rightIcon={<ChatIcon sx={{ fontSize: 24 }} />}
       rightTitle="Discussion"
     >
-      {isEditing ? (
-        <Stack sx={{ gap: 1, p: 2 }}>
-          <StyledContainer sx={{ p: 1 }}>
-            <TextInput label="Name" value={name} onChange={setName} hideHelperText={true} inputPropsSx={{ flex: 1 }} />
-          </StyledContainer>
-          <StyledContainer sx={{ p: 1 }}>
-            <TextInput
-              label="Content"
-              value={content}
-              onChange={setContent}
-              hideHelperText={true}
-              minRows={4}
-              inputPropsSx={{ flex: 1 }}
-            />
-          </StyledContainer>
-        </Stack>
-      ) : (
-        <Stack sx={{ gap: 1, p: 2 }}>
-          <Typography variant="body1" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
-            {kanbanItem.name || "No name"}
-          </Typography>
-          <Typography
-            variant="body1"
-            component="div"
-            sx={{ color: kanbanItem.content ? "text.primary" : "text.disabled", whiteSpace: "pre-wrap" }}
-          >
-            {kanbanItem.content ? parseContent(kanbanItem.content) : "No content"}
-          </Typography>
-        </Stack>
-      )}
+      <Stack sx={{ p: 2 }}>
+        <Typography variant="body2" sx={{ textAlign: "right" }}>
+          {getDisplayDateTimeString(new Date(kanbanItem.created_at))} (
+          {getDaysSinceString(new Date(kanbanItem.created_at))})
+        </Typography>
+      </Stack>
+      <Stack sx={{ gap: 1, px: 2 }}>
+        {isEditing ? (
+          <>
+            <StyledContainer sx={{ p: 1 }}>
+              <TextInput
+                label="Name"
+                value={name}
+                onChange={setName}
+                hideHelperText={true}
+                inputPropsSx={{ flex: 1 }}
+              />
+            </StyledContainer>
+            <StyledContainer sx={{ p: 1 }}>
+              <TextInput
+                label="Content"
+                value={content}
+                onChange={setContent}
+                hideHelperText={true}
+                minRows={4}
+                inputPropsSx={{ flex: 1 }}
+              />
+            </StyledContainer>
+          </>
+        ) : (
+          <>
+            <Typography variant="body1" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
+              {kanbanItem.name || "No name"}
+            </Typography>
+            <Typography
+              variant="body1"
+              component="div"
+              sx={{ color: kanbanItem.content ? "text.primary" : "text.disabled", whiteSpace: "pre-wrap" }}
+            >
+              {kanbanItem.content ? parseContent(kanbanItem.content) : "No content"}
+            </Typography>
+          </>
+        )}
+      </Stack>
     </WModal>
   );
 };
