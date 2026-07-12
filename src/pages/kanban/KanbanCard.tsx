@@ -1,11 +1,11 @@
 import { RefObject, useRef } from "react";
-import { Card, CardActionArea, CardContent, Typography } from "@mui/material";
+import { Card, CardActionArea, CardContent, Divider, Typography } from "@mui/material";
 import Draggable from "react-draggable";
 import { KanbanItem } from "../../services/Types";
-import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
+import { getDateString } from "../../common/DateUtils";
 import { Stack } from "@mui/material";
 import { iconButtonSx, WButton } from "../../components/WButton";
-import { Close as CloseIcon } from "@mui/icons-material";
+import { Close as CloseIcon, DragIndicator as DragIndicatorIcon } from "@mui/icons-material";
 
 export const padding = 2;
 export const threshold = 4;
@@ -58,6 +58,35 @@ const getRowOffset = (
   }
   return y < 0 ? offset + 1 : offset;
 };
+
+export const KanbanCardContent = ({ item, isDragIconHidden }: { item: KanbanItem; isDragIconHidden?: boolean }) => (
+  <Stack sx={{ flexDirection: "row", gap: 2 }}>
+    <Stack sx={{ flex: 1, gap: 1 }}>
+      <Typography variant="body1" sx={{ color: item.name ? "text.primary" : "text.disabled" }}>
+        {item.name || "No name"}
+      </Typography>
+      <Stack sx={{ flexDirection: "row" }}>
+        <Typography variant="body2">{getDateString(new Date(item.created_at))}</Typography>
+        {item.messages.length > 0 && (
+          <>
+            <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+            <Typography variant="body2">
+              {item.messages.length} {item.messages.length === 1 ? "message" : "messages"}
+            </Typography>
+          </>
+        )}
+      </Stack>
+    </Stack>
+    {!isDragIconHidden && (
+      <>
+        <Divider orientation="vertical" flexItem />
+        <Stack sx={{ justifyContent: "center" }}>
+          <DragIndicatorIcon sx={{ fontSize: 24, color: "text.disabled" }} />
+        </Stack>
+      </>
+    )}
+  </Stack>
+);
 
 export const KanbanCard = ({
   stackRef,
@@ -133,8 +162,11 @@ export const KanbanCard = ({
       <Card
         ref={nodeRef}
         sx={{
-          boxShadow: 3,
-          borderRadius: 1
+          boxShadow: 0,
+          borderRadius: 1,
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderColor: "divider"
         }}
         className="drag-handle"
       >
@@ -147,22 +179,15 @@ export const KanbanCard = ({
               }
             }}
           >
-            <CardContent sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography variant="body1" sx={{ color: item.name ? "text.primary" : "text.disabled" }}>
-                {item.name || "No name"}
-              </Typography>
-              <Typography variant="body2">
-                {getDisplayDateTimeString(new Date(item.created_at))} ({getDaysSinceString(new Date(item.created_at))})
-              </Typography>
+            <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
+              <KanbanCardContent item={item} isDragIconHidden={!draggable || controlGroupState !== 0} />
             </CardContent>
           </CardActionArea>
-          <Stack>
-            {controlGroupState === 2 && (
-              <WButton onClick={onDeleteItemClick} className="drag-cancel" sx={iconButtonSx}>
-                <CloseIcon sx={{ fontSize: 24 }} />
-              </WButton>
-            )}
-          </Stack>
+          {controlGroupState === 2 && (
+            <WButton onClick={onDeleteItemClick} className="drag-cancel" sx={{ ...iconButtonSx }}>
+              <CloseIcon sx={{ fontSize: 24 }} />
+            </WButton>
+          )}
         </Stack>
       </Card>
     </Draggable>
