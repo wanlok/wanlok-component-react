@@ -16,7 +16,7 @@ const Top = ({
 }) => {
   return (
     <Stack sx={{ flexDirection: "row", height: 45 }}>
-      <Stack sx={{ flex: 1, p: 1, justifyContent: "center" }}>
+      <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
         <Typography variant="body1">{project?.name}</Typography>
       </Stack>
       {project && (

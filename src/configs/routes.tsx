@@ -1,10 +1,12 @@
 import { LayoutMenu } from "../components/LayoutMenu";
 import { Landing } from "../pages/landing";
-import { ComponentPage } from "../pages/ComponentPage";
+import { Playground } from "../pages/playground";
 import { CollectionPage } from "../pages/collection";
 import WANLOKImage from "../assets/images/wanlok.png";
 import WANLOKImage2 from "../assets/images/wanlok_2.png";
 import {
+  BugReport as BugReportIcon,
+  BugReportOutlined as BugReportOutlinedIcon,
   Folder as FolderIcon,
   FolderOutlined as FolderOutlinedIcon,
   ViewKanban as KanbanIcon,
@@ -48,12 +50,12 @@ export const routes = [
         element: <CollectionPage />
       },
       {
-        icon: <FolderOutlinedIcon sx={{ fontSize: iconSize }} />,
-        icon_selected: <FolderIcon sx={{ fontSize: iconSize }} />,
-        name: "Components",
+        icon: <BugReportOutlinedIcon sx={{ fontSize: iconSize }} />,
+        icon_selected: <BugReportIcon sx={{ fontSize: iconSize }} />,
+        name: "Playground",
         path: "/components/:id?",
-        element: <ComponentPage />
-        // children: [{ path: "/snapshot/:id2", element: <ComponentPage /> }]
+        element: <Playground />
+        // children: [{ path: "/snapshot/:id2", element: <Playground /> }]
       }
     ]
   },

@@ -184,7 +184,11 @@ export const KanbanCard = ({
             </CardContent>
           </CardActionArea>
           {controlGroupState === 2 && (
-            <WButton onClick={onDeleteItemClick} className="drag-cancel" sx={{ ...iconButtonSx }}>
+            <WButton
+              onClick={onDeleteItemClick}
+              className="drag-cancel"
+              sx={{ ...iconButtonSx, backgroundColor: "transparent" }}
+            >
               <CloseIcon sx={{ fontSize: 24 }} />
             </WButton>
           )}
