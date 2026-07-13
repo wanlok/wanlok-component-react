@@ -4,8 +4,7 @@ import { routes } from "../configs/routes";
 import { WButton } from "./WButton";
 import { Fragment } from "react/jsx-runtime";
 import { LayoutDivider } from "./LayoutDivider";
-
-const buttonHeight = 100;
+import { layoutHeaderHeight } from "./LayoutHeader";
 
 export const LayoutMenu = () => {
   const { pathname } = useLocation();
@@ -33,7 +32,7 @@ export const LayoutMenu = () => {
                 <Link to={route.path.replace(/\/:[\w]+\??$/, "")} key={`menu-link-${index}`}>
                   <WButton
                     sx={{
-                      height: buttonHeight,
+                      height: layoutHeaderHeight,
                       aspectRatio: "1/1",
                       flexDirection: "column",
                       gap: "4px",
@@ -71,7 +70,7 @@ export const LayoutMenu = () => {
           })}
         </Stack>
       </LayoutDivider>
-      <Stack sx={{ flex: 1, height: mobile ? `calc(100dvh - ${buttonHeight}px)` : "100dvh", overflow: "auto" }}>
+      <Stack sx={{ flex: 1, height: mobile ? `calc(100dvh - ${layoutHeaderHeight}px)` : "100dvh", overflow: "auto" }}>
         <Outlet />
       </Stack>
     </Stack>

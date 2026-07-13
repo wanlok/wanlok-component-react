@@ -1,5 +1,5 @@
 import { Stack, Typography } from "@mui/material";
-import { LayoutHeader } from "../../components/LayoutHeader";
+import { LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { WButton } from "../../components/WButton";
 import { KanbanProject } from "../../services/Types";
 
@@ -15,7 +15,7 @@ const Top = ({
   onDeleteItemButtonClick: () => void;
 }) => {
   return (
-    <Stack sx={{ flexDirection: "row", height: 45 }}>
+    <Stack sx={[topSx]}>
       <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
         <Typography variant="body1">{project?.name}</Typography>
       </Stack>
