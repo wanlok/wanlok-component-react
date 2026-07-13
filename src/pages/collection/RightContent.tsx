@@ -9,7 +9,7 @@ import {
   YouTubeOEmbed
 } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
-import { WText } from "../../components/WText";
+import { TextInputWithButtons } from "../../components/TextInputWithButtons";
 import { StyledContainer } from "../../components/StyledContainer";
 import { getDocumentId } from "./useFolder";
 import { Send as SendIcon, Upload as UploadIcon } from "@mui/icons-material";
@@ -71,7 +71,7 @@ export const RightContent = ({
         onRightButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.right)}
       />
       <StyledContainer>
-        <WText
+        <TextInputWithButtons
           placeholder="Add Links or Upload Files"
           rightButtons={[
             {

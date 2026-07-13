@@ -11,7 +11,7 @@ interface ButtonContent {
   onClick?: () => void;
 }
 
-export const WText = ({
+export const TextInputWithButtons = ({
   placeholder,
   initialValue,
   onChange,
@@ -69,7 +69,10 @@ export const WText = ({
         <TextInput
           placeholder={placeholder}
           value={value}
-          onChange={(changedText) => { setValue(changedText); onChange?.(changedText); }}
+          onChange={(changedText) => {
+            setValue(changedText);
+            onChange?.(changedText);
+          }}
           hideHelperText={true}
         />
       </Stack>
@@ -78,13 +81,13 @@ export const WText = ({
           <WButton
             key={`right-button-${index}`}
             rightIcon={icon}
-            sx={{ width: title ? undefined : buttonHeight, height: buttonHeight, p: title ? undefined : 0 }}
+            sx={{ width: title && !sufficientSpaces ? undefined : buttonHeight, height: buttonHeight, p: title && !sufficientSpaces ? undefined : 0 }}
             onClick={() => {
               onClick && onClick();
               onClickWithText && getText(onClickWithText);
             }}
           >
-            {title}
+            {!sufficientSpaces && title}
           </WButton>
         ))}
       </Stack>

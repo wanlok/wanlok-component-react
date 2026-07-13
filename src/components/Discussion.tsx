@@ -4,9 +4,9 @@ import { Close as CloseIcon, Refresh as RefreshIcon, Send as SendIcon } from "@m
 import { Message } from "../services/Types";
 import { WModalContent } from "./WModal";
 import { iconButtonSx, WButton } from "./WButton";
-import { TextInput } from "./TextInput";
-import { StyledContainer } from "./StyledContainer";
+import { TextInputWithButtons } from "./TextInputWithButtons";
 import { getDisplayDateTimeString } from "../common/DateUtils";
+import { StyledContainer } from "./StyledContainer";
 
 export const Row = ({
   message,
@@ -56,7 +56,6 @@ export const Discussion = ({
 }) => {
   const [isDeletingMessages, setIsDeletingMessages] = useState(false);
   const [name, setName] = useState(() => localStorage.getItem("discussion_name") ?? "");
-  const [messageText, setMessageText] = useState("");
   const stackRef = useRef<HTMLDivElement>(null);
   const numberOfMessagesRef = useRef(messages.length);
 
@@ -73,54 +72,40 @@ export const Discussion = ({
       titleIcon={titleIcon}
       title={title}
       top={
-        <>
-          <StyledContainer sx={{ flex: 1, p: 1 }}>
-            <TextInput
-              placeholder="Name"
-              value={name}
-              onChange={(value) => {
-                setName(value);
-                localStorage.setItem("discussion_name", value);
-              }}
-              hideHelperText={true}
-            />
-          </StyledContainer>
-          <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-            <WButton onClick={onRefresh} sx={iconButtonSx}>
-              <RefreshIcon sx={{ fontSize: 24 }} />
-            </WButton>
-            <WButton
-              onClick={() => setIsDeletingMessages(!isDeletingMessages)}
-              rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
-            >
-              Delete
-            </WButton>
-          </Stack>
-        </>
+        <StyledContainer sx={{ flex: 1 }}>
+          <TextInputWithButtons
+            placeholder="Name"
+            initialValue={name}
+            onChange={(value) => {
+              setName(value);
+              localStorage.setItem("discussion_name", value);
+            }}
+            rightButtons={[
+              { icon: <RefreshIcon sx={{ fontSize: 24 }} />, onClick: onRefresh },
+              {
+                icon: <CloseIcon sx={{ fontSize: 24 }} />,
+                title: "Delete",
+                onClick: () => setIsDeletingMessages(!isDeletingMessages)
+              }
+            ]}
+          />
+        </StyledContainer>
       }
       bottom={
-        <>
-          <StyledContainer sx={{ flex: 1, p: 1 }}>
-            <TextInput
-              placeholder="Add a message"
-              value={messageText}
-              onChange={setMessageText}
-              hideHelperText={true}
-            />
-          </StyledContainer>
-          <WButton
-            onClick={() => {
-              if (messageText && messageText.trim().length > 0) {
-                setIsDeletingMessages(false);
-                onAddMessage(name, messageText);
-                setMessageText("");
+        <StyledContainer sx={{ flex: 1 }}>
+          <TextInputWithButtons
+            placeholder="Add a message"
+            rightButtons={[
+              {
+                icon: <SendIcon sx={{ fontSize: 20 }} />,
+                onClickWithText: (text) => {
+                  setIsDeletingMessages(false);
+                  onAddMessage(name, text);
+                }
               }
-            }}
-            sx={iconButtonSx}
-          >
-            <SendIcon sx={{ fontSize: 20 }} />
-          </WButton>
-        </>
+            ]}
+          />
+        </StyledContainer>
       }
     >
       <Stack ref={stackRef} sx={{ backgroundColor: "background.default", gap: 0.5 }}>

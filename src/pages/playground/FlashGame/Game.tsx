@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { useGame } from "./useGame";
 import { Stack, Typography } from "@mui/material";
-import { WText } from "../../../components/WText";
+import { TextInputWithButtons } from "../../../components/TextInputWithButtons";
 import { PlayArrow as PlayArrowIcon } from "@mui/icons-material";
 import { FlashGamePlayer } from "../../../components/FlashGamePlayer";
 
@@ -15,7 +15,7 @@ export const Game = () => {
   return (
     <Stack>
       {!name && (
-        <WText
+        <TextInputWithButtons
           placeholder="Name"
           rightButtons={[
             {
