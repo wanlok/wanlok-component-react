@@ -49,8 +49,8 @@ export const WCarousel = ({
         style: {
           backgroundColor: alpha(palette.common.black, 0.6),
           borderRadius: 0,
-          width: 55,
-          height: 55,
+          width: 56,
+          height: 56,
           marginTop: -4,
           marginLeft: 0,
           marginRight: 0
@@ -61,8 +61,8 @@ export const WCarousel = ({
           top: "50%",
           transform: "translateY(-50%)",
           right: 1,
-          width: 55,
-          height: 55
+          width: 56,
+          height: 56
         }
       }}
       navButtonsAlwaysVisible={true}

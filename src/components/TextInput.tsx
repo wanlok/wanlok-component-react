@@ -109,7 +109,8 @@ export const TextInput = ({
           },
           "& textarea": {
             p: 1,
-            fontSize: 16
+            fontSize: 16,
+            lineHeight: "24px"
           }
         }}
       />

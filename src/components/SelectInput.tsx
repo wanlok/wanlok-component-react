@@ -12,7 +12,7 @@ export interface SelectInputProps {
   onChange: (value: string) => void;
 }
 
-const height = 39;
+const height = 40;
 
 export const SelectInput = ({ label, items, value, onChange }: SelectInputProps) => {
   return (
@@ -38,7 +38,8 @@ export const SelectInput = ({ label, items, value, onChange }: SelectInputProps)
           "& .MuiSelect-select": {
             px: 1,
             py: 0,
-            paddingRight: "32px !important"
+            paddingRight: "32px !important",
+            lineHeight: "24px"
           },
           "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "primary.dark"
