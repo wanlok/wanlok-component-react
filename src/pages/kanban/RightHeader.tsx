@@ -1,4 +1,5 @@
 import { Stack, Typography } from "@mui/material";
+import { Add as AddIcon, Close as CloseIcon, Edit as EditIcon } from "@mui/icons-material";
 import { LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { WButton } from "../../components/WButton";
 import { KanbanProject } from "../../services/Types";
@@ -21,13 +22,13 @@ const Top = ({
       </Stack>
       {project && (
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          <WButton sx={{ height: "100%" }} onClick={onEditButtonClick}>
+          <WButton rightIcon={<EditIcon sx={{ fontSize: 18 }} />} onClick={onEditButtonClick}>
             Edit
           </WButton>
-          <WButton sx={{ height: "100%" }} onClick={onAddItemButtonClick}>
+          <WButton rightIcon={<AddIcon sx={{ fontSize: 24 }} />} onClick={onAddItemButtonClick}>
             Add Item
           </WButton>
-          <WButton sx={{ height: "100%" }} onClick={onDeleteItemButtonClick}>
+          <WButton rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} onClick={onDeleteItemButtonClick}>
             Delete Item
           </WButton>
         </Stack>
