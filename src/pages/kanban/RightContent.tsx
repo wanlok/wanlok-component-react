@@ -6,7 +6,6 @@ import { KanbanCard, padding } from "./KanbanCard";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
 import { DropdownIcon } from "../../components/DropdownIcon";
-import { layoutHeaderHeight } from "../../components/LayoutHeader";
 
 const getColumns = (
   columns: KanbanColumn[],
@@ -148,7 +147,7 @@ export const KanbanColumnLayout = ({
         return (
           <Fragment key={name}>
             {i !== 0 && <Divider orientation="vertical" />}
-            <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto", height: `calc(100dvh - ${layoutHeaderHeight}px)` }}>
+            <Stack ref={stackRef} sx={{ flex: 1, overflowY: "auto" }}>
               <Stack sx={{ p: padding, gap: 1 }}>
                 {items.map((item, j) => (
                   <KanbanCard

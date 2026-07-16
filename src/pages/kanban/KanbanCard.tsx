@@ -111,6 +111,7 @@ export const KanbanCard = ({
   const startX = useRef(0);
   const startY = useRef(0);
   const dragged = useRef(false);
+  const savedScrollTops = useRef<number[]>([]);
   const getX = () => nodeRef.current?.getBoundingClientRect()?.x ?? 0;
   const getY = () => nodeRef.current?.getBoundingClientRect()?.y ?? 0;
   return (
@@ -121,24 +122,40 @@ export const KanbanCard = ({
       disabled={!draggable}
       position={{ x: 0, y: 0 }}
       onStart={(_, { node: draggedNode }) => {
-        startX.current = getX();
-        startY.current = getY();
         dragged.current = false;
-        for (const stackRef of stackRefs.current ?? []) {
-          if (stackRef.current) {
-            stackRef.current.style.marginTop = "-" + stackRef.current.scrollTop + "px";
-            stackRef.current.style.overflowY = "visible";
+        savedScrollTops.current = (stackRefs.current ?? []).map(ref => ref.current?.scrollTop ?? 0);
+        (stackRefs.current ?? []).forEach((ref, i) => {
+          if (ref.current) {
+            ref.current.style.marginTop = "-" + savedScrollTops.current[i] + "px";
+            ref.current.style.overflowY = "visible";
           }
-          const nodes = Array.from(stackRef.current?.children[0]?.children ?? []) as HTMLElement[];
+          const nodes = Array.from(ref.current?.children[0]?.children ?? []) as HTMLElement[];
           for (const node of nodes) {
             node.style.zIndex = node === draggedNode ? "1" : "";
           }
-        }
+        });
+        startX.current = getX();
+        startY.current = getY();
       }}
       onStop={(_, { x, y, node: draggedNode }) => {
-        const offsetX = Math.abs(startX.current - getX());
-        const offsetY = Math.abs(startY.current - getY());
+        const endX = getX();
+        const endY = getY();
+        (stackRefs.current ?? []).forEach((ref, i) => {
+          if (ref.current) {
+            ref.current.style.marginTop = "0px";
+            ref.current.style.overflowY = "auto";
+            ref.current.scrollTop = savedScrollTops.current[i];
+          }
+          const nodes = Array.from(ref.current?.children[0]?.children ?? []) as HTMLElement[];
+          for (const node of nodes) {
+            node.style.zIndex = "";
+          }
+        });
+        const offsetX = Math.abs(startX.current - endX);
+        const offsetY = Math.abs(startY.current - endY);
         if (offsetX <= threshold && offsetY <= threshold) {
+          onClick();
+          dragged.current = true;
           return;
         }
         dragged.current = true;
@@ -149,12 +166,6 @@ export const KanbanCard = ({
           if (targetStackRef) {
             const rowOffset = getRowOffset(targetStackRef, y, draggedNode, columnOffset);
             onDragStop(item, columnOffset, rowOffset);
-          }
-        }
-        for (const stackRef of stackRefs.current ?? []) {
-          if (stackRef.current) {
-            stackRef.current.style.marginTop = 0 + "px";
-            stackRef.current.style.overflowY = "auto";
           }
         }
       }}
