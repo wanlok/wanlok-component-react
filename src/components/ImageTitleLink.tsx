@@ -26,7 +26,7 @@ export const ImageTitleLink = ({
   imageSx?: SxProps<Theme>;
   title?: string;
   href: string;
-  width: string;
+  width: string | Record<string, string>;
   height?: string;
   aspectRatio?: string;
   leftMost?: boolean;

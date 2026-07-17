@@ -31,11 +31,10 @@ export const CollectionList = ({
   onRightButtonClick: (type: string, id: string) => void;
 }) => {
   const { breakpoints } = useTheme();
-  const tablet = useMediaQuery(breakpoints.down("xl"));
   const mobile = useMediaQuery(breakpoints.down("sm"));
   const numberOfComponentsPerSlide = 4;
   const list = [charts, files, hyperlinks, steam, youTubeShortVideos, youTubeRegularVideos];
-  const width = mobile ? "100%" : tablet ? "calc(50% - 1px)" : "calc(25% - 1px)";
+  const width = { xs: "100%", sm: "calc(50% - 1px)", lg: "calc(33.333% - 1px)", xl: "calc(25% - 1px)" };
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack>
@@ -44,7 +43,7 @@ export const CollectionList = ({
             <WChart
               key={`chart-${i}`}
               chartItem={chartItem}
-              width={mobile ? "100%" : "calc(50% - 1px)"}
+              width={{ xs: "100%", sm: "calc(50% - 1px)" }}
               leftMost={i === 0}
               rightMost={i === charts.length - 1}
               scrollHorizontally={false}

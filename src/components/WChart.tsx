@@ -14,7 +14,7 @@ export const WChart = ({
   onDeleteButtonClick
 }: {
   chartItem: ChartItem;
-  width: string;
+  width: string | Record<string, string>;
   leftMost?: boolean;
   rightMost?: boolean;
   scrollHorizontally: boolean;
