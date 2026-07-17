@@ -70,37 +70,39 @@ export const RightContent = ({
         onLeftButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.left)}
         onRightButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.right)}
       />
-      <StyledContainer>
-        <TextInputWithButtons
-          placeholder="Add Links or Upload Files"
-          rightButtons={[
-            {
-              icon: <SendIcon sx={{ fontSize: 20 }} />,
-              onClickWithText: async (text) => {
-                const collectionId = getDocumentId(selectedFolder?.name);
-                if (collectionId) {
-                  const counts = await addCollectionItems(collectionId, text);
-                  if (counts) {
-                    await updateFolderCounts(counts);
+      {!isLoading && (
+        <StyledContainer>
+          <TextInputWithButtons
+            placeholder="Add Links or Upload Files"
+            rightButtons={[
+              {
+                icon: <SendIcon sx={{ fontSize: 20 }} />,
+                onClickWithText: async (text) => {
+                  const collectionId = getDocumentId(selectedFolder?.name);
+                  if (collectionId) {
+                    const counts = await addCollectionItems(collectionId, text);
+                    if (counts) {
+                      await updateFolderCounts(counts);
+                    }
+                  }
+                }
+              },
+              {
+                icon: <UploadIcon sx={{ fontSize: 24 }} />,
+                onClick: async () => {
+                  const collectionId = getDocumentId(selectedFolder?.name);
+                  if (collectionId) {
+                    const counts = await addCollectionFiles(collectionId);
+                    if (counts) {
+                      await updateFolderCounts(counts);
+                    }
                   }
                 }
               }
-            },
-            {
-              icon: <UploadIcon sx={{ fontSize: 24 }} />,
-              onClick: async () => {
-                const collectionId = getDocumentId(selectedFolder?.name);
-                if (collectionId) {
-                  const counts = await addCollectionFiles(collectionId);
-                  if (counts) {
-                    await updateFolderCounts(counts);
-                  }
-                }
-              }
-            }
-          ]}
-        />
-      </StyledContainer>
+            ]}
+          />
+        </StyledContainer>
+      )}
     </>
   );
 };

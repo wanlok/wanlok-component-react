@@ -4,12 +4,32 @@ import { LayoutDivider } from "./LayoutDivider";
 import { WCard } from "./WCardList";
 import { DropdownIcon } from "./DropdownIcon";
 
+const TopCard = ({
+  panelOpened,
+  setPanelOpened,
+  topChildren,
+  hideDropdownIcon
+}: {
+  panelOpened: boolean;
+  setPanelOpened: Dispatch<React.SetStateAction<boolean>>;
+  topChildren?: ReactNode;
+  hideDropdownIcon: boolean;
+}) => (
+  <WCard onClick={() => setPanelOpened(!panelOpened)}>
+    <Stack sx={{ flexDirection: "row", alignItems: "center", backgroundColor: "background.default" }}>
+      <Stack sx={{ flex: 1 }}>{topChildren}</Stack>
+      {!hideDropdownIcon && <DropdownIcon panelOpened={panelOpened} />}
+    </Stack>
+  </WCard>
+);
+
 export const LayoutPanel = ({
   panelOpened,
   setPanelOpened,
   width,
   panel,
   topChildren,
+  isLoading = false,
   hideDropdownIcon = false,
   sx,
   children
@@ -19,6 +39,7 @@ export const LayoutPanel = ({
   width: number;
   panel: ReactNode;
   topChildren?: ReactNode;
+  isLoading?: boolean;
   hideDropdownIcon?: boolean;
   sx?: SxProps<Theme>;
   children?: ReactNode;
@@ -31,12 +52,12 @@ export const LayoutPanel = ({
         <LayoutDivider hideDivider={mobile} sx={mobile ? { flex: 1 } : { width }}>
           {mobile ? (
             <>
-              <WCard onClick={() => setPanelOpened(!panelOpened)}>
-                <Stack sx={{ flexDirection: "row", alignItems: "center", backgroundColor: "background.default" }}>
-                  <Stack sx={{ flex: 1 }}>{topChildren}</Stack>
-                  {!hideDropdownIcon && <DropdownIcon panelOpened={panelOpened} />}
-                </Stack>
-              </WCard>
+              <TopCard
+                panelOpened={panelOpened}
+                setPanelOpened={setPanelOpened}
+                topChildren={topChildren}
+                hideDropdownIcon={hideDropdownIcon}
+              />
               {panel}
             </>
           ) : (
@@ -46,13 +67,13 @@ export const LayoutPanel = ({
       )}
       {!panelOpened && (
         <Stack sx={{ flex: 1 }}>
-          {mobile && (
-            <WCard onClick={() => setPanelOpened(!panelOpened)}>
-              <Stack sx={{ flexDirection: "row", alignItems: "center", backgroundColor: "background.default" }}>
-                <Stack sx={{ flex: 1 }}>{topChildren}</Stack>
-                {!hideDropdownIcon && <DropdownIcon panelOpened={panelOpened} />}
-              </Stack>
-            </WCard>
+          {mobile && !isLoading && (
+            <TopCard
+              panelOpened={panelOpened}
+              setPanelOpened={setPanelOpened}
+              topChildren={topChildren}
+              hideDropdownIcon={hideDropdownIcon}
+            />
           )}
           {children}
         </Stack>

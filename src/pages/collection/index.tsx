@@ -102,6 +102,7 @@ export const CollectionPage = () => {
       panelOpened={panelOpened}
       setPanelOpened={setPanelOpened}
       width={300}
+      isLoading={!selectedFolder}
       panel={
         <>
           <LeftHeader
