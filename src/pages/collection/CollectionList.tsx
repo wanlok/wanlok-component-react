@@ -1,9 +1,8 @@
-import { Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Stack } from "@mui/material";
 import { ChartItem, CloudinaryFileInfo, serverUrl, SteamInfo, viewUrls, YouTubeOEmbed } from "../../services/Types";
 import { seperate } from "../../common/LayoutUtils";
 import { WChart } from "../../components/WChart";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
-import { WCarousel } from "../../components/WCarousel";
 
 export const CollectionList = ({
   charts,
@@ -30,9 +29,6 @@ export const CollectionList = ({
   onLeftButtonClick: (type: string, id: string) => void;
   onRightButtonClick: (type: string, id: string) => void;
 }) => {
-  const { breakpoints } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("sm"));
-  const numberOfComponentsPerSlide = 4;
   const list = [charts, files, hyperlinks, steam, youTubeShortVideos, youTubeRegularVideos];
   const width = { xs: "100%", sm: "calc(50% - 1px)", lg: "calc(33.333% - 1px)", xl: "calc(25% - 1px)" };
   return (
@@ -54,27 +50,25 @@ export const CollectionList = ({
           ))}
         </Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, files) }}>
-          {files.map(([id, { name, url }], i) => {
-            return (
-              <ImageTitleLink
-                key={`files-${i}`}
-                imageUrl={url}
-                imageSx={{ objectPosition: "top" }}
-                title={name}
-                href={url}
-                width={width}
-                aspectRatio={"16/9"}
-                leftMost={i === 0}
-                rightMost={i === files.length - 1}
-                scrollHorizontally={false}
-                controlGroupState={controlGroupState}
-                onDetailsButtonClick={() => onDetailsButtonClick("files", id)}
-                onLeftButtonClick={() => onLeftButtonClick("files", id)}
-                onRightButtonClick={() => onRightButtonClick("files", id)}
-                onDeleteButtonClick={() => onDeleteButtonClick("files", id)}
-              />
-            );
-          })}
+          {files.map(([id, { name, url }], i) => (
+            <ImageTitleLink
+              key={`files-${i}`}
+              imageUrl={url}
+              imageSx={{ objectPosition: "top" }}
+              title={name}
+              href={url}
+              width={width}
+              aspectRatio="16/9"
+              leftMost={i === 0}
+              rightMost={i === files.length - 1}
+              scrollHorizontally={false}
+              controlGroupState={controlGroupState}
+              onDetailsButtonClick={() => onDetailsButtonClick("files", id)}
+              onLeftButtonClick={() => onLeftButtonClick("files", id)}
+              onRightButtonClick={() => onRightButtonClick("files", id)}
+              onDeleteButtonClick={() => onDeleteButtonClick("files", id)}
+            />
+          ))}
         </Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, hyperlinks) }}>
           {hyperlinks.map(([url, id], i) => (
@@ -85,7 +79,7 @@ export const CollectionList = ({
               title={url}
               href={url}
               width={width}
-              aspectRatio={"16/9"}
+              aspectRatio="16/9"
               leftMost={i === 0}
               rightMost={i === hyperlinks.length - 1}
               scrollHorizontally={false}
@@ -117,30 +111,27 @@ export const CollectionList = ({
             />
           ))}
         </Stack>
-        <WCarousel
-          list={youTubeShortVideos}
-          numberOfComponentsPerSlide={mobile ? 2 : numberOfComponentsPerSlide}
-          slideKey={(i) => `youtube-shorts-${i}`}
-          renderContent={([id, { title, thumbnail_url }], i, j) => (
+        <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, youTubeShortVideos) }}>
+          {youTubeShortVideos.map(([id, { title, thumbnail_url }], i) => (
             <ImageTitleLink
-              key={`youtube-shorts-${i}-${j}`}
+              key={`youtube-shorts-${i}`}
               imageUrl={thumbnail_url}
+              imageSx={{ objectFit: "contain" }}
               title={title}
               href={`${viewUrls.youtube_shorts}${id}`}
-              width={mobile ? "50%" : `calc(${100 / numberOfComponentsPerSlide}% - 1px)`}
-              aspectRatio="9/16"
-              leftMost={i === 0 && j === 0}
-              rightMost={i * numberOfComponentsPerSlide + j === youTubeShortVideos.length - 1}
-              scrollHorizontally={true}
+              width={width}
+              aspectRatio="16/9"
+              leftMost={i === 0}
+              rightMost={i === youTubeShortVideos.length - 1}
+              scrollHorizontally={false}
               controlGroupState={controlGroupState}
               onDetailsButtonClick={() => onDetailsButtonClick("youtube_shorts", id)}
               onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
               onLeftButtonClick={() => onLeftButtonClick("youtube_shorts", id)}
               onRightButtonClick={() => onRightButtonClick("youtube_shorts", id)}
             />
-          )}
-          sx={{ mt: seperate(list, youTubeShortVideos) }}
-        />
+          ))}
+        </Stack>
         <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px", mt: seperate(list, youTubeRegularVideos) }}>
           {youTubeRegularVideos.map(([id, { title, thumbnail_url }], i) => (
             <ImageTitleLink
