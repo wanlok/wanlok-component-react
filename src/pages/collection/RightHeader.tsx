@@ -126,7 +126,7 @@ export const RightHeader = ({
   <LayoutHeader
     top={<Top folder={folder} />}
     bottom={
-      isLoading ? (
+      isLoading || !folder ? (
         <></>
       ) : (
         <Bottom
