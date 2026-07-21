@@ -194,7 +194,7 @@ export const useCollection = (
   };
 
   return {
-    isLoading: collectionDocument === null,
+    isLoading: Boolean(documentId) && collectionDocument == null,
     charts: toList(collectionDocument?.charts, collectionSequences?.charts),
     files: toList(collectionDocument?.files, collectionSequences?.files),
     hyperlinks: toList(collectionDocument?.hyperlinks, collectionSequences?.hyperlinks),
