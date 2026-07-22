@@ -19,8 +19,8 @@ const Top = ({ folder, onDownloadButtonClick }: { folder: Folder | undefined; on
       <Typography variant="body1">{folder ? folder.name : ""}</Typography>
     </Stack>
     {folder && (
-      <WButton onClick={onDownloadButtonClick} rightIcon={<DownloadIcon sx={{ fontSize: 24 }} />}>
-        Download
+      <WButton onClick={onDownloadButtonClick} sx={iconButtonSx}>
+        <DownloadIcon sx={{ fontSize: 24 }} />
       </WButton>
     )}
   </Stack>
