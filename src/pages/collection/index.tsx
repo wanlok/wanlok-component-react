@@ -1,5 +1,6 @@
 import { useCollection } from "./useCollection";
-import { useEffect, useState } from "react";
+import { useCollectionFilter } from "./useCollectionFilter";
+import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { EditAttributeModal } from "./EditAttributeModal";
@@ -50,52 +51,17 @@ export const CollectionPage = () => {
   const [editAttributeModalOpen, setEditAttributeModalOpen] = useState(false);
   const [undoRearrangeModalOpen, setUndoRearrangeModalOpen] = useState(false);
   const [collectionTypeId, setCollectionTypeId] = useState<{ type: string; id: string } | undefined>(undefined);
-  const [selectedCategory, setSelectedCategory] = useState("");
-
-  useEffect(() => {
-    setSelectedCategory("");
-  }, [selectedFolder?.name]);
-
-  const uncategorisedValue = "__uncategorised__";
-
-  const hasUncategorised = [...files, ...youTubeRegularVideos, ...youTubeShortVideos].some(
-    ([, item]) => !item.attributes?.["category"]
-  );
-
-  useEffect(() => {
-    if (!hasUncategorised && selectedCategory === uncategorisedValue) {
-      setSelectedCategory("");
-    }
-  }, [hasUncategorised, selectedCategory]);
-
-  const categoryItems = [
-    { label: "All", value: "" },
-    ...(hasUncategorised ? [{ label: "All (Uncategorised)", value: uncategorisedValue }] : []),
-    ...[
-      ...new Set(
-        [
-          ...files.map(([, item]) => item.attributes?.["category"]),
-          ...youTubeRegularVideos.map(([, item]) => item.attributes?.["category"]),
-          ...youTubeShortVideos.map(([, item]) => item.attributes?.["category"])
-        ].filter((v): v is string => Boolean(v))
-      )
-    ]
-      .sort()
-      .map((category) => ({ label: category, value: category }))
-  ];
-
-  const matchesCategory = (category: string | undefined) =>
-    selectedCategory === uncategorisedValue ? !category : category === selectedCategory;
-
-  const filteredFiles = selectedCategory
-    ? files.filter(([, item]) => matchesCategory(item.attributes?.["category"]))
-    : files;
-  const filteredYouTubeRegularVideos = selectedCategory
-    ? youTubeRegularVideos.filter(([, item]) => matchesCategory(item.attributes?.["category"]))
-    : youTubeRegularVideos;
-  const filteredYouTubeShortVideos = selectedCategory
-    ? youTubeShortVideos.filter(([, item]) => matchesCategory(item.attributes?.["category"]))
-    : youTubeShortVideos;
+  const {
+    attributeKeys,
+    attributeValues,
+    selectedAttributeKey,
+    selectedAttributeValue,
+    onAttributeKeyChange,
+    onAttributeValueChange,
+    filteredFiles,
+    filteredYouTubeRegularVideos,
+    filteredYouTubeShortVideos
+  } = useCollectionFilter(selectedFolder, files, youTubeRegularVideos, youTubeShortVideos);
 
   return (
     <LayoutPanel
@@ -135,14 +101,17 @@ export const CollectionPage = () => {
         folder={selectedFolder}
         resetButtonHidden={!isFolderSorted()}
         controlGroupState={controlGroupState}
-        items={categoryItems}
-        selectedCategory={selectedCategory}
-        onCategoryChange={(value) => {
-          setSelectedCategory(value);
-          if (value && controlGroupState === 3) {
+        attributeKeys={attributeKeys}
+        attributeValues={attributeValues}
+        selectedAttributeKey={selectedAttributeKey}
+        selectedAttributeValue={selectedAttributeValue}
+        onAttributeKeyChange={(value) => {
+          onAttributeKeyChange(value);
+          if (controlGroupState === 3) {
             setControlGroupState(0);
           }
         }}
+        onAttributeValueChange={onAttributeValueChange}
         onAttributeButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
         onEditAttributeButtonClick={() => setEditAttributeModalOpen(true)}
         onDeleteButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}

@@ -24,9 +24,12 @@ const Top = ({ folder }: { folder: Folder | undefined }) => (
 const Bottom = ({
   resetButtonHidden,
   controlGroupState,
-  items,
-  selectedCategory,
-  onCategoryChange,
+  attributeKeys,
+  attributeValues,
+  selectedAttributeKey,
+  selectedAttributeValue,
+  onAttributeKeyChange,
+  onAttributeValueChange,
   onAttributeButtonClick,
   onEditAttributeButtonClick,
   onDeleteButtonClick,
@@ -36,9 +39,12 @@ const Bottom = ({
 }: {
   resetButtonHidden: boolean;
   controlGroupState: number;
-  items: { label: string; value: string }[];
-  selectedCategory: string;
-  onCategoryChange: (value: string) => void;
+  attributeKeys: { label: string; value: string }[];
+  attributeValues: { label: string; value: string }[];
+  selectedAttributeKey: string;
+  selectedAttributeValue: string;
+  onAttributeKeyChange: (value: string) => void;
+  onAttributeValueChange: (value: string) => void;
   onAttributeButtonClick: () => void;
   onEditAttributeButtonClick: () => void;
   onDeleteButtonClick: () => void;
@@ -48,8 +54,15 @@ const Bottom = ({
 }) => {
   return (
     <Stack sx={[bottomSx]}>
-      <StyledContainer sx={{ flex: 1, p: 1 }}>
-        <SelectInput items={items} value={selectedCategory} onChange={onCategoryChange} />
+      <StyledContainer sx={{ flex: 1, flexDirection: "row", p: 1, gap: 1 }}>
+        <Stack sx={{ flex: 1 }}>
+          <SelectInput items={attributeKeys} value={selectedAttributeKey} onChange={onAttributeKeyChange} />
+        </Stack>
+        {selectedAttributeKey && (
+          <Stack sx={{ flex: 1 }}>
+            <SelectInput items={attributeValues} value={selectedAttributeValue} onChange={onAttributeValueChange} />
+          </Stack>
+        )}
       </StyledContainer>
       <Stack sx={{ flexDirection: "row", gap: 1 }}>
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
@@ -74,7 +87,7 @@ const Bottom = ({
               </WButton>
             )}
             <WButton
-              disabled={Boolean(selectedCategory)}
+              disabled={Boolean(selectedAttributeValue)}
               onClick={onRearrangeButtonClick}
               rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
               sx={controlGroupState === 3 && !resetButtonHidden ? { pt: "4px", borderBottom: "black solid 4px" } : {}}
@@ -99,9 +112,12 @@ export const RightHeader = ({
   folder,
   resetButtonHidden,
   controlGroupState,
-  items,
-  selectedCategory,
-  onCategoryChange,
+  attributeKeys,
+  attributeValues,
+  selectedAttributeKey,
+  selectedAttributeValue,
+  onAttributeKeyChange,
+  onAttributeValueChange,
   onAttributeButtonClick,
   onEditAttributeButtonClick,
   onDeleteButtonClick,
@@ -113,9 +129,12 @@ export const RightHeader = ({
   folder: Folder | undefined;
   resetButtonHidden: boolean;
   controlGroupState: number;
-  items: { label: string; value: string }[];
-  selectedCategory: string;
-  onCategoryChange: (value: string) => void;
+  attributeKeys: { label: string; value: string }[];
+  attributeValues: { label: string; value: string }[];
+  selectedAttributeKey: string;
+  selectedAttributeValue: string;
+  onAttributeKeyChange: (value: string) => void;
+  onAttributeValueChange: (value: string) => void;
   onAttributeButtonClick: () => void;
   onEditAttributeButtonClick: () => void;
   onDeleteButtonClick: () => void;
@@ -132,9 +151,12 @@ export const RightHeader = ({
         <Bottom
           resetButtonHidden={resetButtonHidden}
           controlGroupState={controlGroupState}
-          items={items}
-          selectedCategory={selectedCategory}
-          onCategoryChange={onCategoryChange}
+          attributeKeys={attributeKeys}
+          attributeValues={attributeValues}
+          selectedAttributeKey={selectedAttributeKey}
+          selectedAttributeValue={selectedAttributeValue}
+          onAttributeKeyChange={onAttributeKeyChange}
+          onAttributeValueChange={onAttributeValueChange}
           onAttributeButtonClick={onAttributeButtonClick}
           onEditAttributeButtonClick={onEditAttributeButtonClick}
           onDeleteButtonClick={onDeleteButtonClick}
