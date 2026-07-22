@@ -9,7 +9,7 @@ import {
 } from "@mui/icons-material";
 import { Folder } from "../../services/Types";
 import { WCardList } from "../../components/WCardList";
-import { WButton } from "../../components/WButton";
+import { iconButtonSx, WButton } from "../../components/WButton";
 import { StyledContainer } from "../../components/StyledContainer";
 import { TextInputWithButtons } from "../../components/TextInputWithButtons";
 import { PanelRow } from "../../components/PanelRow";
