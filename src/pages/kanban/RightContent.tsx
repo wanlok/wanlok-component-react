@@ -1,4 +1,4 @@
-import { createRef, Fragment, useRef, useState } from "react";
+import { createRef, Fragment, useEffect, useRef, useState } from "react";
 import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { LayoutLoading } from "../../components/LayoutLoading";
 import { KanbanColumn, KanbanItem, KanbanProject } from "../../services/Types";
@@ -140,6 +140,19 @@ export const KanbanColumnLayout = ({
   onDeleteItemClick: (i: number, j: number) => void;
 }) => {
   const stackRefs = useRef(project.columns.map(() => createRef<HTMLDivElement>()));
+  const prevFirstColumnItemCount = useRef(project.columns[0]?.items.length ?? 0);
+
+  useEffect(() => {
+    const currentCount = project.columns[0]?.items.length ?? 0;
+    if (currentCount > prevFirstColumnItemCount.current) {
+      const ref = stackRefs.current[0];
+      if (ref?.current) {
+        ref.current.scrollTop = ref.current.scrollHeight;
+      }
+    }
+    prevFirstColumnItemCount.current = currentCount;
+  }, [project.columns]);
+
   return (
     <Stack sx={{ flex: 1, flexDirection: "row", overflow: "hidden" }}>
       {project.columns.map(({ name, items }, i) => {
