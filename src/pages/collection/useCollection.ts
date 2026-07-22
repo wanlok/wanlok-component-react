@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { db } from "../../firebase";
 import { deleteDoc, deleteField, doc, FieldPath, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import {
@@ -26,8 +26,10 @@ export const useCollection = (
   updateFolderSequences?: (type: string, sequences: string[]) => void
 ) => {
   const [collectionDocument, setCollectionDocument] = useState<CollectionDocument | null | undefined>(undefined);
+  const syncedDocumentIdRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
+    syncedDocumentIdRef.current = documentId;
     if (documentId) {
       setCollectionDocument(null);
       const fetchCollectionDocument = async () => {
@@ -194,7 +196,7 @@ export const useCollection = (
   };
 
   return {
-    isLoading: Boolean(documentId) && collectionDocument == null,
+    isLoading: syncedDocumentIdRef.current !== documentId || collectionDocument === null,
     charts: toList(collectionDocument?.charts, collectionSequences?.charts),
     files: toList(collectionDocument?.files, collectionSequences?.files),
     hyperlinks: toList(collectionDocument?.hyperlinks, collectionSequences?.hyperlinks),
