@@ -13,11 +13,16 @@ import { SelectInput } from "../../components/SelectInput";
 import { bottomSx, LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { StyledContainer } from "../../components/StyledContainer";
 
-const Top = ({ folder }: { folder: Folder | undefined }) => (
-  <Stack sx={[topSx, { alignItems: "center", px: 2 }]}>
-    <Typography variant="body1" sx={{ flex: 1 }}>
-      {folder ? folder.name : ""}
-    </Typography>
+const Top = ({ folder, onDownloadButtonClick }: { folder: Folder | undefined; onDownloadButtonClick: () => void }) => (
+  <Stack sx={[topSx]}>
+    <Stack sx={{ flex: 1, justifyContent: "center", px: 2 }}>
+      <Typography variant="body1">{folder ? folder.name : ""}</Typography>
+    </Stack>
+    {folder && (
+      <WButton onClick={onDownloadButtonClick} rightIcon={<DownloadIcon sx={{ fontSize: 24 }} />}>
+        Download
+      </WButton>
+    )}
   </Stack>
 );
 
@@ -34,8 +39,7 @@ const Bottom = ({
   onEditAttributeButtonClick,
   onDeleteButtonClick,
   onRearrangeButtonClick,
-  onResetButtonClick,
-  onDownloadButtonClick
+  onResetButtonClick
 }: {
   resetButtonHidden: boolean;
   controlGroupState: number;
@@ -50,7 +54,6 @@ const Bottom = ({
   onDeleteButtonClick: () => void;
   onRearrangeButtonClick: () => void;
   onResetButtonClick: () => void;
-  onDownloadButtonClick: () => void;
 }) => {
   return (
     <Stack sx={[bottomSx]}>
@@ -98,9 +101,6 @@ const Bottom = ({
           <WButton onClick={onDeleteButtonClick} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}>
             Delete
           </WButton>
-          <WButton onClick={onDownloadButtonClick} rightIcon={<DownloadIcon sx={{ fontSize: 24 }} />}>
-            Download
-          </WButton>
         </Stack>
       </Stack>
     </Stack>
@@ -143,7 +143,7 @@ export const RightHeader = ({
   onDownloadButtonClick: () => void;
 }) => (
   <LayoutHeader
-    top={<Top folder={folder} />}
+    top={<Top folder={folder} onDownloadButtonClick={onDownloadButtonClick} />}
     bottom={
       isLoading || !folder ? (
         <></>
@@ -162,7 +162,6 @@ export const RightHeader = ({
           onDeleteButtonClick={onDeleteButtonClick}
           onRearrangeButtonClick={onRearrangeButtonClick}
           onResetButtonClick={onResetButtonClick}
-          onDownloadButtonClick={onDownloadButtonClick}
         />
       )
     }
