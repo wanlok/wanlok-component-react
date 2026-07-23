@@ -1,6 +1,6 @@
 import { useCollection } from "./useCollection";
 import { useCollectionFilter } from "./useCollectionFilter";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { EditAttributeModal } from "./EditAttributeModal";
@@ -62,6 +62,10 @@ export const CollectionPage = () => {
     filteredYouTubeRegularVideos,
     filteredYouTubeShortVideos
   } = useCollectionFilter(selectedFolder, files, youTubeRegularVideos, youTubeShortVideos);
+
+  useEffect(() => {
+    setControlGroupState(0);
+  }, [selectedFolder?.name]);
 
   return (
     <LayoutPanel
