@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
+import { useSearchParams } from "react-router-dom";
 import { CloudinaryFileInfo, Folder, YouTubeOEmbed } from "../../services/Types";
 
 const uncategorisedValue = "__uncategorised__";
@@ -9,17 +10,18 @@ export const useCollectionFilter = (
   youTubeRegularVideos: [string, YouTubeOEmbed][],
   youTubeShortVideos: [string, YouTubeOEmbed][]
 ) => {
-  const [selectedAttributeKey, setSelectedAttributeKey] = useState("");
-  const [selectedAttributeValue, setSelectedAttributeValue] = useState("");
+  const [searchParams, setSearchParams] = useSearchParams();
+  const selectedAttributeKey = searchParams.get("key") ?? "";
+  const selectedAttributeValue = searchParams.get("value") ?? "";
+
+  const prevFolderNameRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
-    setSelectedAttributeKey("");
-    setSelectedAttributeValue("");
+    if (prevFolderNameRef.current !== undefined) {
+      setSearchParams((prev) => { prev.delete("key"); prev.delete("value"); return prev; }, { replace: true });
+    }
+    prevFolderNameRef.current = folder?.name;
   }, [folder?.name]);
-
-  useEffect(() => {
-    setSelectedAttributeValue("");
-  }, [selectedAttributeKey]);
 
   const hasUncategorised =
     Boolean(selectedAttributeKey) &&
@@ -29,7 +31,7 @@ export const useCollectionFilter = (
 
   useEffect(() => {
     if (!hasUncategorised && selectedAttributeValue === uncategorisedValue) {
-      setSelectedAttributeValue("");
+      setSearchParams((prev) => { prev.delete("value"); return prev; }, { replace: true });
     }
   }, [hasUncategorised, selectedAttributeValue]);
 
@@ -69,13 +71,42 @@ export const useCollectionFilter = (
     ? youTubeShortVideos.filter(([, item]) => matchesFilter(item.attributes))
     : youTubeShortVideos;
 
+  const onAttributeKeyChange = (value: string) => {
+    setSearchParams(
+      (prev) => {
+        if (value) {
+          prev.set("key", value);
+        } else {
+          prev.delete("key");
+        }
+        prev.delete("value");
+        return prev;
+      },
+      { replace: true }
+    );
+  };
+
+  const onAttributeValueChange = (value: string) => {
+    setSearchParams(
+      (prev) => {
+        if (value) {
+          prev.set("value", value);
+        } else {
+          prev.delete("value");
+        }
+        return prev;
+      },
+      { replace: true }
+    );
+  };
+
   return {
     attributeKeys,
     attributeValues,
     selectedAttributeKey,
     selectedAttributeValue,
-    onAttributeKeyChange: setSelectedAttributeKey,
-    onAttributeValueChange: setSelectedAttributeValue,
+    onAttributeKeyChange,
+    onAttributeValueChange,
     filteredFiles,
     filteredYouTubeRegularVideos,
     filteredYouTubeShortVideos
