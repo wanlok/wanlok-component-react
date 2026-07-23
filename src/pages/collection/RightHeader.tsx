@@ -13,12 +13,20 @@ import { SelectInput } from "../../components/SelectInput";
 import { bottomSx, LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { StyledContainer } from "../../components/StyledContainer";
 
-const Top = ({ folder, onDownloadButtonClick }: { folder: Folder | undefined; onDownloadButtonClick: () => void }) => (
+const Top = ({
+  isLoading,
+  folder,
+  onDownloadButtonClick
+}: {
+  isLoading: boolean;
+  folder: Folder | undefined;
+  onDownloadButtonClick: () => void;
+}) => (
   <Stack sx={[topSx]}>
     <Stack sx={{ flex: 1, justifyContent: "center", px: 2 }}>
       <Typography variant="body1">{folder ? folder.name : ""}</Typography>
     </Stack>
-    {folder && (
+    {folder && !isLoading && (
       <WButton onClick={onDownloadButtonClick} sx={iconButtonSx}>
         <DownloadIcon sx={{ fontSize: 24 }} />
       </WButton>
@@ -143,7 +151,7 @@ export const RightHeader = ({
   onDownloadButtonClick: () => void;
 }) => (
   <LayoutHeader
-    top={<Top folder={folder} onDownloadButtonClick={onDownloadButtonClick} />}
+    top={<Top isLoading={isLoading} folder={folder} onDownloadButtonClick={onDownloadButtonClick} />}
     bottom={
       isLoading || !folder ? (
         <></>

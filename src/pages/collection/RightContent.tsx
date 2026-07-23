@@ -1,4 +1,4 @@
-import { LayoutLoading } from "../../components/LayoutLoading";
+import { Skeleton, Stack } from "@mui/material";
 import {
   ChartItem,
   CloudinaryFileInfo,
@@ -13,6 +13,23 @@ import { TextInputWithButtons } from "../../components/TextInputWithButtons";
 import { StyledContainer } from "../../components/StyledContainer";
 import { getDocumentId } from "./useFolder";
 import { Send as SendIcon, Upload as UploadIcon } from "@mui/icons-material";
+
+const CollectionSkeleton = () => {
+  const width = { xs: "100%", sm: "calc(50% - 1px)", lg: "calc(33.333% - 1px)", xl: "calc(25% - 1px)" };
+  return (
+    <Stack sx={{ flex: 1, overflowY: "auto" }}>
+      <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
+        {Array.from({ length: 8 }).map((_, i) => (
+          <Skeleton
+            key={i}
+            variant="rectangular"
+            sx={{ aspectRatio: "16/10", width, height: "auto", bgcolor: "divider" }}
+          />
+        ))}
+      </Stack>
+    </Stack>
+  );
+};
 
 export const RightContent = ({
   isLoading,
@@ -48,7 +65,7 @@ export const RightContent = ({
   addCollectionFiles: (collectionId: string) => Promise<CollectionCounts | undefined>;
 }) => {
   if (isLoading) {
-    return <LayoutLoading />;
+    return <CollectionSkeleton />;
   }
   return (
     <>

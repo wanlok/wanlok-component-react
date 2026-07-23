@@ -34,7 +34,7 @@ export const useCollection = (
       setCollectionDocument(null);
       const fetchCollectionDocument = async () => {
         const docRef = doc(db, collectionName, documentId);
-        setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | undefined);
+setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | undefined);
       };
       fetchCollectionDocument();
     } else {
