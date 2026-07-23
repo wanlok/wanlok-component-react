@@ -1,5 +1,5 @@
 import { useCollection } from "./useCollection";
-import { useCollectionFilter } from "./useCollectionFilter";
+import { toAttributeKey, useCollectionFilter } from "./useCollectionFilter";
 import { useEffect, useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
@@ -158,8 +158,8 @@ export const CollectionPage = () => {
             const newName = newAttributes[i].name;
             if (oldName && newName && oldName !== newName && !newNames.has(oldName) && !oldNames.has(newName)) {
               await renameCollectionAttributeKey(oldName, newName);
-              if (selectedAttributeKey === oldName) {
-                onAttributeKeyChange(newName);
+              if (selectedAttributeKey === toAttributeKey(oldName)) {
+                onAttributeKeyChange(toAttributeKey(newName));
               }
             }
           }

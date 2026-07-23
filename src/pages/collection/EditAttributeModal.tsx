@@ -36,6 +36,22 @@ export const EditAttributeModal = ({
     }
   }, [open, selectedFolder]);
 
+  const nameCounts = new Map<string, number[]>();
+  attributes.forEach(({ name }, i) => {
+    if (name) {
+      if (!nameCounts.has(name)) {
+        nameCounts.set(name, []);
+      }
+      nameCounts.get(name)!.push(i);
+    }
+  });
+  const duplicateIndices = new Set<number>();
+  nameCounts.forEach((indices) => {
+    if (indices.length > 1) {
+      indices.forEach((i) => duplicateIndices.add(i));
+    }
+  });
+
   return (
     <WModal
       open={open}
@@ -71,6 +87,7 @@ export const EditAttributeModal = ({
       bottom={
         <YesNoButtons
           yesLabel="Save"
+          yesDisabled={duplicateIndices.size > 0}
           onYesClick={async () => {
             await updateFolderAttributes(attributes);
             onClose();
@@ -81,62 +98,64 @@ export const EditAttributeModal = ({
       }
     >
       <Stack sx={{ gap: "1px", p: 2 }}>
-        {attributes.map(({ name, type }, i) => {
-          return (
-            <StyledContainer key={`attribute-${i}`} sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}>
-              <Stack
-                sx={{
-                  flex: 1,
-                  flexDirection: "row",
-                  p: 1,
-                  gap: 1,
-                  alignItems: "center",
-                  justifyContent: "center",
-                  backgroundColor: "background.default"
+        {attributes.map(({ name, type }, i) => (
+          <StyledContainer
+            key={`attribute-${i}`}
+            isError={duplicateIndices.has(i)}
+            sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}
+          >
+            <Stack
+              sx={{
+                flex: 1,
+                flexDirection: "row",
+                p: 1,
+                gap: 1,
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "background.default"
+              }}
+            >
+              <WCheckbox
+                checked={checkboxStatus.has(i)}
+                onChange={(checked) => {
+                  const newCheckboxStatus = new Set(checkboxStatus);
+                  if (checked) {
+                    newCheckboxStatus.add(i);
+                  } else {
+                    newCheckboxStatus.delete(i);
+                  }
+                  setCheckboxStatus(newCheckboxStatus);
                 }}
-              >
-                <WCheckbox
-                  checked={checkboxStatus.has(i)}
-                  onChange={(checked) => {
-                    const newCheckboxStatus = new Set(checkboxStatus);
-                    if (checked) {
-                      newCheckboxStatus.add(i);
-                    } else {
-                      newCheckboxStatus.delete(i);
+              />
+              <Stack sx={{ flex: 1 }}>
+                <TextInput
+                  value={name}
+                  onChange={(value) => {
+                    const newAttributes = [...attributes];
+                    newAttributes[i].name = value;
+                    setAttributes(newAttributes);
+                  }}
+                  hideHelperText={true}
+                  inputPropsSx={{ flex: 1 }}
+                />
+              </Stack>
+              <Stack sx={{ flex: 1 }}>
+                <SelectInput
+                  items={options}
+                  value={type}
+                  onChange={(value: string) => {
+                    if (value !== "text" && value !== "number") {
+                      return;
                     }
-                    setCheckboxStatus(newCheckboxStatus);
+                    const newAttributes = [...attributes];
+                    newAttributes[i].type = value;
+                    setAttributes(newAttributes);
                   }}
                 />
-                <Stack sx={{ flex: 1 }}>
-                  <TextInput
-                    value={name}
-                    onChange={(value) => {
-                      const newAttributes = [...attributes];
-                      newAttributes[i].name = value;
-                      setAttributes(newAttributes);
-                    }}
-                    hideHelperText={true}
-                    inputPropsSx={{ flex: 1 }}
-                  />
-                </Stack>
-                <Stack sx={{ flex: 1 }}>
-                  <SelectInput
-                    items={options}
-                    value={type}
-                    onChange={(value: string) => {
-                      if (value !== "text" && value !== "number") {
-                        return;
-                      }
-                      const newAttributes = [...attributes];
-                      newAttributes[i].type = value;
-                      setAttributes(newAttributes);
-                    }}
-                  />
-                </Stack>
               </Stack>
-            </StyledContainer>
-          );
-        })}
+            </Stack>
+          </StyledContainer>
+        ))}
       </Stack>
     </WModal>
   );

@@ -4,6 +4,12 @@ import { CloudinaryFileInfo, Folder, YouTubeOEmbed } from "../../services/Types"
 
 const uncategorisedValue = "__uncategorised__";
 
+export const toAttributeKey = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-]/g, "");
+
 export const useCollectionFilter = (
   folder: Folder | undefined,
   files: [string, CloudinaryFileInfo][],
@@ -14,30 +20,60 @@ export const useCollectionFilter = (
   const selectedAttributeKey = searchParams.get("key") ?? "";
   const selectedAttributeValue = searchParams.get("value") ?? "";
 
+  const originalAttributeKey =
+    folder?.attributes.find((attribute) => toAttributeKey(attribute.name) === selectedAttributeKey)?.name ??
+    selectedAttributeKey;
+
   const prevFolderNameRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
     if (prevFolderNameRef.current !== undefined) {
-      setSearchParams((prev) => { prev.delete("key"); prev.delete("value"); return prev; }, { replace: true });
+      setSearchParams(
+        (prev) => {
+          prev.delete("key");
+          prev.delete("value");
+          return prev;
+        },
+        { replace: true }
+      );
     }
     prevFolderNameRef.current = folder?.name;
   }, [folder?.name]);
 
+  useEffect(() => {
+    if (selectedAttributeKey && !attributeKeys.some((k) => k.value === selectedAttributeKey)) {
+      setSearchParams(
+        (prev) => {
+          prev.delete("key");
+          prev.delete("value");
+          return prev;
+        },
+        { replace: true }
+      );
+    }
+  }, [selectedAttributeKey, folder?.attributes]);
+
   const hasUncategorised =
     Boolean(selectedAttributeKey) &&
     [...files, ...youTubeRegularVideos, ...youTubeShortVideos].some(
-      ([, item]) => !item.attributes?.[selectedAttributeKey]
+      ([, item]) => !item.attributes?.[originalAttributeKey]
     );
 
   useEffect(() => {
     if (!hasUncategorised && selectedAttributeValue === uncategorisedValue) {
-      setSearchParams((prev) => { prev.delete("value"); return prev; }, { replace: true });
+      setSearchParams(
+        (prev) => {
+          prev.delete("value");
+          return prev;
+        },
+        { replace: true }
+      );
     }
   }, [hasUncategorised, selectedAttributeValue]);
 
   const attributeKeys = [
     { label: "All", value: "" },
-    ...(folder?.attributes ?? []).map(({ name }) => ({ label: name, value: name }))
+    ...(folder?.attributes ?? []).map(({ name }) => ({ label: name, value: toAttributeKey(name) }))
   ];
 
   const attributeValues = [
@@ -46,20 +82,20 @@ export const useCollectionFilter = (
     ...[
       ...new Set(
         [
-          ...files.map(([, item]) => item.attributes?.[selectedAttributeKey]),
-          ...youTubeRegularVideos.map(([, item]) => item.attributes?.[selectedAttributeKey]),
-          ...youTubeShortVideos.map(([, item]) => item.attributes?.[selectedAttributeKey])
+          ...files.map(([, item]) => item.attributes?.[originalAttributeKey]),
+          ...youTubeRegularVideos.map(([, item]) => item.attributes?.[originalAttributeKey]),
+          ...youTubeShortVideos.map(([, item]) => item.attributes?.[originalAttributeKey])
         ].filter((v): v is string => Boolean(v))
       )
     ]
       .sort()
-      .map((value) => ({ label: value, value }))
+      .map((value) => ({ label: value, value: toAttributeKey(value) }))
   ];
 
   const matchesFilter = (attributes: { [key: string]: string } | undefined) =>
     selectedAttributeValue === uncategorisedValue
-      ? !attributes?.[selectedAttributeKey]
-      : attributes?.[selectedAttributeKey] === selectedAttributeValue;
+      ? !attributes?.[originalAttributeKey]
+      : toAttributeKey(attributes?.[originalAttributeKey] ?? "") === selectedAttributeValue;
 
   const filteredFiles = selectedAttributeValue ? files.filter(([, item]) => matchesFilter(item.attributes)) : files;
 
