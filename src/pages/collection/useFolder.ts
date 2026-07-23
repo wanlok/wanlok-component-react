@@ -17,18 +17,12 @@ import { getDateTimeString } from "../../common/DateUtils";
 import { getServerHealth } from "../../services/ServerHealthService";
 import { getFiles } from "../../common/FileUtils";
 import { getCountsByUrlStrings } from "../../common/CountUtils";
+import { toSlug } from "../../common/StringUtils";
 
 const collectionName = "configs";
 const documentId = "folders";
 
-export const getDocumentId = (folderName?: string) => {
-  return folderName
-    ? folderName
-        .toLowerCase()
-        .replace(/\s+/g, "-")
-        .replace(/[^a-z0-9-]/g, "")
-    : undefined;
-};
+export const getDocumentId = (folderName?: string) => (folderName ? toSlug(folderName) : undefined);
 
 const download = (content?: string, fileName?: string) => {
   if (content && fileName) {

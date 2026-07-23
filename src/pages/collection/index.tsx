@@ -1,5 +1,6 @@
 import { useCollection } from "./useCollection";
-import { toAttributeKey, useCollectionFilter } from "./useCollectionFilter";
+import { useCollectionFilter } from "./useCollectionFilter";
+import { toSlug } from "../../common/StringUtils";
 import { useEffect, useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
@@ -91,7 +92,10 @@ export const CollectionPage = () => {
             selectedFolder={selectedFolder}
             folderControlGroupState={folderControlGroupState}
             setPanelOpened={setPanelOpened}
-            openFolder={openFolder}
+            openFolder={(folder) => {
+              openFolder(folder);
+              setControlGroupState(0);
+            }}
             deleteFolder={deleteFolder}
             addFolder={addFolder}
           />
@@ -158,8 +162,8 @@ export const CollectionPage = () => {
             const newName = newAttributes[i].name;
             if (oldName && newName && oldName !== newName && !newNames.has(oldName) && !oldNames.has(newName)) {
               await renameCollectionAttributeKey(oldName, newName);
-              if (selectedAttributeKey === toAttributeKey(oldName)) {
-                onAttributeKeyChange(toAttributeKey(newName));
+              if (selectedAttributeKey === toSlug(oldName)) {
+                onAttributeKeyChange(toSlug(newName));
               }
             }
           }

@@ -1,14 +1,9 @@
 import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { CloudinaryFileInfo, Folder, YouTubeOEmbed } from "../../services/Types";
+import { toSlug } from "../../common/StringUtils";
 
 const uncategorisedValue = "__uncategorised__";
-
-export const toAttributeKey = (value: string) =>
-  value
-    .toLowerCase()
-    .replace(/\s+/g, "-")
-    .replace(/[^a-z0-9-]/g, "");
 
 export const useCollectionFilter = (
   folder: Folder | undefined,
@@ -21,7 +16,7 @@ export const useCollectionFilter = (
   const selectedAttributeValue = searchParams.get("value") ?? "";
 
   const originalAttributeKey =
-    folder?.attributes.find((attribute) => toAttributeKey(attribute.name) === selectedAttributeKey)?.name ??
+    folder?.attributes.find((attribute) => toSlug(attribute.name) === selectedAttributeKey)?.name ??
     selectedAttributeKey;
 
   const prevFolderNameRef = useRef<string | undefined>(undefined);
@@ -73,7 +68,7 @@ export const useCollectionFilter = (
 
   const attributeKeys = [
     { label: "All", value: "" },
-    ...(folder?.attributes ?? []).map(({ name }) => ({ label: name, value: toAttributeKey(name) }))
+    ...(folder?.attributes ?? []).map(({ name }) => ({ label: name, value: toSlug(name) }))
   ];
 
   const attributeValues = [
@@ -89,13 +84,13 @@ export const useCollectionFilter = (
       )
     ]
       .sort()
-      .map((value) => ({ label: value, value: toAttributeKey(value) }))
+      .map((value) => ({ label: value, value: toSlug(value) }))
   ];
 
   const matchesFilter = (attributes: { [key: string]: string } | undefined) =>
     selectedAttributeValue === uncategorisedValue
       ? !attributes?.[originalAttributeKey]
-      : toAttributeKey(attributes?.[originalAttributeKey] ?? "") === selectedAttributeValue;
+      : toSlug(attributes?.[originalAttributeKey] ?? "") === selectedAttributeValue;
 
   const filteredFiles = selectedAttributeValue ? files.filter(([, item]) => matchesFilter(item.attributes)) : files;
 

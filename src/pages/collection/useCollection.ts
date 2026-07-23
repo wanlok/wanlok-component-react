@@ -126,24 +126,18 @@ setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | unde
     if (!collectionDocument || !documentId) {
       return;
     }
-    const renameKey = (attributes: { [key: string]: string } | undefined) => {
-      if (!attributes || !(oldKey in attributes)) {
-        return attributes;
+    const renameItemKey = <T extends { attributes?: { [key: string]: string } }>(item: T): T => {
+      if (!item.attributes?.[oldKey]) {
+        return item;
       }
-      const { [oldKey]: value, ...rest } = attributes;
-      return { ...rest, [newKey]: value };
+      const { [oldKey]: value, ...rest } = item.attributes;
+      return { ...item, attributes: { ...rest, [newKey]: value } };
     };
     const newCollectionDocument = {
       ...collectionDocument,
-      files: Object.fromEntries(
-        Object.entries(collectionDocument.files).map(([id, item]) => [id, { ...item, attributes: renameKey(item.attributes) }])
-      ),
-      youtube_regular: Object.fromEntries(
-        Object.entries(collectionDocument.youtube_regular).map(([id, item]) => [id, { ...item, attributes: renameKey(item.attributes) }])
-      ),
-      youtube_shorts: Object.fromEntries(
-        Object.entries(collectionDocument.youtube_shorts).map(([id, item]) => [id, { ...item, attributes: renameKey(item.attributes) }])
-      )
+      files: Object.fromEntries(Object.entries(collectionDocument.files).map(([id, item]) => [id, renameItemKey(item)])),
+      youtube_regular: Object.fromEntries(Object.entries(collectionDocument.youtube_regular).map(([id, item]) => [id, renameItemKey(item)])),
+      youtube_shorts: Object.fromEntries(Object.entries(collectionDocument.youtube_shorts).map(([id, item]) => [id, renameItemKey(item)]))
     };
     const docRef = doc(db, collectionName, documentId);
     await updateDoc(docRef, newCollectionDocument);
