@@ -1,5 +1,5 @@
 import { Stack } from "@mui/material";
-import { ChartItem, CloudinaryFileInfo, serverUrl, SteamInfo, viewUrls, YouTubeOEmbed } from "../../services/Types";
+import { ChartItem, CloudinaryFileInfo, serverUrl, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
 
@@ -20,8 +20,8 @@ export const CollectionList = ({
   files: [string, CloudinaryFileInfo][];
   hyperlinks: [string, string][];
   steam: [string, SteamInfo][];
-  youTubeRegularVideos: [string, YouTubeOEmbed][];
-  youTubeShortVideos: [string, YouTubeOEmbed][];
+  youTubeRegularVideos: [string, YouTubeInfo][];
+  youTubeShortVideos: [string, YouTubeInfo][];
   controlGroupState: number;
   onDetailsButtonClick: (type: string, id: string) => void;
   onDeleteButtonClick: (type: string, id: string) => void;
@@ -101,10 +101,10 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("steam", appId)}
           />
         ))}
-        {youTubeShortVideos.map(([id, { title, thumbnail_url }], i) => (
+        {youTubeShortVideos.map(([id, { title, imageUrl }], i) => (
           <ImageTitleLink
             key={`youtube-shorts-${i}`}
-            imageUrl={thumbnail_url}
+            imageUrl={imageUrl}
             imageSx={{ objectFit: "contain" }}
             title={title}
             href={`${viewUrls.youtube_shorts}${id}`}
@@ -120,10 +120,10 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("youtube_shorts", id)}
           />
         ))}
-        {youTubeRegularVideos.map(([id, { title, thumbnail_url }], i) => (
+        {youTubeRegularVideos.map(([id, { title, imageUrl }], i) => (
           <ImageTitleLink
             key={`youtube-regular-${i}`}
-            imageUrl={thumbnail_url}
+            imageUrl={imageUrl}
             title={title}
             href={`${viewUrls.youtube_regular}${id}`}
             width={width}

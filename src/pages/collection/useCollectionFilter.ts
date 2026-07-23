@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
-import { CloudinaryFileInfo, Folder, YouTubeOEmbed } from "../../services/Types";
+import { CloudinaryFileInfo, Folder, YouTubeInfo } from "../../services/Types";
 import { toSlug } from "../../common/StringUtils";
 
 const uncategorisedValue = "__uncategorised__";
@@ -8,8 +8,8 @@ const uncategorisedValue = "__uncategorised__";
 export const useCollectionFilter = (
   folder: Folder | undefined,
   files: [string, CloudinaryFileInfo][],
-  youTubeRegularVideos: [string, YouTubeOEmbed][],
-  youTubeShortVideos: [string, YouTubeOEmbed][]
+  youTubeRegularVideos: [string, YouTubeInfo][],
+  youTubeShortVideos: [string, YouTubeInfo][]
 ) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedAttributeKey = searchParams.get("key") ?? "";

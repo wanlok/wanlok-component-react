@@ -1,18 +1,19 @@
 import { extractUrlStrings } from "../common/StringUtils";
-import { regex, YouTubeOEmbed } from "./Types";
+import { regex, YouTubeInfo } from "./Types";
 
 const SINGLE_URL_REGEX =
   /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:(?:watch\?v=([\w-]{11}))|(?:embed\/([\w-]{11}))|(?:shorts\/([\w-]{11})))|youtu\.be\/([\w-]{11}))/;
 
-export const fetchYouTubeOEmbed = async (urlString: string) => {
-  let youTubeOEmbed: YouTubeOEmbed | undefined = undefined;
+export const fetchYouTubeInfo = async (urlString: string) => {
+  let youTubeInfo: YouTubeInfo | undefined = undefined;
   try {
     const response = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(urlString)}&format=json`);
     if (response.ok) {
-      youTubeOEmbed = (await response.json()) as YouTubeOEmbed;
+      const oembed = await response.json();
+      youTubeInfo = { title: oembed.title, imageUrl: oembed.thumbnail_url };
     }
   } catch (e) {}
-  return youTubeOEmbed;
+  return youTubeInfo;
 };
 
 export const extractYouTubeInfos = (urlStrings: string[]): { urlString: string; id: string; type: string }[] => {
@@ -30,19 +31,19 @@ export const extractYouTubeInfos = (urlStrings: string[]): { urlString: string; 
 };
 
 export const getYouTubeRegularAndShortInfos = async (text: string) => {
-  const youtube_regular: { [key: string]: YouTubeOEmbed } = {};
-  const youtube_shorts: { [key: string]: YouTubeOEmbed } = {};
+  const youtube_regular: { [key: string]: YouTubeInfo } = {};
+  const youtube_shorts: { [key: string]: YouTubeInfo } = {};
 
   const youTubeInfos = extractYouTubeInfos(extractUrlStrings(text, regex.YOUTUBE));
 
   const results = (
     await Promise.all(
       youTubeInfos.map(async ({ urlString, id, type }) => {
-        const value = await fetchYouTubeOEmbed(urlString);
+        const value = await fetchYouTubeInfo(urlString);
         return value ? { id, type, value } : null;
       })
     )
-  ).filter(Boolean) as { id: string; type: string; value: YouTubeOEmbed }[];
+  ).filter(Boolean) as { id: string; type: string; value: YouTubeInfo }[];
 
   for (const { id, type, value } of results) {
     if (type === "youtube_regular") {

@@ -6,7 +6,7 @@ import {
   Direction,
   Folder,
   SteamInfo,
-  YouTubeOEmbed
+  YouTubeInfo
 } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
 import { TextInputWithButtons } from "../../components/TextInputWithButtons";
@@ -53,8 +53,8 @@ export const RightContent = ({
   files: [string, CloudinaryFileInfo][];
   hyperlinks: [string, string][];
   steam: [string, SteamInfo][];
-  youTubeRegularVideos: [string, YouTubeOEmbed][];
-  youTubeShortVideos: [string, YouTubeOEmbed][];
+  youTubeRegularVideos: [string, YouTubeInfo][];
+  youTubeShortVideos: [string, YouTubeInfo][];
   controlGroupState: number;
   selectedFolder: Folder | undefined;
   setCollectionTypeId: (value: { type: string; id: string } | undefined) => void;

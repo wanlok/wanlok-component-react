@@ -80,16 +80,9 @@ export interface SteamInfo {
   imageUrl: string;
 }
 
-export interface YouTubeOEmbed extends ParentInfo {
+export interface YouTubeInfo extends ParentInfo {
   title: string;
-  author_name: string;
-  author_url: string;
-  thumbnail_url: string;
-  thumbnail_width: number;
-  thumbnail_height: number;
-  html: string;
-  width: number;
-  height: number;
+  imageUrl: string;
 }
 
 export interface Hyperlink {
@@ -106,8 +99,8 @@ export interface CollectionDocument {
   files: { [key: string]: CloudinaryFileInfo };
   hyperlinks: { [key: string]: string };
   steam: { [key: string]: SteamInfo };
-  youtube_regular: { [key: string]: YouTubeOEmbed };
-  youtube_shorts: { [key: string]: YouTubeOEmbed };
+  youtube_regular: { [key: string]: YouTubeInfo };
+  youtube_shorts: { [key: string]: YouTubeInfo };
 }
 
 export const isCollectionKey = (key: string): key is keyof CollectionDocument => {
