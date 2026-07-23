@@ -191,7 +191,7 @@ export const KanbanCard = ({
             }}
           >
             <CardContent sx={{ display: "flex", flexDirection: "column", gap: 1 }}>
-              <KanbanCardContent item={item} isDragIconHidden={!draggable || controlGroupState !== 0} />
+              <KanbanCardContent item={item} isDragIconHidden={!draggable || controlGroupState === 2} />
             </CardContent>
           </CardActionArea>
           {controlGroupState === 2 && (
