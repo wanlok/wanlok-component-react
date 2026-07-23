@@ -70,7 +70,7 @@ export const RightContent = ({
         onLeftButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.left)}
         onRightButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.right)}
       />
-      {!isLoading && (
+      {selectedFolder && (
         <StyledContainer>
           <TextInputWithButtons
             placeholder="Add Links or Upload Files"
