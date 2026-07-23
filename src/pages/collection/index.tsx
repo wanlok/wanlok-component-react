@@ -42,6 +42,7 @@ export const CollectionPage = () => {
     addCollectionItems,
     addCollectionFiles,
     updateCollectionAttributes,
+    renameCollectionAttributeKey,
     updateCollectionSequences,
     deleteCollectionItem
   } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolderSequences);
@@ -148,7 +149,22 @@ export const CollectionPage = () => {
         open={editAttributeModalOpen}
         onClose={() => setEditAttributeModalOpen(false)}
         selectedFolder={selectedFolder}
-        updateFolderAttributes={updateFolderAttributes}
+        updateFolderAttributes={async (newAttributes) => {
+          const oldAttributes = selectedFolder?.attributes ?? [];
+          const oldNames = new Set(oldAttributes.map((attribute) => attribute.name));
+          const newNames = new Set(newAttributes.map((attribute) => attribute.name));
+          for (let i = 0; i < Math.min(oldAttributes.length, newAttributes.length); i++) {
+            const oldName = oldAttributes[i].name;
+            const newName = newAttributes[i].name;
+            if (oldName && newName && oldName !== newName && !newNames.has(oldName) && !oldNames.has(newName)) {
+              await renameCollectionAttributeKey(oldName, newName);
+              if (selectedAttributeKey === oldName) {
+                onAttributeKeyChange(newName);
+              }
+            }
+          }
+          await updateFolderAttributes(newAttributes);
+        }}
       />
       <AttributeModal
         charts={charts}

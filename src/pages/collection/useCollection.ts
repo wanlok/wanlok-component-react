@@ -122,6 +122,34 @@ setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | unde
     }
   };
 
+  const renameCollectionAttributeKey = async (oldKey: string, newKey: string) => {
+    if (!collectionDocument || !documentId) {
+      return;
+    }
+    const renameKey = (attributes: { [key: string]: string } | undefined) => {
+      if (!attributes || !(oldKey in attributes)) {
+        return attributes;
+      }
+      const { [oldKey]: value, ...rest } = attributes;
+      return { ...rest, [newKey]: value };
+    };
+    const newCollectionDocument = {
+      ...collectionDocument,
+      files: Object.fromEntries(
+        Object.entries(collectionDocument.files).map(([id, item]) => [id, { ...item, attributes: renameKey(item.attributes) }])
+      ),
+      youtube_regular: Object.fromEntries(
+        Object.entries(collectionDocument.youtube_regular).map(([id, item]) => [id, { ...item, attributes: renameKey(item.attributes) }])
+      ),
+      youtube_shorts: Object.fromEntries(
+        Object.entries(collectionDocument.youtube_shorts).map(([id, item]) => [id, { ...item, attributes: renameKey(item.attributes) }])
+      )
+    };
+    const docRef = doc(db, collectionName, documentId);
+    await updateDoc(docRef, newCollectionDocument);
+    setCollectionDocument(newCollectionDocument);
+  };
+
   const updateCollectionSequences = async (type: string, id: string, direction: Direction) => {
     if (collectionDocument && isCollectionKey(type)) {
       const keys = Object.keys(collectionDocument[type]);
@@ -206,6 +234,7 @@ setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | unde
     addCollectionItems,
     addCollectionFiles,
     updateCollectionAttributes,
+    renameCollectionAttributeKey,
     updateCollectionSequences,
     deleteCollection,
     deleteCollectionItem,
