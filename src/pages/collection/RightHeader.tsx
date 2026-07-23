@@ -1,5 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import {
+  Api as ApiIcon,
   Close as CloseIcon,
   Download as DownloadIcon,
   Edit as EditIcon,
@@ -9,6 +10,7 @@ import {
 } from "@mui/icons-material";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { Folder } from "../../services/Types";
+import { toSlug } from "../../common/StringUtils";
 import { SelectInput } from "../../components/SelectInput";
 import { bottomSx, LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { StyledContainer } from "../../components/StyledContainer";
@@ -27,9 +29,17 @@ const Top = ({
       <Typography variant="body1">{folder ? folder.name : ""}</Typography>
     </Stack>
     {folder && !isLoading && (
-      <WButton onClick={onDownloadButtonClick} sx={iconButtonSx}>
-        <DownloadIcon sx={{ fontSize: 24 }} />
-      </WButton>
+      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+        <WButton onClick={onDownloadButtonClick} rightIcon={<DownloadIcon sx={{ fontSize: 24 }} />}>
+          Export
+        </WButton>
+        <WButton
+          onClick={() => window.open(`#/api/collections/${toSlug(folder.name)}`, "_blank")}
+          rightIcon={<ApiIcon sx={{ fontSize: 24 }} />}
+        >
+          API
+        </WButton>
+      </Stack>
     )}
   </Stack>
 );
