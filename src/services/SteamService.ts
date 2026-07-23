@@ -10,7 +10,7 @@ export const fetchSteamInfo = async (appId: string) => {
     if (response.ok) {
       const { name, header_image } = (await response.json())[appId]["data"];
       steamInfo = {
-        title: name as string,
+        name: name as string,
         imageUrl: header_image as string
       };
     }

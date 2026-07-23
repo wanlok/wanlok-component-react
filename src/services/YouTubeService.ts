@@ -10,7 +10,7 @@ export const fetchYouTubeInfo = async (urlString: string) => {
     const response = await fetch(`https://www.youtube.com/oembed?url=${encodeURIComponent(urlString)}&format=json`);
     if (response.ok) {
       const oembed = await response.json();
-      youTubeInfo = { title: oembed.title, imageUrl: oembed.thumbnail_url };
+      youTubeInfo = { name: oembed.title, imageUrl: oembed.thumbnail_url };
     }
   } catch (e) {}
   return youTubeInfo;

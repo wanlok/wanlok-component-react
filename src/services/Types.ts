@@ -70,18 +70,18 @@ interface ParentInfo {
 }
 
 export interface CloudinaryFileInfo extends ParentInfo {
-  title: string;
+  name: string;
   mime_type: string;
   url: string;
 }
 
 export interface SteamInfo {
-  title: string;
+  name: string;
   imageUrl: string;
 }
 
 export interface YouTubeInfo extends ParentInfo {
-  title: string;
+  name: string;
   imageUrl: string;
 }
 

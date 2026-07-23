@@ -7,7 +7,7 @@ export const ImageTitleLink = ({
   imageUrl,
   imageFallbackUrl,
   imageSx,
-  title,
+  name,
   href,
   width,
   height,
@@ -24,7 +24,7 @@ export const ImageTitleLink = ({
   imageUrl: string;
   imageFallbackUrl?: string;
   imageSx?: SxProps<Theme>;
-  title?: string;
+  name?: string;
   href: string;
   width: string | Record<string, string>;
   height?: string;
@@ -71,7 +71,7 @@ export const ImageTitleLink = ({
             }}
           />
         </Stack>
-        {title && (
+        {name && (
           <Stack sx={{ p: 2 }}>
             <Typography
               variant="body1"
@@ -82,10 +82,10 @@ export const ImageTitleLink = ({
                 overflow: "hidden",
                 textOverflow: "ellipsis",
                 color: "common.white",
-                wordBreak: title.indexOf(" ") > 0 ? undefined : "break-all"
+                wordBreak: name.indexOf(" ") > 0 ? undefined : "break-all"
               }}
             >
-              {title}
+              {name}
             </Typography>
           </Stack>
         )}

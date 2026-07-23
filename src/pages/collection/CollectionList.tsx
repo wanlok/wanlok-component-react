@@ -45,12 +45,12 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("charts", uuid)}
           />
         ))}
-        {files.map(([id, { title, url }], i) => (
+        {files.map(([id, { name, url }], i) => (
           <ImageTitleLink
             key={`files-${i}`}
             imageUrl={url}
             imageSx={{ objectPosition: "top" }}
-            title={title}
+            name={name}
             href={url}
             width={width}
             aspectRatio="16/9"
@@ -69,7 +69,7 @@ export const CollectionList = ({
             key={`hyperlinks-${i}`}
             imageUrl={`https://wanlok2025.github.io/screenshots/${id}.png`}
             imageFallbackUrl={`${serverUrl}/screenshot/${id}.png`}
-            title={url}
+            name={url}
             href={url}
             width={width}
             aspectRatio="16/9"
@@ -83,11 +83,11 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("hyperlinks", url)}
           />
         ))}
-        {steam.map(([appId, { title, imageUrl }], i) => (
+        {steam.map(([appId, { name, imageUrl }], i) => (
           <ImageTitleLink
             key={`steam-${i}`}
             imageUrl={imageUrl}
-            title={title}
+            name={name}
             href={`${viewUrls.steam}${appId}`}
             width={width}
             aspectRatio="92/43"
@@ -101,12 +101,12 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("steam", appId)}
           />
         ))}
-        {youTubeShortVideos.map(([id, { title, imageUrl }], i) => (
+        {youTubeShortVideos.map(([id, { name, imageUrl }], i) => (
           <ImageTitleLink
             key={`youtube-shorts-${i}`}
             imageUrl={imageUrl}
             imageSx={{ objectFit: "contain" }}
-            title={title}
+            name={name}
             href={`${viewUrls.youtube_shorts}${id}`}
             width={width}
             aspectRatio="16/9"
@@ -120,11 +120,11 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("youtube_shorts", id)}
           />
         ))}
-        {youTubeRegularVideos.map(([id, { title, imageUrl }], i) => (
+        {youTubeRegularVideos.map(([id, { name, imageUrl }], i) => (
           <ImageTitleLink
             key={`youtube-regular-${i}`}
             imageUrl={imageUrl}
-            title={title}
+            name={name}
             href={`${viewUrls.youtube_regular}${id}`}
             width={width}
             aspectRatio="16/9"
