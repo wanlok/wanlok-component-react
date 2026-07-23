@@ -72,7 +72,6 @@ export const useCollectionFilter = (
   ];
 
   const attributeValues = [
-    { label: "All", value: "" },
     ...(hasUncategorised ? [{ label: "All (Uncategorised)", value: uncategorisedValue }] : []),
     ...[
       ...new Set(
@@ -86,6 +85,18 @@ export const useCollectionFilter = (
       .sort()
       .map((value) => ({ label: value, value: toSlug(value) }))
   ];
+
+  useEffect(() => {
+    if (selectedAttributeKey && !selectedAttributeValue && attributeValues.length > 0) {
+      setSearchParams(
+        (prev) => {
+          prev.set("value", attributeValues[0].value);
+          return prev;
+        },
+        { replace: true }
+      );
+    }
+  }, [selectedAttributeKey, selectedAttributeValue, attributeValues.length]);
 
   const matchesFilter = (attributes: { [key: string]: string } | undefined) =>
     selectedAttributeValue === uncategorisedValue
