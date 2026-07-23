@@ -75,7 +75,7 @@ export interface CloudinaryFileInfo extends ParentInfo {
   url: string;
 }
 
-export interface SteamInfo {
+export interface SteamInfo extends ParentInfo {
   name: string;
   imageUrl: string;
 }

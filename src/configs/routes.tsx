@@ -13,7 +13,7 @@ import {
   ViewKanbanOutlined as KanbanOutlinedIcon
 } from "@mui/icons-material";
 import { Kanban } from "../pages/kanban";
-import { BanknoteAPI } from "../pages/api/BanknoteAPI";
+import { CollectionAPI } from "../pages/api/CollectionAPI";
 
 const iconSize = 32;
 
@@ -60,7 +60,7 @@ export const routes = [
     ]
   },
   {
-    path: "/api/banknotes",
-    element: <BanknoteAPI />
+    path: "/api/collections/:id",
+    element: <CollectionAPI />
   }
 ];
