@@ -24,7 +24,7 @@ export const uploadAndGetFileInfos = async (files: File[]) => {
 
         fileInfos = {
           [public_id]: {
-            name: original_filename,
+            title: original_filename,
             mime_type: mimeType,
             url: secure_url
           }

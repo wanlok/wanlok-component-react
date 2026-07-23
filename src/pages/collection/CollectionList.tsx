@@ -45,12 +45,12 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("charts", uuid)}
           />
         ))}
-        {files.map(([id, { name, url }], i) => (
+        {files.map(([id, { title, url }], i) => (
           <ImageTitleLink
             key={`files-${i}`}
             imageUrl={url}
             imageSx={{ objectPosition: "top" }}
-            title={name}
+            title={title}
             href={url}
             width={width}
             aspectRatio="16/9"

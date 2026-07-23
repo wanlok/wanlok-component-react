@@ -5,7 +5,7 @@ import { Attributes, CloudinaryFileInfo, CollectionAttributes, Folder, TypedAttr
 import { setTypedAttributes } from "../../common/setTypedAttributes";
 
 interface Banknote {
-  name: string;
+  title: string;
   url: string;
   width: number;
   height: number;
@@ -42,10 +42,10 @@ const getBanknotes = async (collectionAttributes: CollectionAttributes) => {
   let dict: Record<string, Banknote> = {};
 
   Object.keys(data.files).forEach((key) => {
-    const { name, url, attributes } = data.files[key];
+    const { title, url, attributes } = data.files[key];
     const { width, height } = parseAttributes(collectionAttributes, attributes);
     if (width > 0 && height > 0) {
-      dict[key] = { name, url, width, height };
+      dict[key] = { title, url, width, height };
     }
   });
 

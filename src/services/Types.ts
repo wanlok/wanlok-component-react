@@ -70,7 +70,7 @@ interface ParentInfo {
 }
 
 export interface CloudinaryFileInfo extends ParentInfo {
-  name: string;
+  title: string;
   mime_type: string;
   url: string;
 }
