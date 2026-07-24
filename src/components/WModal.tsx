@@ -50,7 +50,7 @@ export const WModal = ({
       open={open}
       onClose={onClose}
       slotProps={{
-        backdrop: { sx: { backgroundColor: alpha(palette.common.black, 0.8) } }
+        backdrop: { sx: { backgroundColor: alpha(palette.common.white, 0.8) } }
       }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
@@ -63,10 +63,14 @@ export const WModal = ({
           transform: "translate(-50%, -50%)",
           flexDirection: mobile && right ? "column" : "row",
           width: mobile ? "100vw" : right !== undefined ? 800 : 400,
-          height: mobile ? "100dvh" : "80vh",
+          height: mobile ? "100dvh" : undefined,
+          maxHeight: mobile ? undefined : "80vh",
           overflow: "hidden",
           gap: mobile && right ? 0 : "1px",
-          backgroundColor: mobile && right ? "common.white" : undefined
+          backgroundColor: mobile && right ? "common.white" : undefined,
+          borderWidth: 1,
+          borderStyle: "solid",
+          borderColor: "divider"
         }}
       >
         {mobile && right ? (
