@@ -15,15 +15,15 @@ import { getDocumentId } from "./useFolder";
 import { Send as SendIcon, Upload as UploadIcon } from "@mui/icons-material";
 
 const CollectionSkeleton = () => {
-  const width = { xs: "100%", sm: "calc(50% - 1px)", lg: "calc(33.333% - 1px)", xl: "calc(25% - 1px)" };
+  const gridTemplateColumns = { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" };
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
-      <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
+      <Stack sx={{ display: "grid", gridTemplateColumns, gap: "1px" }}>
         {Array.from({ length: 8 }).map((_, i) => (
           <Skeleton
             key={i}
             variant="rectangular"
-            sx={{ aspectRatio: "16/10", width, height: "auto", bgcolor: "divider" }}
+            sx={{ aspectRatio: "16/10", width: "100%", height: "auto", bgcolor: "divider" }}
           />
         ))}
       </Stack>

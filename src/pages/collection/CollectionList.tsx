@@ -28,15 +28,14 @@ export const CollectionList = ({
   onLeftButtonClick: (type: string, id: string) => void;
   onRightButtonClick: (type: string, id: string) => void;
 }) => {
-  const width = { xs: "100%", sm: "calc(50% - 1px)", lg: "calc(33.333% - 1px)", xl: "calc(25% - 1px)" };
+  const gridTemplateColumns = { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" };
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
-      <Stack sx={{ flexDirection: "row", flexWrap: "wrap", gap: "1px" }}>
+      <Stack sx={{ display: "grid", gridTemplateColumns, gap: "1px" }}>
         {charts.map(([uuid, chartItem], i) => (
           <WChart
             key={`chart-${i}`}
             chartItem={chartItem}
-            width={{ xs: "100%", sm: "calc(50% - 1px)" }}
             leftMost={i === 0}
             rightMost={i === charts.length - 1}
             scrollHorizontally={false}
@@ -52,7 +51,6 @@ export const CollectionList = ({
             imageSx={{ objectPosition: "top" }}
             name={name}
             href={url}
-            width={width}
             aspectRatio="16/9"
             leftMost={i === 0}
             rightMost={i === files.length - 1}
@@ -71,7 +69,6 @@ export const CollectionList = ({
             imageFallbackUrl={`${serverUrl}/screenshot/${id}.png`}
             name={url}
             href={url}
-            width={width}
             aspectRatio="16/9"
             leftMost={i === 0}
             rightMost={i === hyperlinks.length - 1}
@@ -89,7 +86,6 @@ export const CollectionList = ({
             imageUrl={imageUrl}
             name={name}
             href={`${viewUrls.steam}${appId}`}
-            width={width}
             aspectRatio="92/43"
             leftMost={i === 0}
             rightMost={i === steam.length - 1}
@@ -108,7 +104,6 @@ export const CollectionList = ({
             imageSx={{ objectFit: "contain" }}
             name={name}
             href={`${viewUrls.youtube_shorts}${id}`}
-            width={width}
             aspectRatio="16/9"
             leftMost={i === 0}
             rightMost={i === youTubeShortVideos.length - 1}
@@ -126,7 +121,6 @@ export const CollectionList = ({
             imageUrl={imageUrl}
             name={name}
             href={`${viewUrls.youtube_regular}${id}`}
-            width={width}
             aspectRatio="16/9"
             leftMost={i === 0}
             rightMost={i === youTubeRegularVideos.length - 1}

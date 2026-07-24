@@ -51,7 +51,7 @@ export const CollectionPage = () => {
   const [folderControlGroupState, setFolderControlGroupState] = useState(0);
   const [controlGroupState, setControlGroupState] = useState(0);
   const [editAttributeModalOpen, setEditAttributeModalOpen] = useState(false);
-  const [undoRearrangeModalOpen, setUndoRearrangeModalOpen] = useState(false);
+  const [resetOrderModalOpen, setResetOrderModalOpen] = useState(false);
   const [collectionTypeId, setCollectionTypeId] = useState<{ type: string; id: string } | undefined>(undefined);
   const {
     attributeKeys,
@@ -125,7 +125,7 @@ export const CollectionPage = () => {
         onEditAttributeButtonClick={() => setEditAttributeModalOpen(true)}
         onDeleteButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
         onRearrangeButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
-        onResetButtonClick={() => setUndoRearrangeModalOpen(true)}
+        onResetButtonClick={() => setResetOrderModalOpen(true)}
         onDownloadButtonClick={() => {
           if (selectedFolder) {
             downloadFolder(selectedFolder);
@@ -183,8 +183,8 @@ export const CollectionPage = () => {
         updateCollectionAttributes={updateCollectionAttributes}
       />
       <ResetOrderConfirmationModal
-        open={undoRearrangeModalOpen}
-        onClose={() => setUndoRearrangeModalOpen(false)}
+        open={resetOrderModalOpen}
+        onClose={() => setResetOrderModalOpen(false)}
         onConfirm={resetFolderSequences}
       />
     </LayoutPanel>

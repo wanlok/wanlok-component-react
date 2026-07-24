@@ -1,4 +1,4 @@
-import { Stack, Typography } from "@mui/material";
+import { Stack } from "@mui/material";
 import {
   Api as ApiIcon,
   Close as CloseIcon,
@@ -9,6 +9,7 @@ import {
   ViewList as ViewListIcon
 } from "@mui/icons-material";
 import { iconButtonSx, WButton } from "../../components/WButton";
+import { OneLineTypography } from "../../components/OneLineTypography";
 import { Folder } from "../../services/Types";
 import { toSlug } from "../../common/StringUtils";
 import { SelectInput } from "../../components/SelectInput";
@@ -18,18 +19,32 @@ import { StyledContainer } from "../../components/StyledContainer";
 const Top = ({
   isLoading,
   folder,
+  resetButtonHidden,
+  onEditAttributeButtonClick,
+  onResetButtonClick,
   onDownloadButtonClick
 }: {
   isLoading: boolean;
   folder: Folder | undefined;
+  resetButtonHidden: boolean;
+  onEditAttributeButtonClick: () => void;
+  onResetButtonClick: () => void;
   onDownloadButtonClick: () => void;
 }) => (
   <Stack sx={[topSx]}>
-    <Stack sx={{ flex: 1, justifyContent: "center", px: 2 }}>
-      <Typography variant="body1">{folder ? folder.name : ""}</Typography>
+    <Stack sx={{ flex: 1, minWidth: 0, justifyContent: "center", px: 2 }}>
+      <OneLineTypography variant="body1">{folder ? folder.name : ""}</OneLineTypography>
     </Stack>
     {folder && !isLoading && (
       <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+        <WButton onClick={onEditAttributeButtonClick} rightIcon={<EditIcon sx={{ fontSize: 18 }} />}>
+          Edit Attributes
+        </WButton>
+        {!resetButtonHidden && (
+          <WButton onClick={onResetButtonClick} rightIcon={<UndoIcon sx={{ fontSize: 20 }} />}>
+            Reset Order
+          </WButton>
+        )}
         <WButton onClick={onDownloadButtonClick} rightIcon={<DownloadIcon sx={{ fontSize: 24 }} />}>
           Export
         </WButton>
@@ -45,7 +60,6 @@ const Top = ({
 );
 
 const Bottom = ({
-  resetButtonHidden,
   controlGroupState,
   attributeKeys,
   attributeValues,
@@ -54,12 +68,9 @@ const Bottom = ({
   onAttributeKeyChange,
   onAttributeValueChange,
   onAttributeButtonClick,
-  onEditAttributeButtonClick,
   onDeleteButtonClick,
-  onRearrangeButtonClick,
-  onResetButtonClick
+  onRearrangeButtonClick
 }: {
-  resetButtonHidden: boolean;
   controlGroupState: number;
   attributeKeys: { label: string; value: string }[];
   attributeValues: { label: string; value: string }[];
@@ -68,10 +79,8 @@ const Bottom = ({
   onAttributeKeyChange: (value: string) => void;
   onAttributeValueChange: (value: string) => void;
   onAttributeButtonClick: () => void;
-  onEditAttributeButtonClick: () => void;
   onDeleteButtonClick: () => void;
   onRearrangeButtonClick: () => void;
-  onResetButtonClick: () => void;
 }) => {
   return (
     <Stack sx={[bottomSx]}>
@@ -87,37 +96,36 @@ const Bottom = ({
       </StyledContainer>
       <Stack sx={{ flexDirection: "row", gap: 1 }}>
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          <Stack sx={{ flexDirection: "row" }}>
-            {controlGroupState === 1 && (
-              <WButton onClick={onEditAttributeButtonClick} sx={{ ...iconButtonSx, backgroundColor: "common.black" }}>
-                <EditIcon sx={{ fontSize: 18, color: "common.white" }} />
-              </WButton>
-            )}
-            <WButton
-              onClick={onAttributeButtonClick}
-              rightIcon={<ViewListIcon sx={{ fontSize: 24 }} />}
-              sx={controlGroupState === 1 ? { pt: "4px", borderBottom: "black solid 4px" } : {}}
-            >
-              Attributes
-            </WButton>
-          </Stack>
-          <Stack sx={{ flexDirection: "row" }}>
-            {controlGroupState === 3 && !resetButtonHidden && (
-              <WButton onClick={onResetButtonClick} sx={{ ...iconButtonSx, backgroundColor: "common.black" }}>
-                <UndoIcon sx={{ fontSize: 20, color: "common.white" }} />
-              </WButton>
-            )}
-            <WButton
-              disabled={Boolean(selectedAttributeValue)}
-              onClick={onRearrangeButtonClick}
-              rightIcon={<SwapHorizIcon sx={{ fontSize: 26 }} />}
-              sx={controlGroupState === 3 && !resetButtonHidden ? { pt: "4px", borderBottom: "black solid 4px" } : {}}
-            >
-              Rearrange
-            </WButton>
-          </Stack>
-          <WButton onClick={onDeleteButtonClick} rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}>
-            Delete
+          <WButton
+            onClick={onAttributeButtonClick}
+            sx={
+              controlGroupState === 1
+                ? { ...iconButtonSx, backgroundColor: "common.black", "&:hover": { backgroundColor: "common.black" } }
+                : iconButtonSx
+            }
+          >
+            <ViewListIcon sx={{ fontSize: 24, color: controlGroupState === 1 ? "common.white" : "inherit" }} />
+          </WButton>
+          <WButton
+            disabled={Boolean(selectedAttributeValue)}
+            onClick={onRearrangeButtonClick}
+            sx={
+              controlGroupState === 3
+                ? { ...iconButtonSx, backgroundColor: "common.black", "&:hover": { backgroundColor: "common.black" } }
+                : iconButtonSx
+            }
+          >
+            <SwapHorizIcon sx={{ fontSize: 26, color: controlGroupState === 3 ? "common.white" : "inherit" }} />
+          </WButton>
+          <WButton
+            onClick={onDeleteButtonClick}
+            sx={
+              controlGroupState === 2
+                ? { ...iconButtonSx, backgroundColor: "common.black", "&:hover": { backgroundColor: "common.black" } }
+                : iconButtonSx
+            }
+          >
+            <CloseIcon sx={{ fontSize: 24, color: controlGroupState === 2 ? "common.white" : "inherit" }} />
           </WButton>
         </Stack>
       </Stack>
@@ -161,13 +169,21 @@ export const RightHeader = ({
   onDownloadButtonClick: () => void;
 }) => (
   <LayoutHeader
-    top={<Top isLoading={isLoading} folder={folder} onDownloadButtonClick={onDownloadButtonClick} />}
+    top={
+      <Top
+        isLoading={isLoading}
+        folder={folder}
+        resetButtonHidden={resetButtonHidden}
+        onEditAttributeButtonClick={onEditAttributeButtonClick}
+        onResetButtonClick={onResetButtonClick}
+        onDownloadButtonClick={onDownloadButtonClick}
+      />
+    }
     bottom={
       isLoading || !folder ? (
         <></>
       ) : (
         <Bottom
-          resetButtonHidden={resetButtonHidden}
           controlGroupState={controlGroupState}
           attributeKeys={attributeKeys}
           attributeValues={attributeValues}
@@ -176,10 +192,8 @@ export const RightHeader = ({
           onAttributeKeyChange={onAttributeKeyChange}
           onAttributeValueChange={onAttributeValueChange}
           onAttributeButtonClick={onAttributeButtonClick}
-          onEditAttributeButtonClick={onEditAttributeButtonClick}
           onDeleteButtonClick={onDeleteButtonClick}
           onRearrangeButtonClick={onRearrangeButtonClick}
-          onResetButtonClick={onResetButtonClick}
         />
       )
     }

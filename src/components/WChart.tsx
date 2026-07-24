@@ -5,7 +5,6 @@ import { ControlGroup } from "./ControlGroup";
 
 export const WChart = ({
   chartItem,
-  width,
   leftMost = false,
   rightMost = false,
   scrollHorizontally,
@@ -14,7 +13,6 @@ export const WChart = ({
   onDeleteButtonClick
 }: {
   chartItem: ChartItem;
-  width: string | Record<string, string>;
   leftMost?: boolean;
   rightMost?: boolean;
   scrollHorizontally: boolean;
@@ -23,7 +21,7 @@ export const WChart = ({
   onDeleteButtonClick: () => void;
 }) => {
   return (
-    <Stack sx={{ position: "relative", width, backgroundColor: "#EEEEEE" }}>
+    <Stack sx={{ position: "relative", backgroundColor: "#EEEEEE" }}>
       <LineChart xAxis={[{ data: chartItem.x }]} series={[{ data: chartItem.y }]} height={300} />
       <ControlGroup
         direction={Direction.right}

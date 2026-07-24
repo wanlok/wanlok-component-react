@@ -83,7 +83,10 @@ export const Kanban = () => {
             selectedProject={selectedProject}
             controlGroupState={controlGroupState}
             setPanelOpened={setPanelOpened}
-            openProject={openProject}
+            openProject={(project) => {
+              openProject(project);
+              setControlGroupState(0);
+            }}
             deleteProject={deleteProject}
           />
         </>

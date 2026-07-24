@@ -9,7 +9,6 @@ export const ImageTitleLink = ({
   imageSx,
   name,
   href,
-  width,
   height,
   aspectRatio,
   leftMost = false,
@@ -26,7 +25,6 @@ export const ImageTitleLink = ({
   imageSx?: SxProps<Theme>;
   name?: string;
   href: string;
-  width: string | Record<string, string>;
   height?: string;
   aspectRatio?: string;
   leftMost?: boolean;
@@ -45,7 +43,7 @@ export const ImageTitleLink = ({
   }, [imageUrl]);
 
   return (
-    <Stack sx={{ position: "relative", width }}>
+    <Stack sx={{ position: "relative" }}>
       <Link
         href={href}
         target="_blank"
