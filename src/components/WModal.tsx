@@ -50,7 +50,7 @@ export const WModal = ({
       open={open}
       onClose={onClose}
       slotProps={{
-        backdrop: { sx: { backgroundColor: alpha(palette.common.white, 0.8) } }
+        backdrop: { sx: { backgroundColor: alpha(palette.common.white, 0.6) } }
       }}
       aria-labelledby="modal-modal-title"
       aria-describedby="modal-modal-description"
