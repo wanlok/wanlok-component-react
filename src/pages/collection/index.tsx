@@ -4,7 +4,7 @@ import { toSlug } from "../../common/StringUtils";
 import { useEffect, useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
-import { EditAttributeModal } from "./EditAttributeModal";
+import { FolderModal } from "./FolderModal";
 import { AttributeModal } from "./AttributeModal";
 import { ResetOrderConfirmationModal } from "./ResetOrderConfirmationModal";
 import { LeftContent } from "./LeftContent";
@@ -160,7 +160,7 @@ export const CollectionPage = () => {
         addCollectionItems={addCollectionItems}
         addCollectionFiles={addCollectionFiles}
       />
-      <EditAttributeModal
+      <FolderModal
         open={editAttributeModalOpen}
         onClose={() => setEditAttributeModalOpen(false)}
         selectedFolder={selectedFolder}

@@ -15,7 +15,7 @@ const options = [
   { label: "Number", value: "number" }
 ];
 
-export const EditAttributeModal = ({
+export const FolderModal = ({
   open,
   onClose,
   selectedFolder,
