@@ -81,14 +81,14 @@ export const ImageTitleLink = ({
           onDetailsButtonClick={onDetailsButtonClick}
         />
       )}
-      {controlGroupState === 2 && (
+      {controlGroupState === 3 && (
         <ControlGroup
           direction={Direction.right}
           scrollHorizontally={scrollHorizontally}
           onDeleteButtonClick={onDeleteButtonClick}
         />
       )}
-      {controlGroupState === 3 && (
+      {controlGroupState === 2 && (
         <ControlGroup
           direction={Direction.right}
           scrollHorizontally={scrollHorizontally}

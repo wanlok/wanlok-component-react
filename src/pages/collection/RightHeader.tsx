@@ -96,36 +96,19 @@ const Bottom = ({
       </StyledContainer>
       <Stack sx={{ flexDirection: "row", gap: 1 }}>
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          <WButton
-            onClick={onAttributeButtonClick}
-            sx={
-              controlGroupState === 1
-                ? { ...iconButtonSx, backgroundColor: "common.black", "&:hover": { backgroundColor: "common.black" } }
-                : iconButtonSx
-            }
-          >
-            <ViewListIcon sx={{ fontSize: 24, color: controlGroupState === 1 ? "common.white" : "inherit" }} />
+          <WButton isActivated={controlGroupState === 1} onClick={onAttributeButtonClick} sx={iconButtonSx}>
+            <ViewListIcon sx={{ fontSize: 24 }} />
           </WButton>
           <WButton
+            isActivated={controlGroupState === 2}
             disabled={Boolean(selectedAttributeValue)}
             onClick={onRearrangeButtonClick}
-            sx={
-              controlGroupState === 3
-                ? { ...iconButtonSx, backgroundColor: "common.black", "&:hover": { backgroundColor: "common.black" } }
-                : iconButtonSx
-            }
+            sx={iconButtonSx}
           >
-            <SwapHorizIcon sx={{ fontSize: 26, color: controlGroupState === 3 ? "common.white" : "inherit" }} />
+            <SwapHorizIcon sx={{ fontSize: 26 }} />
           </WButton>
-          <WButton
-            onClick={onDeleteButtonClick}
-            sx={
-              controlGroupState === 2
-                ? { ...iconButtonSx, backgroundColor: "common.black", "&:hover": { backgroundColor: "common.black" } }
-                : iconButtonSx
-            }
-          >
-            <CloseIcon sx={{ fontSize: 24, color: controlGroupState === 2 ? "common.white" : "inherit" }} />
+          <WButton isActivated={controlGroupState === 3} onClick={onDeleteButtonClick} sx={iconButtonSx}>
+            <CloseIcon sx={{ fontSize: 24 }} />
           </WButton>
         </Stack>
       </Stack>

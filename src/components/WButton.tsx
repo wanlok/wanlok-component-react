@@ -12,6 +12,7 @@ export const WButton = ({
   color = "primary",
   className,
   disabled,
+  isActivated,
   sx,
   onClick,
   leftIcon,
@@ -21,6 +22,7 @@ export const WButton = ({
   color?: ButtonOwnProps["color"];
   className?: string;
   disabled?: boolean;
+  isActivated?: boolean;
   sx?: SxProps<Theme>;
   onClick?: () => void;
   leftIcon?: ReactNode;
@@ -43,6 +45,11 @@ export const WButton = ({
         py: 0,
         px: 2,
         gap: 1,
+        ...(isActivated && {
+          backgroundColor: "common.black",
+          "&:hover": { backgroundColor: "common.black" },
+          color: "common.white"
+        }),
         ...sx
       }}
       onClick={onClick}

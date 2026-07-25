@@ -126,15 +126,15 @@ export const CollectionPage = () => {
         selectedAttributeValue={selectedAttributeValue}
         onAttributeKeyChange={(value) => {
           onAttributeKeyChange(value);
-          if (controlGroupState === 3) {
+          if (controlGroupState === 2) {
             setControlGroupState(0);
           }
         }}
         onAttributeValueChange={onAttributeValueChange}
         onAttributeButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
         onEditAttributeButtonClick={() => setEditAttributeModalOpen(true)}
-        onDeleteButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
-        onRearrangeButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
+        onDeleteButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
+        onRearrangeButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
         onResetButtonClick={() => setResetOrderModalOpen(true)}
         onDownloadButtonClick={() => {
           if (selectedFolder) {

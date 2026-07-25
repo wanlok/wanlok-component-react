@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import { bottomSx, LayoutHeader, topSx } from "../../components/LayoutHeader";
-import { WButton } from "../../components/WButton";
+import { iconButtonSx, WButton } from "../../components/WButton";
 import { Add as AddIcon, Close as CloseIcon } from "@mui/icons-material";
 
 const Top = () => (
@@ -26,12 +26,8 @@ const Bottom = ({
     >
       Add
     </WButton>
-    <WButton
-      onClick={onDeleteButtonClick}
-      sx={{ backgroundColor: controlGroupState === 1 ? "primary.dark" : "primary.main" }}
-      rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
-    >
-      Delete
+    <WButton isActivated={controlGroupState === 1} sx={iconButtonSx} onClick={onDeleteButtonClick}>
+      <CloseIcon sx={{ fontSize: 24 }} />
     </WButton>
   </Stack>
 );

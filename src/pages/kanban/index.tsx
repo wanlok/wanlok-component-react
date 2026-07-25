@@ -96,6 +96,7 @@ export const Kanban = () => {
       <RightHeader
         isLoading={isLoading}
         project={selectedProject}
+        controlGroupState={controlGroupState}
         onEditButtonClick={onEditButtonClick}
         onAddItemButtonClick={addItem}
         onDeleteItemButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}

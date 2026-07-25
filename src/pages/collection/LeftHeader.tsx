@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { WButton } from "../../components/WButton";
+import { iconButtonSx, WButton } from "../../components/WButton";
 import { bottomSx, LayoutHeader, topSx } from "../../components/LayoutHeader";
 
 const Top = () => (
@@ -17,12 +17,8 @@ const Bottom = ({
   onDeleteButtonClick: () => void;
 }) => (
   <Stack sx={[bottomSx, { gap: "1px" }]}>
-    <WButton
-      onClick={onDeleteButtonClick}
-      sx={{ backgroundColor: folderControlGroupState === 2 ? "primary.dark" : "primary.main" }}
-      rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
-    >
-      Delete
+    <WButton isActivated={folderControlGroupState === 1} sx={iconButtonSx} onClick={onDeleteButtonClick}>
+      <CloseIcon sx={{ fontSize: 24 }} />
     </WButton>
   </Stack>
 );

@@ -1,16 +1,18 @@
 import { Stack, Typography } from "@mui/material";
 import { Add as AddIcon, Close as CloseIcon, Edit as EditIcon } from "@mui/icons-material";
 import { LayoutHeader, topSx } from "../../components/LayoutHeader";
-import { WButton } from "../../components/WButton";
+import { iconButtonSx, WButton } from "../../components/WButton";
 import { KanbanProject } from "../../services/Types";
 
 const Top = ({
   project,
+  controlGroupState,
   onEditButtonClick,
   onAddItemButtonClick,
   onDeleteItemButtonClick
 }: {
   project: KanbanProject | undefined;
+  controlGroupState: number;
   onEditButtonClick: () => void;
   onAddItemButtonClick: () => void;
   onDeleteItemButtonClick: () => void;
@@ -28,8 +30,8 @@ const Top = ({
           <WButton rightIcon={<AddIcon sx={{ fontSize: 24 }} />} onClick={onAddItemButtonClick}>
             Add Item
           </WButton>
-          <WButton rightIcon={<CloseIcon sx={{ fontSize: 24 }} />} onClick={onDeleteItemButtonClick}>
-            Delete Item
+          <WButton isActivated={controlGroupState === 2} sx={iconButtonSx} onClick={onDeleteItemButtonClick}>
+            <CloseIcon sx={{ fontSize: 24 }} />
           </WButton>
         </Stack>
       )}
@@ -74,12 +76,14 @@ const Bottom = ({ project }: { project: KanbanProject | undefined }) => {
 export const RightHeader = ({
   isLoading,
   project,
+  controlGroupState,
   onEditButtonClick,
   onAddItemButtonClick,
   onDeleteItemButtonClick
 }: {
   isLoading: boolean;
   project: KanbanProject | undefined;
+  controlGroupState: number;
   onEditButtonClick: () => void;
   onAddItemButtonClick: () => void;
   onDeleteItemButtonClick: () => void;
@@ -88,6 +92,7 @@ export const RightHeader = ({
     top={
       <Top
         project={project}
+        controlGroupState={controlGroupState}
         onEditButtonClick={onEditButtonClick}
         onAddItemButtonClick={onAddItemButtonClick}
         onDeleteItemButtonClick={onDeleteItemButtonClick}
