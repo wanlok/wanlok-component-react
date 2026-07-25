@@ -1,4 +1,3 @@
-import { convertPdfToImageBlobs } from "../utils/convertPdfToImageBlobs";
 import { CloudinaryFileInfo } from "./Types";
 
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`;
@@ -26,7 +25,15 @@ const uploadImageBlob = async (
   return { [public_id]: { name, mime_type: mimeType, url: secure_url } };
 };
 
-export const uploadAndGetFileInfos = async (files: File[], onPendingCount?: (count: number) => void) => {
+export const uploadImageBlobs = async (blobs: { name: string; blob: Blob }[]) => {
+  let fileInfos: { [key: string]: CloudinaryFileInfo } = {};
+  for (const { name, blob } of blobs) {
+    fileInfos = { ...fileInfos, ...(await uploadImageBlob(blob, name, "image/png")) };
+  }
+  return fileInfos;
+};
+
+export const uploadAndGetFileInfos = async (files: File[]) => {
   let fileInfos: { [key: string]: CloudinaryFileInfo } = {};
 
   if (files.length === 0) {
@@ -37,14 +44,7 @@ export const uploadAndGetFileInfos = async (files: File[], onPendingCount?: (cou
   const mimeType = file.type;
 
   try {
-    if (mimeType === "application/pdf") {
-      const blobs = await convertPdfToImageBlobs(file, onPendingCount);
-      for (const { name, blob } of blobs) {
-        const result = await uploadImageBlob(blob, name, "image/png");
-        fileInfos = { ...fileInfos, ...result };
-      }
-    } else if (mimeType.startsWith("image/")) {
-      onPendingCount?.(1);
+    if (mimeType.startsWith("image/")) {
       const blob = new Blob([await file.arrayBuffer()], { type: mimeType });
       fileInfos = await uploadImageBlob(blob, file.name.replace(/\.[^.]+$/, ""), mimeType);
     }

@@ -1,9 +1,11 @@
+import { useEffect, useRef } from "react";
 import { Skeleton, Stack } from "@mui/material";
 import { ChartItem, CloudinaryFileInfo, serverUrl, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
 
 export const CollectionList = ({
+  isLoading,
   charts,
   files,
   hyperlinks,
@@ -17,6 +19,7 @@ export const CollectionList = ({
   onLeftButtonClick,
   onRightButtonClick
 }: {
+  isLoading: boolean;
   charts: [string, ChartItem][];
   files: [string, CloudinaryFileInfo][];
   hyperlinks: [string, string][];
@@ -30,16 +33,31 @@ export const CollectionList = ({
   onLeftButtonClick: (type: string, id: string) => void;
   onRightButtonClick: (type: string, id: string) => void;
 }) => {
-  const gridTemplateColumns = { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" };
-  const count =
+  const containerRef = useRef<HTMLDivElement>(null);
+  const scrollCountRef = useRef<number | undefined>(undefined);
+  const totalCount =
     charts.length +
     files.length +
     hyperlinks.length +
     steam.length +
     youTubeRegularVideos.length +
     youTubeShortVideos.length;
+
+  useEffect(() => {
+    if (isLoading) {
+      scrollCountRef.current = undefined;
+    } else {
+      const scrollCount = totalCount + loadingCount;
+      if (scrollCountRef.current !== undefined && scrollCount > scrollCountRef.current) {
+        containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" });
+      }
+      scrollCountRef.current = scrollCount;
+    }
+  }, [isLoading, totalCount, loadingCount]);
+
+  const gridTemplateColumns = { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" };
   return (
-    <Stack sx={{ flex: 1, overflowY: "auto" }}>
+    <Stack ref={containerRef} sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ display: "grid", gridTemplateColumns, gap: "1px" }}>
         {charts.map(([uuid, chartItem], i) => (
           <WChart
@@ -142,11 +160,18 @@ export const CollectionList = ({
           />
         ))}
         {Array.from({ length: loadingCount }).map((_, i) => (
-          <Skeleton
-            key={`pending-${i}`}
-            variant="rectangular"
-            sx={{ aspectRatio: count > 0 ? undefined : "16/9", width: "100%", height: "auto", bgcolor: "divider" }}
-          />
+          <Stack key={`pending-${i}`} sx={{ bgcolor: "background.default" }}>
+            <Stack sx={{ aspectRatio: "16/9", position: "relative" }}>
+              <Skeleton
+                variant="rectangular"
+                sx={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
+              />
+            </Stack>
+            <Stack sx={{ p: 2, gap: 1 }}>
+              <Skeleton variant="rectangular" />
+              <Skeleton variant="rectangular" sx={{ width: "40%" }} />
+            </Stack>
+          </Stack>
         ))}
       </Stack>
     </Stack>

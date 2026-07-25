@@ -14,7 +14,8 @@ import { getFiles } from "../../common/FileUtils";
 import { getChartItems } from "../../services/ChartService";
 import { getSteamInfos } from "../../services/SteamService";
 import { getYouTubeRegularAndShortInfos } from "../../services/YouTubeService";
-import { uploadAndGetFileInfos } from "../../services/FileService";
+import { uploadAndGetFileInfos, uploadImageBlobs } from "../../services/FileService";
+import { convertPdfToImageBlobs } from "../../utils/convertPdfToImageBlobs";
 import { getHyperlinks } from "../../services/HyperlinkService";
 import { getCounts } from "../../common/CountUtils";
 
@@ -85,15 +86,20 @@ export const useCollection = (
     if (files.length === 0) {
       return undefined;
     }
-    setLoadingCount((prev) => prev + 1);
+    const file = files[0];
+    let pdfPages: { name: string; blob: Blob }[] | undefined;
+    if (file.type === "application/pdf") {
+      pdfPages = await convertPdfToImageBlobs(file);
+      if (pdfPages.length === 0) {
+        return undefined;
+      }
+    }
+    const pendingCount = pdfPages ? pdfPages.length : 1;
+    setLoadingCount((prev) => prev + pendingCount);
     return new Promise<{ counts: CollectionCounts; sequences?: string[] }>((resolve) => {
       uploadQueueRef.current = uploadQueueRef.current.then(async () => {
-        let totalAdded = 1;
-        const fileInfos = await uploadAndGetFileInfos(files, (count) => {
-          setLoadingCount((prev) => prev + (count - 1));
-          totalAdded = count;
-        });
-        setLoadingCount((prev) => prev - totalAdded);
+        const fileInfos = pdfPages ? await uploadImageBlobs(pdfPages) : await uploadAndGetFileInfos(files);
+        setLoadingCount((prev) => prev - pendingCount);
         const docRef = doc(db, collectionName, collectionId);
         let document;
         const current = collectionDocumentRef.current;
@@ -116,14 +122,9 @@ export const useCollection = (
         }
         setCollectionDocumentAndRef(document);
         const counts = getCounts(document);
-        const sequences =
-          files[0].type === "application/pdf"
-            ? appendSequences(
-                collectionSequences?.files ?? [],
-                Object.keys(current?.files ?? {}),
-                Object.keys(fileInfos)
-              )
-            : undefined;
+        const sequences = pdfPages
+          ? appendSequences(collectionSequences?.files ?? [], Object.keys(current?.files ?? {}), Object.keys(fileInfos))
+          : undefined;
         resolve({ counts, sequences });
       });
     });

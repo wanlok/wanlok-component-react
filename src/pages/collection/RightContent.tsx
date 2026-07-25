@@ -52,6 +52,7 @@ export const RightContent = ({
   return (
     <>
       <CollectionList
+        isLoading={isLoading}
         charts={charts}
         files={files}
         hyperlinks={hyperlinks}
