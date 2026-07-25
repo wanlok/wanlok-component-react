@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { Skeleton, Stack } from "@mui/material";
-import { ChartItem, CloudinaryFileInfo, serverUrl, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
+import { ChartItem, CloudinaryFileInfo, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
 
@@ -93,7 +93,7 @@ export const CollectionList = ({
           <ImageTitleLink
             key={`hyperlinks-${i}`}
             imageUrl={`https://wanlok2025.github.io/screenshots/${id}.png`}
-            imageFallbackUrl={`${serverUrl}/screenshot/${id}.png`}
+
             name={url}
             href={url}
             aspectRatio="16/9"
