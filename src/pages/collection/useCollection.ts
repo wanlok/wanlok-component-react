@@ -14,7 +14,7 @@ import { getFiles } from "../../common/FileUtils";
 import { getChartItems } from "../../services/ChartService";
 import { getSteamInfos } from "../../services/SteamService";
 import { getYouTubeRegularAndShortInfos } from "../../services/YouTubeService";
-import { uploadAndGetFileInfos } from "../../services/ImageService";
+import { uploadAndGetFileInfos } from "../../services/FileService";
 import { getHyperlinks } from "../../services/HyperlinkService";
 import { getCounts } from "../../common/CountUtils";
 

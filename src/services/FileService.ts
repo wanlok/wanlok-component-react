@@ -3,10 +3,23 @@ import { CloudinaryFileInfo } from "./Types";
 
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`;
 
-const uploadImageBlob = async (blob: Blob, name: string, mimeType: string): Promise<{ [key: string]: CloudinaryFileInfo }> => {
+const mimeTypeExtensions: Record<string, string> = {
+  "image/png": "png",
+  "image/jpeg": "jpg",
+  "image/gif": "gif",
+  "image/webp": "webp",
+  "image/svg+xml": "svg"
+};
+
+const uploadImageBlob = async (
+  blob: Blob,
+  name: string,
+  mimeType: string
+): Promise<{ [key: string]: CloudinaryFileInfo }> => {
+  const ext = mimeTypeExtensions[mimeType];
   const formData = new FormData();
   formData.append("upload_preset", "wanlok-component");
-  formData.append("file", blob, name);
+  formData.append("file", blob, ext ? `${name}.${ext}` : name);
 
   const response = await fetch(cloudinaryUrl, { method: "POST", body: formData });
   const { public_id, secure_url } = await response.json();
