@@ -3,6 +3,7 @@ import { db } from "../../firebase";
 import { deleteDoc, deleteField, doc, FieldPath, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import {
   CollectionDocument,
+  CollectionAttributes,
   CollectionCounts,
   isCollectionKey,
   viewUrls,
@@ -24,7 +25,7 @@ const collectionName = "collections";
 export const useCollection = (
   documentId?: string,
   collectionSequences?: CollectionSequences,
-  updateFolder?: (params: { counts?: CollectionCounts; sequences?: Partial<CollectionSequences> }) => void
+  updateFolder?: (params: { counts?: CollectionCounts; sequences?: Partial<CollectionSequences>; attributes?: CollectionAttributes }) => void
 ) => {
   const [collectionDocument, setCollectionDocument] = useState<CollectionDocument | null | undefined>(undefined);
   const collectionDocumentRef = useRef<CollectionDocument | null | undefined>(undefined);
@@ -96,9 +97,17 @@ export const useCollection = (
     }
     const pendingCount = pdfPages ? pdfPages.length : 1;
     setLoadingCount((prev) => prev + pendingCount);
-    return new Promise<{ counts: CollectionCounts; sequences?: string[] }>((resolve) => {
+    return new Promise<{ counts: CollectionCounts; sequences?: string[]; attributes?: CollectionAttributes }>((resolve) => {
       uploadQueueRef.current = uploadQueueRef.current.then(async () => {
-        const fileInfos = pdfPages ? await uploadImageBlobs(pdfPages) : await uploadAndGetFileInfos(files);
+        const rawFileInfos = pdfPages ? await uploadImageBlobs(pdfPages) : await uploadAndGetFileInfos(files);
+        const fileInfos = pdfPages
+          ? Object.fromEntries(
+              Object.entries(rawFileInfos).map(([id, info], i) => [
+                id,
+                { ...info, name: `Page ${i + 1}`, attributes: { File: file.name } }
+              ])
+            )
+          : rawFileInfos;
         setLoadingCount((prev) => prev - pendingCount);
         const docRef = doc(db, collectionName, collectionId);
         let document;
@@ -125,7 +134,7 @@ export const useCollection = (
         const sequences = pdfPages
           ? appendSequences(collectionSequences?.files ?? [], Object.keys(current?.files ?? {}), Object.keys(fileInfos))
           : undefined;
-        resolve({ counts, sequences });
+        resolve({ counts, sequences, attributes: pdfPages ? [{ name: "File", type: "text" }] : undefined });
       });
     });
   };

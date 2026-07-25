@@ -1,6 +1,7 @@
 import {
   ChartItem,
   CloudinaryFileInfo,
+  CollectionAttributes,
   CollectionCounts,
   CollectionSequences,
   Direction,
@@ -44,10 +45,10 @@ export const RightContent = ({
   selectedFolder: Folder | undefined;
   setCollectionTypeId: (value: { type: string; id: string } | undefined) => void;
   deleteCollectionItem: (type: string, id: string) => Promise<CollectionCounts | undefined>;
-  updateFolder: (params: { counts?: CollectionCounts; sequences?: Partial<CollectionSequences> }) => Promise<void>;
+  updateFolder: (params: { counts?: CollectionCounts; sequences?: Partial<CollectionSequences>; attributes?: CollectionAttributes }) => Promise<void>;
   updateCollectionSequences: (type: string, id: string, direction: Direction) => void;
   addCollectionItems: (collectionId: string, text: string) => Promise<CollectionCounts | undefined>;
-  addCollectionFiles: (collectionId: string) => Promise<{ counts: CollectionCounts; sequences?: string[] } | undefined>;
+  addCollectionFiles: (collectionId: string) => Promise<{ counts: CollectionCounts; sequences?: string[]; attributes?: CollectionAttributes } | undefined>;
 }) => {
   return (
     <>
@@ -95,8 +96,20 @@ export const RightContent = ({
                   if (collectionId) {
                     const result = await addCollectionFiles(collectionId);
                     if (result) {
-                      const { counts, sequences } = result;
-                      await updateFolder({ counts, sequences: sequences ? { files: sequences } : undefined });
+                      const { counts, sequences, attributes } = result;
+                      let mergedAttributes: CollectionAttributes | undefined;
+                      if (attributes && selectedFolder) {
+                        const existingNames = new Set(selectedFolder.attributes.map((a) => a.name));
+                        const newAttributes = attributes.filter((a) => !existingNames.has(a.name));
+                        if (newAttributes.length > 0) {
+                          mergedAttributes = [...selectedFolder.attributes, ...newAttributes];
+                        }
+                      }
+                      await updateFolder({
+                        counts,
+                        sequences: sequences ? { files: sequences } : undefined,
+                        attributes: mergedAttributes
+                      });
                     }
                   }
                 }

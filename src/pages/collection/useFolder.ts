@@ -126,14 +126,19 @@ export const useFolder = () => {
 
   const updateFolder = async ({
     counts,
-    sequences
-  }: { counts?: CollectionCounts; sequences?: Partial<CollectionSequences> } = {}) => {
+    sequences,
+    attributes
+  }: {
+    counts?: CollectionCounts;
+    sequences?: Partial<CollectionSequences>;
+    attributes?: CollectionAttributes;
+  } = {}) => {
     if (selectedFolder) {
       await updateFolderDocument({
         name: selectedFolder.name,
-        attributes: selectedFolder.attributes,
         counts: counts ?? selectedFolder.counts,
-        sequences: sequences ? { ...selectedFolder.sequences, ...sequences } : selectedFolder.sequences
+        sequences: sequences ? { ...selectedFolder.sequences, ...sequences } : selectedFolder.sequences,
+        attributes: attributes ?? selectedFolder.attributes
       });
     }
   };
