@@ -26,20 +26,27 @@ export const useCollection = (
   updateFolderSequences?: (type: string, sequences: string[]) => void
 ) => {
   const [collectionDocument, setCollectionDocument] = useState<CollectionDocument | null | undefined>(undefined);
+  const collectionDocumentRef = useRef<CollectionDocument | null | undefined>(undefined);
   const [loadingCount, setLoadingCount] = useState(0);
   const syncedDocumentIdRef = useRef<string | undefined>(undefined);
+  const uploadQueueRef = useRef<Promise<void>>(Promise.resolve());
+
+  const setCollectionDocumentAndRef = (document: CollectionDocument | null | undefined) => {
+    collectionDocumentRef.current = document;
+    setCollectionDocument(document);
+  };
 
   useEffect(() => {
     syncedDocumentIdRef.current = documentId;
     if (documentId) {
-      setCollectionDocument(null);
+      setCollectionDocumentAndRef(null);
       const fetchCollectionDocument = async () => {
         const docRef = doc(db, collectionName, documentId);
-setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | undefined);
+        setCollectionDocumentAndRef((await getDoc(docRef)).data() as CollectionDocument | undefined);
       };
       fetchCollectionDocument();
     } else {
-      setCollectionDocument(undefined);
+      setCollectionDocumentAndRef(undefined);
     }
   }, [documentId]);
 
@@ -67,39 +74,52 @@ setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | unde
         document = { charts, files: {}, hyperlinks, steam, youtube_regular, youtube_shorts };
         await setDoc(docRef, document);
       }
-      setCollectionDocument(document);
+      setCollectionDocumentAndRef(document);
       counts = getCounts(document);
     }
     return counts;
   };
 
   const addCollectionFiles = async (collectionId: string) => {
-    let counts: CollectionCounts | undefined = undefined;
-    let files = await getFiles();
-    const fileInfos = await uploadAndGetFileInfos(files, setLoadingCount);
-    setLoadingCount(0);
-    const docRef = doc(db, collectionName, collectionId);
-    let document;
-    if (collectionDocument) {
-      document = {
-        ...collectionDocument,
-        files: { ...collectionDocument.files, ...fileInfos }
-      };
-      await updateDoc(docRef, document);
-    } else {
-      document = {
-        charts: {},
-        files: fileInfos,
-        hyperlinks: {},
-        steam: {},
-        youtube_regular: {},
-        youtube_shorts: {}
-      };
-      await setDoc(docRef, document);
+    const files = await getFiles();
+    if (files.length === 0) {
+      return undefined;
     }
-    setCollectionDocument(document);
-    counts = getCounts(document);
-    return counts;
+    setLoadingCount((prev) => prev + 1);
+    return new Promise<CollectionCounts | undefined>((resolve) => {
+      uploadQueueRef.current = uploadQueueRef.current.then(async () => {
+        let counts: CollectionCounts | undefined = undefined;
+        let totalAdded = 1;
+        const fileInfos = await uploadAndGetFileInfos(files, (count) => {
+          setLoadingCount((prev) => prev + (count - 1));
+          totalAdded = count;
+        });
+        setLoadingCount((prev) => prev - totalAdded);
+        const docRef = doc(db, collectionName, collectionId);
+        let document;
+        const current = collectionDocumentRef.current;
+        if (current) {
+          document = {
+            ...current,
+            files: { ...current.files, ...fileInfos }
+          };
+          await updateDoc(docRef, document);
+        } else {
+          document = {
+            charts: {},
+            files: fileInfos,
+            hyperlinks: {},
+            steam: {},
+            youtube_regular: {},
+            youtube_shorts: {}
+          };
+          await setDoc(docRef, document);
+        }
+        setCollectionDocumentAndRef(document);
+        counts = getCounts(document);
+        resolve(counts);
+      });
+    });
   };
 
   const updateCollectionAttributes = async (
@@ -120,7 +140,7 @@ setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | unde
       }
       const docRef = doc(db, collectionName, documentId!);
       await updateDoc(docRef, newCollectionDocument);
-      setCollectionDocument(newCollectionDocument);
+      setCollectionDocumentAndRef(newCollectionDocument);
     }
   };
 
@@ -143,7 +163,7 @@ setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | unde
     };
     const docRef = doc(db, collectionName, documentId);
     await updateDoc(docRef, newCollectionDocument);
-    setCollectionDocument(newCollectionDocument);
+    setCollectionDocumentAndRef(newCollectionDocument);
   };
 
   const updateCollectionSequences = async (type: string, id: string, direction: Direction) => {
@@ -179,10 +199,10 @@ setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | unde
       const docRef = doc(db, collectionName, documentId);
       if (isAllEmpty(document)) {
         await deleteDoc(docRef);
-        setCollectionDocument(undefined);
+        setCollectionDocumentAndRef(undefined);
       } else {
         await updateDoc(docRef, new FieldPath(type, id), deleteField());
-        setCollectionDocument(document);
+        setCollectionDocumentAndRef(document);
       }
       counts = getCounts(document);
     }

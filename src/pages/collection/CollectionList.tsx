@@ -31,6 +31,13 @@ export const CollectionList = ({
   onRightButtonClick: (type: string, id: string) => void;
 }) => {
   const gridTemplateColumns = { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" };
+  const count =
+    charts.length +
+    files.length +
+    hyperlinks.length +
+    steam.length +
+    youTubeRegularVideos.length +
+    youTubeShortVideos.length;
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ display: "grid", gridTemplateColumns, gap: "1px" }}>
@@ -138,7 +145,7 @@ export const CollectionList = ({
           <Skeleton
             key={`pending-${i}`}
             variant="rectangular"
-            sx={{ width: "100%", height: "auto", bgcolor: "divider" }}
+            sx={{ aspectRatio: count > 0 ? undefined : "16/9", width: "100%", height: "auto", bgcolor: "divider" }}
           />
         ))}
       </Stack>
