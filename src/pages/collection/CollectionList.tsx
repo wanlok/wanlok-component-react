@@ -1,4 +1,4 @@
-import { Stack } from "@mui/material";
+import { Skeleton, Stack } from "@mui/material";
 import { ChartItem, CloudinaryFileInfo, serverUrl, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
@@ -10,6 +10,7 @@ export const CollectionList = ({
   steam,
   youTubeRegularVideos,
   youTubeShortVideos,
+  loadingCount,
   controlGroupState,
   onDetailsButtonClick,
   onDeleteButtonClick,
@@ -22,6 +23,7 @@ export const CollectionList = ({
   steam: [string, SteamInfo][];
   youTubeRegularVideos: [string, YouTubeInfo][];
   youTubeShortVideos: [string, YouTubeInfo][];
+  loadingCount: number;
   controlGroupState: number;
   onDetailsButtonClick: (type: string, id: string) => void;
   onDeleteButtonClick: (type: string, id: string) => void;
@@ -130,6 +132,13 @@ export const CollectionList = ({
             onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}
             onLeftButtonClick={() => onLeftButtonClick("youtube_regular", id)}
             onRightButtonClick={() => onRightButtonClick("youtube_regular", id)}
+          />
+        ))}
+        {Array.from({ length: loadingCount }).map((_, i) => (
+          <Skeleton
+            key={`pending-${i}`}
+            variant="rectangular"
+            sx={{ width: "100%", height: "auto", bgcolor: "divider" }}
           />
         ))}
       </Stack>

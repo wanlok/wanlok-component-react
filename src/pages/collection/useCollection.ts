@@ -26,6 +26,7 @@ export const useCollection = (
   updateFolderSequences?: (type: string, sequences: string[]) => void
 ) => {
   const [collectionDocument, setCollectionDocument] = useState<CollectionDocument | null | undefined>(undefined);
+  const [loadingCount, setLoadingCount] = useState(0);
   const syncedDocumentIdRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
@@ -75,7 +76,8 @@ setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | unde
   const addCollectionFiles = async (collectionId: string) => {
     let counts: CollectionCounts | undefined = undefined;
     let files = await getFiles();
-    const fileInfos = await uploadAndGetFileInfos(files);
+    const fileInfos = await uploadAndGetFileInfos(files, setLoadingCount);
+    setLoadingCount(0);
     const docRef = doc(db, collectionName, collectionId);
     let document;
     if (collectionDocument) {
@@ -219,6 +221,7 @@ setCollectionDocument((await getDoc(docRef)).data() as CollectionDocument | unde
 
   return {
     isLoading: syncedDocumentIdRef.current !== documentId || collectionDocument === null,
+    loadingCount,
     charts: toList(collectionDocument?.charts, collectionSequences?.charts),
     files: toList(collectionDocument?.files, collectionSequences?.files),
     hyperlinks: toList(collectionDocument?.hyperlinks, collectionSequences?.hyperlinks),

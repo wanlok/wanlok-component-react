@@ -40,6 +40,7 @@ export const CollectionPage = () => {
     steam,
     youTubeRegularVideos,
     youTubeShortVideos,
+    loadingCount,
     addCollectionItems,
     addCollectionFiles,
     updateCollectionAttributes,
@@ -146,6 +147,7 @@ export const CollectionPage = () => {
         deleteCollectionItem={deleteCollectionItem}
         updateFolderCounts={updateFolderCounts}
         updateCollectionSequences={updateCollectionSequences}
+        loadingCount={loadingCount}
         addCollectionItems={addCollectionItems}
         addCollectionFiles={addCollectionFiles}
       />

@@ -2,6 +2,7 @@ export const getFiles = (): Promise<File[]> => {
   return new Promise((resolve) => {
     const input = document.createElement("input");
     input.type = "file";
+    input.accept = "image/*,application/pdf";
     input.onchange = async () => {
       const files = input.files;
       if (files) {

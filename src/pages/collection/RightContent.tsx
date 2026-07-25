@@ -1,4 +1,3 @@
-import { Skeleton, Stack } from "@mui/material";
 import {
   ChartItem,
   CloudinaryFileInfo,
@@ -14,23 +13,6 @@ import { StyledContainer } from "../../components/StyledContainer";
 import { getDocumentId } from "./useFolder";
 import { Send as SendIcon, Upload as UploadIcon } from "@mui/icons-material";
 
-const CollectionSkeleton = () => {
-  const gridTemplateColumns = { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" };
-  return (
-    <Stack sx={{ flex: 1, overflowY: "auto" }}>
-      <Stack sx={{ display: "grid", gridTemplateColumns, gap: "1px" }}>
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Skeleton
-            key={i}
-            variant="rectangular"
-            sx={{ aspectRatio: "16/10", width: "100%", height: "auto", bgcolor: "divider" }}
-          />
-        ))}
-      </Stack>
-    </Stack>
-  );
-};
-
 export const RightContent = ({
   isLoading,
   charts,
@@ -39,6 +21,7 @@ export const RightContent = ({
   steam,
   youTubeRegularVideos,
   youTubeShortVideos,
+  loadingCount,
   controlGroupState,
   selectedFolder,
   setCollectionTypeId,
@@ -55,6 +38,7 @@ export const RightContent = ({
   steam: [string, SteamInfo][];
   youTubeRegularVideos: [string, YouTubeInfo][];
   youTubeShortVideos: [string, YouTubeInfo][];
+  loadingCount: number;
   controlGroupState: number;
   selectedFolder: Folder | undefined;
   setCollectionTypeId: (value: { type: string; id: string } | undefined) => void;
@@ -64,9 +48,6 @@ export const RightContent = ({
   addCollectionItems: (collectionId: string, text: string) => Promise<CollectionCounts | undefined>;
   addCollectionFiles: (collectionId: string) => Promise<CollectionCounts | undefined>;
 }) => {
-  if (isLoading) {
-    return <CollectionSkeleton />;
-  }
   return (
     <>
       <CollectionList
@@ -76,6 +57,7 @@ export const RightContent = ({
         steam={steam}
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
+        loadingCount={isLoading ? 8 : loadingCount}
         controlGroupState={controlGroupState}
         onDetailsButtonClick={(type, id) => setCollectionTypeId({ type, id })}
         onDeleteButtonClick={async (type, id) => {
