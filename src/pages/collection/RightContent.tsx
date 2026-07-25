@@ -2,6 +2,7 @@ import {
   ChartItem,
   CloudinaryFileInfo,
   CollectionCounts,
+  CollectionSequences,
   Direction,
   Folder,
   SteamInfo,
@@ -26,7 +27,7 @@ export const RightContent = ({
   selectedFolder,
   setCollectionTypeId,
   deleteCollectionItem,
-  updateFolderCounts,
+  updateFolder,
   updateCollectionSequences,
   addCollectionItems,
   addCollectionFiles
@@ -43,10 +44,10 @@ export const RightContent = ({
   selectedFolder: Folder | undefined;
   setCollectionTypeId: (value: { type: string; id: string } | undefined) => void;
   deleteCollectionItem: (type: string, id: string) => Promise<CollectionCounts | undefined>;
-  updateFolderCounts: (counts: CollectionCounts) => Promise<void>;
+  updateFolder: (params: { counts?: CollectionCounts; sequences?: Partial<CollectionSequences> }) => Promise<void>;
   updateCollectionSequences: (type: string, id: string, direction: Direction) => void;
   addCollectionItems: (collectionId: string, text: string) => Promise<CollectionCounts | undefined>;
-  addCollectionFiles: (collectionId: string) => Promise<CollectionCounts | undefined>;
+  addCollectionFiles: (collectionId: string) => Promise<{ counts: CollectionCounts; sequences?: string[] } | undefined>;
 }) => {
   return (
     <>
@@ -63,7 +64,7 @@ export const RightContent = ({
         onDeleteButtonClick={async (type, id) => {
           const counts = await deleteCollectionItem(type, id);
           if (counts) {
-            await updateFolderCounts(counts);
+            await updateFolder({ counts });
           }
         }}
         onLeftButtonClick={(type, id) => updateCollectionSequences(type, id, Direction.left)}
@@ -81,7 +82,7 @@ export const RightContent = ({
                   if (collectionId) {
                     const counts = await addCollectionItems(collectionId, text);
                     if (counts) {
-                      await updateFolderCounts(counts);
+                      await updateFolder({ counts });
                     }
                   }
                 }
@@ -91,9 +92,10 @@ export const RightContent = ({
                 onClick: async () => {
                   const collectionId = getDocumentId(selectedFolder?.name);
                   if (collectionId) {
-                    const counts = await addCollectionFiles(collectionId);
-                    if (counts) {
-                      await updateFolderCounts(counts);
+                    const result = await addCollectionFiles(collectionId);
+                    if (result) {
+                      const { counts, sequences } = result;
+                      await updateFolder({ counts, sequences: sequences ? { files: sequences } : undefined });
                     }
                   }
                 }

@@ -17,6 +17,14 @@ export const toList = <T>(dict?: Record<string, T>, sequences?: string[]): [stri
   return entries;
 };
 
+export const appendSequences = (existingSequences: string[], existingIds: string[], newIds: string[]): string[] => {
+  const allExistingIds =
+    existingSequences.length > 0
+      ? [...existingSequences, ...existingIds.filter((id) => !existingSequences.includes(id))]
+      : existingIds;
+  return [...allExistingIds, ...newIds];
+};
+
 export const toDict = <T, U = T>(list: T[], key: keyof T, mapper?: (item: T) => U): Record<string, U> => {
   const dict: Record<string, U> = {};
   list.forEach((item) => {

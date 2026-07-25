@@ -22,8 +22,7 @@ export const CollectionPage = () => {
     selectedFolder,
     addFolder,
     updateFolderAttributes,
-    updateFolderCounts,
-    updateFolderSequences,
+    updateFolder,
     isFolderSorted,
     resetFolderSequences,
     deleteFolder,
@@ -47,7 +46,7 @@ export const CollectionPage = () => {
     renameCollectionAttributeKey,
     updateCollectionSequences,
     deleteCollectionItem
-  } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolderSequences);
+  } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolder);
   const [panelOpened, setPanelOpened] = useState(false);
   const [folderControlGroupState, setFolderControlGroupState] = useState(0);
   const [controlGroupState, setControlGroupState] = useState(0);
@@ -145,7 +144,7 @@ export const CollectionPage = () => {
         selectedFolder={selectedFolder}
         setCollectionTypeId={setCollectionTypeId}
         deleteCollectionItem={deleteCollectionItem}
-        updateFolderCounts={updateFolderCounts}
+        updateFolder={updateFolder}
         updateCollectionSequences={updateCollectionSequences}
         loadingCount={loadingCount}
         addCollectionItems={addCollectionItems}

@@ -5,6 +5,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
   CollectionAttributes,
   CollectionCounts,
+  CollectionSequences,
   emptyCollectionAttributes,
   emptyCollectionCounts,
   emptyCollectionSequences,
@@ -123,28 +124,16 @@ export const useFolder = () => {
     }
   };
 
-  const updateFolderCounts = async (counts: CollectionCounts) => {
+  const updateFolder = async ({
+    counts,
+    sequences
+  }: { counts?: CollectionCounts; sequences?: Partial<CollectionSequences> } = {}) => {
     if (selectedFolder) {
       await updateFolderDocument({
         name: selectedFolder.name,
         attributes: selectedFolder.attributes,
-        counts,
-        sequences: selectedFolder.sequences
-      });
-    }
-  };
-
-  const updateFolderSequences = async (type: string, sequences: string[]) => {
-    if (selectedFolder) {
-      const newSequences = { ...selectedFolder.sequences };
-      if (isCollectionKey(type)) {
-        newSequences[type] = sequences;
-      }
-      await updateFolderDocument({
-        name: selectedFolder.name,
-        attributes: selectedFolder.attributes,
-        counts: selectedFolder.counts,
-        sequences: newSequences
+        counts: counts ?? selectedFolder.counts,
+        sequences: sequences ? { ...selectedFolder.sequences, ...sequences } : selectedFolder.sequences
       });
     }
   };
@@ -261,8 +250,8 @@ export const useFolder = () => {
     selectedFolder,
     addFolder,
     updateFolderAttributes,
-    updateFolderCounts,
-    updateFolderSequences,
+    updateFolder,
+
     isFolderSorted,
     resetFolderSequences,
     deleteFolder,

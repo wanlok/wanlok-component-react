@@ -9,7 +9,7 @@ import {
   CollectionSequences,
   Direction
 } from "../../services/Types";
-import { isAllEmpty, toList } from "../../common/ListDictUtils";
+import { appendSequences, isAllEmpty, toList } from "../../common/ListDictUtils";
 import { getFiles } from "../../common/FileUtils";
 import { getChartItems } from "../../services/ChartService";
 import { getSteamInfos } from "../../services/SteamService";
@@ -23,7 +23,7 @@ const collectionName = "collections";
 export const useCollection = (
   documentId?: string,
   collectionSequences?: CollectionSequences,
-  updateFolderSequences?: (type: string, sequences: string[]) => void
+  updateFolder?: (params: { counts?: CollectionCounts; sequences?: Partial<CollectionSequences> }) => void
 ) => {
   const [collectionDocument, setCollectionDocument] = useState<CollectionDocument | null | undefined>(undefined);
   const collectionDocumentRef = useRef<CollectionDocument | null | undefined>(undefined);
@@ -86,9 +86,8 @@ export const useCollection = (
       return undefined;
     }
     setLoadingCount((prev) => prev + 1);
-    return new Promise<CollectionCounts | undefined>((resolve) => {
+    return new Promise<{ counts: CollectionCounts; sequences?: string[] }>((resolve) => {
       uploadQueueRef.current = uploadQueueRef.current.then(async () => {
-        let counts: CollectionCounts | undefined = undefined;
         let totalAdded = 1;
         const fileInfos = await uploadAndGetFileInfos(files, (count) => {
           setLoadingCount((prev) => prev + (count - 1));
@@ -116,8 +115,16 @@ export const useCollection = (
           await setDoc(docRef, document);
         }
         setCollectionDocumentAndRef(document);
-        counts = getCounts(document);
-        resolve(counts);
+        const counts = getCounts(document);
+        const sequences =
+          files[0].type === "application/pdf"
+            ? appendSequences(
+                collectionSequences?.files ?? [],
+                Object.keys(current?.files ?? {}),
+                Object.keys(fileInfos)
+              )
+            : undefined;
+        resolve({ counts, sequences });
       });
     });
   };
@@ -132,11 +139,20 @@ export const useCollection = (
     if (collectionDocument && isCollectionKey(type)) {
       const newCollectionDocument = { ...collectionDocument };
       if (type === "files") {
-        newCollectionDocument.files = { ...collectionDocument.files, [id]: { ...collectionDocument.files[id], attributes } };
+        newCollectionDocument.files = {
+          ...collectionDocument.files,
+          [id]: { ...collectionDocument.files[id], attributes }
+        };
       } else if (type === "youtube_regular") {
-        newCollectionDocument.youtube_regular = { ...collectionDocument.youtube_regular, [id]: { ...collectionDocument.youtube_regular[id], attributes } };
+        newCollectionDocument.youtube_regular = {
+          ...collectionDocument.youtube_regular,
+          [id]: { ...collectionDocument.youtube_regular[id], attributes }
+        };
       } else if (type === "youtube_shorts") {
-        newCollectionDocument.youtube_shorts = { ...collectionDocument.youtube_shorts, [id]: { ...collectionDocument.youtube_shorts[id], attributes } };
+        newCollectionDocument.youtube_shorts = {
+          ...collectionDocument.youtube_shorts,
+          [id]: { ...collectionDocument.youtube_shorts[id], attributes }
+        };
       }
       const docRef = doc(db, collectionName, documentId!);
       await updateDoc(docRef, newCollectionDocument);
@@ -157,9 +173,15 @@ export const useCollection = (
     };
     const newCollectionDocument = {
       ...collectionDocument,
-      files: Object.fromEntries(Object.entries(collectionDocument.files).map(([id, item]) => [id, renameItemKey(item)])),
-      youtube_regular: Object.fromEntries(Object.entries(collectionDocument.youtube_regular).map(([id, item]) => [id, renameItemKey(item)])),
-      youtube_shorts: Object.fromEntries(Object.entries(collectionDocument.youtube_shorts).map(([id, item]) => [id, renameItemKey(item)]))
+      files: Object.fromEntries(
+        Object.entries(collectionDocument.files).map(([id, item]) => [id, renameItemKey(item)])
+      ),
+      youtube_regular: Object.fromEntries(
+        Object.entries(collectionDocument.youtube_regular).map(([id, item]) => [id, renameItemKey(item)])
+      ),
+      youtube_shorts: Object.fromEntries(
+        Object.entries(collectionDocument.youtube_shorts).map(([id, item]) => [id, renameItemKey(item)])
+      )
     };
     const docRef = doc(db, collectionName, documentId);
     await updateDoc(docRef, newCollectionDocument);
@@ -179,12 +201,12 @@ export const useCollection = (
         const temp = sequences[index];
         sequences[index] = sequences[index - 1];
         sequences[index - 1] = temp;
-        updateFolderSequences?.(type, sequences);
+        updateFolder?.({ sequences: { [type]: sequences } });
       } else if (direction === Direction.right && index < sequences.length - 1) {
         const temp = sequences[index];
         sequences[index] = sequences[index + 1];
         sequences[index + 1] = temp;
-        updateFolderSequences?.(type, sequences);
+        updateFolder?.({ sequences: { [type]: sequences } });
       }
     }
   };
