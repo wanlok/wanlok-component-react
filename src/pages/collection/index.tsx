@@ -65,9 +65,19 @@ export const CollectionPage = () => {
     filteredYouTubeShortVideos
   } = useCollectionFilter(selectedFolder, files, youTubeRegularVideos, youTubeShortVideos);
 
+  const count =
+    charts.length +
+    files.length +
+    hyperlinks.length +
+    steam.length +
+    youTubeRegularVideos.length +
+    youTubeShortVideos.length;
+
   useEffect(() => {
-    setControlGroupState(0);
-  }, [selectedFolder?.name]);
+    if (count === 0) {
+      setControlGroupState(0);
+    }
+  }, [count]);
 
   return (
     <LayoutPanel
