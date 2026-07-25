@@ -17,7 +17,7 @@ export const WChip = ({ icon, label, sx }: { icon: string | ReactNode; label?: s
         borderRadius: 0,
         pl: 1,
         fontSize: 14,
-        "& .MuiChip-label": { pr: 2 },
+        "& .MuiChip-label": { pr: 1.8 },
         ...(!label
           ? {
               pr: 1.5,
