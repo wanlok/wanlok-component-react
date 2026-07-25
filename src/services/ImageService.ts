@@ -1,7 +1,7 @@
 import { convertPdfToImageBlobs } from "../utils/convertPdfToImageBlobs";
 import { CloudinaryFileInfo } from "./Types";
 
-const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/image/upload`;
+const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`;
 
 const uploadImageBlob = async (blob: Blob, name: string, mimeType: string): Promise<{ [key: string]: CloudinaryFileInfo }> => {
   const formData = new FormData();
