@@ -86,7 +86,11 @@ export const LeftContent = ({
             <Stack sx={{ border: 1, borderColor: "divider" }}>
               <Row icon={<AssignmentIcon sx={{ fontSize: 18 }} />} count={numberOfTasks} dateString={lastTaskDate} />
               <Divider />
-              <Row icon={<ChatIcon sx={{ fontSize: 18 }} />} count={numberOfMessages} dateString={lastMessageDate} />
+              <Row
+                icon={<ChatIcon sx={{ fontSize: 18, mt: 0.2 }} />}
+                count={numberOfMessages}
+                dateString={lastMessageDate}
+              />
             </Stack>
           </PanelRow>
         );
