@@ -50,7 +50,7 @@ export const CollectionPage = () => {
   const [panelOpened, setPanelOpened] = useState(false);
   const [folderControlGroupState, setFolderControlGroupState] = useState(0);
   const [controlGroupState, setControlGroupState] = useState(0);
-  const [editAttributeModalOpen, setEditAttributeModalOpen] = useState(false);
+  const [folderModalOpen, setFolderModalOpen] = useState(false);
   const [resetOrderModalOpen, setResetOrderModalOpen] = useState(false);
   const [collectionTypeId, setCollectionTypeId] = useState<{ type: string; id: string } | undefined>(undefined);
   const {
@@ -132,7 +132,7 @@ export const CollectionPage = () => {
         }}
         onAttributeValueChange={onAttributeValueChange}
         onAttributeButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
-        onEditAttributeButtonClick={() => setEditAttributeModalOpen(true)}
+        onEditFolderButtonClick={() => setFolderModalOpen(true)}
         onDeleteButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
         onRearrangeButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
         onResetButtonClick={() => setResetOrderModalOpen(true)}
@@ -161,8 +161,8 @@ export const CollectionPage = () => {
         addCollectionFiles={addCollectionFiles}
       />
       <FolderModal
-        open={editAttributeModalOpen}
-        onClose={() => setEditAttributeModalOpen(false)}
+        open={folderModalOpen}
+        onClose={() => setFolderModalOpen(false)}
         selectedFolder={selectedFolder}
         updateFolderAttributes={async (newAttributes) => {
           const oldAttributes = selectedFolder?.attributes ?? [];

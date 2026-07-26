@@ -57,7 +57,7 @@ export const FolderModal = ({
       open={open}
       onClose={onClose}
       titleIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
-      title="Edit Attributes"
+      title="Edit Folder"
       top={
         <>
           <WButton
