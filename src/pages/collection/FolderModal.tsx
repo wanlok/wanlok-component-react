@@ -57,7 +57,7 @@ export const FolderModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      titleIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
+      titleIcon={<EditIcon sx={{ fontSize: 18, mt: -0.1 }} />}
       title="Edit Folder"
       bottom={
         <YesNoButtons
@@ -95,9 +95,9 @@ export const FolderModal = ({
                 }
                 setAttributes([...attributes, { name: "", type: "text" }]);
               }}
-              rightIcon={<AddIcon sx={{ fontSize: 24 }} />}
+              sx={iconButtonSx}
             >
-              Add Row
+              <AddIcon sx={{ fontSize: 24 }} />
             </WButton>
             <WButton isActivated={isDeleting} onClick={() => setIsDeleting(!isDeleting)} sx={iconButtonSx}>
               <CloseIcon sx={{ fontSize: 24 }} />
