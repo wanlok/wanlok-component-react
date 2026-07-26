@@ -113,7 +113,6 @@ export const AttributeModal = ({
                     newAttributes[name] = value;
                     setAttributes(newAttributes);
                   }}
-                  hideHelperText={true}
                   inputPropsSx={{ flex: 1 }}
                 />
               </Stack>

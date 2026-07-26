@@ -78,7 +78,6 @@ export const FolderModal = ({
             label="Name"
             value={folderName}
             onChange={(value) => setFolderName(value)}
-            hideHelperText={true}
             inputPropsSx={{ flex: 1 }}
           />
         </StyledContainer>
@@ -131,7 +130,6 @@ export const FolderModal = ({
                         newAttributes[i].name = value;
                         setAttributes(newAttributes);
                       }}
-                      hideHelperText={true}
                       inputPropsSx={{ flex: 1 }}
                     />
                   </Stack>

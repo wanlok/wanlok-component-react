@@ -7,6 +7,7 @@ import { WButton } from "../../components/WButton";
 import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
 import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
+import { applyCorrections, checkGrammar } from "../../services/GrammarService";
 import { StyledContainer } from "../../components/StyledContainer";
 import { Discussion } from "../../components/Discussion";
 import { bottomSx, topSx } from "../../components/LayoutHeader";
@@ -60,6 +61,8 @@ export const ItemModal = ({
   const [name, setName] = useState(kanbanItem.name);
   const [content, setContent] = useState(kanbanItem.content);
   const [selectedColumn, setSelectedColumn] = useState(String(item.i));
+  const [nameHint, setNameHint] = useState("");
+  const [contentHint, setContentHint] = useState("");
 
   return (
     <WModal
@@ -122,13 +125,8 @@ export const ItemModal = ({
       rightIcon={<ChatIcon sx={{ fontSize: 24 }} />}
       rightTitle="Discussion"
     >
-      <Stack sx={{ flexDirection: "row", p: 2, gap: 1 }}>
-        {isEditing && (
-          <Stack sx={topSx}>
-            <WButton onClick={() => {}}>Grammer Check</WButton>
-          </Stack>
-        )}
-        <Typography variant="body2" sx={{ flex: 1, textAlign: "right", alignSelf: "flex-end" }}>
+      <Stack sx={{ p: 2 }}>
+        <Typography variant="body2" sx={{ textAlign: "right" }}>
           {getDisplayDateTimeString(new Date(kanbanItem.created_at))} (
           {getDaysSinceString(new Date(kanbanItem.created_at))})
         </Typography>
@@ -141,7 +139,7 @@ export const ItemModal = ({
                 label="Name"
                 value={name}
                 onChange={setName}
-                hideHelperText={true}
+                helperText={nameHint}
                 inputPropsSx={{ flex: 1 }}
               />
             </StyledContainer>
@@ -150,11 +148,30 @@ export const ItemModal = ({
                 label="Content"
                 value={content}
                 onChange={setContent}
-                hideHelperText={true}
+                helperText={contentHint}
                 minRows={4}
                 inputPropsSx={{ flex: 1 }}
               />
             </StyledContainer>
+            <Stack sx={[topSx, { gap: "1px" }]}>
+              <WButton
+                onClick={async () => {
+                  const [nameMatches, contentMatches] = await Promise.all([checkGrammar(name), checkGrammar(content)]);
+                  setNameHint(applyCorrections(name, nameMatches));
+                  setContentHint(applyCorrections(content, contentMatches));
+                }}
+              >
+                Grammer Check
+              </WButton>
+              <WButton
+                onClick={() => {
+                  setNameHint("");
+                  setContentHint("");
+                }}
+              >
+                Clear
+              </WButton>
+            </Stack>
           </>
         ) : (
           <Stack sx={{ gap: 2 }}>

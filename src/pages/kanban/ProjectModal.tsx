@@ -70,7 +70,6 @@ export const ProjectModal = ({
             label="Name"
             value={name}
             onChange={(value) => setName(value)}
-            hideHelperText={true}
             inputPropsSx={{ flex: 1 }}
           />
         </StyledContainer>
@@ -97,7 +96,6 @@ export const ProjectModal = ({
                   newColumns[i] = value;
                   setColumns(newColumns);
                 }}
-                hideHelperText={true}
                 inputPropsSx={{ flex: 1 }}
               />
             ))}

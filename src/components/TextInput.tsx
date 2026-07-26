@@ -47,7 +47,7 @@ export const TextInput = ({
   placeholder,
   value,
   onChange,
-  hideHelperText = false,
+  helperText,
   tabAllowed = false,
   disabled = false,
   minRows,
@@ -57,7 +57,7 @@ export const TextInput = ({
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
-  hideHelperText?: boolean;
+  helperText?: string;
   tabAllowed?: boolean;
   disabled?: boolean;
   minRows?: number;
@@ -66,7 +66,7 @@ export const TextInput = ({
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   return (
     <FormControl>
-      {label && <FormLabel sx={{ color: "text.primary", typography: "body2", mb: "4px" }}>{label}</FormLabel>}
+      {label && <FormLabel sx={{ color: "text.primary", typography: "body2", mb: 0.5 }}>{label}</FormLabel>}
       <TextField
         inputRef={inputRef}
         placeholder={placeholder}
@@ -114,7 +114,7 @@ export const TextInput = ({
           }
         }}
       />
-      {!hideHelperText && <FormHelperText sx={{ mt: 1 }}>Shift + Enter for multiple lines</FormHelperText>}
+      {helperText && <FormHelperText sx={{ mt: 0.5, ml: 0, color: "text.secondary" }}>{helperText}</FormHelperText>}
     </FormControl>
   );
 };

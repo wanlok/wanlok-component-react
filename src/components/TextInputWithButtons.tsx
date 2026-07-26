@@ -73,7 +73,6 @@ export const TextInputWithButtons = ({
             setValue(changedText);
             onChange?.(changedText);
           }}
-          hideHelperText={true}
         />
       </Stack>
       <Stack sx={{ flexDirection: sufficientSpaces ? "column" : "row", gap: "1px" }}>
