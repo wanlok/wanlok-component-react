@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { Skeleton, Stack } from "@mui/material";
 import { ChartItem, CloudinaryFileInfo, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
 import { WChart } from "../../components/WChart";
@@ -34,26 +34,6 @@ export const CollectionList = ({
   onRightButtonClick: (type: string, id: string) => void;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const scrollCountRef = useRef<number | undefined>(undefined);
-  const totalCount =
-    charts.length +
-    files.length +
-    hyperlinks.length +
-    steam.length +
-    youTubeRegularVideos.length +
-    youTubeShortVideos.length;
-
-  useEffect(() => {
-    if (isLoading) {
-      scrollCountRef.current = undefined;
-    } else {
-      const scrollCount = totalCount + loadingCount;
-      if (scrollCountRef.current !== undefined && scrollCount > scrollCountRef.current) {
-        containerRef.current?.scrollTo({ top: containerRef.current.scrollHeight, behavior: "smooth" });
-      }
-      scrollCountRef.current = scrollCount;
-    }
-  }, [isLoading, totalCount, loadingCount]);
 
   const gridTemplateColumns = { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" };
   return (
