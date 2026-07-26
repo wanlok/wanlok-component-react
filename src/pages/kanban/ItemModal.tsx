@@ -97,7 +97,7 @@ export const ItemModal = ({
           ) : (
             <WButton
               onClick={() => setIsEditing(true)}
-              rightIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
+              rightIcon={<EditIcon sx={{ fontSize: 18, mt: -0.1 }} />}
               sx={{ flex: 1 }}
             >
               Edit
