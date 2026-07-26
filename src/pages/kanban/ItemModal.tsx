@@ -9,7 +9,7 @@ import { TextInput } from "../../components/TextInput";
 import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
 import { StyledContainer } from "../../components/StyledContainer";
 import { Discussion } from "../../components/Discussion";
-import { bottomSx } from "../../components/LayoutHeader";
+import { bottomSx, topSx } from "../../components/LayoutHeader";
 import { SelectInput } from "../../components/SelectInput";
 
 const parseContent = (text: string) => {
@@ -122,8 +122,13 @@ export const ItemModal = ({
       rightIcon={<ChatIcon sx={{ fontSize: 24 }} />}
       rightTitle="Discussion"
     >
-      <Stack sx={{ p: 2 }}>
-        <Typography variant="body2" sx={{ textAlign: "right" }}>
+      <Stack sx={{ flexDirection: "row", p: 2, gap: 1 }}>
+        {isEditing && (
+          <Stack sx={topSx}>
+            <WButton onClick={() => {}}>Grammer Check</WButton>
+          </Stack>
+        )}
+        <Typography variant="body2" sx={{ flex: 1, textAlign: "right", alignSelf: "flex-end" }}>
           {getDisplayDateTimeString(new Date(kanbanItem.created_at))} (
           {getDaysSinceString(new Date(kanbanItem.created_at))})
         </Typography>
