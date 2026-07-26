@@ -1,11 +1,10 @@
-import { Stack } from "@mui/material";
+import { Divider, Stack, Typography } from "@mui/material";
 import { StyledContainer } from "../../components/StyledContainer";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { useEffect, useState } from "react";
-import { WButton } from "../../components/WButton";
+import { iconButtonSx, WButton } from "../../components/WButton";
 import { CollectionAttributes, Folder } from "../../services/Types";
-import { WCheckbox } from "../../components/WCheckbox";
 import { WModal } from "../../components/WModal";
 import { YesNoButtons } from "../../components/YesNoButtons";
 import { Add as AddIcon, Close as CloseIcon, Edit as EditIcon } from "@mui/icons-material";
@@ -24,15 +23,17 @@ export const FolderModal = ({
   open: boolean;
   onClose: () => void;
   selectedFolder?: Folder;
-  updateFolderAttributes: (attributes: CollectionAttributes) => Promise<void>;
+  updateFolderAttributes: (folderName: string, attributes: CollectionAttributes) => Promise<void>;
 }) => {
+  const [folderName, setFolderName] = useState("");
   const [attributes, setAttributes] = useState<CollectionAttributes>([]);
-  const [checkboxStatus, setCheckboxStatus] = useState(new Set<number>());
+  const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
     if (open && selectedFolder) {
+      setFolderName(selectedFolder.name);
       setAttributes([...selectedFolder.attributes.map((attribute) => ({ ...attribute }))]);
-      setCheckboxStatus(new Set());
+      setIsDeleting(false);
     }
   }, [open, selectedFolder]);
 
@@ -58,38 +59,12 @@ export const FolderModal = ({
       onClose={onClose}
       titleIcon={<EditIcon sx={{ fontSize: 18, mt: "-2px" }} />}
       title="Edit Folder"
-      top={
-        <>
-          <WButton
-            onClick={() => {
-              if (!attributes) {
-                return;
-              }
-              setAttributes([...attributes, { name: "", type: "text" }]);
-            }}
-            rightIcon={<AddIcon sx={{ fontSize: 24 }} />}
-          >
-            Add Row
-          </WButton>
-          {checkboxStatus.size > 0 && (
-            <WButton
-              onClick={() => {
-                setAttributes(attributes.filter((_, i) => !checkboxStatus.has(i)));
-                setCheckboxStatus(new Set());
-              }}
-              rightIcon={<CloseIcon sx={{ fontSize: 24 }} />}
-            >
-              {`Delete ${checkboxStatus.size} ${checkboxStatus.size === 1 ? "Row" : "Rows"}`}
-            </WButton>
-          )}
-        </>
-      }
       bottom={
         <YesNoButtons
           yesLabel="Save"
           yesDisabled={duplicateIndices.size > 0}
           onYesClick={async () => {
-            await updateFolderAttributes(attributes);
+            await updateFolderAttributes(folderName, attributes);
             onClose();
           }}
           noLabel="Cancel"
@@ -97,65 +72,93 @@ export const FolderModal = ({
         />
       }
     >
-      <Stack sx={{ gap: "1px", p: 2 }}>
-        {attributes.map(({ name, type }, i) => (
-          <StyledContainer
-            key={`attribute-${i}`}
-            isError={duplicateIndices.has(i)}
-            sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}
-          >
-            <Stack
-              sx={{
-                flex: 1,
-                flexDirection: "row",
-                p: 1,
-                gap: 1,
-                alignItems: "center",
-                justifyContent: "center",
-                backgroundColor: "background.default"
+      <Stack sx={{ gap: 2, p: 2 }}>
+        <StyledContainer sx={{ p: 1 }}>
+          <TextInput
+            label="Name"
+            value={folderName}
+            onChange={(value) => setFolderName(value)}
+            hideHelperText={true}
+            inputPropsSx={{ flex: 1 }}
+          />
+        </StyledContainer>
+        <Divider />
+        <Stack sx={{ gap: 1 }}>
+          <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+            <Typography variant="body1" sx={{ flex: 1, alignSelf: "center" }}>
+              {`Attributes (${attributes.length})`}
+            </Typography>
+            <WButton
+              onClick={() => {
+                if (!attributes) {
+                  return;
+                }
+                setAttributes([...attributes, { name: "", type: "text" }]);
               }}
+              rightIcon={<AddIcon sx={{ fontSize: 24 }} />}
             >
-              <WCheckbox
-                checked={checkboxStatus.has(i)}
-                onChange={(checked) => {
-                  const newCheckboxStatus = new Set(checkboxStatus);
-                  if (checked) {
-                    newCheckboxStatus.add(i);
-                  } else {
-                    newCheckboxStatus.delete(i);
-                  }
-                  setCheckboxStatus(newCheckboxStatus);
-                }}
-              />
-              <Stack sx={{ flex: 1 }}>
-                <TextInput
-                  value={name}
-                  onChange={(value) => {
-                    const newAttributes = [...attributes];
-                    newAttributes[i].name = value;
-                    setAttributes(newAttributes);
+              Add Row
+            </WButton>
+            <WButton isActivated={isDeleting} onClick={() => setIsDeleting(!isDeleting)} sx={iconButtonSx}>
+              <CloseIcon sx={{ fontSize: 24 }} />
+            </WButton>
+          </Stack>
+          <Stack sx={{ gap: "1px" }}>
+            {attributes.map(({ name, type }, i) => (
+              <StyledContainer
+                key={`attribute-${i}`}
+                isError={duplicateIndices.has(i)}
+                sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}
+              >
+                <Stack
+                  sx={{
+                    flex: 1,
+                    flexDirection: "row",
+                    py: 1,
+                    pl: 1,
+                    pr: isDeleting ? 0 : 1,
+                    gap: 1,
+                    alignItems: "center",
+                    justifyContent: "center",
+                    backgroundColor: "background.default"
                   }}
-                  hideHelperText={true}
-                  inputPropsSx={{ flex: 1 }}
-                />
-              </Stack>
-              <Stack sx={{ flex: 1 }}>
-                <SelectInput
-                  items={options}
-                  value={type}
-                  onChange={(value: string) => {
-                    if (value !== "text" && value !== "number") {
-                      return;
-                    }
-                    const newAttributes = [...attributes];
-                    newAttributes[i].type = value;
-                    setAttributes(newAttributes);
-                  }}
-                />
-              </Stack>
-            </Stack>
-          </StyledContainer>
-        ))}
+                >
+                  <Stack sx={{ flex: 1 }}>
+                    <TextInput
+                      value={name}
+                      onChange={(value) => {
+                        const newAttributes = [...attributes];
+                        newAttributes[i].name = value;
+                        setAttributes(newAttributes);
+                      }}
+                      hideHelperText={true}
+                      inputPropsSx={{ flex: 1 }}
+                    />
+                  </Stack>
+                  <Stack sx={{ flex: 1 }}>
+                    <SelectInput
+                      items={options}
+                      value={type}
+                      onChange={(value: string) => {
+                        if (value !== "text" && value !== "number") {
+                          return;
+                        }
+                        const newAttributes = [...attributes];
+                        newAttributes[i].type = value;
+                        setAttributes(newAttributes);
+                      }}
+                    />
+                  </Stack>
+                </Stack>
+                {isDeleting && (
+                  <WButton onClick={() => setAttributes(attributes.filter((_, j) => j !== i))} sx={iconButtonSx}>
+                    <CloseIcon sx={{ fontSize: 24 }} />
+                  </WButton>
+                )}
+              </StyledContainer>
+            ))}
+          </Stack>
+        </Stack>
       </Stack>
     </WModal>
   );

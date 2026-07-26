@@ -113,33 +113,28 @@ export const useFolder = () => {
     }
   };
 
-  const updateFolderAttributes = async (attributes: CollectionAttributes) => {
-    if (selectedFolder) {
-      await updateFolderDocument({
-        name: selectedFolder.name,
-        attributes,
-        counts: selectedFolder.counts,
-        sequences: selectedFolder.sequences
-      });
-    }
-  };
-
   const updateFolder = async ({
+    name,
     counts,
     sequences,
     attributes
   }: {
+    name?: string;
     counts?: CollectionCounts;
     sequences?: Partial<CollectionSequences>;
     attributes?: CollectionAttributes;
   } = {}) => {
     if (selectedFolder) {
+      const newName = name ?? selectedFolder.name;
       await updateFolderDocument({
-        name: selectedFolder.name,
+        name: newName,
         counts: counts ?? selectedFolder.counts,
         sequences: sequences ? { ...selectedFolder.sequences, ...sequences } : selectedFolder.sequences,
         attributes: attributes ?? selectedFolder.attributes
       });
+      if (name && name !== selectedFolder.name) {
+        openFolder({ ...selectedFolder, name });
+      }
     }
   };
 
@@ -254,7 +249,6 @@ export const useFolder = () => {
     folders: folderDocument?.folders ?? [],
     selectedFolder,
     addFolder,
-    updateFolderAttributes,
     updateFolder,
 
     isFolderSorted,

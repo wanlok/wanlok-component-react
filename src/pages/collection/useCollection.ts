@@ -246,6 +246,13 @@ export const useCollection = (
     deleteDoc(docRef);
   };
 
+  const renameCollection = async (newId: string) => {
+    if (collectionDocumentRef.current && documentId) {
+      await setDoc(doc(db, collectionName, newId), collectionDocumentRef.current);
+      await deleteDoc(doc(db, collectionName, documentId));
+    }
+  };
+
   const getCollectionUrls = async (id?: string) => {
     const urls: string[] = [];
     if (id) {
@@ -286,6 +293,7 @@ export const useCollection = (
     renameCollectionAttributeKey,
     updateCollectionSequences,
     deleteCollection,
+    renameCollection,
     deleteCollectionItem,
     getCollectionUrls
   };

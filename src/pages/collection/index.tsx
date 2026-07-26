@@ -21,7 +21,6 @@ export const CollectionPage = () => {
     folders,
     selectedFolder,
     addFolder,
-    updateFolderAttributes,
     updateFolder,
     isFolderSorted,
     resetFolderSequences,
@@ -44,6 +43,7 @@ export const CollectionPage = () => {
     addCollectionFiles,
     updateCollectionAttributes,
     renameCollectionAttributeKey,
+    renameCollection,
     updateCollectionSequences,
     deleteCollectionItem
   } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolder);
@@ -164,7 +164,7 @@ export const CollectionPage = () => {
         open={folderModalOpen}
         onClose={() => setFolderModalOpen(false)}
         selectedFolder={selectedFolder}
-        updateFolderAttributes={async (newAttributes) => {
+        updateFolderAttributes={async (newFolderName, newAttributes) => {
           const oldAttributes = selectedFolder?.attributes ?? [];
           const oldNames = new Set(oldAttributes.map((attribute) => attribute.name));
           const newNames = new Set(newAttributes.map((attribute) => attribute.name));
@@ -178,7 +178,13 @@ export const CollectionPage = () => {
               }
             }
           }
-          await updateFolderAttributes(newAttributes);
+          if (newFolderName !== selectedFolder?.name) {
+            const newId = getDocumentId(newFolderName);
+            if (newId) {
+              await renameCollection(newId);
+            }
+          }
+          await updateFolder({ name: newFolderName, attributes: newAttributes });
         }}
       />
       <AttributeModal
