@@ -1,9 +1,12 @@
-import { Stack } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { StyledContainer } from "../../components/StyledContainer";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { WModal } from "../../components/WModal";
 import { YesNoButtons } from "../../components/YesNoButtons";
+import { useEffect, useState } from "react";
+import { KanbanProject } from "../../services/Types";
+import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
 
 const defaultColumnNames: Record<number, string[]> = {
   1: ["To Do"],
@@ -16,68 +19,90 @@ const defaultColumnNames: Record<number, string[]> = {
 export const ProjectModal = ({
   open,
   onClose,
-  title,
-  rows,
-  onRowValueChange,
+  project,
   onSaveButtonClick
 }: {
   open: boolean;
   onClose: () => void;
-  title: string;
-  rows: { label: string; value: string | string[]; disabled?: boolean }[];
-  onRowValueChange: (index: number, value: string | string[]) => void;
-  onSaveButtonClick: () => void;
+  project?: KanbanProject;
+  onSaveButtonClick: (name: string, columns: string[]) => void;
 }) => {
+  const [name, setName] = useState("");
+  const [columns, setColumns] = useState<string[]>(["To Do", "In Progress", "Ready To Deploy", "Done"]);
+
+  useEffect(() => {
+    if (open) {
+      if (project) {
+        setName(project.name);
+        setColumns(project.columns.map((column) => column.name));
+      } else {
+        setName("");
+        setColumns(["To Do", "In Progress", "Ready To Deploy", "Done"]);
+      }
+    }
+  }, [open, project]);
+
   return (
     <WModal
       open={open}
       onClose={onClose}
-      title={title}
-      bottom={<YesNoButtons yesLabel="Save" onYesClick={onSaveButtonClick} noLabel="Cancel" onNoClick={onClose} />}
+      title={project ? "Edit Project" : "Create Project"}
+      bottom={
+        <YesNoButtons
+          yesLabel="Save"
+          onYesClick={() => onSaveButtonClick(name, columns)}
+          noLabel="Cancel"
+          onNoClick={onClose}
+        />
+      }
     >
       <Stack sx={{ gap: 1, p: 2 }}>
-        {rows.map(({ label, value, disabled }, i) => (
-          <StyledContainer key={`row-${i}`} sx={{ p: 1 }}>
-            {typeof value === "string" ? (
+        {project?.created_at && (
+          <Stack sx={{ pb: 1 }}>
+            <Typography variant="body2" sx={{ textAlign: "right" }}>
+              {getDisplayDateTimeString(new Date(project.created_at))} (
+              {getDaysSinceString(new Date(project.created_at))})
+            </Typography>
+          </Stack>
+        )}
+        <StyledContainer sx={{ p: 1 }}>
+          <TextInput
+            label="Name"
+            value={name}
+            onChange={(value) => setName(value)}
+            hideHelperText={true}
+            inputPropsSx={{ flex: 1 }}
+          />
+        </StyledContainer>
+        <StyledContainer sx={{ p: 1 }}>
+          <Stack sx={{ gap: 1 }}>
+            <SelectInput
+              label="Number of Columns"
+              items={Array.from({ length: 5 }, (_, i) => ({
+                label: String(i + 1),
+                value: String(i + 1)
+              }))}
+              value={String(columns.length)}
+              onChange={(count) => {
+                setColumns(defaultColumnNames[parseInt(count)]);
+              }}
+            />
+            {columns.map((column, i) => (
               <TextInput
-                label={label}
-                value={value}
-                onChange={(v) => onRowValueChange(i, v)}
+                key={`column-${i}`}
+                label={`Column ${i + 1}`}
+                value={column}
+                onChange={(value) => {
+                  const newColumns = [...columns];
+                  newColumns[i] = value;
+                  setColumns(newColumns);
+                }}
                 hideHelperText={true}
-                disabled={disabled}
                 inputPropsSx={{ flex: 1 }}
               />
-            ) : (
-              <Stack sx={{ gap: 1 }}>
-                <SelectInput
-                  label="Number of Columns"
-                  items={Array.from({ length: 5 }, (_, i) => ({
-                    label: String(i + 1),
-                    value: String(i + 1)
-                  }))}
-                  value={String(value.length)}
-                  onChange={(count) => {
-                    onRowValueChange(i, defaultColumnNames[parseInt(count)]);
-                  }}
-                />
-                {value.map((v, j) => (
-                  <TextInput
-                    key={`row-${i}-${j}`}
-                    label={`Column ${j + 1}`}
-                    value={v}
-                    onChange={(newV) => {
-                      const values = [...value];
-                      values[j] = newV;
-                      onRowValueChange(i, values);
-                    }}
-                    hideHelperText={true}
-                    inputPropsSx={{ flex: 1 }}
-                  />
-                ))}
-              </Stack>
-            )}
-          </StyledContainer>
-        ))}
+            ))}
+          </Stack>
+        </StyledContainer>
       </Stack>
     </WModal>
   );

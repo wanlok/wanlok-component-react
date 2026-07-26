@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { getDisplayDateTimeString } from "../../common/DateUtils";
 import { useKanban } from "./useKanban";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { ProjectModal } from "./ProjectModal";
@@ -34,15 +33,7 @@ export const Kanban = () => {
   const [opened, setOpened] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const defaultProjectModalRows: { label: string; value: string | string[]; disabled?: boolean }[] = [
-    { label: "Name", value: "" },
-    { label: "Columns", value: ["To Do", "In Progress", "Ready To Deploy", "Done"] }
-  ];
-
-  const [projectModalRows, setProjectModalRows] = useState(defaultProjectModalRows);
-
   const onAddButtonClick = () => {
-    setProjectModalRows(defaultProjectModalRows);
     setIsEditing(false);
     setOpened(true);
   };
@@ -51,15 +42,6 @@ export const Kanban = () => {
     if (!selectedProject) {
       return;
     }
-    setProjectModalRows([
-      { label: "Name", value: selectedProject.name },
-      {
-        label: "Created Date",
-        value: selectedProject.created_at ? getDisplayDateTimeString(new Date(selectedProject.created_at)) : "",
-        disabled: true
-      },
-      { label: "Columns", value: selectedProject.columns.map((column) => column.name) }
-    ]);
     setIsEditing(true);
     setOpened(true);
   };
@@ -138,16 +120,8 @@ export const Kanban = () => {
       <ProjectModal
         open={opened}
         onClose={() => setOpened(false)}
-        title={isEditing ? "Edit Project" : "Create Project"}
-        rows={projectModalRows}
-        onRowValueChange={(i, value) => {
-          const newProjectModalRows = [...projectModalRows];
-          newProjectModalRows[i].value = value;
-          setProjectModalRows(newProjectModalRows);
-        }}
-        onSaveButtonClick={() => {
-          const name = projectModalRows[0].value as string;
-          const columns = projectModalRows[projectModalRows.length - 1].value as string[];
+        project={isEditing ? selectedProject : undefined}
+        onSaveButtonClick={(name, columns) => {
           if (isEditing) {
             updateProject(name, columns);
           } else {
