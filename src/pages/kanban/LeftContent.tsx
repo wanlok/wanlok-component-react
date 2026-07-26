@@ -16,7 +16,7 @@ import { PanelRow } from "../../components/PanelRow";
 import { OneLineTypography } from "../../components/OneLineTypography";
 
 const Row = ({ icon, count, dateString }: { icon: React.ReactNode; count: number; dateString?: string }) => (
-  <Stack sx={{ flexDirection: "row", px: 2, py: 1, gap: 2, alignItems: "center" }}>
+  <Stack sx={{ flexDirection: "row", px: 2, py: 1, gap: 2 }}>
     <Stack sx={{ flexDirection: "row", gap: 1 }}>
       <Stack sx={{ width: 20, alignItems: "center", justifyContent: "center" }}>{icon}</Stack>
       <OneLineTypography variant="body2">{count}</OneLineTypography>
