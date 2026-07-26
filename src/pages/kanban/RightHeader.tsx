@@ -24,11 +24,11 @@ const Top = ({
       </Stack>
       {project && (
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          <WButton rightIcon={<EditIcon sx={{ fontSize: 18 }} />} onClick={onEditButtonClick}>
-            Edit Project
+          <WButton onClick={onAddItemButtonClick} sx={iconButtonSx}>
+            <AddIcon sx={{ fontSize: 24 }} />
           </WButton>
-          <WButton rightIcon={<AddIcon sx={{ fontSize: 24 }} />} onClick={onAddItemButtonClick}>
-            Add Item
+          <WButton onClick={onEditButtonClick} sx={iconButtonSx}>
+            <EditIcon sx={{ fontSize: 18 }} />
           </WButton>
           <WButton isActivated={controlGroupState === 2} sx={iconButtonSx} onClick={onDeleteItemButtonClick}>
             <CloseIcon sx={{ fontSize: 24 }} />

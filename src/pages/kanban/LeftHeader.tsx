@@ -19,12 +19,8 @@ const Bottom = ({
   onDeleteButtonClick: () => void;
 }) => (
   <Stack sx={[bottomSx, { gap: "1px" }]}>
-    <WButton
-      onClick={onAddButtonClick}
-      sx={{ backgroundColor: "primary.main" }}
-      rightIcon={<AddIcon sx={{ fontSize: 24 }} />}
-    >
-      Add
+    <WButton onClick={onAddButtonClick} sx={iconButtonSx}>
+      <AddIcon sx={{ fontSize: 24 }} />
     </WButton>
     <WButton isActivated={controlGroupState === 1} sx={iconButtonSx} onClick={onDeleteButtonClick}>
       <CloseIcon sx={{ fontSize: 24 }} />
