@@ -16,18 +16,25 @@ import { PanelRow } from "../../components/PanelRow";
 import { OneLineTypography } from "../../components/OneLineTypography";
 
 const Row = ({ icon, count, dateString }: { icon: React.ReactNode; count: number; dateString?: string }) => (
-  <Stack sx={{ flexDirection: "row", px: 2, py: 1, gap: 2 }}>
-    <Stack sx={{ flexDirection: "row", gap: 1 }}>
+  <>
+    <Stack sx={{ flexDirection: "row", gap: 1, px: 2, py: 1, alignItems: "center" }}>
       <Stack sx={{ width: 20, alignItems: "center", justifyContent: "center" }}>{icon}</Stack>
       <OneLineTypography variant="body2">{count}</OneLineTypography>
     </Stack>
-    {dateString && (
+    {dateString ? (
       <>
-        <Divider orientation="vertical" flexItem />
-        <OneLineTypography variant="body2">{dateString}</OneLineTypography>
+        <Divider orientation="vertical" sx={{ alignSelf: "stretch", height: "auto", my: 1 }} />
+        <OneLineTypography variant="body2" sx={{ px: 2, alignSelf: "center" }}>
+          {dateString}
+        </OneLineTypography>
+      </>
+    ) : (
+      <>
+        <span />
+        <span />
       </>
     )}
-  </Stack>
+  </>
 );
 
 export const LeftContent = ({
@@ -83,9 +90,9 @@ export const LeftContent = ({
             : undefined;
         return (
           <PanelRow icon={<Icon sx={{ fontSize: 24 }} />} title={project.name}>
-            <Stack sx={{ border: 1, borderColor: "divider" }}>
+            <Stack sx={{ border: 1, borderColor: "divider", display: "grid", gridTemplateColumns: "auto 1px 1fr" }}>
               <Row icon={<AssignmentIcon sx={{ fontSize: 18 }} />} count={numberOfTasks} dateString={lastTaskDate} />
-              <Divider />
+              <Divider sx={{ gridColumn: "1 / -1" }} />
               <Row
                 icon={<ChatIcon sx={{ fontSize: 18, mt: 0.2 }} />}
                 count={numberOfMessages}
