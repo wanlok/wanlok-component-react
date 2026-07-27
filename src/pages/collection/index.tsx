@@ -7,7 +7,7 @@ import { getDocumentId, useFolder } from "./useFolder";
 import { FolderModal } from "./FolderModal";
 import { AttributeModal } from "./AttributeModal";
 import { ResetOrderConfirmationModal } from "./ResetOrderConfirmationModal";
-import { ClipboardImageModal } from "./ClipboardImageModal";
+import { ImageClipboardModal } from "./ImageClipboardModal";
 import { LeftContent } from "./LeftContent";
 import { LeftHeader } from "./LeftHeader";
 import { PanelRow } from "../../components/PanelRow";
@@ -230,9 +230,9 @@ export const CollectionPage = () => {
         onClose={() => setResetOrderModalOpen(false)}
         onConfirm={resetFolderSequences}
       />
-      <ClipboardImageModal
+      <ImageClipboardModal
         open={Boolean(clipboardImage)}
-        previewUrl={clipboardImage?.previewUrl ?? ""}
+        src={clipboardImage?.previewUrl ?? ""}
         onUploadButtonClick={async () => {
           const collectionId = getDocumentId(selectedFolder?.name);
           if (collectionId && clipboardImage) {
