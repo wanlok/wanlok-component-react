@@ -7,6 +7,7 @@ import { getDocumentId, useFolder } from "./useFolder";
 import { FolderModal } from "./FolderModal";
 import { AttributeModal } from "./AttributeModal";
 import { ResetOrderConfirmationModal } from "./ResetOrderConfirmationModal";
+import { ClipboardImageModal } from "./ClipboardImageModal";
 import { LeftContent } from "./LeftContent";
 import { LeftHeader } from "./LeftHeader";
 import { PanelRow } from "../../components/PanelRow";
@@ -41,6 +42,7 @@ export const CollectionPage = () => {
     loadingCount,
     addCollectionItems,
     addCollectionFiles,
+    addCollectionBlob,
     updateCollectionAttributes,
     renameCollectionAttributeKey,
     renameCollection,
@@ -48,6 +50,7 @@ export const CollectionPage = () => {
     deleteCollectionItem
   } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolder);
   const [panelOpened, setPanelOpened] = useState(false);
+  const [clipboardImage, setClipboardImage] = useState<{ blob: Blob; previewUrl: string } | null>(null);
   const [folderControlGroupState, setFolderControlGroupState] = useState(0);
   const [controlGroupState, setControlGroupState] = useState(0);
   const [folderModalOpen, setFolderModalOpen] = useState(false);
@@ -78,6 +81,29 @@ export const CollectionPage = () => {
       setControlGroupState(0);
     }
   }, [count]);
+
+  useEffect(() => {
+    const handlePaste = (event: ClipboardEvent) => {
+      if (!selectedFolder) {
+        return;
+      }
+      const items = event.clipboardData?.items;
+      if (!items) {
+        return;
+      }
+      for (const item of Array.from(items)) {
+        if (item.type.startsWith("image/")) {
+          const blob = item.getAsFile();
+          if (blob) {
+            setClipboardImage({ blob, previewUrl: URL.createObjectURL(blob) });
+          }
+          break;
+        }
+      }
+    };
+    window.addEventListener("paste", handlePaste);
+    return () => window.removeEventListener("paste", handlePaste);
+  }, [selectedFolder]);
 
   return (
     <LayoutPanel
@@ -203,6 +229,26 @@ export const CollectionPage = () => {
         open={resetOrderModalOpen}
         onClose={() => setResetOrderModalOpen(false)}
         onConfirm={resetFolderSequences}
+      />
+      <ClipboardImageModal
+        open={Boolean(clipboardImage)}
+        previewUrl={clipboardImage?.previewUrl ?? ""}
+        onUploadButtonClick={async () => {
+          const collectionId = getDocumentId(selectedFolder?.name);
+          if (collectionId && clipboardImage) {
+            const name = `Screenshot ${new Date().toISOString().replace("T", " ").slice(0, 19)}`;
+            URL.revokeObjectURL(clipboardImage.previewUrl);
+            setClipboardImage(null);
+            const counts = await addCollectionBlob(collectionId, clipboardImage.blob, name);
+            await updateFolder({ counts });
+          }
+        }}
+        onClose={() => {
+          if (clipboardImage) {
+            URL.revokeObjectURL(clipboardImage.previewUrl);
+          }
+          setClipboardImage(null);
+        }}
       />
     </LayoutPanel>
   );

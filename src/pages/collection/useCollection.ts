@@ -241,6 +241,28 @@ export const useCollection = (
     return counts;
   };
 
+  const addCollectionBlob = async (collectionId: string, blob: Blob, name: string) => {
+    setLoadingCount((prev) => prev + 1);
+    return new Promise<CollectionCounts>((resolve) => {
+      uploadQueueRef.current = uploadQueueRef.current.then(async () => {
+        const fileInfos = await uploadImageBlobs([{ name, blob }]);
+        setLoadingCount((prev) => prev - 1);
+        const docRef = doc(db, collectionName, collectionId);
+        let document;
+        const current = collectionDocumentRef.current;
+        if (current) {
+          document = { ...current, files: { ...current.files, ...fileInfos } };
+          await updateDoc(docRef, document);
+        } else {
+          document = { charts: {}, files: fileInfos, hyperlinks: {}, steam: {}, youtube_regular: {}, youtube_shorts: {} };
+          await setDoc(docRef, document);
+        }
+        setCollectionDocumentAndRef(document);
+        resolve(getCounts(document));
+      });
+    });
+  };
+
   const deleteCollection = async (collectionId: string) => {
     const docRef = doc(db, collectionName, collectionId);
     deleteDoc(docRef);
@@ -292,6 +314,7 @@ export const useCollection = (
     updateCollectionAttributes,
     renameCollectionAttributeKey,
     updateCollectionSequences,
+    addCollectionBlob,
     deleteCollection,
     renameCollection,
     deleteCollectionItem,
