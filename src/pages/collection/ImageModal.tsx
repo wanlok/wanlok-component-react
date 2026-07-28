@@ -7,7 +7,8 @@ import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
 import { StyledContainer } from "../../components/StyledContainer";
 import { getImageBase64String, recognizeText } from "../../common/ImageUtils";
-import GoogleIcon from "../../assets/images/icons/Google.svg";
+import GoogleIcon from "../../assets/images/icons/google.png";
+import BingIcon from "../../assets/images/icons/bing.png";
 import { ImageRegionOverlay, Region } from "./ImageRegionOverlay";
 
 const RegionThumbnail = ({ src, region }: { src: string; region: Region }) => {
@@ -82,7 +83,13 @@ const RegionRow = ({
           onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(region.text!)}`, "_blank")}
           sx={iconButtonSx}
         >
-          <Box component="img" src={GoogleIcon} sx={{ width: 20, height: 20 }} />
+          <Box component="img" src={GoogleIcon} sx={{ width: 16, height: 16 }} />
+        </WButton>
+        <WButton
+          onClick={() => window.open(`https://www.bing.com/search?q=${encodeURIComponent(region.text!)}`, "_blank")}
+          sx={iconButtonSx}
+        >
+          <Box component="img" src={BingIcon} sx={{ width: 20, height: 20 }} />
         </WButton>
       </Stack>
     )}
