@@ -57,8 +57,7 @@ export const FolderModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      titleIcon={<EditIcon sx={{ fontSize: 18, mt: -0.1 }} />}
-      title="Edit Folder"
+      tabs={[{ icon: <EditIcon sx={{ fontSize: 18, mt: -0.1 }} />, label: "Edit Folder" }]}
       bottom={
         <YesNoButtons
           yesLabel="Save"

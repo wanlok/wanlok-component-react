@@ -46,7 +46,7 @@ export const ProjectModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      title={project ? "Edit Project" : "Create Project"}
+      tabs={[{ label: project ? "Edit Project" : "Create Project" }]}
       bottom={
         <YesNoButtons
           yesLabel="Save"

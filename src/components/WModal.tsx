@@ -1,26 +1,19 @@
-import { alpha, Divider, Modal, Stack, Tab, Tabs, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { Close as CloseIcon } from "@mui/icons-material";
-import { iconButtonSx, WButton } from "./WButton";
+import { alpha, Modal, Stack, useMediaQuery, useTheme } from "@mui/material";
+import { TabItem, WTabs } from "./WTabs";
 import { ReactElement, ReactNode, useState } from "react";
 
 type PanelProps = {
-  titleIcon?: ReactElement;
-  title?: string;
+  tabs?: TabItem[];
+  tab?: number;
+  onTabChange?: (tab: number) => void;
   top?: ReactNode;
   bottom?: ReactNode;
   children?: ReactNode;
 };
 
-export const WModalContent = ({ titleIcon, title, top, bottom, children }: PanelProps) => (
+export const WModalContent = ({ tabs, tab = 0, onTabChange, top, bottom, children }: PanelProps) => (
   <Stack sx={{ flex: 1, overflow: "hidden", backgroundColor: "background.default" }}>
-    {(titleIcon || title) && (
-      <Stack sx={{ flexDirection: "row", flexShrink: 0 }}>
-        <Stack sx={{ flexDirection: "row", flex: 1, alignItems: "center", p: 2, gap: 1 }}>
-          {titleIcon}
-          {title && <Typography sx={{ flex: 1 }}>{title}</Typography>}
-        </Stack>
-      </Stack>
-    )}
+    {tabs && tabs.length > 0 && <WTabs value={tab} tabs={tabs} onChange={onTabChange ?? (() => {})} />}
     {top && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{top}</Stack>}
     <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>{children}</Stack>
     {bottom && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{bottom}</Stack>}
@@ -47,7 +40,7 @@ export const WModal = ({
 } & PanelProps) => {
   const { palette, breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
-  const [tab, setTab] = useState(0);
+  const [mobileTab, setMobileTab] = useState(0);
 
   return (
     <Modal
@@ -79,41 +72,19 @@ export const WModal = ({
       >
         {mobile && right ? (
           <>
-            <Stack sx={{ flexDirection: "row", alignItems: "center" }}>
-              <Tabs
-                value={tab}
-                variant="fullWidth"
-                onChange={(_, value) => setTab(value)}
-                sx={{
-                  flex: 1,
-                  "& .MuiTab-root": {
-                    p: 2,
-                    backgroundColor: "common.white",
-                    color: "text.primary",
-                    textTransform: "none",
-                    minHeight: 56,
-                    fontSize: 16,
-                    justifyContent: "flex-start"
-                  },
-                  "& .MuiTab-root.Mui-selected": {
-                    backgroundColor: "background.default",
-                    color: "text.primary"
-                  },
-                  "& .MuiTabs-indicator": { display: "none" }
-                }}
-              >
-                <Tab icon={panelProps.titleIcon} iconPosition="start" label={panelProps.title ?? "Main"} />
-                <Tab icon={rightIcon} iconPosition="start" label={rightTitle ?? "More"} />
-              </Tabs>
-              <Divider orientation="vertical" flexItem sx={{ my: 1 }} />
-              <WButton onClick={onClose} sx={{ ...iconButtonSx, backgroundColor: "transparent" }}>
-                <CloseIcon sx={{ fontSize: 24 }} />
-              </WButton>
+            <WTabs
+              value={mobileTab}
+              tabs={[
+                { icon: panelProps.tabs?.[0]?.icon, label: panelProps.tabs?.[0]?.label ?? "Main" },
+                { icon: rightIcon, label: rightTitle ?? "More" }
+              ]}
+              onChange={setMobileTab}
+              onClose={onClose}
+            />
+            <Stack sx={{ flex: 1, overflow: "hidden", display: mobileTab === 0 ? "flex" : "none" }}>
+              <WModalContent {...panelProps} />
             </Stack>
-            <Stack sx={{ flex: 1, overflow: "hidden", display: tab === 0 ? "flex" : "none" }}>
-              <WModalContent {...panelProps} title={undefined} titleIcon={undefined} />
-            </Stack>
-            <Stack sx={{ flex: 1, overflow: "hidden", display: tab === 1 ? "flex" : "none" }}>{right}</Stack>
+            <Stack sx={{ flex: 1, overflow: "hidden", display: mobileTab === 1 ? "flex" : "none" }}>{right}</Stack>
           </>
         ) : (
           <>

@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Stack, Typography } from "@mui/material";
 import { Close as CloseIcon, Refresh as RefreshIcon, Send as SendIcon } from "@mui/icons-material";
 import { Message } from "../services/Types";
@@ -7,6 +7,7 @@ import { iconButtonSx, WButton } from "./WButton";
 import { TextInputWithButtons } from "./TextInputWithButtons";
 import { getDisplayDateTimeString } from "../common/DateUtils";
 import { StyledContainer } from "./StyledContainer";
+import { TabItem } from "./WTabs";
 
 export const Row = ({
   message,
@@ -40,15 +41,13 @@ export const Row = ({
 );
 
 export const Discussion = ({
-  titleIcon,
-  title,
+  tabs,
   messages,
   onRefresh,
   onAddMessage,
   onDeleteMessage
 }: {
-  titleIcon?: ReactElement;
-  title?: string;
+  tabs?: TabItem[];
   messages: Message[];
   onRefresh: () => void;
   onAddMessage: (name: string, text: string) => void;
@@ -69,8 +68,7 @@ export const Discussion = ({
 
   return (
     <WModalContent
-      titleIcon={titleIcon}
-      title={title}
+      tabs={tabs}
       top={
         <StyledContainer sx={{ flex: 1 }}>
           <TextInputWithButtons
