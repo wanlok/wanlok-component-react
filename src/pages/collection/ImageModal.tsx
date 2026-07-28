@@ -7,6 +7,7 @@ import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
 import { StyledContainer } from "../../components/StyledContainer";
 import { getImageBase64String, recognizeText } from "../../common/ImageUtils";
+import GoogleIcon from "../../assets/images/icons/Google.svg";
 import { ImageRegionOverlay, Region } from "./ImageRegionOverlay";
 
 const RegionThumbnail = ({ src, region }: { src: string; region: Region }) => {
@@ -74,6 +75,16 @@ const RegionRow = ({
       <WButton onClick={onDeleteClick} sx={iconButtonSx}>
         <CloseIcon sx={{ fontSize: 24 }} />
       </WButton>
+    )}
+    {!isDeletingRegion && region.text && (
+      <Stack sx={{ gap: "1px" }}>
+        <WButton
+          onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(region.text!)}`, "_blank")}
+          sx={iconButtonSx}
+        >
+          <Box component="img" src={GoogleIcon} sx={{ width: 20, height: 20 }} />
+        </WButton>
+      </Stack>
     )}
   </StyledContainer>
 );
