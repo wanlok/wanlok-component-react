@@ -16,8 +16,8 @@ export const ImageClipboardModal = ({
   <WModal
     open={open}
     onClose={onClose}
-    title="Image Clipboard"
-    bottom={<YesNoButtons yesLabel="Upload" onYesClick={onUploadButtonClick} noLabel="Cancel" onNoClick={onClose} />}
+    title="Upload Image"
+    bottom={<YesNoButtons onYesClick={onUploadButtonClick} onNoClick={onClose} />}
   >
     <Box component="img" src={src} alt="" />
   </WModal>

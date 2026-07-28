@@ -30,14 +30,18 @@ export const WModalContent = ({ titleIcon, title, top, bottom, children }: Panel
 export const WModal = ({
   open,
   onClose,
+  width,
   right,
+  rightWidth = 400,
   rightIcon,
   rightTitle,
   ...panelProps
 }: {
   open: boolean;
   onClose: () => void;
+  width?: number | string;
   right?: ReactNode;
+  rightWidth?: number;
   rightIcon?: ReactElement;
   rightTitle?: string;
 } & PanelProps) => {
@@ -62,7 +66,7 @@ export const WModal = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           flexDirection: mobile && right ? "column" : "row",
-          width: mobile ? "100vw" : right !== undefined ? 800 : 400,
+          width: mobile ? "100vw" : (width ?? (right !== undefined ? 800 : rightWidth)),
           height: mobile ? "100dvh" : undefined,
           maxHeight: mobile ? undefined : "80vh",
           overflow: "hidden",
@@ -114,7 +118,7 @@ export const WModal = ({
         ) : (
           <>
             <WModalContent {...panelProps} />
-            {right}
+            {right && <Stack sx={{ width: rightWidth }}>{right}</Stack>}
           </>
         )}
       </Stack>

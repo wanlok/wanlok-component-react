@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   ChartItem,
   CloudinaryFileInfo,
@@ -10,6 +11,7 @@ import {
   YouTubeInfo
 } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
+import { ImageModal } from "./ImageModal";
 import { TextInputWithButtons } from "../../components/TextInputWithButtons";
 import { StyledContainer } from "../../components/StyledContainer";
 import { getDocumentId } from "./useFolder";
@@ -26,12 +28,12 @@ export const RightContent = ({
   loadingCount,
   controlGroupState,
   selectedFolder,
-  setCollectionTypeId,
   deleteCollectionItem,
   updateFolder,
   updateCollectionSequences,
   addCollectionItems,
-  addCollectionFiles
+  addCollectionFiles,
+  updateCollectionFile
 }: {
   isLoading: boolean;
   charts: [string, ChartItem][];
@@ -43,16 +45,22 @@ export const RightContent = ({
   loadingCount: number;
   controlGroupState: number;
   selectedFolder: Folder | undefined;
-  setCollectionTypeId: (value: { type: string; id: string } | undefined) => void;
   deleteCollectionItem: (type: string, id: string) => Promise<CollectionCounts | undefined>;
   updateFolder: (params: { counts?: CollectionCounts; sequences?: Partial<CollectionSequences>; attributes?: CollectionAttributes }) => Promise<void>;
   updateCollectionSequences: (type: string, id: string, direction: Direction) => void;
   addCollectionItems: (collectionId: string, text: string) => Promise<CollectionCounts | undefined>;
   addCollectionFiles: (collectionId: string) => Promise<{ counts: CollectionCounts; sequences?: string[]; attributes?: CollectionAttributes } | undefined>;
+  updateCollectionFile: (id: string, name: string, attributes: { [key: string]: string }) => Promise<void>;
 }) => {
+  const [selectedFile, setSelectedFile] = useState<{ id: string; src: string; name: string; attributes: { [key: string]: string } } | null>(null);
+
   return (
     <>
       <CollectionList
+        onFileClick={(id, src, name) => {
+          const file = files.find(([fileId]) => fileId === id);
+          setSelectedFile({ id, src, name, attributes: file?.[1].attributes ?? {} });
+        }}
         isLoading={isLoading}
         charts={charts}
         files={files}
@@ -62,7 +70,6 @@ export const RightContent = ({
         youTubeShortVideos={youTubeShortVideos}
         loadingCount={isLoading ? 8 : loadingCount}
         controlGroupState={controlGroupState}
-        onDetailsButtonClick={(type, id) => setCollectionTypeId({ type, id })}
         onDeleteButtonClick={async (type, id) => {
           const counts = await deleteCollectionItem(type, id);
           if (counts) {
@@ -118,6 +125,19 @@ export const RightContent = ({
           />
         </StyledContainer>
       )}
+      <ImageModal
+        open={Boolean(selectedFile)}
+        src={selectedFile?.src ?? ""}
+        name={selectedFile?.name ?? ""}
+        attributes={selectedFile?.attributes ?? {}}
+        folderAttributes={selectedFolder?.attributes ?? []}
+        onSaveButtonClick={async (name, attributes) => {
+          if (selectedFile) {
+            await updateCollectionFile(selectedFile.id, name, attributes);
+          }
+        }}
+        onClose={() => setSelectedFile(null)}
+      />
     </>
   );
 };

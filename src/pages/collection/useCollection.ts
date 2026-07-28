@@ -241,6 +241,18 @@ export const useCollection = (
     return counts;
   };
 
+  const updateCollectionFile = async (id: string, name: string, attributes: { [key: string]: string }) => {
+    if (collectionDocument && documentId) {
+      const newCollectionDocument = {
+        ...collectionDocument,
+        files: { ...collectionDocument.files, [id]: { ...collectionDocument.files[id], name, attributes } }
+      };
+      const docRef = doc(db, collectionName, documentId);
+      await updateDoc(docRef, newCollectionDocument);
+      setCollectionDocumentAndRef(newCollectionDocument);
+    }
+  };
+
   const addCollectionBlob = async (collectionId: string, blob: Blob, name: string) => {
     setLoadingCount((prev) => prev + 1);
     return new Promise<CollectionCounts>((resolve) => {
@@ -314,6 +326,7 @@ export const useCollection = (
     updateCollectionAttributes,
     renameCollectionAttributeKey,
     updateCollectionSequences,
+    updateCollectionFile,
     addCollectionBlob,
     deleteCollection,
     renameCollection,

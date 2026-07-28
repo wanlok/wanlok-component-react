@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { FolderModal } from "./FolderModal";
-import { AttributeModal } from "./AttributeModal";
 import { ResetOrderConfirmationModal } from "./ResetOrderConfirmationModal";
 import { ImageClipboardModal } from "./ImageClipboardModal";
 import { useImageClipboard } from "./useImageClipboard";
@@ -44,7 +43,7 @@ export const CollectionPage = () => {
     addCollectionItems,
     addCollectionFiles,
     addCollectionBlob,
-    updateCollectionAttributes,
+    updateCollectionFile,
     renameCollectionAttributeKey,
     renameCollection,
     updateCollectionSequences,
@@ -65,7 +64,6 @@ export const CollectionPage = () => {
   const [controlGroupState, setControlGroupState] = useState(0);
   const [folderModalOpen, setFolderModalOpen] = useState(false);
   const [resetOrderModalOpen, setResetOrderModalOpen] = useState(false);
-  const [collectionTypeId, setCollectionTypeId] = useState<{ type: string; id: string } | undefined>(undefined);
   const {
     attributeKeys,
     attributeValues,
@@ -144,7 +142,6 @@ export const CollectionPage = () => {
           }
         }}
         onAttributeValueChange={onAttributeValueChange}
-        onAttributeButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
         onEditFolderButtonClick={() => setFolderModalOpen(true)}
         onDeleteButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
         onRearrangeButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
@@ -165,13 +162,13 @@ export const CollectionPage = () => {
         youTubeShortVideos={filteredYouTubeShortVideos}
         controlGroupState={controlGroupState}
         selectedFolder={selectedFolder}
-        setCollectionTypeId={setCollectionTypeId}
         deleteCollectionItem={deleteCollectionItem}
         updateFolder={updateFolder}
         updateCollectionSequences={updateCollectionSequences}
         loadingCount={loadingCount}
         addCollectionItems={addCollectionItems}
         addCollectionFiles={addCollectionFiles}
+        updateCollectionFile={updateCollectionFile}
       />
       <FolderModal
         open={folderModalOpen}
@@ -200,19 +197,7 @@ export const CollectionPage = () => {
           await updateFolder({ name: newFolderName, attributes: newAttributes });
         }}
       />
-      <AttributeModal
-        charts={charts}
-        files={files}
-        hyperlinks={hyperlinks}
-        steam={steam}
-        youTubeRegularVideos={youTubeRegularVideos}
-        youTubeShortVideos={youTubeShortVideos}
-        collectionTypeId={collectionTypeId}
-        setCollectionTypeId={setCollectionTypeId}
-        selectedFolder={selectedFolder}
-        updateCollectionAttributes={updateCollectionAttributes}
-      />
-      <ResetOrderConfirmationModal
+<ResetOrderConfirmationModal
         open={resetOrderModalOpen}
         onClose={() => setResetOrderModalOpen(false)}
         onConfirm={resetFolderSequences}

@@ -56,7 +56,7 @@ export const ProjectModal = ({
         />
       }
     >
-      <Stack sx={{ gap: 1, p: 2 }}>
+      <Stack sx={{ gap: "1px", p: 2 }}>
         {project?.created_at && (
           <Stack sx={{ pb: 1 }}>
             <Typography variant="body2" sx={{ textAlign: "right" }}>
@@ -66,12 +66,7 @@ export const ProjectModal = ({
           </Stack>
         )}
         <StyledContainer sx={{ p: 1 }}>
-          <TextInput
-            label="Name"
-            value={name}
-            onChange={(value) => setName(value)}
-            inputPropsSx={{ flex: 1 }}
-          />
+          <TextInput label="Name" value={name} onChange={(value) => setName(value)} inputPropsSx={{ flex: 1 }} />
         </StyledContainer>
         <StyledContainer sx={{ p: 1 }}>
           <Stack sx={{ gap: 1 }}>

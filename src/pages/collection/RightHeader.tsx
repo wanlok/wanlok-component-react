@@ -5,8 +5,7 @@ import {
   Download as DownloadIcon,
   Edit as EditIcon,
   Undo as UndoIcon,
-  SwapHoriz as SwapHorizIcon,
-  ViewList as ViewListIcon
+  SwapHoriz as SwapHorizIcon
 } from "@mui/icons-material";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { OneLineTypography } from "../../components/OneLineTypography";
@@ -74,7 +73,6 @@ const Bottom = ({
   selectedAttributeValue,
   onAttributeKeyChange,
   onAttributeValueChange,
-  onAttributeButtonClick,
   onRearrangeButtonClick
 }: {
   controlGroupState: number;
@@ -84,7 +82,6 @@ const Bottom = ({
   selectedAttributeValue: string;
   onAttributeKeyChange: (value: string) => void;
   onAttributeValueChange: (value: string) => void;
-  onAttributeButtonClick: () => void;
   onRearrangeButtonClick: () => void;
 }) => {
   return (
@@ -101,9 +98,6 @@ const Bottom = ({
       </StyledContainer>
       <Stack sx={{ flexDirection: "row", gap: 1 }}>
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          <WButton isActivated={controlGroupState === 1} onClick={onAttributeButtonClick} sx={iconButtonSx}>
-            <ViewListIcon sx={{ fontSize: 24 }} />
-          </WButton>
           <WButton
             isActivated={controlGroupState === 2}
             disabled={Boolean(selectedAttributeValue)}
@@ -129,7 +123,6 @@ export const RightHeader = ({
   selectedAttributeValue,
   onAttributeKeyChange,
   onAttributeValueChange,
-  onAttributeButtonClick,
   onEditFolderButtonClick,
   onDeleteButtonClick,
   onRearrangeButtonClick,
@@ -146,7 +139,6 @@ export const RightHeader = ({
   selectedAttributeValue: string;
   onAttributeKeyChange: (value: string) => void;
   onAttributeValueChange: (value: string) => void;
-  onAttributeButtonClick: () => void;
   onEditFolderButtonClick: () => void;
   onDeleteButtonClick: () => void;
   onRearrangeButtonClick: () => void;
@@ -178,7 +170,6 @@ export const RightHeader = ({
           selectedAttributeValue={selectedAttributeValue}
           onAttributeKeyChange={onAttributeKeyChange}
           onAttributeValueChange={onAttributeValueChange}
-          onAttributeButtonClick={onAttributeButtonClick}
           onRearrangeButtonClick={onRearrangeButtonClick}
         />
       )
