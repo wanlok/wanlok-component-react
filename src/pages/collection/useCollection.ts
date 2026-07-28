@@ -139,36 +139,6 @@ export const useCollection = (
     });
   };
 
-  const updateCollectionAttributes = async (
-    type: string,
-    id: string,
-    attributes: {
-      [key: string]: string;
-    }
-  ) => {
-    if (collectionDocument && isCollectionKey(type)) {
-      const newCollectionDocument = { ...collectionDocument };
-      if (type === "files") {
-        newCollectionDocument.files = {
-          ...collectionDocument.files,
-          [id]: { ...collectionDocument.files[id], attributes }
-        };
-      } else if (type === "youtube_regular") {
-        newCollectionDocument.youtube_regular = {
-          ...collectionDocument.youtube_regular,
-          [id]: { ...collectionDocument.youtube_regular[id], attributes }
-        };
-      } else if (type === "youtube_shorts") {
-        newCollectionDocument.youtube_shorts = {
-          ...collectionDocument.youtube_shorts,
-          [id]: { ...collectionDocument.youtube_shorts[id], attributes }
-        };
-      }
-      const docRef = doc(db, collectionName, documentId!);
-      await updateDoc(docRef, newCollectionDocument);
-      setCollectionDocumentAndRef(newCollectionDocument);
-    }
-  };
 
   const renameCollectionAttributeKey = async (oldKey: string, newKey: string) => {
     if (!collectionDocument || !documentId) {
@@ -323,7 +293,6 @@ export const useCollection = (
     youTubeShortVideos: toList(collectionDocument?.youtube_shorts, collectionSequences?.youtube_shorts),
     addCollectionItems,
     addCollectionFiles,
-    updateCollectionAttributes,
     renameCollectionAttributeKey,
     updateCollectionSequences,
     updateCollectionFile,
