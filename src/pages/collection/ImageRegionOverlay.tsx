@@ -1,4 +1,4 @@
-import { RefObject, useRef, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 import { alpha, Box, Stack, useTheme } from "@mui/material";
 
 export type Region = {
@@ -95,16 +95,32 @@ export const ImageRegionOverlay = ({
   const interaction = useRef<Interaction | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
-  const getSvgPoint = (event: React.MouseEvent) => {
+  useEffect(() => {
+    const svg = svgRef.current;
+    if (!svg) {
+      return;
+    }
+    const onTouchMove = (e: TouchEvent) => {
+      if (interaction.current) {
+        e.preventDefault();
+      }
+    };
+    svg.addEventListener("touchmove", onTouchMove, { passive: false });
+    return () => {
+      svg.removeEventListener("touchmove", onTouchMove);
+    };
+  }, []);
+
+  const getSvgPoint = (clientX: number, clientY: number) => {
     const bounds = svgRef.current!.getBoundingClientRect();
-    return { x: event.clientX - bounds.left, y: event.clientY - bounds.top };
+    return { x: clientX - bounds.left, y: clientY - bounds.top };
   };
 
-  const onMouseMove = (event: React.MouseEvent) => {
+  const handleMove = (clientX: number, clientY: number) => {
     if (!interaction.current) {
       return;
     }
-    const { x, y } = getSvgPoint(event);
+    const { x, y } = getSvgPoint(clientX, clientY);
     if (interaction.current.type === "drag") {
       const { regionId, startMouseX, startMouseY, startX, startY } = interaction.current;
       const dx = x - startMouseX;
@@ -122,17 +138,21 @@ export const ImageRegionOverlay = ({
     }
   };
 
-  const onMouseUp = () => {
+  const handleEnd = () => {
     if (interaction.current) {
       onRegionMouseUp?.(interaction.current.regionId);
     }
     interaction.current = null;
   };
 
-  const onRegionMouseDown = (event: React.MouseEvent, regionId: string) => {
-    event.stopPropagation();
+  const onMouseMove = (event: React.MouseEvent) => handleMove(event.clientX, event.clientY);
+  const onTouchMove = (event: React.TouchEvent) => handleMove(event.touches[0].clientX, event.touches[0].clientY);
+  const onMouseUp = handleEnd;
+  const onTouchEnd = handleEnd;
+
+  const handleRegionPointerDown = (clientX: number, clientY: number, regionId: string) => {
     setSelectedId(regionId);
-    const { x, y } = getSvgPoint(event);
+    const { x, y } = getSvgPoint(clientX, clientY);
     const region = regions.find((r) => r.id === regionId)!;
     interaction.current = {
       type: "drag",
@@ -144,9 +164,18 @@ export const ImageRegionOverlay = ({
     };
   };
 
-  const onHandleMouseDown = (event: React.MouseEvent, regionId: string, handle: Handle) => {
+  const onRegionMouseDown = (event: React.MouseEvent, regionId: string) => {
     event.stopPropagation();
-    const { x, y } = getSvgPoint(event);
+    handleRegionPointerDown(event.clientX, event.clientY, regionId);
+  };
+
+  const onRegionTouchStart = (event: React.TouchEvent, regionId: string) => {
+    event.stopPropagation();
+    handleRegionPointerDown(event.touches[0].clientX, event.touches[0].clientY, regionId);
+  };
+
+  const handleHandlePointerDown = (clientX: number, clientY: number, regionId: string, handle: Handle) => {
+    const { x, y } = getSvgPoint(clientX, clientY);
     const region = regions.find((r) => r.id === regionId)!;
     interaction.current = {
       type: "resize",
@@ -158,6 +187,16 @@ export const ImageRegionOverlay = ({
     };
   };
 
+  const onHandleMouseDown = (event: React.MouseEvent, regionId: string, handle: Handle) => {
+    event.stopPropagation();
+    handleHandlePointerDown(event.clientX, event.clientY, regionId, handle);
+  };
+
+  const onHandleTouchStart = (event: React.TouchEvent, regionId: string, handle: Handle) => {
+    event.stopPropagation();
+    handleHandlePointerDown(event.touches[0].clientX, event.touches[0].clientY, regionId, handle);
+  };
+
   return (
     <Stack ref={scrollRef} sx={{ height: "100%", overflow: "auto", alignItems: "flex-start", backgroundColor: "common.black" }}>
       <Box sx={{ position: "relative", display: "inline-block", lineHeight: 0 }}>
@@ -167,8 +206,11 @@ export const ImageRegionOverlay = ({
           ref={svgRef}
           sx={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "visible" }}
           onMouseDown={() => setSelectedId(null)}
+          onTouchStart={() => setSelectedId(null)}
           onMouseMove={onMouseMove}
+          onTouchMove={onTouchMove}
           onMouseUp={onMouseUp}
+          onTouchEnd={onTouchEnd}
           onMouseLeave={onMouseUp}
         >
           {regions.map((region, i) => {
@@ -206,6 +248,7 @@ export const ImageRegionOverlay = ({
                   strokeWidth={1}
                   style={{ cursor: "move" }}
                   onMouseDown={(e) => onRegionMouseDown(e, region.id)}
+                  onTouchStart={(e) => onRegionTouchStart(e, region.id)}
                 />
                 {isSelected &&
                   HANDLES.map((handle) => {
@@ -220,6 +263,7 @@ export const ImageRegionOverlay = ({
                         fill={palette.common.black}
                         style={{ cursor: HANDLE_CURSORS[handle] }}
                         onMouseDown={(e) => onHandleMouseDown(e, region.id, handle)}
+                        onTouchStart={(e) => onHandleTouchStart(e, region.id, handle)}
                       />
                     );
                   })}
