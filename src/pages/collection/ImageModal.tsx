@@ -40,9 +40,13 @@ export const ImageModal = ({
       open={open}
       onClose={onClose}
       width="80vw"
+      height="80vh"
       tabs={[{ icon: <ImageIcon sx={{ fontSize: 24 }} />, label: "Image" }]}
       hideLeftLabel
-      rightTabs={[{ icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" }, { icon: <RemoveRedEyeIcon sx={{ fontSize: 24 }} />, label: "AI" }]}
+      rightTabs={[
+        { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
+        { icon: <RemoveRedEyeIcon sx={{ fontSize: 24 }} />, label: "AI" }
+      ]}
       rightTab={tab}
       onRightTabChange={setTab}
       right={

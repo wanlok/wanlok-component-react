@@ -25,6 +25,7 @@ export const WModal = ({
   open,
   onClose,
   width,
+  height,
   right,
   rightWidth = 400,
   rightIcon,
@@ -38,6 +39,7 @@ export const WModal = ({
   open: boolean;
   onClose: () => void;
   width?: number | string;
+  height?: number | string;
   right?: ReactNode;
   rightWidth?: number;
   rightIcon?: ReactElement;
@@ -73,7 +75,7 @@ export const WModal = ({
           transform: "translate(-50%, -50%)",
           flexDirection: mobile && right ? "column" : "row",
           width: mobile ? "100vw" : (width ?? (right !== undefined ? 800 : rightWidth)),
-          height: mobile ? "100dvh" : undefined,
+          height: mobile ? "100dvh" : height,
           maxHeight: mobile ? undefined : "80vh",
           overflow: "hidden",
           gap: mobile && right ? 0 : "1px",
