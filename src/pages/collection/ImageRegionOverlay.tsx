@@ -199,7 +199,7 @@ export const ImageRegionOverlay = ({
 
   return (
     <Stack ref={scrollRef} sx={{ height: "100%", overflow: "auto", alignItems: "flex-start", backgroundColor: "common.black" }}>
-      <Box sx={{ position: "relative", display: "inline-block", lineHeight: 0 }}>
+      <Box sx={{ position: "relative", display: "inline-block", lineHeight: 0, m: "auto" }}>
         <Box component="img" src={src} alt={alt} sx={{ display: "block" }} />
         <Box
           component="svg"
