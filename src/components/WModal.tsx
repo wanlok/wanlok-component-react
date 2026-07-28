@@ -6,14 +6,15 @@ type PanelProps = {
   tabs?: TabItem[];
   tab?: number;
   onTabChange?: (tab: number) => void;
+  onClose?: () => void;
   top?: ReactNode;
   bottom?: ReactNode;
   children?: ReactNode;
 };
 
-export const WModalContent = ({ tabs, tab = 0, onTabChange, top, bottom, children }: PanelProps) => (
+export const WModalContent = ({ tabs, tab = 0, onTabChange, onClose, top, bottom, children }: PanelProps) => (
   <Stack sx={{ flex: 1, overflow: "hidden", backgroundColor: "background.default" }}>
-    {tabs && tabs.length > 0 && <WTabs value={tab} tabs={tabs} onChange={onTabChange ?? (() => {})} />}
+    {tabs && tabs.length > 0 && <WTabs value={tab} tabs={tabs} onChange={onTabChange ?? (() => {})} onClose={onClose} />}
     {top && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{top}</Stack>}
     <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>{children}</Stack>
     {bottom && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{bottom}</Stack>}
@@ -28,6 +29,9 @@ export const WModal = ({
   rightWidth = 400,
   rightIcon,
   rightTitle,
+  rightTabs,
+  rightTab,
+  onRightTabChange,
   ...panelProps
 }: {
   open: boolean;
@@ -37,10 +41,17 @@ export const WModal = ({
   rightWidth?: number;
   rightIcon?: ReactElement;
   rightTitle?: string;
+  rightTabs?: TabItem[];
+  rightTab?: number;
+  onRightTabChange?: (tab: number) => void;
 } & PanelProps) => {
   const { palette, breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const [mobileTab, setMobileTab] = useState(0);
+
+  const leftTabs = panelProps.tabs ?? [{ label: "Main" }];
+  const allRightTabs = rightTabs ?? [{ icon: rightIcon, label: rightTitle ?? "More" }];
+  const leftTabCount = leftTabs.length;
 
   return (
     <Modal
@@ -71,25 +82,34 @@ export const WModal = ({
         }}
       >
         {mobile && right ? (
-          <>
-            <WTabs
-              value={mobileTab}
-              tabs={[
-                { icon: panelProps.tabs?.[0]?.icon, label: panelProps.tabs?.[0]?.label ?? "Main" },
-                { icon: rightIcon, label: rightTitle ?? "More" }
-              ]}
-              onChange={setMobileTab}
-              onClose={onClose}
-            />
-            <Stack sx={{ flex: 1, overflow: "hidden", display: mobileTab === 0 ? "flex" : "none" }}>
-              <WModalContent {...panelProps} />
-            </Stack>
-            <Stack sx={{ flex: 1, overflow: "hidden", display: mobileTab === 1 ? "flex" : "none" }}>{right}</Stack>
-          </>
+          <WModalContent
+            tabs={[...leftTabs, ...allRightTabs]}
+            tab={mobileTab}
+            onTabChange={(newTab) => {
+              setMobileTab(newTab);
+              if (newTab >= leftTabCount) {
+                onRightTabChange?.(newTab - leftTabCount);
+              } else {
+                panelProps.onTabChange?.(newTab);
+              }
+            }}
+            onClose={onClose}
+            top={mobileTab < leftTabCount ? panelProps.top : undefined}
+            bottom={mobileTab < leftTabCount ? panelProps.bottom : undefined}
+          >
+            {mobileTab < leftTabCount ? panelProps.children : right}
+          </WModalContent>
         ) : (
           <>
             <WModalContent {...panelProps} />
-            {right && <Stack sx={{ width: rightWidth }}>{right}</Stack>}
+            {right && (
+              <Stack sx={{ width: rightWidth }}>
+                {rightTabs && rightTabs.length > 0 && (
+                  <WTabs value={rightTab ?? 0} tabs={rightTabs} onChange={onRightTabChange ?? (() => {})} />
+                )}
+                {right}
+              </Stack>
+            )}
           </>
         )}
       </Stack>

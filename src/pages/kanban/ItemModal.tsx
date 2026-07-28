@@ -67,6 +67,7 @@ export const ItemModal = ({
       open={true}
       onClose={onClose}
       tabs={[{ icon: <AssignmentIcon sx={{ fontSize: 24 }} />, label: isEditing ? "Edit Task" : "Task" }]}
+      rightTabs={[{ icon: <ChatIcon sx={{ fontSize: 24 }} />, label: "Discussion" }]}
       top={
         <StyledContainer sx={{ flex: 1, p: 1 }}>
           <SelectInput
@@ -107,15 +108,12 @@ export const ItemModal = ({
       }
       right={
         <Discussion
-          tabs={[{ icon: <ChatIcon sx={{ fontSize: 24 }} />, label: `Discussion (${kanbanItem.messages.length} ${kanbanItem.messages.length === 1 ? "Message" : "Messages"})` }]}
           messages={kanbanItem.messages}
           onRefresh={onRefresh}
           onAddMessage={onAddMessage}
           onDeleteMessage={onDeleteMessage}
         />
       }
-      rightIcon={<ChatIcon sx={{ fontSize: 24 }} />}
-      rightTitle="Discussion"
     >
       <Stack sx={{ p: 2 }}>
         <Typography variant="body2" sx={{ textAlign: "right" }}>

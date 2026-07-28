@@ -7,7 +7,6 @@ import { iconButtonSx, WButton } from "./WButton";
 import { TextInputWithButtons } from "./TextInputWithButtons";
 import { getDisplayDateTimeString } from "../common/DateUtils";
 import { StyledContainer } from "./StyledContainer";
-import { TabItem } from "./WTabs";
 
 export const Row = ({
   message,
@@ -41,13 +40,11 @@ export const Row = ({
 );
 
 export const Discussion = ({
-  tabs,
   messages,
   onRefresh,
   onAddMessage,
   onDeleteMessage
 }: {
-  tabs?: TabItem[];
   messages: Message[];
   onRefresh: () => void;
   onAddMessage: (name: string, text: string) => void;
@@ -68,7 +65,6 @@ export const Discussion = ({
 
   return (
     <WModalContent
-      tabs={tabs}
       top={
         <StyledContainer sx={{ flex: 1 }}>
           <TextInputWithButtons

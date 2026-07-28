@@ -19,7 +19,7 @@ export const WTabs = ({
   onChange: (value: number) => void;
   onClose?: () => void;
 }) => (
-  <Stack sx={{ flexDirection: "row", alignItems: "center" }}>
+  <Stack sx={{ flexDirection: "row", alignItems: "center", backgroundColor: "common.white" }}>
     <Tabs
       value={value}
       variant="fullWidth"

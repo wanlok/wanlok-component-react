@@ -39,11 +39,11 @@ export const ImageModal = ({
       open={open}
       onClose={onClose}
       width="80vw"
+      rightTabs={[{ label: "Edit Image" }, { label: "Recognition" }]}
+      rightTab={tab}
+      onRightTabChange={setTab}
       right={
         <WModalContent
-          tabs={[{ label: "Edit Image" }, { label: "Recognition" }]}
-          tab={tab}
-          onTabChange={setTab}
           bottom={
             tab === 0 ? (
               <YesNoButtons
