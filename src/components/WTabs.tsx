@@ -41,6 +41,7 @@ export const WTabs = ({
           backgroundColor: "background.default",
           color: "text.primary"
         },
+        "& .MuiTab-root:not(:last-child)": { borderRightWidth: 1, borderRightStyle: "solid", borderColor: "divider" },
         "& .MuiTabs-indicator": { display: "none" }
       }}
     >
@@ -50,7 +51,7 @@ export const WTabs = ({
     </Tabs>
     {onClose && (
       <>
-        <Divider orientation="vertical" flexItem sx={{ my: 1 }} />
+        <Divider orientation="vertical" flexItem />
         <WButton onClick={onClose} sx={{ ...iconButtonSx, backgroundColor: "transparent" }}>
           <CloseIcon sx={{ fontSize: 24 }} />
         </WButton>
