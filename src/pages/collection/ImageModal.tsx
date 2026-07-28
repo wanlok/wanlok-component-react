@@ -40,7 +40,7 @@ export const ImageModal = ({
       open={open}
       onClose={onClose}
       width="80vw"
-      height="80vh"
+      height="80dvh"
       tabs={[{ icon: <ImageIcon sx={{ fontSize: 24 }} />, label: "Image" }]}
       hideLeftLabel
       rightTabs={[
