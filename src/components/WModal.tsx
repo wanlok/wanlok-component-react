@@ -32,6 +32,7 @@ export const WModal = ({
   rightTabs,
   rightTab,
   onRightTabChange,
+  hideLeftLabel,
   ...panelProps
 }: {
   open: boolean;
@@ -44,6 +45,7 @@ export const WModal = ({
   rightTabs?: TabItem[];
   rightTab?: number;
   onRightTabChange?: (tab: number) => void;
+  hideLeftLabel?: boolean;
 } & PanelProps) => {
   const { palette, breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
@@ -101,7 +103,7 @@ export const WModal = ({
           </WModalContent>
         ) : (
           <>
-            <WModalContent {...panelProps} />
+            <WModalContent {...panelProps} tabs={hideLeftLabel ? undefined : panelProps.tabs} />
             {right && (
               <Stack sx={{ width: rightWidth }}>
                 {rightTabs && rightTabs.length > 0 && (

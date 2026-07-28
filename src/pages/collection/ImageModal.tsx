@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Box, Stack } from "@mui/material";
+import { Image as ImageIcon, RemoveRedEye as RemoveRedEyeIcon, ViewList as ViewListIcon } from "@mui/icons-material";
 import { WModal, WModalContent } from "../../components/WModal";
 import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
@@ -39,7 +40,9 @@ export const ImageModal = ({
       open={open}
       onClose={onClose}
       width="80vw"
-      rightTabs={[{ label: "Edit Image" }, { label: "Recognition" }]}
+      tabs={[{ icon: <ImageIcon sx={{ fontSize: 24 }} />, label: "Image" }]}
+      hideLeftLabel
+      rightTabs={[{ icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" }, { icon: <RemoveRedEyeIcon sx={{ fontSize: 24 }} />, label: "AI" }]}
       rightTab={tab}
       onRightTabChange={setTab}
       right={
