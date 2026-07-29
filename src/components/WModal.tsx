@@ -79,7 +79,7 @@ export const WModal = ({
           maxHeight: mobile ? undefined : "80dvh",
           overflow: "hidden",
           gap: mobile && right ? 0 : "1px",
-          backgroundColor: mobile && right ? "common.white" : undefined,
+          backgroundColor: right ? "common.white" : undefined,
           borderWidth: 1,
           borderStyle: "solid",
           borderColor: "divider"
