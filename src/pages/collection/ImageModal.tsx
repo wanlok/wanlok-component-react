@@ -1,6 +1,12 @@
 import { useEffect, useRef, useState } from "react";
-import { Avatar, Box, Divider, Stack, Typography } from "@mui/material";
-import { Add as AddIcon, Close as CloseIcon, Image as ImageIcon, ViewList as ViewListIcon } from "@mui/icons-material";
+import { Avatar, Box, Stack, Typography } from "@mui/material";
+import {
+  Add as AddIcon,
+  Close as CloseIcon,
+  CropFree as CropFreeIcon,
+  Image as ImageIcon,
+  ViewList as ViewListIcon
+} from "@mui/icons-material";
 import { WModal, WModalContent } from "../../components/WModal";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { YesNoButtons } from "../../components/YesNoButtons";
@@ -11,6 +17,8 @@ import { getImageBase64String, LANGUAGE_ITEMS, recognizeText } from "../../commo
 import GoogleIcon from "../../assets/images/icons/google.png";
 import BingIcon from "../../assets/images/icons/bing.png";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
+
+const OCR_ENGINE_ITEMS = [{ label: "Tesseract OCR", value: "tesseract" }];
 
 const RegionThumbnail = ({ src, region }: { src: string; region: TextRegion }) => {
   const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
@@ -42,7 +50,6 @@ const RegionThumbnail = ({ src, region }: { src: string; region: TextRegion }) =
     </Box>
   );
 };
-
 
 const RegionRow = ({
   src,
@@ -99,31 +106,17 @@ const RegionRow = ({
 );
 
 const Details = ({
-  src,
   editedName,
   onEditedNameChange,
   editedAttributes,
   onEditedAttributesChange,
-  folderAttributes,
-  regions,
-  onRegionsChange,
-  onAddRegionClick,
-  isDeletingRegion,
-  onIsDeletingRegionChange,
-  onRegionLanguageChange
+  folderAttributes
 }: {
-  src: string;
   editedName: string;
   onEditedNameChange: (name: string) => void;
   editedAttributes: { [key: string]: string };
   onEditedAttributesChange: (attributes: { [key: string]: string }) => void;
   folderAttributes: { name: string }[];
-  regions: TextRegion[];
-  onRegionsChange: (regions: TextRegion[]) => void;
-  onAddRegionClick: () => void;
-  isDeletingRegion: boolean;
-  onIsDeletingRegionChange: (isDeleting: boolean) => void;
-  onRegionLanguageChange: (regionId: string, language: string) => void;
 }) => (
   <Stack sx={{ p: 2, gap: 2 }}>
     <Stack sx={{ gap: "1px" }}>
@@ -141,37 +134,34 @@ const Details = ({
         </StyledContainer>
       ))}
     </Stack>
-    <Divider />
-    <Stack sx={{ gap: 1 }}>
-      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-        <Typography variant="body1" sx={{ flex: 1, alignSelf: "center" }}>
-          {`Regions (${regions.length})`}
-        </Typography>
-        <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
-          <AddIcon sx={{ fontSize: 24 }} />
-        </WButton>
-        <WButton
-          isActivated={isDeletingRegion}
-          onClick={() => onIsDeletingRegionChange(!isDeletingRegion)}
-          sx={iconButtonSx}
-        >
-          <CloseIcon sx={{ fontSize: 24 }} />
-        </WButton>
-      </Stack>
-      <Stack sx={{ gap: "1px" }}>
-        {regions.map((region, i) => (
-          <RegionRow
-            key={region.id}
-            src={src}
-            region={region}
-            index={i}
-            isDeletingRegion={isDeletingRegion}
-            onDeleteClick={() => onRegionsChange(regions.filter((r) => r.id !== region.id))}
-            onLanguageChange={(language) => onRegionLanguageChange(region.id, language)}
-          />
-        ))}
-      </Stack>
-    </Stack>
+  </Stack>
+);
+
+const Recognitions = ({
+  src,
+  regions,
+  onRegionsChange,
+  isDeletingRegion,
+  onRegionLanguageChange
+}: {
+  src: string;
+  regions: TextRegion[];
+  onRegionsChange: (regions: TextRegion[]) => void;
+  isDeletingRegion: boolean;
+  onRegionLanguageChange: (regionId: string, language: string) => void;
+}) => (
+  <Stack sx={{ p: 2, gap: "1px" }}>
+    {regions.map((region, i) => (
+      <RegionRow
+        key={region.id}
+        src={src}
+        region={region}
+        index={i}
+        isDeletingRegion={isDeletingRegion}
+        onDeleteClick={() => onRegionsChange(regions.filter((r) => r.id !== region.id))}
+        onLanguageChange={(language) => onRegionLanguageChange(region.id, language)}
+      />
+    ))}
   </Stack>
 );
 
@@ -198,6 +188,8 @@ export const ImageModal = ({
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
   const [regions, setRegions] = useState<TextRegion[]>(textRegions);
   const [isDeletingRegion, setIsDeletingRegion] = useState(false);
+  const [selectedTab, setSelectedTab] = useState(0);
+  const [selectedOcrEngine, setSelectedOcrEngine] = useState("tesseract");
   const imageCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageScrollRef = useRef<HTMLDivElement>(null);
 
@@ -269,9 +261,35 @@ export const ImageModal = ({
       height="80dvh"
       tabs={[{ icon: <ImageIcon sx={{ fontSize: 24 }} />, label: "Image" }]}
       hideLeftLabel
-      rightTabs={[{ icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" }]}
+      rightTabs={[
+        { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
+        { icon: <CropFreeIcon sx={{ fontSize: 24 }} />, label: "Recognitions" }
+      ]}
+      rightTab={selectedTab}
+      onRightTabChange={setSelectedTab}
       right={
         <WModalContent
+          top={
+            selectedTab === 1 ? (
+              <>
+                <Stack sx={{ flex: 1, p: 1 }}>
+                  <SelectInput items={OCR_ENGINE_ITEMS} value={selectedOcrEngine} onChange={setSelectedOcrEngine} />
+                </Stack>
+                <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
+                  <AddIcon sx={{ fontSize: 24 }} />
+                </WButton>
+                <WButton
+                  isActivated={isDeletingRegion}
+                  onClick={() => setIsDeletingRegion(!isDeletingRegion)}
+                  sx={iconButtonSx}
+                >
+                  <CloseIcon sx={{ fontSize: 24 }} />
+                </WButton>
+              </>
+            ) : (
+              <></>
+            )
+          }
           bottom={
             <YesNoButtons
               yesLabel="Save"
@@ -279,25 +297,28 @@ export const ImageModal = ({
                 onSaveButtonClick(editedName, editedAttributes, regions);
                 onClose();
               }}
-              noLabel="Cancel"
+              noLabel="Close"
               onNoClick={onClose}
             />
           }
         >
-          <Details
-            src={src}
-            editedName={editedName}
-            onEditedNameChange={setEditedName}
-            editedAttributes={editedAttributes}
-            onEditedAttributesChange={setEditedAttributes}
-            folderAttributes={folderAttributes}
-            regions={regions}
-            onRegionsChange={setRegions}
-            onAddRegionClick={onAddRegionClick}
-            isDeletingRegion={isDeletingRegion}
-            onIsDeletingRegionChange={setIsDeletingRegion}
-            onRegionLanguageChange={onRegionLanguageChange}
-          />
+          {selectedTab === 0 ? (
+            <Details
+              editedName={editedName}
+              onEditedNameChange={setEditedName}
+              editedAttributes={editedAttributes}
+              onEditedAttributesChange={setEditedAttributes}
+              folderAttributes={folderAttributes}
+            />
+          ) : (
+            <Recognitions
+              src={src}
+              regions={regions}
+              onRegionsChange={setRegions}
+              isDeletingRegion={isDeletingRegion}
+              onRegionLanguageChange={onRegionLanguageChange}
+            />
+          )}
         </WModalContent>
       }
     >
