@@ -69,10 +69,21 @@ interface ParentInfo {
   attributes?: { [key: string]: string };
 }
 
+export interface TextRegion {
+  id: string;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  text?: string;
+  language?: string;
+}
+
 export interface CloudinaryFileInfo extends ParentInfo {
   name: string;
   mime_type: string;
   url: string;
+  textRegions?: TextRegion[];
 }
 
 export interface SteamInfo extends ParentInfo {

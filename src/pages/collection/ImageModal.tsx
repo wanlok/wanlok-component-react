@@ -10,9 +10,9 @@ import { StyledContainer } from "../../components/StyledContainer";
 import { getImageBase64String, LANGUAGE_ITEMS, recognizeText } from "../../common/ImageUtils";
 import GoogleIcon from "../../assets/images/icons/google.png";
 import BingIcon from "../../assets/images/icons/bing.png";
-import { ImageRegionOverlay, Region } from "./ImageRegionOverlay";
+import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
 
-const RegionThumbnail = ({ src, region }: { src: string; region: Region }) => {
+const RegionThumbnail = ({ src, region }: { src: string; region: TextRegion }) => {
   const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
 
   return (
@@ -53,7 +53,7 @@ const RegionRow = ({
   onLanguageChange
 }: {
   src: string;
-  region: Region;
+  region: TextRegion;
   index: number;
   isDeletingRegion: boolean;
   onDeleteClick: () => void;
@@ -118,8 +118,8 @@ const Details = ({
   editedAttributes: { [key: string]: string };
   onEditedAttributesChange: (attributes: { [key: string]: string }) => void;
   folderAttributes: { name: string }[];
-  regions: Region[];
-  onRegionsChange: (regions: Region[]) => void;
+  regions: TextRegion[];
+  onRegionsChange: (regions: TextRegion[]) => void;
   onAddRegionClick: () => void;
   isDeletingRegion: boolean;
   onIsDeletingRegionChange: (isDeleting: boolean) => void;
@@ -180,6 +180,7 @@ export const ImageModal = ({
   src,
   name,
   attributes,
+  textRegions,
   folderAttributes,
   onSaveButtonClick,
   onClose
@@ -188,13 +189,14 @@ export const ImageModal = ({
   src: string;
   name: string;
   attributes: { [key: string]: string };
+  textRegions: TextRegion[];
   folderAttributes: { name: string }[];
-  onSaveButtonClick: (name: string, attributes: { [key: string]: string }) => void;
+  onSaveButtonClick: (name: string, attributes: { [key: string]: string }, textRegions: TextRegion[]) => void;
   onClose: () => void;
 }) => {
   const [editedName, setEditedName] = useState(name);
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
-  const [regions, setRegions] = useState<Region[]>([]);
+  const [regions, setRegions] = useState<TextRegion[]>(textRegions);
   const [isDeletingRegion, setIsDeletingRegion] = useState(false);
   const imageCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageScrollRef = useRef<HTMLDivElement>(null);
@@ -208,13 +210,13 @@ export const ImageModal = ({
     if (open) {
       setEditedName(name);
       setEditedAttributes(attributes);
-      setRegions([]);
+      setRegions(textRegions);
       setIsDeletingRegion(false);
       imageCanvasRef.current = null;
     }
   }, [open, name, attributes]);
 
-  const recognizeRegionText = async (region: Region, language: string) => {
+  const recognizeRegionText = async (region: TextRegion, language: string) => {
     if (!imageCanvasRef.current) {
       const img = new Image();
       img.crossOrigin = "anonymous";
@@ -274,7 +276,7 @@ export const ImageModal = ({
             <YesNoButtons
               yesLabel="Save"
               onYesClick={() => {
-                onSaveButtonClick(editedName, editedAttributes);
+                onSaveButtonClick(editedName, editedAttributes, regions);
                 onClose();
               }}
               noLabel="Cancel"

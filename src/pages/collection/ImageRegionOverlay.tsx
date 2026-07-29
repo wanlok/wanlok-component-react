@@ -1,21 +1,14 @@
 import { RefObject, useEffect, useRef, useState } from "react";
 import { alpha, Box, Stack, useTheme } from "@mui/material";
+import { TextRegion } from "../../services/Types";
 
-export type Region = {
-  id: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-  text?: string;
-  language?: string;
-};
+export type { TextRegion };
 
 type Handle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
 
 type Interaction =
   | { type: "drag"; regionId: string; startMouseX: number; startMouseY: number; startX: number; startY: number }
-  | { type: "resize"; regionId: string; handle: Handle; startMouseX: number; startMouseY: number; startRegion: Region };
+  | { type: "resize"; regionId: string; handle: Handle; startMouseX: number; startMouseY: number; startRegion: TextRegion };
 
 const HANDLE_SIZE = 8;
 const MIN_SIZE = 20;
@@ -32,7 +25,7 @@ const HANDLE_CURSORS: Record<Handle, string> = {
   w: "ew-resize"
 };
 
-const getHandlePosition = (region: Region, handle: Handle) => {
+const getHandlePosition = (region: TextRegion, handle: Handle) => {
   const { x, y, width, height } = region;
   const half = HANDLE_SIZE / 2;
   switch (handle) {
@@ -55,7 +48,7 @@ const getHandlePosition = (region: Region, handle: Handle) => {
   }
 };
 
-const applyResize = (startRegion: Region, handle: Handle, dx: number, dy: number): Region => {
+const applyResize = (startRegion: TextRegion, handle: Handle, dx: number, dy: number): TextRegion => {
   let { x, y, width, height } = startRegion;
   if (handle.includes("e")) {
     width = Math.max(MIN_SIZE, startRegion.width + dx);
@@ -86,8 +79,8 @@ export const ImageRegionOverlay = ({
 }: {
   src: string;
   alt: string;
-  regions: Region[];
-  onRegionsChange: (regions: Region[]) => void;
+  regions: TextRegion[];
+  onRegionsChange: (regions: TextRegion[]) => void;
   onRegionMouseUp?: (regionId: string) => void;
   scrollRef?: RefObject<HTMLDivElement>;
 }) => {

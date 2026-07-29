@@ -8,6 +8,7 @@ import {
   Direction,
   Folder,
   SteamInfo,
+  TextRegion,
   YouTubeInfo
 } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
@@ -50,16 +51,16 @@ export const RightContent = ({
   updateCollectionSequences: (type: string, id: string, direction: Direction) => void;
   addCollectionItems: (collectionId: string, text: string) => Promise<CollectionCounts | undefined>;
   addCollectionFiles: (collectionId: string) => Promise<{ counts: CollectionCounts; sequences?: string[]; attributes?: CollectionAttributes } | undefined>;
-  updateCollectionFile: (id: string, name: string, attributes: { [key: string]: string }) => Promise<void>;
+  updateCollectionFile: (id: string, name: string, attributes: { [key: string]: string }, textRegions: TextRegion[]) => Promise<void>;
 }) => {
-  const [selectedFile, setSelectedFile] = useState<{ id: string; src: string; name: string; attributes: { [key: string]: string } } | null>(null);
+  const [selectedFile, setSelectedFile] = useState<{ id: string; src: string; name: string; attributes: { [key: string]: string }; textRegions: TextRegion[] } | null>(null);
 
   return (
     <>
       <CollectionList
         onFileClick={(id, src, name) => {
           const file = files.find(([fileId]) => fileId === id);
-          setSelectedFile({ id, src, name, attributes: file?.[1].attributes ?? {} });
+          setSelectedFile({ id, src, name, attributes: file?.[1].attributes ?? {}, textRegions: file?.[1].textRegions ?? [] });
         }}
         isLoading={isLoading}
         charts={charts}
@@ -130,10 +131,11 @@ export const RightContent = ({
         src={selectedFile?.src ?? ""}
         name={selectedFile?.name ?? ""}
         attributes={selectedFile?.attributes ?? {}}
+        textRegions={selectedFile?.textRegions ?? []}
         folderAttributes={selectedFolder?.attributes ?? []}
-        onSaveButtonClick={async (name, attributes) => {
+        onSaveButtonClick={async (name, attributes, textRegions) => {
           if (selectedFile) {
-            await updateCollectionFile(selectedFile.id, name, attributes);
+            await updateCollectionFile(selectedFile.id, name, attributes, textRegions);
           }
         }}
         onClose={() => setSelectedFile(null)}

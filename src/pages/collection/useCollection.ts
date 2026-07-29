@@ -8,7 +8,8 @@ import {
   isCollectionKey,
   viewUrls,
   CollectionSequences,
-  Direction
+  Direction,
+  TextRegion
 } from "../../services/Types";
 import { appendSequences, isAllEmpty, toList } from "../../common/ListDictUtils";
 import { getFiles } from "../../common/FileUtils";
@@ -211,11 +212,11 @@ export const useCollection = (
     return counts;
   };
 
-  const updateCollectionFile = async (id: string, name: string, attributes: { [key: string]: string }) => {
+  const updateCollectionFile = async (id: string, name: string, attributes: { [key: string]: string }, textRegions: TextRegion[]) => {
     if (collectionDocument && documentId) {
       const newCollectionDocument = {
         ...collectionDocument,
-        files: { ...collectionDocument.files, [id]: { ...collectionDocument.files[id], name, attributes } }
+        files: { ...collectionDocument.files, [id]: { ...collectionDocument.files[id], name, attributes, textRegions } }
       };
       const docRef = doc(db, collectionName, documentId);
       await updateDoc(docRef, newCollectionDocument);
