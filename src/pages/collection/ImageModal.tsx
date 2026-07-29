@@ -6,8 +6,10 @@ import {
   CropFree as CropFreeIcon,
   Edit as EditIcon,
   Image as ImageIcon,
+  Search as SearchIcon,
   ViewList as ViewListIcon
 } from "@mui/icons-material";
+import { useMediaQuery, useTheme } from "@mui/material";
 import { WModal, WModalContent } from "../../components/WModal";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { YesNoButtons } from "../../components/YesNoButtons";
@@ -29,7 +31,7 @@ const ZOOM_ITEMS = [
 const RegionRow = ({
   region,
   index,
-  isDeletingRegion,
+  controlGroupState,
   isSelected,
   onDeleteClick,
   onLanguageChange,
@@ -37,7 +39,7 @@ const RegionRow = ({
 }: {
   region: TextRegion;
   index: number;
-  isDeletingRegion: boolean;
+  controlGroupState: number;
   isSelected: boolean;
   onDeleteClick: () => void;
   onLanguageChange: (language: string) => void;
@@ -60,12 +62,12 @@ const RegionRow = ({
         inputPropsSx={{ flex: 1 }}
       />
     </Stack>
-    {isDeletingRegion && (
+    {controlGroupState === 2 && (
       <WButton onClick={onDeleteClick} sx={iconButtonSx}>
         <CloseIcon sx={{ fontSize: 24 }} />
       </WButton>
     )}
-    {!isDeletingRegion && region.text && (
+    {controlGroupState === 1 && region.text && (
       <Stack sx={{ gap: "1px" }}>
         <WButton
           onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(region.text!)}`, "_blank")}
@@ -119,14 +121,14 @@ const Details = ({
 const Recognitions = ({
   regions,
   onRegionsChange,
-  isDeletingRegion,
+  controlGroupState,
   selectedRegionId,
   onRegionLanguageChange,
   onRegionTextChange
 }: {
   regions: TextRegion[];
   onRegionsChange: (regions: TextRegion[]) => void;
-  isDeletingRegion: boolean;
+  controlGroupState: number;
   selectedRegionId: string | null;
   onRegionLanguageChange: (regionId: string, language: string) => void;
   onRegionTextChange: (regionId: string, text: string) => void;
@@ -137,7 +139,7 @@ const Recognitions = ({
         key={region.id}
         region={region}
         index={i}
-        isDeletingRegion={isDeletingRegion}
+        controlGroupState={controlGroupState}
         isSelected={region.id === selectedRegionId}
         onDeleteClick={() => onRegionsChange(regions.filter((r) => r.id !== region.id))}
         onLanguageChange={(language) => onRegionLanguageChange(region.id, language)}
@@ -168,10 +170,12 @@ export const ImageModal = ({
   onEditFolderButtonClick: () => void;
   onClose: () => void;
 }) => {
+  const { breakpoints } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
   const [editedName, setEditedName] = useState(name);
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
   const [regions, setRegions] = useState<TextRegion[]>(textRegions);
-  const [isDeletingRegion, setIsDeletingRegion] = useState(false);
+  const [controlGroupState, setControlGroupState] = useState(0);
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedOcrEngine, setSelectedOcrEngine] = useState("tesseract");
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
@@ -189,7 +193,7 @@ export const ImageModal = ({
       setEditedName(name);
       setEditedAttributes(attributes);
       setRegions(textRegions);
-      setIsDeletingRegion(false);
+      setControlGroupState(0);
       setSelectedTab(0);
       setSelectedRegionId(null);
       setZoom("fit");
@@ -272,8 +276,15 @@ export const ImageModal = ({
                   <AddIcon sx={{ fontSize: 24 }} />
                 </WButton>
                 <WButton
-                  isActivated={isDeletingRegion}
-                  onClick={() => setIsDeletingRegion(!isDeletingRegion)}
+                  isActivated={controlGroupState === 1}
+                  onClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
+                  sx={iconButtonSx}
+                >
+                  <SearchIcon sx={{ fontSize: 24 }} />
+                </WButton>
+                <WButton
+                  isActivated={controlGroupState === 2}
+                  onClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
                   sx={iconButtonSx}
                 >
                   <CloseIcon sx={{ fontSize: 24 }} />
@@ -321,7 +332,7 @@ export const ImageModal = ({
             <Recognitions
               regions={regions}
               onRegionsChange={setRegions}
-              isDeletingRegion={isDeletingRegion}
+              controlGroupState={controlGroupState}
               selectedRegionId={selectedRegionId}
               onRegionLanguageChange={onRegionLanguageChange}
               onRegionTextChange={onRegionTextChange}
@@ -333,7 +344,7 @@ export const ImageModal = ({
       <ImageRegionOverlay
         src={src}
         alt={name}
-        regions={selectedTab === 1 ? regions : []}
+        regions={mobile || selectedTab === 1 ? regions : []}
         onRegionsChange={setRegions}
         onRegionMouseUp={onRegionMouseUp}
         scrollRef={imageScrollRef}
