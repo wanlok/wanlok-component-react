@@ -5,8 +5,9 @@ import { WModal, WModalContent } from "../../components/WModal";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
+import { SelectInput } from "../../components/SelectInput";
 import { StyledContainer } from "../../components/StyledContainer";
-import { getImageBase64String, recognizeText } from "../../common/ImageUtils";
+import { getImageBase64String, LANGUAGE_ITEMS, recognizeText } from "../../common/ImageUtils";
 import GoogleIcon from "../../assets/images/icons/google.png";
 import BingIcon from "../../assets/images/icons/bing.png";
 import { ImageRegionOverlay, Region } from "./ImageRegionOverlay";
@@ -42,18 +43,21 @@ const RegionThumbnail = ({ src, region }: { src: string; region: Region }) => {
   );
 };
 
+
 const RegionRow = ({
   src,
   region,
   index,
   isDeletingRegion,
-  onDeleteClick
+  onDeleteClick,
+  onLanguageChange
 }: {
   src: string;
   region: Region;
   index: number;
   isDeletingRegion: boolean;
   onDeleteClick: () => void;
+  onLanguageChange: (language: string) => void;
 }) => (
   <StyledContainer sx={{ flexDirection: "row" }}>
     <Stack sx={{ flex: 1, p: 1, gap: 1 }}>
@@ -61,11 +65,9 @@ const RegionRow = ({
         <Avatar sx={{ width: 32, height: 32, fontSize: 12, backgroundColor: "common.black", color: "common.white" }}>
           {index + 1}
         </Avatar>
-        <Typography
-          variant="body2"
-          color="text.primary"
-          sx={{ flex: 1 }}
-        >{`x: ${Math.round(region.x)},  y: ${Math.round(region.y)},  w: ${Math.round(region.width)},  h: ${Math.round(region.height)}`}</Typography>
+        <Stack sx={{ flex: 1 }}>
+          <SelectInput items={LANGUAGE_ITEMS} value={region.language ?? "eng"} onChange={onLanguageChange} />
+        </Stack>
       </Stack>
       <RegionThumbnail src={src} region={region} />
       <Typography variant="body1" color={region.text ? "text.primary" : "text.secondary"}>
@@ -107,7 +109,8 @@ const Details = ({
   onRegionsChange,
   onAddRegionClick,
   isDeletingRegion,
-  onIsDeletingRegionChange
+  onIsDeletingRegionChange,
+  onRegionLanguageChange
 }: {
   src: string;
   editedName: string;
@@ -120,6 +123,7 @@ const Details = ({
   onAddRegionClick: () => void;
   isDeletingRegion: boolean;
   onIsDeletingRegionChange: (isDeleting: boolean) => void;
+  onRegionLanguageChange: (regionId: string, language: string) => void;
 }) => (
   <Stack sx={{ p: 2, gap: 2 }}>
     <Stack sx={{ gap: "1px" }}>
@@ -163,6 +167,7 @@ const Details = ({
             index={i}
             isDeletingRegion={isDeletingRegion}
             onDeleteClick={() => onRegionsChange(regions.filter((r) => r.id !== region.id))}
+            onLanguageChange={(language) => onRegionLanguageChange(region.id, language)}
           />
         ))}
       </Stack>
@@ -209,11 +214,7 @@ export const ImageModal = ({
     }
   }, [open, name, attributes]);
 
-  const onRegionMouseUp = async (regionId: string) => {
-    const region = regions.find((r) => r.id === regionId);
-    if (!region) {
-      return;
-    }
+  const recognizeRegionText = async (region: Region, language: string) => {
     if (!imageCanvasRef.current) {
       const img = new Image();
       img.crossOrigin = "anonymous";
@@ -237,8 +238,25 @@ export const ImageModal = ({
     if (!base64) {
       return;
     }
-    const text = await recognizeText(base64);
-    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, text } : r)));
+    const text = await recognizeText(base64, language);
+    setRegions((prev) => prev.map((r) => (r.id === region.id ? { ...r, text } : r)));
+  };
+
+  const onRegionMouseUp = async (regionId: string) => {
+    const region = regions.find((r) => r.id === regionId);
+    if (!region) {
+      return;
+    }
+    await recognizeRegionText(region, region.language ?? "eng");
+  };
+
+  const onRegionLanguageChange = async (regionId: string, language: string) => {
+    const region = regions.find((r) => r.id === regionId);
+    if (!region) {
+      return;
+    }
+    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, language } : r)));
+    await recognizeRegionText(region, language);
   };
 
   return (
@@ -276,6 +294,7 @@ export const ImageModal = ({
             onAddRegionClick={onAddRegionClick}
             isDeletingRegion={isDeletingRegion}
             onIsDeletingRegionChange={setIsDeletingRegion}
+            onRegionLanguageChange={onRegionLanguageChange}
           />
         </WModalContent>
       }

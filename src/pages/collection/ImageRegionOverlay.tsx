@@ -8,6 +8,7 @@ export type Region = {
   width: number;
   height: number;
   text?: string;
+  language?: string;
 };
 
 type Handle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";

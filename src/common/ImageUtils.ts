@@ -61,7 +61,23 @@ export const getImageBase64String = (sourceCanvas: HTMLCanvasElement, rect: Rect
   return imageBase64;
 };
 
-export const recognizeText = async (imageBase64String: string) => {
-  const { data } = await Tesseract.recognize(imageBase64String, "eng");
+export const LANGUAGE_ITEMS = [
+  { label: "Chinese (Simplified)", value: "chi_sim" },
+  { label: "Chinese (Traditional)", value: "chi_tra" },
+  { label: "English", value: "eng" },
+  { label: "English + Chinese (Simplified)", value: "eng+chi_sim" },
+  { label: "English + Chinese (Traditional)", value: "eng+chi_tra" },
+  { label: "English + Hindi", value: "eng+hin" },
+  { label: "English + Japanese", value: "eng+jpn" },
+  { label: "French", value: "fra" },
+  { label: "German", value: "deu" },
+  { label: "Hindi", value: "hin" },
+  { label: "Japanese", value: "jpn" },
+  { label: "Korean", value: "kor" },
+  { label: "Spanish", value: "spa" }
+];
+
+export const recognizeText = async (imageBase64String: string, language: string) => {
+  const { data } = await Tesseract.recognize(imageBase64String, language);
   return data.text.trim();
 };
