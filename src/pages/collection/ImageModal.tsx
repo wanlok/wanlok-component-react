@@ -24,6 +24,7 @@ const RegionRow = ({
   region,
   index,
   isDeletingRegion,
+  isSelected,
   onDeleteClick,
   onLanguageChange,
   onTextChange
@@ -31,11 +32,12 @@ const RegionRow = ({
   region: TextRegion;
   index: number;
   isDeletingRegion: boolean;
+  isSelected: boolean;
   onDeleteClick: () => void;
   onLanguageChange: (language: string) => void;
   onTextChange: (text: string) => void;
 }) => (
-  <StyledContainer sx={{ flexDirection: "row" }}>
+  <StyledContainer sx={{ flexDirection: "row", ...(isSelected && { borderLeftColor: "common.black" }) }}>
     <Stack sx={{ flex: 1, p: 1, gap: 1 }}>
       <Stack sx={{ flexDirection: "row", gap: 1, alignItems: "center" }}>
         <Avatar sx={{ width: 32, height: 32, fontSize: 12, backgroundColor: "common.black", color: "common.white" }}>
@@ -112,12 +114,14 @@ const Recognitions = ({
   regions,
   onRegionsChange,
   isDeletingRegion,
+  selectedRegionId,
   onRegionLanguageChange,
   onRegionTextChange
 }: {
   regions: TextRegion[];
   onRegionsChange: (regions: TextRegion[]) => void;
   isDeletingRegion: boolean;
+  selectedRegionId: string | null;
   onRegionLanguageChange: (regionId: string, language: string) => void;
   onRegionTextChange: (regionId: string, text: string) => void;
 }) => (
@@ -128,6 +132,7 @@ const Recognitions = ({
         region={region}
         index={i}
         isDeletingRegion={isDeletingRegion}
+        isSelected={region.id === selectedRegionId}
         onDeleteClick={() => onRegionsChange(regions.filter((r) => r.id !== region.id))}
         onLanguageChange={(language) => onRegionLanguageChange(region.id, language)}
         onTextChange={(text) => onRegionTextChange(region.id, text)}
@@ -161,6 +166,7 @@ export const ImageModal = ({
   const [isDeletingRegion, setIsDeletingRegion] = useState(false);
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedOcrEngine, setSelectedOcrEngine] = useState("tesseract");
+  const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
   const imageCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageScrollRef = useRef<HTMLDivElement>(null);
 
@@ -176,6 +182,7 @@ export const ImageModal = ({
       setRegions(textRegions);
       setIsDeletingRegion(false);
       setSelectedTab(0);
+      setSelectedRegionId(null);
       imageCanvasRef.current = null;
     }
   }, [open, name, attributes]);
@@ -291,6 +298,7 @@ export const ImageModal = ({
               regions={regions}
               onRegionsChange={setRegions}
               isDeletingRegion={isDeletingRegion}
+              selectedRegionId={selectedRegionId}
               onRegionLanguageChange={onRegionLanguageChange}
               onRegionTextChange={onRegionTextChange}
             />
@@ -306,6 +314,8 @@ export const ImageModal = ({
         onRegionMouseUp={onRegionMouseUp}
         scrollRef={imageScrollRef}
         fitScreen={selectedTab === 0}
+        selectedId={selectedRegionId}
+        onSelectedIdChange={setSelectedRegionId}
       />
     </WModal>
   );

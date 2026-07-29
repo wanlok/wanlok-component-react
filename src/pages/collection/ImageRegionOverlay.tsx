@@ -76,7 +76,9 @@ export const ImageRegionOverlay = ({
   onRegionsChange,
   onRegionMouseUp,
   scrollRef,
-  fitScreen
+  fitScreen,
+  selectedId,
+  onSelectedIdChange
 }: {
   src: string;
   alt: string;
@@ -85,11 +87,12 @@ export const ImageRegionOverlay = ({
   onRegionMouseUp?: (regionId: string) => void;
   scrollRef?: RefObject<HTMLDivElement>;
   fitScreen?: boolean;
+  selectedId?: string | null;
+  onSelectedIdChange?: (id: string | null) => void;
 }) => {
   const { palette, typography } = useTheme();
   const svgRef = useRef<SVGSVGElement>(null);
   const interaction = useRef<Interaction | null>(null);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
@@ -152,7 +155,7 @@ export const ImageRegionOverlay = ({
   const onTouchEnd = handleEnd;
 
   const handleRegionPointerDown = (clientX: number, clientY: number, regionId: string) => {
-    setSelectedId(regionId);
+    onSelectedIdChange?.(regionId);
     const { x, y } = getSvgPoint(clientX, clientY);
     const region = regions.find((r) => r.id === regionId)!;
     interaction.current = {
@@ -222,8 +225,8 @@ export const ImageRegionOverlay = ({
           ref={svgRef}
           {...(fitScreen && naturalSize.width > 0 && { viewBox: `0 0 ${naturalSize.width} ${naturalSize.height}` })}
           sx={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "visible" }}
-          onMouseDown={() => setSelectedId(null)}
-          onTouchStart={() => setSelectedId(null)}
+          onMouseDown={() => onSelectedIdChange?.(null)}
+          onTouchStart={() => onSelectedIdChange?.(null)}
           onMouseMove={onMouseMove}
           onTouchMove={onTouchMove}
           onMouseUp={onMouseUp}
