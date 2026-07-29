@@ -194,8 +194,8 @@ export const ImageModal = ({
   const imageScrollRef = useRef<HTMLDivElement>(null);
 
   const onAddRegionClick = () => {
-    setRegions((prev) => [...prev, { id: String(Date.now()), x: 50, y: 50, width: 240, height: 135 }]);
-    imageScrollRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+    setRegions((prev) => [...prev, { id: String(Date.now()), x: 80, y: 40, width: 240, height: 135 }]);
+    imageScrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
   };
 
   useEffect(() => {
@@ -204,6 +204,7 @@ export const ImageModal = ({
       setEditedAttributes(attributes);
       setRegions(textRegions);
       setIsDeletingRegion(false);
+      setSelectedTab(0);
       imageCanvasRef.current = null;
     }
   }, [open, name, attributes]);
@@ -329,6 +330,7 @@ export const ImageModal = ({
         onRegionsChange={setRegions}
         onRegionMouseUp={onRegionMouseUp}
         scrollRef={imageScrollRef}
+        fitScreen={selectedTab === 0}
       />
     </WModal>
   );

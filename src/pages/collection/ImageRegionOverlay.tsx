@@ -75,7 +75,8 @@ export const ImageRegionOverlay = ({
   regions,
   onRegionsChange,
   onRegionMouseUp,
-  scrollRef
+  scrollRef,
+  fitScreen
 }: {
   src: string;
   alt: string;
@@ -83,11 +84,13 @@ export const ImageRegionOverlay = ({
   onRegionsChange: (regions: TextRegion[]) => void;
   onRegionMouseUp?: (regionId: string) => void;
   scrollRef?: RefObject<HTMLDivElement>;
+  fitScreen?: boolean;
 }) => {
   const { palette, typography } = useTheme();
   const svgRef = useRef<SVGSVGElement>(null);
   const interaction = useRef<Interaction | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
     const svg = svgRef.current;
@@ -106,8 +109,12 @@ export const ImageRegionOverlay = ({
   }, []);
 
   const getSvgPoint = (clientX: number, clientY: number) => {
-    const bounds = svgRef.current!.getBoundingClientRect();
-    return { x: clientX - bounds.left, y: clientY - bounds.top };
+    const svg = svgRef.current!;
+    const point = svg.createSVGPoint();
+    point.x = clientX;
+    point.y = clientY;
+    const transformed = point.matrixTransform(svg.getScreenCTM()!.inverse());
+    return { x: transformed.x, y: transformed.y };
   };
 
   const handleMove = (clientX: number, clientY: number) => {
@@ -192,12 +199,28 @@ export const ImageRegionOverlay = ({
   };
 
   return (
-    <Stack ref={scrollRef} sx={{ height: "100%", overflow: "auto", alignItems: "flex-start", backgroundColor: "common.black" }}>
-      <Box sx={{ position: "relative", display: "inline-block", lineHeight: 0, m: "auto" }}>
-        <Box component="img" src={src} alt={alt} sx={{ display: "block" }} />
+    <Stack
+      ref={scrollRef}
+      sx={
+        fitScreen
+          ? { height: "100%", overflow: "hidden", alignItems: "center", justifyContent: "center", backgroundColor: "common.black" }
+          : { height: "100%", overflow: "auto", alignItems: "flex-start", backgroundColor: "common.black" }
+      }
+    >
+      <Box sx={{ position: "relative", display: "inline-block", lineHeight: 0, m: "auto", ...(fitScreen && { maxWidth: "100%" }) }}>
+        <Box
+          component="img"
+          src={src}
+          alt={alt}
+          sx={{ display: "block", ...(fitScreen && { maxWidth: "100%", maxHeight: "80dvh" }) }}
+          onLoad={(e: React.SyntheticEvent<HTMLImageElement>) => {
+            setNaturalSize({ width: e.currentTarget.naturalWidth, height: e.currentTarget.naturalHeight });
+          }}
+        />
         <Box
           component="svg"
           ref={svgRef}
+          {...(fitScreen && naturalSize.width > 0 && { viewBox: `0 0 ${naturalSize.width} ${naturalSize.height}` })}
           sx={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "visible" }}
           onMouseDown={() => setSelectedId(null)}
           onTouchStart={() => setSelectedId(null)}
