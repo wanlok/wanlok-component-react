@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Avatar, Box, Stack, Typography } from "@mui/material";
+import { Avatar, Box, Stack } from "@mui/material";
 import {
   Add as AddIcon,
   Close as CloseIcon,
@@ -20,51 +20,20 @@ import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
 
 const OCR_ENGINE_ITEMS = [{ label: "Tesseract OCR", value: "tesseract" }];
 
-const RegionThumbnail = ({ src, region }: { src: string; region: TextRegion }) => {
-  const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
-
-  return (
-    <Box
-      sx={{
-        width: "100%",
-        aspectRatio: `${region.width} / ${region.height}`,
-        overflow: "hidden",
-        position: "relative",
-        backgroundColor: "common.black"
-      }}
-    >
-      <Box
-        component="img"
-        src={src}
-        sx={{
-          position: "absolute",
-          width: naturalSize.width > 0 ? `${(naturalSize.width / region.width) * 100}%` : 0,
-          height: naturalSize.height > 0 ? `${(naturalSize.height / region.height) * 100}%` : 0,
-          left: `${(-region.x / region.width) * 100}%`,
-          top: `${(-region.y / region.height) * 100}%`
-        }}
-        onLoad={(e: React.SyntheticEvent<HTMLImageElement>) => {
-          setNaturalSize({ width: e.currentTarget.naturalWidth, height: e.currentTarget.naturalHeight });
-        }}
-      />
-    </Box>
-  );
-};
-
 const RegionRow = ({
-  src,
   region,
   index,
   isDeletingRegion,
   onDeleteClick,
-  onLanguageChange
+  onLanguageChange,
+  onTextChange
 }: {
-  src: string;
   region: TextRegion;
   index: number;
   isDeletingRegion: boolean;
   onDeleteClick: () => void;
   onLanguageChange: (language: string) => void;
+  onTextChange: (text: string) => void;
 }) => (
   <StyledContainer sx={{ flexDirection: "row" }}>
     <Stack sx={{ flex: 1, p: 1, gap: 1 }}>
@@ -76,10 +45,12 @@ const RegionRow = ({
           <SelectInput items={LANGUAGE_ITEMS} value={region.language ?? "eng"} onChange={onLanguageChange} />
         </Stack>
       </Stack>
-      <RegionThumbnail src={src} region={region} />
-      <Typography variant="body1" color={region.text ? "text.primary" : "text.secondary"}>
-        {region.text ?? "No text recognised"}
-      </Typography>
+      <TextInput
+        value={region.text ?? ""}
+        onChange={onTextChange}
+        placeholder="No text recognised"
+        inputPropsSx={{ flex: 1 }}
+      />
     </Stack>
     {isDeletingRegion && (
       <WButton onClick={onDeleteClick} sx={iconButtonSx}>
@@ -138,28 +109,28 @@ const Details = ({
 );
 
 const Recognitions = ({
-  src,
   regions,
   onRegionsChange,
   isDeletingRegion,
-  onRegionLanguageChange
+  onRegionLanguageChange,
+  onRegionTextChange
 }: {
-  src: string;
   regions: TextRegion[];
   onRegionsChange: (regions: TextRegion[]) => void;
   isDeletingRegion: boolean;
   onRegionLanguageChange: (regionId: string, language: string) => void;
+  onRegionTextChange: (regionId: string, text: string) => void;
 }) => (
   <Stack sx={{ p: 2, gap: "1px" }}>
     {regions.map((region, i) => (
       <RegionRow
         key={region.id}
-        src={src}
         region={region}
         index={i}
         isDeletingRegion={isDeletingRegion}
         onDeleteClick={() => onRegionsChange(regions.filter((r) => r.id !== region.id))}
         onLanguageChange={(language) => onRegionLanguageChange(region.id, language)}
+        onTextChange={(text) => onRegionTextChange(region.id, text)}
       />
     ))}
   </Stack>
@@ -254,6 +225,10 @@ export const ImageModal = ({
     await recognizeRegionText(region, language);
   };
 
+  const onRegionTextChange = (regionId: string, text: string) => {
+    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, text } : r)));
+  };
+
   return (
     <WModal
       open={open}
@@ -313,11 +288,11 @@ export const ImageModal = ({
             />
           ) : (
             <Recognitions
-              src={src}
               regions={regions}
               onRegionsChange={setRegions}
               isDeletingRegion={isDeletingRegion}
               onRegionLanguageChange={onRegionLanguageChange}
+              onRegionTextChange={onRegionTextChange}
             />
           )}
         </WModalContent>
@@ -326,7 +301,7 @@ export const ImageModal = ({
       <ImageRegionOverlay
         src={src}
         alt={name}
-        regions={regions}
+        regions={selectedTab === 1 ? regions : []}
         onRegionsChange={setRegions}
         onRegionMouseUp={onRegionMouseUp}
         scrollRef={imageScrollRef}
