@@ -4,6 +4,7 @@ import {
   Add as AddIcon,
   Close as CloseIcon,
   CropFree as CropFreeIcon,
+  Edit as EditIcon,
   Image as ImageIcon,
   ViewList as ViewListIcon
 } from "@mui/icons-material";
@@ -19,6 +20,11 @@ import BingIcon from "../../assets/images/icons/bing.png";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
 
 const OCR_ENGINE_ITEMS = [{ label: "Tesseract OCR", value: "tesseract" }];
+
+const ZOOM_ITEMS = [
+  { label: "Fit Screen", value: "fit" },
+  { label: "Original Size", value: "original" }
+];
 
 const RegionRow = ({
   region,
@@ -149,6 +155,7 @@ export const ImageModal = ({
   textRegions,
   folderAttributes,
   onSaveButtonClick,
+  onEditFolderButtonClick,
   onClose
 }: {
   open: boolean;
@@ -158,6 +165,7 @@ export const ImageModal = ({
   textRegions: TextRegion[];
   folderAttributes: { name: string }[];
   onSaveButtonClick: (name: string, attributes: { [key: string]: string }, textRegions: TextRegion[]) => void;
+  onEditFolderButtonClick: () => void;
   onClose: () => void;
 }) => {
   const [editedName, setEditedName] = useState(name);
@@ -167,6 +175,7 @@ export const ImageModal = ({
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedOcrEngine, setSelectedOcrEngine] = useState("tesseract");
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
+  const [zoom, setZoom] = useState("fit");
   const imageCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageScrollRef = useRef<HTMLDivElement>(null);
 
@@ -183,6 +192,7 @@ export const ImageModal = ({
       setIsDeletingRegion(false);
       setSelectedTab(0);
       setSelectedRegionId(null);
+      setZoom("fit");
       imageCanvasRef.current = null;
     }
   }, [open, name, attributes]);
@@ -255,9 +265,9 @@ export const ImageModal = ({
           top={
             selectedTab === 1 ? (
               <>
-                <Stack sx={{ flex: 1, p: 1 }}>
+                <StyledContainer sx={{ flex: 1, p: 1 }}>
                   <SelectInput items={OCR_ENGINE_ITEMS} value={selectedOcrEngine} onChange={setSelectedOcrEngine} />
-                </Stack>
+                </StyledContainer>
                 <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
                   <AddIcon sx={{ fontSize: 24 }} />
                 </WButton>
@@ -270,7 +280,21 @@ export const ImageModal = ({
                 </WButton>
               </>
             ) : (
-              <></>
+              <>
+                <StyledContainer sx={{ flex: 1, p: 1 }}>
+                  <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={setZoom} />
+                </StyledContainer>
+                <WButton
+                  onClick={() => {
+                    onClose();
+                    onEditFolderButtonClick();
+                  }}
+                  rightIcon={<EditIcon sx={{ fontSize: 18, mt: -0.1 }} />}
+                  sx={{ height: 56 }}
+                >
+                  Edit Folder
+                </WButton>
+              </>
             )
           }
           bottom={
@@ -280,7 +304,7 @@ export const ImageModal = ({
                 onSaveButtonClick(editedName, editedAttributes, regions);
                 onClose();
               }}
-              noLabel="Close"
+              noLabel="Cancel"
               onNoClick={onClose}
             />
           }
@@ -313,7 +337,7 @@ export const ImageModal = ({
         onRegionsChange={setRegions}
         onRegionMouseUp={onRegionMouseUp}
         scrollRef={imageScrollRef}
-        fitScreen={selectedTab === 0}
+        fitScreen={selectedTab === 0 && zoom === "fit"}
         selectedId={selectedRegionId}
         onSelectedIdChange={setSelectedRegionId}
       />

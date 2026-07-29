@@ -34,7 +34,8 @@ export const RightContent = ({
   updateCollectionSequences,
   addCollectionItems,
   addCollectionFiles,
-  updateCollectionFile
+  updateCollectionFile,
+  onEditFolderButtonClick
 }: {
   isLoading: boolean;
   charts: [string, ChartItem][];
@@ -52,6 +53,7 @@ export const RightContent = ({
   addCollectionItems: (collectionId: string, text: string) => Promise<CollectionCounts | undefined>;
   addCollectionFiles: (collectionId: string) => Promise<{ counts: CollectionCounts; sequences?: string[]; attributes?: CollectionAttributes } | undefined>;
   updateCollectionFile: (id: string, name: string, attributes: { [key: string]: string }, textRegions: TextRegion[]) => Promise<void>;
+  onEditFolderButtonClick: () => void;
 }) => {
   const [selectedFile, setSelectedFile] = useState<{ id: string; src: string; name: string; attributes: { [key: string]: string }; textRegions: TextRegion[] } | null>(null);
 
@@ -138,6 +140,7 @@ export const RightContent = ({
             await updateCollectionFile(selectedFile.id, name, attributes, textRegions);
           }
         }}
+        onEditFolderButtonClick={onEditFolderButtonClick}
         onClose={() => setSelectedFile(null)}
       />
     </>
