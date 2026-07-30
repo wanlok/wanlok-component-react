@@ -245,7 +245,8 @@ export const ImageModal = ({
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
   const [regions, setRegions] = useState<TextRegion[]>(textRegions);
   const [controlGroupState, setControlGroupState] = useState(0);
-  const [selectedTab, setSelectedTab] = useState(0);
+  const [desktopSelectedTab, setDesktopSelectedTab] = useState(0);
+  const [mobileSelectedTab, setMobileSelectedTab] = useState(0);
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
   const [translatingRegionIds, setTranslatingRegionIds] = useState<Set<string>>(new Set());
   const [zoom, setZoom] = useState("fit");
@@ -263,7 +264,8 @@ export const ImageModal = ({
       setEditedAttributes(attributes);
       setRegions(textRegions);
       setControlGroupState(0);
-      setSelectedTab(0);
+      setDesktopSelectedTab(0);
+      setMobileSelectedTab(0);
       setSelectedRegionId(null);
       setTranslatingRegionIds(new Set());
       setZoom("fit");
@@ -394,6 +396,9 @@ export const ImageModal = ({
 
   const onRegionAvatarClick = (regionId: string) => {
     setSelectedRegionId(regionId);
+    if (mobile) {
+      setMobileSelectedTab(0);
+    }
     const region = regions.find((r) => r.id === regionId);
     if (!region) {
       return;
@@ -433,11 +438,13 @@ export const ImageModal = ({
         { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
         { icon: <CropFreeIcon sx={{ fontSize: 24 }} />, label: "Recognitions" }
       ]}
-      rightTab={selectedTab}
+      rightTab={desktopSelectedTab}
       onRightTabChange={(tab) => {
-        setSelectedTab(tab);
+        setDesktopSelectedTab(tab);
         setControlGroupState(0);
       }}
+      mobileSelectedTab={mobileSelectedTab}
+      onMobileSelectedTabChange={setMobileSelectedTab}
       right={
         <WModalContent
           top={
@@ -447,7 +454,7 @@ export const ImageModal = ({
                   <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={setZoom} />
                 </StyledContainer>
               )}
-              {selectedTab === 1 ? (
+              {desktopSelectedTab === 1 ? (
                 <>
                   <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
                     <AddIcon sx={{ fontSize: 24 }} />
@@ -485,7 +492,7 @@ export const ImageModal = ({
             />
           }
         >
-          {selectedTab === 0 ? (
+          {desktopSelectedTab === 0 ? (
             <Details
               editedName={editedName}
               onEditedNameChange={setEditedName}
@@ -513,7 +520,7 @@ export const ImageModal = ({
       <ImageRegionOverlay
         src={src}
         alt={name}
-        regions={mobile || selectedTab === 1 ? regions : []}
+        regions={mobile || desktopSelectedTab === 1 ? regions : []}
         onRegionsChange={setRegions}
         onRegionMouseUp={onRegionMouseUp}
         scrollRef={imageScrollRef}

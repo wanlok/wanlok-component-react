@@ -1,6 +1,6 @@
 import { alpha, Modal, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { TabItem, WTabs } from "./WTabs";
-import { ReactElement, ReactNode, useState } from "react";
+import { ReactElement, ReactNode } from "react";
 
 type PanelProps = {
   tabs?: TabItem[];
@@ -37,6 +37,8 @@ export const WModal = ({
   rightTabs,
   rightTab,
   onRightTabChange,
+  mobileSelectedTab = 0,
+  onMobileSelectedTabChange,
   hideLeftLabel,
   ...panelProps
 }: {
@@ -51,11 +53,12 @@ export const WModal = ({
   rightTabs?: TabItem[];
   rightTab?: number;
   onRightTabChange?: (tab: number) => void;
+  mobileSelectedTab?: number;
+  onMobileSelectedTabChange?: (tab: number) => void;
   hideLeftLabel?: boolean;
 } & PanelProps) => {
   const { palette, breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
-  const [mobileTab, setMobileTab] = useState(0);
 
   const leftTabs = panelProps.tabs ?? [{ label: "Main" }];
   const allRightTabs = rightTabs ?? [{ icon: rightIcon, label: rightTitle ?? "More" }];
@@ -94,9 +97,9 @@ export const WModal = ({
         {mobile && right ? (
           <WModalContent
             tabs={[...leftTabs, ...allRightTabs]}
-            tab={mobileTab}
+            tab={mobileSelectedTab}
             onTabChange={(newTab) => {
-              setMobileTab(newTab);
+              onMobileSelectedTabChange?.(newTab);
               if (newTab >= leftTabCount) {
                 onRightTabChange?.(newTab - leftTabCount);
               } else {
@@ -104,10 +107,10 @@ export const WModal = ({
               }
             }}
             onClose={onClose}
-            top={mobileTab < leftTabCount ? panelProps.top : undefined}
-            bottom={mobileTab < leftTabCount ? panelProps.bottom : undefined}
+            top={mobileSelectedTab < leftTabCount ? panelProps.top : undefined}
+            bottom={mobileSelectedTab < leftTabCount ? panelProps.bottom : undefined}
           >
-            {mobileTab < leftTabCount ? panelProps.children : right}
+            {mobileSelectedTab < leftTabCount ? panelProps.children : right}
           </WModalContent>
         ) : (
           <>
