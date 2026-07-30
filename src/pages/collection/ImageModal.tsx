@@ -201,7 +201,7 @@ const Recognitions = ({
   onRegionTranslateLanguageChange: (regionId: string, language: string) => void;
   translatingRegionIds: Set<string>;
 }) => (
-  <Stack sx={{ p: 2, gap: 1 }}>
+  <Stack sx={{ px: 2, py: 1, gap: 1 }}>
     {regions.map((region, i) => (
       <RegionRow
         key={region.id}
@@ -334,7 +334,12 @@ export const ImageModal = ({
     if (!region || !region.recognisedText || !region.translateLanguage) {
       return;
     }
-    await performTranslation(regionId, region.recognisedText, getIsoLanguage(region.recogniseLanguage ?? "eng"), region.translateLanguage);
+    await performTranslation(
+      regionId,
+      region.recognisedText,
+      getIsoLanguage(region.recogniseLanguage ?? "eng"),
+      region.translateLanguage
+    );
   };
 
   const performTranslation = async (regionId: string, text: string, sourceLanguage: string, targetLanguage: string) => {
