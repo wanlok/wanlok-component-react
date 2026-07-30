@@ -14,7 +14,9 @@ type PanelProps = {
 
 export const WModalContent = ({ tabs, tab = 0, onTabChange, onClose, top, bottom, children }: PanelProps) => (
   <Stack sx={{ flex: 1, overflow: "hidden", backgroundColor: "background.default" }}>
-    {tabs && tabs.length > 0 && <WTabs value={tab} tabs={tabs} onChange={onTabChange ?? (() => {})} onClose={onClose} />}
+    {tabs && tabs.length > 0 && (
+      <WTabs value={tab} tabs={tabs} onChange={onTabChange ?? (() => {})} onClose={onClose} />
+    )}
     {top && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{top}</Stack>}
     <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>{children}</Stack>
     {bottom && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{bottom}</Stack>}
@@ -70,12 +72,14 @@ export const WModal = ({
       <Stack
         sx={{
           position: "absolute",
-          top: "50%",
-          left: "50%",
-          transform: "translate(-50%, -50%)",
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          margin: "auto",
           flexDirection: mobile && right ? "column" : "row",
           width: mobile ? "100vw" : (width ?? (right !== undefined ? 800 : rightWidth)),
-          height: mobile ? "100dvh" : height,
+          height: mobile ? "100dvh" : (height ?? "fit-content"),
           maxHeight: mobile ? undefined : "80dvh",
           overflow: "hidden",
           gap: mobile && right ? 0 : "1px",

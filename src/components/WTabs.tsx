@@ -34,7 +34,7 @@ export const WTabs = ({
           pointerEvents: tabs.length === 1 ? "none" : undefined,
           "& .MuiTab-root": {
             p: 2,
-            backgroundColor: "common.white",
+            backgroundColor: "background.default",
             color: "text.primary",
             textTransform: "none",
             letterSpacing: "normal",
@@ -46,8 +46,11 @@ export const WTabs = ({
             backgroundColor: "background.default",
             color: "text.primary"
           },
-          "& .MuiTab-root:not(:last-child)": { borderRightWidth: 1, borderRightStyle: "solid", borderColor: "divider" },
-          "& .MuiTabs-indicator": { display: "none" }
+          "& .MuiTabs-indicator": {
+            backgroundColor: "common.black",
+            height: 2,
+            display: tabs.length === 1 ? "none" : undefined
+          }
         }}
       >
         {tabs.map(({ icon, label }, i) => (
