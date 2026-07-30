@@ -116,7 +116,7 @@ export const WModal = ({
           <>
             <WModalContent {...panelProps} tabs={hideLeftLabel ? undefined : panelProps.tabs} />
             {right && (
-              <Stack sx={{ width: rightWidth }}>
+              <Stack sx={{ width: rightWidth, gap: "1px", backgroundColor: "background.default" }}>
                 {rightTabs && rightTabs.length > 0 && (
                   <WTabs value={rightTab ?? 0} tabs={rightTabs} onChange={onRightTabChange ?? (() => {})} />
                 )}

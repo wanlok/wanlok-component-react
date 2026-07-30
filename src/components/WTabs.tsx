@@ -34,7 +34,6 @@ export const WTabs = ({
           pointerEvents: tabs.length > 1 ? undefined : "none",
           "& .MuiTab-root": {
             p: 2,
-            backgroundColor: "background.default",
             color: "text.primary",
             textTransform: "none",
             letterSpacing: "normal",
@@ -43,7 +42,6 @@ export const WTabs = ({
             justifyContent: "flex-start"
           },
           "& .MuiTab-root.Mui-selected": {
-            backgroundColor: "background.default",
             color: "text.primary"
           },
           "& .MuiTabs-indicator": {
