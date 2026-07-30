@@ -169,7 +169,6 @@ export const CollectionPage = () => {
         addCollectionItems={addCollectionItems}
         addCollectionFiles={addCollectionFiles}
         updateCollectionFile={updateCollectionFile}
-        onEditFolderButtonClick={() => setFolderModalOpen(true)}
       />
       <FolderModal
         open={folderModalOpen}
