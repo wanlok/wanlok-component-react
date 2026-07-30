@@ -14,10 +14,12 @@ type PanelProps = {
 
 export const WModalContent = ({ tabs, tab = 0, onTabChange, onClose, top, bottom, children }: PanelProps) => (
   <Stack sx={{ flex: 1, overflow: "hidden", backgroundColor: "background.default" }}>
-    {tabs && tabs.length > 0 && (
-      <WTabs value={tab} tabs={tabs} onChange={onTabChange ?? (() => {})} onClose={onClose} />
-    )}
-    {top && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{top}</Stack>}
+    <Stack sx={{ gap: "1px" }}>
+      {tabs && tabs.length > 0 && (
+        <WTabs value={tab} tabs={tabs} onChange={onTabChange ?? (() => {})} onClose={onClose} />
+      )}
+      {top && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{top}</Stack>}
+    </Stack>
     <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>{children}</Stack>
     {bottom && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{bottom}</Stack>}
   </Stack>

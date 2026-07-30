@@ -26,12 +26,12 @@ export const WTabs = ({
     <Stack sx={{ flexDirection: "row", alignItems: "center", backgroundColor: "common.white" }}>
       <Tabs
         value={value}
-        variant={sm ? "scrollable" : "fullWidth"}
+        variant={sm && tabs.length > 1 ? "scrollable" : "fullWidth"}
         scrollButtons={false}
         onChange={(_, newValue) => onChange(newValue)}
         sx={{
           flex: 1,
-          pointerEvents: tabs.length === 1 ? "none" : undefined,
+          pointerEvents: tabs.length > 1 ? undefined : "none",
           "& .MuiTab-root": {
             p: 2,
             backgroundColor: "background.default",
@@ -49,7 +49,7 @@ export const WTabs = ({
           "& .MuiTabs-indicator": {
             backgroundColor: "common.black",
             height: 2,
-            display: tabs.length === 1 ? "none" : undefined
+            display: tabs.length > 1 ? undefined : "none"
           }
         }}
       >
@@ -58,12 +58,9 @@ export const WTabs = ({
         ))}
       </Tabs>
       {onClose && (
-        <>
-          <Divider orientation="vertical" flexItem />
-          <WButton onClick={onClose} sx={{ ...iconButtonSx, backgroundColor: "transparent" }}>
-            <CloseIcon sx={{ fontSize: 24 }} />
-          </WButton>
-        </>
+        <WButton onClick={onClose} sx={{ ...iconButtonSx }}>
+          <CloseIcon sx={{ fontSize: 24 }} />
+        </WButton>
       )}
     </Stack>
   );
