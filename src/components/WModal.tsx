@@ -25,7 +25,7 @@ type RightPanelProps = {
 export const WModalContent = ({ tabs, selectedTab = 0, onTabChange, onClose, top, bottom, children }: PanelProps) => {
   const hasHeader = (tabs != null && tabs.length > 0) || top != null;
   return (
-    <Stack sx={{ flex: 1, overflow: "hidden", backgroundColor: "background.default" }}>
+    <Stack sx={{ flex: 1, overflow: "hidden", gap: "1px", backgroundColor: "background.default" }}>
       {hasHeader && (
         <Stack sx={{ gap: "1px" }}>
           {tabs && tabs.length > 0 && (
