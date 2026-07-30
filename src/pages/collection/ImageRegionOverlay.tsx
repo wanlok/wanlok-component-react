@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import { MutableRefObject, RefObject, useEffect, useRef, useState } from "react";
 import { alpha, Box, Stack, useTheme } from "@mui/material";
 import { TextRegion } from "../../services/Types";
 
@@ -99,8 +99,23 @@ export const ImageRegionOverlay = ({
 }) => {
   const { palette, typography } = useTheme();
   const svgRef = useRef<SVGSVGElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const interaction = useRef<Interaction | null>(null);
   const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
+  const [pinchScale, setPinchScale] = useState(1);
+  const pinchScaleRef = useRef(1);
+  const pinchGestureRef = useRef<{ initialDist: number; initialScale: number } | null>(null);
+
+  useEffect(() => {
+    if (scrollRef && containerRef.current) {
+      (scrollRef as MutableRefObject<HTMLDivElement | null>).current = containerRef.current;
+    }
+  }, [scrollRef]);
+
+  useEffect(() => {
+    setPinchScale(1);
+    pinchScaleRef.current = 1;
+  }, [src]);
 
   useEffect(() => {
     const svg = svgRef.current;
@@ -115,6 +130,46 @@ export const ImageRegionOverlay = ({
     svg.addEventListener("touchmove", onTouchMove, { passive: false });
     return () => {
       svg.removeEventListener("touchmove", onTouchMove);
+    };
+  }, []);
+
+  useEffect(() => {
+    const container = containerRef.current;
+    if (!container) {
+      return;
+    }
+    const getDist = (touches: TouchList) => {
+      const dx = touches[0].clientX - touches[1].clientX;
+      const dy = touches[0].clientY - touches[1].clientY;
+      return Math.sqrt(dx * dx + dy * dy);
+    };
+    const onTouchStart = (e: TouchEvent) => {
+      if (e.touches.length === 2) {
+        interaction.current = null;
+        pinchGestureRef.current = { initialDist: getDist(e.touches), initialScale: pinchScaleRef.current };
+      }
+    };
+    const onTouchMove = (e: TouchEvent) => {
+      if (e.touches.length === 2 && pinchGestureRef.current) {
+        e.preventDefault();
+        const ratio = getDist(e.touches) / pinchGestureRef.current.initialDist;
+        const newScale = Math.max(0.5, Math.min(5, pinchGestureRef.current.initialScale * ratio));
+        pinchScaleRef.current = newScale;
+        setPinchScale(newScale);
+      }
+    };
+    const onTouchEnd = (e: TouchEvent) => {
+      if (e.touches.length < 2) {
+        pinchGestureRef.current = null;
+      }
+    };
+    container.addEventListener("touchstart", onTouchStart, { passive: true });
+    container.addEventListener("touchmove", onTouchMove, { passive: false });
+    container.addEventListener("touchend", onTouchEnd, { passive: true });
+    return () => {
+      container.removeEventListener("touchstart", onTouchStart);
+      container.removeEventListener("touchmove", onTouchMove);
+      container.removeEventListener("touchend", onTouchEnd);
     };
   }, []);
 
@@ -210,7 +265,7 @@ export const ImageRegionOverlay = ({
 
   return (
     <Stack
-      ref={scrollRef}
+      ref={containerRef}
       sx={
         fitScreen
           ? {
@@ -229,7 +284,9 @@ export const ImageRegionOverlay = ({
           display: "inline-block",
           lineHeight: 0,
           m: "auto",
-          ...(fitScreen && { maxWidth: "100%" })
+          ...(fitScreen && { maxWidth: "100%" }),
+          transform: `scale(${pinchScale})`,
+          transformOrigin: "center center"
         }}
       >
         <Box

@@ -23,7 +23,7 @@ export const WTabs = ({
   const sm = useMediaQuery(breakpoints.down("sm"));
 
   return (
-    <Stack sx={{ flexDirection: "row", alignItems: "center", backgroundColor: "common.white" }}>
+    <Stack sx={{ flexDirection: "row", alignItems: "center" }}>
       <Tabs
         value={value}
         variant={sm && tabs.length > 1 ? "scrollable" : "fullWidth"}
