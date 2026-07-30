@@ -7,8 +7,7 @@ import {
   ZoomIn as ZoomInIcon,
   ZoomOut as ZoomOutIcon,
   Image as ImageIcon,
-  Search as SearchIcon,
-  Translate as TranslateIcon,
+
   ViewList as ViewListIcon
 } from "@mui/icons-material";
 import { useMediaQuery, useTheme } from "@mui/material";
@@ -353,10 +352,10 @@ export const ImageModal = ({
     });
   };
 
-  const onTranslateToggle = async () => {
-    const nextState = controlGroupState === 3 ? 0 : 3;
-    setControlGroupState(nextState);
-    if (nextState !== 3) {
+  const onControlGroupSelectChange = async (value: string) => {
+    const newState = parseInt(value);
+    setControlGroupState(newState);
+    if (newState !== 3) {
       return;
     }
     regions.forEach(async (region) => {
@@ -443,18 +442,18 @@ export const ImageModal = ({
             <>
               {desktopSelectedTab === 1 ? (
                 <>
+                  <StyledContainer sx={{ flex: 1, p: 1 }}>
+                    <SelectInput
+                      items={[
+                        { label: "Search", value: "1" },
+                        { label: "Translate", value: "3" }
+                      ]}
+                      value={[1, 3].includes(controlGroupState) ? String(controlGroupState) : ""}
+                      onChange={onControlGroupSelectChange}
+                    />
+                  </StyledContainer>
                   <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
                     <AddIcon sx={{ fontSize: 24 }} />
-                  </WButton>
-                  <WButton isActivated={controlGroupState === 3} onClick={onTranslateToggle} sx={iconButtonSx}>
-                    <TranslateIcon sx={{ fontSize: 20 }} />
-                  </WButton>
-                  <WButton
-                    isActivated={controlGroupState === 1}
-                    onClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
-                    sx={iconButtonSx}
-                  >
-                    <SearchIcon sx={{ fontSize: 24 }} />
                   </WButton>
                   <WButton
                     isActivated={controlGroupState === 2}
