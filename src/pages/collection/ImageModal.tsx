@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Avatar, Box, Stack } from "@mui/material";
+import { Avatar, Box, ButtonBase, Divider, Stack, Typography } from "@mui/material";
 import {
   Add as AddIcon,
   Close as CloseIcon,
@@ -7,6 +7,7 @@ import {
   Edit as EditIcon,
   Image as ImageIcon,
   Search as SearchIcon,
+  Translate as TranslateIcon,
   ViewList as ViewListIcon
 } from "@mui/icons-material";
 import { useMediaQuery, useTheme } from "@mui/material";
@@ -21,7 +22,10 @@ import GoogleIcon from "../../assets/images/icons/google.png";
 import BingIcon from "../../assets/images/icons/bing.png";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
 
-const OCR_ENGINE_ITEMS = [{ label: "Tesseract OCR", value: "tesseract" }];
+const TRANSLATE_LANGUAGE_ITEMS = [
+  { label: "English", value: "en" },
+  { label: "Chinese", value: "zh" }
+];
 
 const ZOOM_ITEMS = [
   { label: "Fit Screen", value: "fit" },
@@ -33,6 +37,7 @@ const RegionRow = ({
   index,
   controlGroupState,
   isSelected,
+  onAvatarClick,
   onDeleteClick,
   onLanguageChange,
   onTextChange
@@ -41,49 +46,75 @@ const RegionRow = ({
   index: number;
   controlGroupState: number;
   isSelected: boolean;
+  onAvatarClick: () => void;
   onDeleteClick: () => void;
   onLanguageChange: (language: string) => void;
   onTextChange: (text: string) => void;
 }) => (
-  <StyledContainer sx={{ flexDirection: "row", ...(isSelected && { borderLeftColor: "common.black" }) }}>
-    <Stack sx={{ flex: 1, p: 1, gap: 1 }}>
-      <Stack sx={{ flexDirection: "row", gap: 1, alignItems: "center" }}>
-        <Avatar sx={{ width: 32, height: 32, fontSize: 12, backgroundColor: "common.black", color: "common.white" }}>
-          {index + 1}
-        </Avatar>
-        <Stack sx={{ flex: 1 }}>
-          <SelectInput items={LANGUAGE_ITEMS} value={region.language ?? "eng"} onChange={onLanguageChange} />
+  <Stack sx={{}}>
+    <ButtonBase
+      sx={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", gap: 1, py: 1, pl: 1, ml: -1 }}
+      onClick={onAvatarClick}
+    >
+      <Avatar
+        sx={{
+          width: 32,
+          height: 32,
+          fontSize: 12,
+          backgroundColor: isSelected ? "common.black" : "background.default",
+          color: isSelected ? "common.white" : "common.black"
+        }}
+      >
+        {index + 1}
+      </Avatar>
+      <Typography variant="body2">
+        x: {Math.round(region.x)} y: {Math.round(region.y)} w: {Math.round(region.width)} h: {Math.round(region.height)}
+      </Typography>
+    </ButtonBase>
+    <StyledContainer sx={{ flexDirection: "row" }}>
+      <Stack sx={{ flex: 1, p: 1, gap: 2 }}>
+        <Stack sx={{ gap: 1 }}>
+          <SelectInput
+            label="Recognition Language"
+            items={LANGUAGE_ITEMS}
+            value={region.language ?? "eng"}
+            onChange={onLanguageChange}
+          />
+          <TextInput label="Text" value={region.text ?? ""} onChange={onTextChange} inputPropsSx={{ flex: 1 }} />
         </Stack>
+        {controlGroupState === 3 && (
+          <>
+            <Divider />
+            <Stack sx={{ gap: 1 }}>
+              <SelectInput label="Translate Language" items={TRANSLATE_LANGUAGE_ITEMS} value="en" onChange={() => {}} />
+              <Typography variant="body2">Translate Placeholder</Typography>
+            </Stack>
+          </>
+        )}
       </Stack>
-      <TextInput
-        value={region.text ?? ""}
-        onChange={onTextChange}
-        placeholder="No text recognised"
-        inputPropsSx={{ flex: 1 }}
-      />
-    </Stack>
-    {controlGroupState === 2 && (
-      <WButton onClick={onDeleteClick} sx={iconButtonSx}>
-        <CloseIcon sx={{ fontSize: 24 }} />
-      </WButton>
-    )}
-    {controlGroupState === 1 && region.text && (
-      <Stack sx={{ gap: "1px" }}>
-        <WButton
-          onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(region.text!)}`, "_blank")}
-          sx={iconButtonSx}
-        >
-          <Box component="img" src={GoogleIcon} sx={{ width: 16, height: 16 }} />
+      {controlGroupState === 1 && region.text && (
+        <Stack sx={{ gap: "1px" }}>
+          <WButton
+            onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(region.text!)}`, "_blank")}
+            sx={iconButtonSx}
+          >
+            <Box component="img" src={GoogleIcon} sx={{ width: 16, height: 16 }} />
+          </WButton>
+          <WButton
+            onClick={() => window.open(`https://www.bing.com/search?q=${encodeURIComponent(region.text!)}`, "_blank")}
+            sx={iconButtonSx}
+          >
+            <Box component="img" src={BingIcon} sx={{ width: 20, height: 20 }} />
+          </WButton>
+        </Stack>
+      )}
+      {controlGroupState === 2 && (
+        <WButton onClick={onDeleteClick} sx={iconButtonSx}>
+          <CloseIcon sx={{ fontSize: 24 }} />
         </WButton>
-        <WButton
-          onClick={() => window.open(`https://www.bing.com/search?q=${encodeURIComponent(region.text!)}`, "_blank")}
-          sx={iconButtonSx}
-        >
-          <Box component="img" src={BingIcon} sx={{ width: 20, height: 20 }} />
-        </WButton>
-      </Stack>
-    )}
-  </StyledContainer>
+      )}
+    </StyledContainer>
+  </Stack>
 );
 
 const Details = ({
@@ -123,6 +154,7 @@ const Recognitions = ({
   onRegionsChange,
   controlGroupState,
   selectedRegionId,
+  onRegionAvatarClick,
   onRegionLanguageChange,
   onRegionTextChange
 }: {
@@ -130,10 +162,11 @@ const Recognitions = ({
   onRegionsChange: (regions: TextRegion[]) => void;
   controlGroupState: number;
   selectedRegionId: string | null;
+  onRegionAvatarClick: (regionId: string) => void;
   onRegionLanguageChange: (regionId: string, language: string) => void;
   onRegionTextChange: (regionId: string, text: string) => void;
 }) => (
-  <Stack sx={{ p: 2, gap: "1px" }}>
+  <Stack sx={{ p: 2, gap: 1 }}>
     {regions.map((region, i) => (
       <RegionRow
         key={region.id}
@@ -141,6 +174,7 @@ const Recognitions = ({
         index={i}
         controlGroupState={controlGroupState}
         isSelected={region.id === selectedRegionId}
+        onAvatarClick={() => onRegionAvatarClick(region.id)}
         onDeleteClick={() => onRegionsChange(regions.filter((r) => r.id !== region.id))}
         onLanguageChange={(language) => onRegionLanguageChange(region.id, language)}
         onTextChange={(text) => onRegionTextChange(region.id, text)}
@@ -177,7 +211,6 @@ export const ImageModal = ({
   const [regions, setRegions] = useState<TextRegion[]>(textRegions);
   const [controlGroupState, setControlGroupState] = useState(0);
   const [selectedTab, setSelectedTab] = useState(0);
-  const [selectedOcrEngine, setSelectedOcrEngine] = useState("tesseract");
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
   const [zoom, setZoom] = useState("fit");
   const imageCanvasRef = useRef<HTMLCanvasElement | null>(null);
@@ -250,6 +283,23 @@ export const ImageModal = ({
     setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, text } : r)));
   };
 
+  const onRegionAvatarClick = (regionId: string) => {
+    setSelectedRegionId(regionId);
+    const region = regions.find((r) => r.id === regionId);
+    if (!region) {
+      return;
+    }
+    const container = imageScrollRef.current;
+    if (!container) {
+      return;
+    }
+    container.scrollTo({
+      left: region.x - container.clientWidth / 2 + region.width / 2,
+      top: region.y - container.clientHeight / 2 + region.height / 2,
+      behavior: "smooth"
+    });
+  };
+
   return (
     <WModal
       open={open}
@@ -263,17 +313,24 @@ export const ImageModal = ({
         { icon: <CropFreeIcon sx={{ fontSize: 24 }} />, label: "Recognitions" }
       ]}
       rightTab={selectedTab}
-      onRightTabChange={setSelectedTab}
+      onRightTabChange={(tab) => {
+        setSelectedTab(tab);
+        setControlGroupState(0);
+      }}
       right={
         <WModalContent
           top={
             selectedTab === 1 ? (
               <>
-                <StyledContainer sx={{ flex: 1, p: 1 }}>
-                  <SelectInput items={OCR_ENGINE_ITEMS} value={selectedOcrEngine} onChange={setSelectedOcrEngine} />
-                </StyledContainer>
                 <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
                   <AddIcon sx={{ fontSize: 24 }} />
+                </WButton>
+                <WButton
+                  isActivated={controlGroupState === 3}
+                  onClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
+                  sx={iconButtonSx}
+                >
+                  <TranslateIcon sx={{ fontSize: 24 }} />
                 </WButton>
                 <WButton
                   isActivated={controlGroupState === 1}
@@ -334,6 +391,7 @@ export const ImageModal = ({
               onRegionsChange={setRegions}
               controlGroupState={controlGroupState}
               selectedRegionId={selectedRegionId}
+              onRegionAvatarClick={onRegionAvatarClick}
               onRegionLanguageChange={onRegionLanguageChange}
               onRegionTextChange={onRegionTextChange}
             />

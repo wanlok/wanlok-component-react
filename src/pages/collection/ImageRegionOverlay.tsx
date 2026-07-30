@@ -8,11 +8,18 @@ type Handle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
 
 type Interaction =
   | { type: "drag"; regionId: string; startMouseX: number; startMouseY: number; startX: number; startY: number }
-  | { type: "resize"; regionId: string; handle: Handle; startMouseX: number; startMouseY: number; startRegion: TextRegion };
+  | {
+      type: "resize";
+      regionId: string;
+      handle: Handle;
+      startMouseX: number;
+      startMouseY: number;
+      startRegion: TextRegion;
+    };
 
-const HANDLE_SIZE = 8;
+const HANDLE_SIZE = 12;
 const MIN_SIZE = 20;
-const HANDLES: Handle[] = ["nw", "n", "ne", "e", "se", "s", "sw", "w"];
+const HANDLES: Handle[] = ["nw", "ne", "se", "sw"];
 
 const HANDLE_CURSORS: Record<Handle, string> = {
   nw: "nwse-resize",
@@ -206,11 +213,25 @@ export const ImageRegionOverlay = ({
       ref={scrollRef}
       sx={
         fitScreen
-          ? { height: "100%", overflow: "hidden", alignItems: "center", justifyContent: "center", backgroundColor: "common.black" }
+          ? {
+              height: "100%",
+              overflow: "hidden",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "common.black"
+            }
           : { height: "100%", overflow: "auto", alignItems: "flex-start", backgroundColor: "common.black" }
       }
     >
-      <Box sx={{ position: "relative", display: "inline-block", lineHeight: 0, m: "auto", ...(fitScreen && { maxWidth: "100%" }) }}>
+      <Box
+        sx={{
+          position: "relative",
+          display: "inline-block",
+          lineHeight: 0,
+          m: "auto",
+          ...(fitScreen && { maxWidth: "100%" })
+        }}
+      >
         <Box
           component="img"
           src={src}
@@ -244,7 +265,7 @@ export const ImageRegionOverlay = ({
                   cx={avatarCx}
                   cy={avatarCy}
                   r={avatarRadius}
-                  fill={palette.common.black}
+                  fill={isSelected ? palette.common.black : palette.primary.main}
                   style={{ pointerEvents: "none" }}
                 />
                 <text
@@ -252,7 +273,7 @@ export const ImageRegionOverlay = ({
                   y={avatarCy}
                   textAnchor="middle"
                   dominantBaseline="central"
-                  fill={palette.common.white}
+                  fill={isSelected ? palette.common.white : palette.primary.contrastText}
                   fontSize={12}
                   style={{ userSelect: "none", pointerEvents: "none", fontFamily: typography.fontFamily }}
                 >
@@ -263,8 +284,8 @@ export const ImageRegionOverlay = ({
                   y={region.y}
                   width={region.width}
                   height={region.height}
-                  fill={alpha(palette.common.black, 0.4)}
-                  stroke={palette.common.black}
+                  fill={alpha(palette.primary.main, 0.4)}
+                  stroke={palette.primary.main}
                   strokeWidth={1}
                   style={{ cursor: "move" }}
                   onMouseDown={(e) => onRegionMouseDown(e, region.id)}
@@ -280,7 +301,7 @@ export const ImageRegionOverlay = ({
                         y={pos.y}
                         width={HANDLE_SIZE}
                         height={HANDLE_SIZE}
-                        fill={palette.common.black}
+                        fill={palette.primary.main}
                         style={{ cursor: HANDLE_CURSORS[handle] }}
                         onMouseDown={(e) => onHandleMouseDown(e, region.id, handle)}
                         onTouchStart={(e) => onHandleTouchStart(e, region.id, handle)}
