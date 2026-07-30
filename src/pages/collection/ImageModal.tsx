@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Avatar, Box, ButtonBase, Divider, Skeleton, Stack, Typography } from "@mui/material";
+import { alpha, Avatar, Box, ButtonBase, Divider, Skeleton, Stack, Typography } from "@mui/material";
 import {
   Add as AddIcon,
   Close as CloseIcon,
@@ -236,7 +236,7 @@ export const ImageModal = ({
   onSaveButtonClick: (name: string, attributes: { [key: string]: string }, textRegions: TextRegion[]) => void;
   onClose: () => void;
 }) => {
-  const { breakpoints } = useTheme();
+  const { breakpoints, palette } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const [editedName, setEditedName] = useState(name);
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
@@ -524,10 +524,24 @@ export const ImageModal = ({
             gap: "1px"
           }}
         >
-          <WButton onClick={() => setZoom("original")} sx={iconButtonSx}>
+          <WButton
+            onClick={() => setZoom("original")}
+            sx={{
+              ...iconButtonSx,
+              backgroundColor: alpha(palette.primary.main, 0.9),
+              "&:hover": { backgroundColor: palette.primary.main }
+            }}
+          >
             <ZoomInIcon sx={{ fontSize: 28 }} />
           </WButton>
-          <WButton onClick={() => setZoom("fit")} sx={iconButtonSx}>
+          <WButton
+            onClick={() => setZoom("fit")}
+            sx={{
+              ...iconButtonSx,
+              backgroundColor: alpha(palette.primary.main, 0.9),
+              "&:hover": { backgroundColor: palette.primary.main }
+            }}
+          >
             <ZoomOutIcon sx={{ fontSize: 28 }} />
           </WButton>
         </Stack>
