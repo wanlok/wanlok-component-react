@@ -85,6 +85,7 @@ export interface CloudinaryFileInfo extends ParentInfo {
   name: string;
   mime_type: string;
   url: string;
+  layout?: string;
   textRegions?: TextRegion[];
 }
 

@@ -212,11 +212,11 @@ export const useCollection = (
     return counts;
   };
 
-  const updateCollectionFile = async (id: string, name: string, attributes: { [key: string]: string }, textRegions: TextRegion[]) => {
+  const updateCollectionFile = async (id: string, name: string, attributes: { [key: string]: string }, layout: string, textRegions: TextRegion[]) => {
     if (collectionDocument && documentId) {
       const newCollectionDocument = {
         ...collectionDocument,
-        files: { ...collectionDocument.files, [id]: { ...collectionDocument.files[id], name, attributes, textRegions } }
+        files: { ...collectionDocument.files, [id]: { ...collectionDocument.files[id], name, attributes, layout, textRegions } }
       };
       const docRef = doc(db, collectionName, documentId);
       await updateDoc(docRef, newCollectionDocument);

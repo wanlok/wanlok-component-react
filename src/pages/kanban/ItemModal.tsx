@@ -106,7 +106,7 @@ export const ItemModal = ({
           )}
         </Stack>
       }
-      right={
+      rightChildren={
         <Discussion
           messages={kanbanItem.messages}
           onRefresh={onRefresh}

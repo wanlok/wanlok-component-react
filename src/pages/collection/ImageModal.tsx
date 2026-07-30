@@ -10,7 +10,7 @@ import {
   ViewList as ViewListIcon
 } from "@mui/icons-material";
 import { useMediaQuery, useTheme } from "@mui/material";
-import { WModal, WModalContent } from "../../components/WModal";
+import { WModal } from "../../components/WModal";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
@@ -225,6 +225,7 @@ export const ImageModal = ({
   src,
   name,
   attributes,
+  layout,
   textRegions,
   folderAttributes,
   onSaveButtonClick,
@@ -234,9 +235,15 @@ export const ImageModal = ({
   src: string;
   name: string;
   attributes: { [key: string]: string };
+  layout: string;
   textRegions: TextRegion[];
   folderAttributes: { name: string }[];
-  onSaveButtonClick: (name: string, attributes: { [key: string]: string }, textRegions: TextRegion[]) => void;
+  onSaveButtonClick: (
+    name: string,
+    attributes: { [key: string]: string },
+    layout: string,
+    textRegions: TextRegion[]
+  ) => void;
   onClose: () => void;
 }) => {
   const { breakpoints, palette } = useTheme();
@@ -244,7 +251,7 @@ export const ImageModal = ({
   const [editedName, setEditedName] = useState(name);
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
   const [regions, setRegions] = useState<TextRegion[]>(textRegions);
-  const [selectedLayout, setSelectedLayout] = useState("default");
+  const [selectedLayout, setSelectedLayout] = useState(layout);
   const [controlGroupState, setControlGroupState] = useState(0);
   const [desktopSelectedTab, setDesktopSelectedTab] = useState(0);
   const [mobileSelectedTab, setMobileSelectedTab] = useState(0);
@@ -264,7 +271,7 @@ export const ImageModal = ({
       setEditedName(name);
       setEditedAttributes(attributes);
       setRegions(textRegions);
-      setSelectedLayout("default");
+      setSelectedLayout(layout);
       setControlGroupState(0);
       setDesktopSelectedTab(0);
       setMobileSelectedTab(0);
@@ -273,7 +280,7 @@ export const ImageModal = ({
       setZoom("fit");
       imageCanvasRef.current = null;
     }
-  }, [open, name, attributes]);
+  }, [open, name, attributes, layout]);
 
   const recognizeRegionText = async (region: TextRegion, language: string) => {
     if (!imageCanvasRef.current) {
@@ -435,81 +442,75 @@ export const ImageModal = ({
         { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
         { icon: <CropFreeIcon sx={{ fontSize: 24 }} />, label: "Recognitions" }
       ]}
-      rightTab={desktopSelectedTab}
+      rightSelectedTab={desktopSelectedTab}
       onRightTabChange={(tab) => {
         setDesktopSelectedTab(tab);
-        setSelectedLayout("default");
         setControlGroupState(0);
       }}
       mobileSelectedTab={mobileSelectedTab}
       onMobileSelectedTabChange={setMobileSelectedTab}
-      right={
-        <WModalContent
-          top={
-            <>
-              {desktopSelectedTab === 1 ? (
-                <>
-                  <StyledContainer sx={{ flex: 1, p: 1 }}>
-                    <SelectInput
-                      items={[
-                        { label: "Default", value: "default" },
-                        { label: "Default + Search", value: "default+search" },
-                        { label: "Default + Translate", value: "default+translate" }
-                      ]}
-                      value={selectedLayout}
-                      onChange={onLayoutIndexChange}
-                    />
-                  </StyledContainer>
-                  <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
-                    <AddIcon sx={{ fontSize: 24 }} />
-                  </WButton>
-                  <WButton
-                    isActivated={controlGroupState === 2}
-                    onClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
-                    sx={iconButtonSx}
-                  >
-                    <CloseIcon sx={{ fontSize: 24 }} />
-                  </WButton>
-                </>
-              ) : null}
-            </>
-          }
-          bottom={
-            <YesNoButtons
-              yesLabel="Save"
-              onYesClick={() => {
-                onSaveButtonClick(editedName, editedAttributes, regions);
-                onClose();
-              }}
-              noLabel="Cancel"
-              onNoClick={onClose}
-            />
-          }
-        >
-          {desktopSelectedTab === 0 ? (
-            <Details
-              editedName={editedName}
-              onEditedNameChange={setEditedName}
-              editedAttributes={editedAttributes}
-              onEditedAttributesChange={setEditedAttributes}
-              folderAttributes={folderAttributes}
-            />
-          ) : (
-            <Recognitions
-              regions={regions}
-              onRegionsChange={setRegions}
-              selectedLayout={selectedLayout}
-              controlGroupState={controlGroupState}
-              selectedRegionId={selectedRegionId}
-              onRegionAvatarClick={onRegionAvatarClick}
-              onRegionLanguageChange={onRegionLanguageChange}
-              onRegionTextChange={onRegionTextChange}
-              onRegionTextBlur={onRegionTextBlur}
-              onRegionTranslateLanguageChange={onRegionTranslateLanguageChange}
-              translatingRegionIds={translatingRegionIds}
-            />
-          )}
-        </WModalContent>
+      rightTop={
+        desktopSelectedTab === 1 ? (
+          <>
+            <StyledContainer sx={{ flex: 1, p: 1 }}>
+              <SelectInput
+                items={[
+                  { label: "Default", value: "default" },
+                  { label: "Default + Search", value: "default+search" },
+                  { label: "Default + Translate", value: "default+translate" }
+                ]}
+                value={selectedLayout}
+                onChange={onLayoutIndexChange}
+              />
+            </StyledContainer>
+            <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
+              <AddIcon sx={{ fontSize: 24 }} />
+            </WButton>
+            <WButton
+              isActivated={controlGroupState === 2}
+              onClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
+              sx={iconButtonSx}
+            >
+              <CloseIcon sx={{ fontSize: 24 }} />
+            </WButton>
+          </>
+        ) : undefined
+      }
+      rightBottom={
+        <YesNoButtons
+          yesLabel="Save"
+          onYesClick={() => {
+            onSaveButtonClick(editedName, editedAttributes, selectedLayout, regions);
+            onClose();
+          }}
+          noLabel="Cancel"
+          onNoClick={onClose}
+        />
+      }
+      rightChildren={
+        desktopSelectedTab === 0 ? (
+          <Details
+            editedName={editedName}
+            onEditedNameChange={setEditedName}
+            editedAttributes={editedAttributes}
+            onEditedAttributesChange={setEditedAttributes}
+            folderAttributes={folderAttributes}
+          />
+        ) : (
+          <Recognitions
+            regions={regions}
+            onRegionsChange={setRegions}
+            selectedLayout={selectedLayout}
+            controlGroupState={controlGroupState}
+            selectedRegionId={selectedRegionId}
+            onRegionAvatarClick={onRegionAvatarClick}
+            onRegionLanguageChange={onRegionLanguageChange}
+            onRegionTextChange={onRegionTextChange}
+            onRegionTextBlur={onRegionTextBlur}
+            onRegionTranslateLanguageChange={onRegionTranslateLanguageChange}
+            translatingRegionIds={translatingRegionIds}
+          />
+        )
       }
     >
       <Box sx={{ position: "relative", height: "100%" }}>

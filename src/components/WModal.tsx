@@ -1,10 +1,10 @@
 import { alpha, Modal, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { TabItem, WTabs } from "./WTabs";
-import { ReactElement, ReactNode } from "react";
+import { ReactNode } from "react";
 
 type PanelProps = {
   tabs?: TabItem[];
-  tab?: number;
+  selectedTab?: number;
   onTabChange?: (tab: number) => void;
   onClose?: () => void;
   top?: ReactNode;
@@ -12,11 +12,21 @@ type PanelProps = {
   children?: ReactNode;
 };
 
-export const WModalContent = ({ tabs, tab = 0, onTabChange, onClose, top, bottom, children }: PanelProps) => (
+type RightPanelProps = {
+  rightWidth?: number;
+  rightTabs?: TabItem[];
+  rightSelectedTab?: number;
+  onRightTabChange?: (tab: number) => void;
+  rightTop?: ReactNode;
+  rightBottom?: ReactNode;
+  rightChildren?: ReactNode;
+};
+
+export const WModalContent = ({ tabs, selectedTab = 0, onTabChange, onClose, top, bottom, children }: PanelProps) => (
   <Stack sx={{ flex: 1, overflow: "hidden", backgroundColor: "background.default" }}>
     <Stack sx={{ gap: "1px" }}>
       {tabs && tabs.length > 0 && (
-        <WTabs value={tab} tabs={tabs} onChange={onTabChange ?? (() => {})} onClose={onClose} />
+        <WTabs value={selectedTab} tabs={tabs} onChange={onTabChange ?? (() => {})} onClose={onClose} />
       )}
       {top && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{top}</Stack>}
     </Stack>
@@ -30,38 +40,35 @@ export const WModal = ({
   onClose,
   width,
   height,
-  right,
-  rightWidth = 400,
-  rightIcon,
-  rightTitle,
-  rightTabs,
-  rightTab,
-  onRightTabChange,
   mobileSelectedTab = 0,
   onMobileSelectedTabChange,
   hideLeftLabel,
-  ...panelProps
+  tabs,
+  selectedTab,
+  onTabChange,
+  top,
+  bottom,
+  children,
+  rightWidth = 400,
+  rightTabs,
+  rightSelectedTab,
+  onRightTabChange,
+  rightTop,
+  rightBottom,
+  rightChildren
 }: {
   open: boolean;
   onClose: () => void;
   width?: number | string;
   height?: number | string;
-  right?: ReactNode;
-  rightWidth?: number;
-  rightIcon?: ReactElement;
-  rightTitle?: string;
-  rightTabs?: TabItem[];
-  rightTab?: number;
-  onRightTabChange?: (tab: number) => void;
   mobileSelectedTab?: number;
   onMobileSelectedTabChange?: (tab: number) => void;
   hideLeftLabel?: boolean;
-} & PanelProps) => {
+} & PanelProps &
+  RightPanelProps) => {
   const { palette, breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
-
-  const leftTabs = panelProps.tabs ?? [{ label: "Main" }];
-  const allRightTabs = rightTabs ?? [{ icon: rightIcon, label: rightTitle ?? "More" }];
+  const leftTabs = tabs ?? [];
   const leftTabCount = leftTabs.length;
 
   return (
@@ -82,45 +89,59 @@ export const WModal = ({
           right: 0,
           bottom: 0,
           margin: "auto",
-          flexDirection: mobile && right ? "column" : "row",
-          width: mobile ? "100vw" : (width ?? (right !== undefined ? 800 : rightWidth)),
+          flexDirection: mobile && rightChildren ? "column" : "row",
+          width: mobile ? "100vw" : (width ?? (rightChildren !== undefined ? 800 : rightWidth)),
           height: mobile ? "100dvh" : (height ?? "fit-content"),
           maxHeight: mobile ? undefined : "80dvh",
           overflow: "hidden",
-          gap: mobile && right ? 0 : "1px",
-          backgroundColor: right ? "common.white" : undefined,
+          gap: mobile && rightChildren ? 0 : "1px",
+          backgroundColor: rightChildren ? "common.white" : undefined,
           borderWidth: 1,
           borderStyle: "solid",
           borderColor: "divider"
         }}
       >
-        {mobile && right ? (
+        {mobile && rightChildren ? (
           <WModalContent
-            tabs={[...leftTabs, ...allRightTabs]}
-            tab={mobileSelectedTab}
+            tabs={[...leftTabs, ...(rightTabs ?? [])]}
+            selectedTab={mobileSelectedTab}
             onTabChange={(newTab) => {
               onMobileSelectedTabChange?.(newTab);
               if (newTab >= leftTabCount) {
                 onRightTabChange?.(newTab - leftTabCount);
               } else {
-                panelProps.onTabChange?.(newTab);
+                onTabChange?.(newTab);
               }
             }}
             onClose={onClose}
-            top={mobileSelectedTab < leftTabCount ? panelProps.top : undefined}
-            bottom={mobileSelectedTab < leftTabCount ? panelProps.bottom : undefined}
+            top={mobileSelectedTab < leftTabCount ? top : rightTop}
+            bottom={mobileSelectedTab < leftTabCount ? bottom : rightBottom}
           >
-            {mobileSelectedTab < leftTabCount ? panelProps.children : right}
+            {mobileSelectedTab < leftTabCount ? children : rightChildren}
           </WModalContent>
         ) : (
           <>
-            <WModalContent {...panelProps} tabs={hideLeftLabel ? undefined : panelProps.tabs} />
-            {right && (
-              <Stack sx={{ width: rightWidth, gap: "1px", backgroundColor: "background.default" }}>
+            <WModalContent
+              tabs={hideLeftLabel ? undefined : tabs}
+              selectedTab={selectedTab}
+              onTabChange={onTabChange}
+              top={top}
+              bottom={bottom}
+            >
+              {children}
+            </WModalContent>
+            {rightChildren && (
+              <Stack sx={{ width: rightWidth, overflow: "hidden", gap: "1px", backgroundColor: "background.default" }}>
                 {rightTabs && rightTabs.length > 0 && (
-                  <WTabs value={rightTab ?? 0} tabs={rightTabs} onChange={onRightTabChange ?? (() => {})} />
+                  <WTabs value={rightSelectedTab ?? 0} tabs={rightTabs} onChange={onRightTabChange ?? (() => {})} />
                 )}
-                {right}
+                {rightTop && (
+                  <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{rightTop}</Stack>
+                )}
+                <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>{rightChildren}</Stack>
+                {rightBottom && (
+                  <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{rightBottom}</Stack>
+                )}
               </Stack>
             )}
           </>
