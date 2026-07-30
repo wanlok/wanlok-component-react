@@ -427,34 +427,34 @@ export const ImageModal = ({
       right={
         <WModalContent
           top={
-            selectedTab === 1 ? (
-              <>
-                <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
-                  <AddIcon sx={{ fontSize: 24 }} />
-                </WButton>
-                <WButton isActivated={controlGroupState === 3} onClick={onTranslateToggle} sx={iconButtonSx}>
-                  <TranslateIcon sx={{ fontSize: 20 }} />
-                </WButton>
-                <WButton
-                  isActivated={controlGroupState === 1}
-                  onClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
-                  sx={iconButtonSx}
-                >
-                  <SearchIcon sx={{ fontSize: 24 }} />
-                </WButton>
-                <WButton
-                  isActivated={controlGroupState === 2}
-                  onClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
-                  sx={iconButtonSx}
-                >
-                  <CloseIcon sx={{ fontSize: 24 }} />
-                </WButton>
-              </>
-            ) : (
-              <>
-                <StyledContainer sx={{ flex: 1, p: 1 }}>
-                  <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={setZoom} />
-                </StyledContainer>
+            <>
+              <StyledContainer sx={{ flex: 1, p: 1 }}>
+                <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={setZoom} />
+              </StyledContainer>
+              {selectedTab === 1 ? (
+                <>
+                  <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
+                    <AddIcon sx={{ fontSize: 24 }} />
+                  </WButton>
+                  <WButton isActivated={controlGroupState === 3} onClick={onTranslateToggle} sx={iconButtonSx}>
+                    <TranslateIcon sx={{ fontSize: 20 }} />
+                  </WButton>
+                  <WButton
+                    isActivated={controlGroupState === 1}
+                    onClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
+                    sx={iconButtonSx}
+                  >
+                    <SearchIcon sx={{ fontSize: 24 }} />
+                  </WButton>
+                  <WButton
+                    isActivated={controlGroupState === 2}
+                    onClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
+                    sx={iconButtonSx}
+                  >
+                    <CloseIcon sx={{ fontSize: 24 }} />
+                  </WButton>
+                </>
+              ) : (
                 <WButton
                   onClick={() => {
                     onClose();
@@ -465,8 +465,8 @@ export const ImageModal = ({
                 >
                   Edit Folder
                 </WButton>
-              </>
-            )
+              )}
+            </>
           }
           bottom={
             <YesNoButtons
@@ -512,7 +512,7 @@ export const ImageModal = ({
         onRegionsChange={setRegions}
         onRegionMouseUp={onRegionMouseUp}
         scrollRef={imageScrollRef}
-        fitScreen={selectedTab === 0 && zoom === "fit"}
+        fitScreen={zoom === "fit"}
         selectedId={selectedRegionId}
         onSelectedIdChange={setSelectedRegionId}
       />
