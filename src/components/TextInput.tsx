@@ -47,6 +47,7 @@ export const TextInput = ({
   placeholder,
   value,
   onChange,
+  onBlur,
   helperText,
   tabAllowed = false,
   disabled = false,
@@ -57,6 +58,7 @@ export const TextInput = ({
   placeholder?: string;
   value: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
   helperText?: string;
   tabAllowed?: boolean;
   disabled?: boolean;
@@ -82,6 +84,7 @@ export const TextInput = ({
           }
         }}
         onChange={(event) => onChange(event.target.value)}
+        onBlur={onBlur}
         onKeyDown={(event) => {
           if (tabAllowed) {
             handleTab(inputRef.current, event, onChange);

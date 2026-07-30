@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Avatar, Box, ButtonBase, Divider, Stack, Typography } from "@mui/material";
+import { Avatar, Box, ButtonBase, Divider, Skeleton, Stack, Typography } from "@mui/material";
 import {
   Add as AddIcon,
   Close as CloseIcon,
@@ -17,15 +17,17 @@ import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { StyledContainer } from "../../components/StyledContainer";
-import { getImageBase64String, LANGUAGE_ITEMS, recognizeText } from "../../common/ImageUtils";
+import {
+  getImageBase64String,
+  getIsoLanguage,
+  LANGUAGE_ITEMS,
+  recognizeText,
+  TRANSLATE_LANGUAGE_ITEMS,
+  translateText
+} from "../../common/ImageUtils";
 import GoogleIcon from "../../assets/images/icons/google.png";
 import BingIcon from "../../assets/images/icons/bing.png";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
-
-const TRANSLATE_LANGUAGE_ITEMS = [
-  { label: "English", value: "en" },
-  { label: "Chinese", value: "zh" }
-];
 
 const ZOOM_ITEMS = [
   { label: "Fit Screen", value: "fit" },
@@ -40,7 +42,10 @@ const RegionRow = ({
   onAvatarClick,
   onDeleteClick,
   onLanguageChange,
-  onTextChange
+  onTextChange,
+  onTextBlur,
+  onTranslateLanguageChange,
+  isTranslating
 }: {
   region: TextRegion;
   index: number;
@@ -50,6 +55,9 @@ const RegionRow = ({
   onDeleteClick: () => void;
   onLanguageChange: (language: string) => void;
   onTextChange: (text: string) => void;
+  onTextBlur: () => void;
+  onTranslateLanguageChange: (language: string) => void;
+  isTranslating: boolean;
 }) => (
   <Stack sx={{}}>
     <ButtonBase
@@ -75,33 +83,54 @@ const RegionRow = ({
       <Stack sx={{ flex: 1, p: 1, gap: 2 }}>
         <Stack sx={{ gap: 1 }}>
           <SelectInput
-            label="Recognition Language"
+            label="Recognise Language"
             items={LANGUAGE_ITEMS}
-            value={region.language ?? "eng"}
+            value={region.recogniseLanguage ?? "eng"}
             onChange={onLanguageChange}
           />
-          <TextInput label="Text" value={region.text ?? ""} onChange={onTextChange} inputPropsSx={{ flex: 1 }} />
+          <TextInput
+            label="Text"
+            value={region.recognisedText ?? ""}
+            onChange={onTextChange}
+            onBlur={onTextBlur}
+            inputPropsSx={{ flex: 1 }}
+          />
         </Stack>
         {controlGroupState === 3 && (
           <>
             <Divider />
             <Stack sx={{ gap: 1 }}>
-              <SelectInput label="Translate Language" items={TRANSLATE_LANGUAGE_ITEMS} value="en" onChange={() => {}} />
-              <Typography variant="body2">Translate Placeholder</Typography>
+              <SelectInput
+                label="Translate Language"
+                items={TRANSLATE_LANGUAGE_ITEMS}
+                value={region.translateLanguage ?? ""}
+                onChange={onTranslateLanguageChange}
+              />
+              {isTranslating ? (
+                <Skeleton variant="rectangular" height={24} />
+              ) : (
+                <Typography variant="body1" sx={{ lineHeight: "24px" }}>
+                  {region.translatedText ?? ""}
+                </Typography>
+              )}
             </Stack>
           </>
         )}
       </Stack>
-      {controlGroupState === 1 && region.text && (
+      {controlGroupState === 1 && region.recognisedText && (
         <Stack sx={{ gap: "1px" }}>
           <WButton
-            onClick={() => window.open(`https://www.google.com/search?q=${encodeURIComponent(region.text!)}`, "_blank")}
+            onClick={() =>
+              window.open(`https://www.google.com/search?q=${encodeURIComponent(region.recognisedText!)}`, "_blank")
+            }
             sx={iconButtonSx}
           >
             <Box component="img" src={GoogleIcon} sx={{ width: 16, height: 16 }} />
           </WButton>
           <WButton
-            onClick={() => window.open(`https://www.bing.com/search?q=${encodeURIComponent(region.text!)}`, "_blank")}
+            onClick={() =>
+              window.open(`https://www.bing.com/search?q=${encodeURIComponent(region.recognisedText!)}`, "_blank")
+            }
             sx={iconButtonSx}
           >
             <Box component="img" src={BingIcon} sx={{ width: 20, height: 20 }} />
@@ -156,7 +185,10 @@ const Recognitions = ({
   selectedRegionId,
   onRegionAvatarClick,
   onRegionLanguageChange,
-  onRegionTextChange
+  onRegionTextChange,
+  onRegionTextBlur,
+  onRegionTranslateLanguageChange,
+  translatingRegionIds
 }: {
   regions: TextRegion[];
   onRegionsChange: (regions: TextRegion[]) => void;
@@ -165,6 +197,9 @@ const Recognitions = ({
   onRegionAvatarClick: (regionId: string) => void;
   onRegionLanguageChange: (regionId: string, language: string) => void;
   onRegionTextChange: (regionId: string, text: string) => void;
+  onRegionTextBlur: (regionId: string) => void;
+  onRegionTranslateLanguageChange: (regionId: string, language: string) => void;
+  translatingRegionIds: Set<string>;
 }) => (
   <Stack sx={{ p: 2, gap: 1 }}>
     {regions.map((region, i) => (
@@ -174,10 +209,13 @@ const Recognitions = ({
         index={i}
         controlGroupState={controlGroupState}
         isSelected={region.id === selectedRegionId}
+        isTranslating={translatingRegionIds.has(region.id)}
         onAvatarClick={() => onRegionAvatarClick(region.id)}
         onDeleteClick={() => onRegionsChange(regions.filter((r) => r.id !== region.id))}
         onLanguageChange={(language) => onRegionLanguageChange(region.id, language)}
         onTextChange={(text) => onRegionTextChange(region.id, text)}
+        onTextBlur={() => onRegionTextBlur(region.id)}
+        onTranslateLanguageChange={(language) => onRegionTranslateLanguageChange(region.id, language)}
       />
     ))}
   </Stack>
@@ -212,6 +250,7 @@ export const ImageModal = ({
   const [controlGroupState, setControlGroupState] = useState(0);
   const [selectedTab, setSelectedTab] = useState(0);
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
+  const [translatingRegionIds, setTranslatingRegionIds] = useState<Set<string>>(new Set());
   const [zoom, setZoom] = useState("fit");
   const imageCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageScrollRef = useRef<HTMLDivElement>(null);
@@ -229,6 +268,7 @@ export const ImageModal = ({
       setControlGroupState(0);
       setSelectedTab(0);
       setSelectedRegionId(null);
+      setTranslatingRegionIds(new Set());
       setZoom("fit");
       imageCanvasRef.current = null;
     }
@@ -259,7 +299,10 @@ export const ImageModal = ({
       return;
     }
     const text = await recognizeText(base64, language);
-    setRegions((prev) => prev.map((r) => (r.id === region.id ? { ...r, text } : r)));
+    setRegions((prev) => prev.map((r) => (r.id === region.id ? { ...r, recognisedText: text } : r)));
+    if (controlGroupState === 3 && text && region.translateLanguage) {
+      await performTranslation(region.id, text, getIsoLanguage(language), region.translateLanguage);
+    }
   };
 
   const onRegionMouseUp = async (regionId: string) => {
@@ -267,7 +310,7 @@ export const ImageModal = ({
     if (!region) {
       return;
     }
-    await recognizeRegionText(region, region.language ?? "eng");
+    await recognizeRegionText(region, region.recogniseLanguage ?? "eng");
   };
 
   const onRegionLanguageChange = async (regionId: string, language: string) => {
@@ -275,12 +318,76 @@ export const ImageModal = ({
     if (!region) {
       return;
     }
-    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, language } : r)));
+    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, recogniseLanguage: language } : r)));
     await recognizeRegionText(region, language);
   };
 
   const onRegionTextChange = (regionId: string, text: string) => {
-    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, text } : r)));
+    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, recognisedText: text } : r)));
+  };
+
+  const onRegionTextBlur = async (regionId: string) => {
+    if (controlGroupState !== 3) {
+      return;
+    }
+    const region = regions.find((r) => r.id === regionId);
+    if (!region || !region.recognisedText || !region.translateLanguage) {
+      return;
+    }
+    await performTranslation(regionId, region.recognisedText, getIsoLanguage(region.recogniseLanguage ?? "eng"), region.translateLanguage);
+  };
+
+  const performTranslation = async (regionId: string, text: string, sourceLanguage: string, targetLanguage: string) => {
+    setTranslatingRegionIds((prev) => new Set(prev).add(regionId));
+    if (sourceLanguage === targetLanguage) {
+      setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, translatedText: text } : r)));
+    } else {
+      const translatedText = await translateText(text, sourceLanguage, targetLanguage);
+      setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, translatedText } : r)));
+    }
+    setTranslatingRegionIds((prev) => {
+      const next = new Set(prev);
+      next.delete(regionId);
+      return next;
+    });
+  };
+
+  const onTranslateToggle = async () => {
+    const nextState = controlGroupState === 3 ? 0 : 3;
+    setControlGroupState(nextState);
+    if (nextState !== 3) {
+      return;
+    }
+    regions.forEach(async (region) => {
+      if (!region.recognisedText || region.translatedText) {
+        return;
+      }
+      const targetLanguage = region.translateLanguage ?? "";
+      if (!targetLanguage) {
+        return;
+      }
+      await performTranslation(
+        region.id,
+        region.recognisedText,
+        getIsoLanguage(region.recogniseLanguage ?? "eng"),
+        targetLanguage
+      );
+    });
+  };
+
+  const onRegionTranslateLanguageChange = async (regionId: string, translateLanguage: string) => {
+    const region = regions.find((r) => r.id === regionId);
+    if (!region || !region.recognisedText) {
+      setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, translateLanguage } : r)));
+      return;
+    }
+    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, translateLanguage } : r)));
+    await performTranslation(
+      regionId,
+      region.recognisedText,
+      getIsoLanguage(region.recogniseLanguage ?? "eng"),
+      translateLanguage
+    );
   };
 
   const onRegionAvatarClick = (regionId: string) => {
@@ -325,12 +432,8 @@ export const ImageModal = ({
                 <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
                   <AddIcon sx={{ fontSize: 24 }} />
                 </WButton>
-                <WButton
-                  isActivated={controlGroupState === 3}
-                  onClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
-                  sx={iconButtonSx}
-                >
-                  <TranslateIcon sx={{ fontSize: 24 }} />
+                <WButton isActivated={controlGroupState === 3} onClick={onTranslateToggle} sx={iconButtonSx}>
+                  <TranslateIcon sx={{ fontSize: 20 }} />
                 </WButton>
                 <WButton
                   isActivated={controlGroupState === 1}
@@ -394,6 +497,9 @@ export const ImageModal = ({
               onRegionAvatarClick={onRegionAvatarClick}
               onRegionLanguageChange={onRegionLanguageChange}
               onRegionTextChange={onRegionTextChange}
+              onRegionTextBlur={onRegionTextBlur}
+              onRegionTranslateLanguageChange={onRegionTranslateLanguageChange}
+              translatingRegionIds={translatingRegionIds}
             />
           )}
         </WModalContent>

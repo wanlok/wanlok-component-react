@@ -81,3 +81,40 @@ export const recognizeText = async (imageBase64String: string, language: string)
   const { data } = await Tesseract.recognize(imageBase64String, language);
   return data.text.trim();
 };
+
+export const TRANSLATE_LANGUAGE_ITEMS = [
+  { label: "Chinese (Simplified)", value: "zh" },
+  { label: "Chinese (Traditional)", value: "zh-TW" },
+  { label: "English", value: "en" },
+  { label: "French", value: "fr" },
+  { label: "German", value: "de" },
+  { label: "Hindi", value: "hi" },
+  { label: "Japanese", value: "ja" },
+  { label: "Korean", value: "ko" },
+  { label: "Spanish", value: "es" }
+];
+
+const TESSERACT_TO_ISO: Record<string, string> = {
+  eng: "en",
+  chi_sim: "zh",
+  chi_tra: "zh-TW",
+  fra: "fr",
+  deu: "de",
+  hin: "hi",
+  jpn: "ja",
+  kor: "ko",
+  spa: "es"
+};
+
+export const getIsoLanguage = (tesseractLanguage: string): string => {
+  const primary = tesseractLanguage.split("+")[0];
+  return TESSERACT_TO_ISO[primary] ?? "en";
+};
+
+export const translateText = async (text: string, sourceLanguage: string, targetLanguage: string): Promise<string> => {
+  const response = await fetch(
+    `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLanguage}|${targetLanguage}`
+  );
+  const data = await response.json();
+  return data.responseData?.translatedText ?? "";
+};

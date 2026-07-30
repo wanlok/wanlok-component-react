@@ -75,8 +75,10 @@ export interface TextRegion {
   y: number;
   width: number;
   height: number;
-  text?: string;
-  language?: string;
+  recogniseLanguage?: string;
+  recognisedText?: string;
+  translateLanguage?: string;
+  translatedText?: string;
 }
 
 export interface CloudinaryFileInfo extends ParentInfo {
