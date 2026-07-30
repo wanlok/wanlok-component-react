@@ -4,7 +4,6 @@ import {
   Add as AddIcon,
   Close as CloseIcon,
   CropFree as CropFreeIcon,
-  Edit as EditIcon,
   Image as ImageIcon,
   Search as SearchIcon,
   Translate as TranslateIcon,
@@ -201,7 +200,7 @@ const Recognitions = ({
   onRegionTranslateLanguageChange: (regionId: string, language: string) => void;
   translatingRegionIds: Set<string>;
 }) => (
-  <Stack sx={{ px: 2, py: 1, gap: 1 }}>
+  <Stack sx={{ px: 2, pt: 1, pb: 2, gap: 1 }}>
     {regions.map((region, i) => (
       <RegionRow
         key={region.id}
@@ -229,7 +228,6 @@ export const ImageModal = ({
   textRegions,
   folderAttributes,
   onSaveButtonClick,
-  onEditFolderButtonClick,
   onClose
 }: {
   open: boolean;
@@ -239,7 +237,6 @@ export const ImageModal = ({
   textRegions: TextRegion[];
   folderAttributes: { name: string }[];
   onSaveButtonClick: (name: string, attributes: { [key: string]: string }, textRegions: TextRegion[]) => void;
-  onEditFolderButtonClick: () => void;
   onClose: () => void;
 }) => {
   const { breakpoints } = useTheme();
@@ -420,6 +417,18 @@ export const ImageModal = ({
       height="80dvh"
       tabs={[{ icon: <ImageIcon sx={{ fontSize: 24 }} />, label: "Image" }]}
       hideLeftLabel
+      top={
+        mobile ? (
+          <>
+            <StyledContainer sx={{ flex: 1, p: 1 }}>
+              <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={setZoom} />
+            </StyledContainer>
+            <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
+              <AddIcon sx={{ fontSize: 24 }} />
+            </WButton>
+          </>
+        ) : undefined
+      }
       rightTabs={[
         { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
         { icon: <CropFreeIcon sx={{ fontSize: 24 }} />, label: "Recognitions" }
@@ -433,9 +442,11 @@ export const ImageModal = ({
         <WModalContent
           top={
             <>
-              <StyledContainer sx={{ flex: 1, p: 1 }}>
-                <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={setZoom} />
-              </StyledContainer>
+              {!mobile && (
+                <StyledContainer sx={{ flex: 1, p: 1 }}>
+                  <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={setZoom} />
+                </StyledContainer>
+              )}
               {selectedTab === 1 ? (
                 <>
                   <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
@@ -459,18 +470,7 @@ export const ImageModal = ({
                     <CloseIcon sx={{ fontSize: 24 }} />
                   </WButton>
                 </>
-              ) : (
-                <WButton
-                  onClick={() => {
-                    onClose();
-                    onEditFolderButtonClick();
-                  }}
-                  rightIcon={<EditIcon sx={{ fontSize: 18, mt: -0.1 }} />}
-                  sx={{ height: 56 }}
-                >
-                  Edit Folder
-                </WButton>
-              )}
+              ) : null}
             </>
           }
           bottom={
