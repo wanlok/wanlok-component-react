@@ -1,5 +1,5 @@
-import { ReactElement } from "react";
-import { Divider, Stack, Tab, Tabs, useMediaQuery, useTheme } from "@mui/material";
+import { ReactElement, useLayoutEffect, useRef, useState } from "react";
+import { Stack, Tab, Tabs } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { iconButtonSx, WButton } from "./WButton";
 
@@ -19,14 +19,23 @@ export const WTabs = ({
   onChange: (value: number) => void;
   onClose?: () => void;
 }) => {
-  const { breakpoints } = useTheme();
-  const sm = useMediaQuery(breakpoints.down("sm"));
+  const tabsRef = useRef<HTMLDivElement>(null);
+  const [variant, setVariant] = useState<"scrollable" | "fullWidth">("scrollable");
+
+  useLayoutEffect(() => {
+    if (variant !== "scrollable") { return; }
+    const element = tabsRef.current;
+    if (!element) { return; }
+    const scroller = element.querySelector(".MuiTabs-scroller") as HTMLElement | null;
+    if (!scroller) { return; }
+    setVariant(scroller.scrollWidth <= scroller.clientWidth ? "fullWidth" : "scrollable");
+  }, [variant]);
 
   return (
-    <Stack sx={{ flexDirection: "row", alignItems: "center" }}>
+    <Stack ref={tabsRef} sx={{ flexDirection: "row", alignItems: "center" }}>
       <Tabs
         value={value}
-        variant={sm && tabs.length > 1 ? "scrollable" : "fullWidth"}
+        variant={variant}
         scrollButtons={false}
         onChange={(_, newValue) => onChange(newValue)}
         sx={{

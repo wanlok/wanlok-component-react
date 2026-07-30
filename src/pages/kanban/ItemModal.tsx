@@ -61,9 +61,12 @@ export const ItemModal = ({
   const [selectedColumn, setSelectedColumn] = useState(String(item.i));
   const [nameHint, setNameHint] = useState("");
   const [contentHint, setContentHint] = useState("");
+  const [mobileSelectedTab, setMobileSelectedTab] = useState(0);
 
   return (
     <WModal
+      mobileSelectedTab={mobileSelectedTab}
+      onMobileSelectedTabChange={setMobileSelectedTab}
       open={true}
       onClose={onClose}
       tabs={[{ icon: <AssignmentIcon sx={{ fontSize: 24 }} />, label: isEditing ? "Edit Task" : "Task" }]}
