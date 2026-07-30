@@ -7,7 +7,6 @@ import {
   ZoomIn as ZoomInIcon,
   ZoomOut as ZoomOutIcon,
   Image as ImageIcon,
-
   ViewList as ViewListIcon
 } from "@mui/icons-material";
 import { useMediaQuery, useTheme } from "@mui/material";
@@ -32,6 +31,7 @@ import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
 const RegionRow = ({
   region,
   index,
+  selectedLayout,
   controlGroupState,
   isSelected,
   onAvatarClick,
@@ -44,6 +44,7 @@ const RegionRow = ({
 }: {
   region: TextRegion;
   index: number;
+  selectedLayout: string;
   controlGroupState: number;
   isSelected: boolean;
   onAvatarClick: () => void;
@@ -91,7 +92,7 @@ const RegionRow = ({
             inputPropsSx={{ flex: 1 }}
           />
         </Stack>
-        {controlGroupState === 3 && (
+        {selectedLayout === "default+translate" && (
           <>
             <Divider />
             <Stack sx={{ gap: 1 }}>
@@ -112,7 +113,7 @@ const RegionRow = ({
           </>
         )}
       </Stack>
-      {controlGroupState === 1 && region.recognisedText && (
+      {selectedLayout === "default+search" && controlGroupState !== 2 && region.recognisedText && (
         <Stack sx={{ gap: "1px" }}>
           <WButton
             onClick={() =>
@@ -176,6 +177,7 @@ const Details = ({
 const Recognitions = ({
   regions,
   onRegionsChange,
+  selectedLayout,
   controlGroupState,
   selectedRegionId,
   onRegionAvatarClick,
@@ -187,6 +189,7 @@ const Recognitions = ({
 }: {
   regions: TextRegion[];
   onRegionsChange: (regions: TextRegion[]) => void;
+  selectedLayout: string;
   controlGroupState: number;
   selectedRegionId: string | null;
   onRegionAvatarClick: (regionId: string) => void;
@@ -202,6 +205,7 @@ const Recognitions = ({
         key={region.id}
         region={region}
         index={i}
+        selectedLayout={selectedLayout}
         controlGroupState={controlGroupState}
         isSelected={region.id === selectedRegionId}
         isTranslating={translatingRegionIds.has(region.id)}
@@ -240,6 +244,7 @@ export const ImageModal = ({
   const [editedName, setEditedName] = useState(name);
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
   const [regions, setRegions] = useState<TextRegion[]>(textRegions);
+  const [selectedLayout, setSelectedLayout] = useState("default");
   const [controlGroupState, setControlGroupState] = useState(0);
   const [desktopSelectedTab, setDesktopSelectedTab] = useState(0);
   const [mobileSelectedTab, setMobileSelectedTab] = useState(0);
@@ -259,6 +264,7 @@ export const ImageModal = ({
       setEditedName(name);
       setEditedAttributes(attributes);
       setRegions(textRegions);
+      setSelectedLayout("default");
       setControlGroupState(0);
       setDesktopSelectedTab(0);
       setMobileSelectedTab(0);
@@ -352,10 +358,10 @@ export const ImageModal = ({
     });
   };
 
-  const onControlGroupSelectChange = async (value: string) => {
-    const newState = parseInt(value);
-    setControlGroupState(newState);
-    if (newState !== 3) {
+  const onLayoutIndexChange = async (value: string) => {
+    setSelectedLayout(value);
+    setControlGroupState(0);
+    if (value !== "default+translate") {
       return;
     }
     regions.forEach(async (region) => {
@@ -432,6 +438,7 @@ export const ImageModal = ({
       rightTab={desktopSelectedTab}
       onRightTabChange={(tab) => {
         setDesktopSelectedTab(tab);
+        setSelectedLayout("default");
         setControlGroupState(0);
       }}
       mobileSelectedTab={mobileSelectedTab}
@@ -445,11 +452,12 @@ export const ImageModal = ({
                   <StyledContainer sx={{ flex: 1, p: 1 }}>
                     <SelectInput
                       items={[
-                        { label: "Search", value: "1" },
-                        { label: "Translate", value: "3" }
+                        { label: "Default", value: "default" },
+                        { label: "Default + Search", value: "default+search" },
+                        { label: "Default + Translate", value: "default+translate" }
                       ]}
-                      value={[1, 3].includes(controlGroupState) ? String(controlGroupState) : ""}
-                      onChange={onControlGroupSelectChange}
+                      value={selectedLayout}
+                      onChange={onLayoutIndexChange}
                     />
                   </StyledContainer>
                   <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
@@ -490,6 +498,7 @@ export const ImageModal = ({
             <Recognitions
               regions={regions}
               onRegionsChange={setRegions}
+              selectedLayout={selectedLayout}
               controlGroupState={controlGroupState}
               selectedRegionId={selectedRegionId}
               onRegionAvatarClick={onRegionAvatarClick}
