@@ -4,6 +4,8 @@ import {
   Add as AddIcon,
   Close as CloseIcon,
   CropFree as CropFreeIcon,
+  ZoomIn as ZoomInIcon,
+  ZoomOut as ZoomOutIcon,
   Image as ImageIcon,
   Search as SearchIcon,
   Translate as TranslateIcon,
@@ -27,11 +29,6 @@ import {
 import GoogleIcon from "../../assets/images/icons/google.png";
 import BingIcon from "../../assets/images/icons/bing.png";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
-
-const ZOOM_ITEMS = [
-  { label: "Fit Screen", value: "fit" },
-  { label: "Original Size", value: "original" }
-];
 
 const RegionRow = ({
   region,
@@ -424,14 +421,9 @@ export const ImageModal = ({
       hideLeftLabel
       top={
         mobile ? (
-          <>
-            <StyledContainer sx={{ flex: 1, p: 1 }}>
-              <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={setZoom} />
-            </StyledContainer>
-            <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
-              <AddIcon sx={{ fontSize: 24 }} />
-            </WButton>
-          </>
+          <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
+            <AddIcon sx={{ fontSize: 24 }} />
+          </WButton>
         ) : undefined
       }
       rightTabs={[
@@ -449,11 +441,6 @@ export const ImageModal = ({
         <WModalContent
           top={
             <>
-              {!mobile && (
-                <StyledContainer sx={{ flex: 1, p: 1 }}>
-                  <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={setZoom} />
-                </StyledContainer>
-              )}
               {desktopSelectedTab === 1 ? (
                 <>
                   <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
@@ -517,17 +504,34 @@ export const ImageModal = ({
         </WModalContent>
       }
     >
-      <ImageRegionOverlay
-        src={src}
-        alt={name}
-        regions={mobile || desktopSelectedTab === 1 ? regions : []}
-        onRegionsChange={setRegions}
-        onRegionMouseUp={onRegionMouseUp}
-        scrollRef={imageScrollRef}
-        fitScreen={zoom === "fit"}
-        selectedId={selectedRegionId}
-        onSelectedIdChange={setSelectedRegionId}
-      />
+      <Box sx={{ position: "relative", height: "100%" }}>
+        <ImageRegionOverlay
+          src={src}
+          alt={name}
+          regions={mobile || desktopSelectedTab === 1 ? regions : []}
+          onRegionsChange={setRegions}
+          onRegionMouseUp={onRegionMouseUp}
+          scrollRef={imageScrollRef}
+          fitScreen={zoom === "fit"}
+          selectedId={selectedRegionId}
+          onSelectedIdChange={setSelectedRegionId}
+        />
+        <Stack
+          sx={{
+            position: "absolute",
+            top: 8,
+            left: 8,
+            gap: "1px"
+          }}
+        >
+          <WButton onClick={() => setZoom("original")} sx={iconButtonSx}>
+            <ZoomInIcon sx={{ fontSize: 28 }} />
+          </WButton>
+          <WButton onClick={() => setZoom("fit")} sx={iconButtonSx}>
+            <ZoomOutIcon sx={{ fontSize: 28 }} />
+          </WButton>
+        </Stack>
+      </Box>
     </WModal>
   );
 };
