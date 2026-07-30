@@ -22,18 +22,23 @@ type RightPanelProps = {
   rightChildren?: ReactNode;
 };
 
-export const WModalContent = ({ tabs, selectedTab = 0, onTabChange, onClose, top, bottom, children }: PanelProps) => (
-  <Stack sx={{ flex: 1, overflow: "hidden", backgroundColor: "background.default" }}>
-    <Stack sx={{ gap: "1px" }}>
-      {tabs && tabs.length > 0 && (
-        <WTabs value={selectedTab} tabs={tabs} onChange={onTabChange ?? (() => {})} onClose={onClose} />
+export const WModalContent = ({ tabs, selectedTab = 0, onTabChange, onClose, top, bottom, children }: PanelProps) => {
+  const hasHeader = (tabs != null && tabs.length > 0) || top != null;
+  return (
+    <Stack sx={{ flex: 1, overflow: "hidden", gap: "1px", backgroundColor: "background.default" }}>
+      {hasHeader && (
+        <Stack sx={{ gap: "1px" }}>
+          {tabs && tabs.length > 0 && (
+            <WTabs value={selectedTab} tabs={tabs} onChange={onTabChange ?? (() => {})} onClose={onClose} />
+          )}
+          {top && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{top}</Stack>}
+        </Stack>
       )}
-      {top && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{top}</Stack>}
+      <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>{children}</Stack>
+      {bottom && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{bottom}</Stack>}
     </Stack>
-    <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>{children}</Stack>
-    {bottom && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{bottom}</Stack>}
-  </Stack>
-);
+  );
+};
 
 export const WModal = ({
   open,
@@ -131,17 +136,16 @@ export const WModal = ({
               {children}
             </WModalContent>
             {rightChildren && (
-              <Stack sx={{ width: rightWidth, overflow: "hidden", gap: "1px", backgroundColor: "background.default" }}>
-                {rightTabs && rightTabs.length > 0 && (
-                  <WTabs value={rightSelectedTab ?? 0} tabs={rightTabs} onChange={onRightTabChange ?? (() => {})} />
-                )}
-                {rightTop && (
-                  <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{rightTop}</Stack>
-                )}
-                <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>{rightChildren}</Stack>
-                {rightBottom && (
-                  <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{rightBottom}</Stack>
-                )}
+              <Stack sx={{ width: rightWidth }}>
+                <WModalContent
+                  tabs={rightTabs}
+                  selectedTab={rightSelectedTab}
+                  onTabChange={onRightTabChange}
+                  top={rightTop}
+                  bottom={rightBottom}
+                >
+                  {rightChildren}
+                </WModalContent>
               </Stack>
             )}
           </>
