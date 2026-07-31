@@ -2,11 +2,16 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
-import { CollectionDocument, CollectionAttributes, Folder, TypedAttributes } from "../../services/Types";
+import { CollectionDocument, CollectionAttributes, Folder, TextRegion, TypedAttributes } from "../../services/Types";
 import { setTypedAttributes } from "../../common/setTypedAttributes";
 import { toSlug } from "../../common/StringUtils";
+import { splitAnswers } from "../../utils/splitAnswers";
 
-type CollectionItem = Record<string, string | number>;
+type QuizQuestionPart = { type: "text" | "image"; value: string };
+
+type QuizEntry = { questions: QuizQuestionPart[]; answers: { text: string; correct: boolean }[] };
+
+type CollectionItem = Record<string, string | number | QuizEntry[]>;
 
 const getCollectionAttributes = async (id: string) => {
   const data = (await getDoc(doc(db, "configs", "folders"))).data() as { folders: Folder[] } | undefined;
@@ -24,6 +29,39 @@ const applyTypedAttributes = (
   return { ...base, ...typedAttributes };
 };
 
+const getQuiz = (layout: string | undefined, textRegions: TextRegion[] | undefined): QuizEntry[] | undefined => {
+  if (layout !== "quiz" || !textRegions) {
+    return undefined;
+  }
+  const quiz: QuizEntry[] = [];
+  let collectingQuestions = false;
+  textRegions.forEach((region) => {
+    const type = region.type ?? "question";
+    if (type === "question") {
+      const currentEntry = quiz[quiz.length - 1];
+      if (currentEntry && collectingQuestions) {
+        currentEntry.questions.push({ type: "text", value: region.recognisedText ?? "" });
+      } else {
+        quiz.push({ questions: [{ type: "text", value: region.recognisedText ?? "" }], answers: [] });
+        collectingQuestions = true;
+      }
+      return;
+    }
+    if (type !== "answers") {
+      return;
+    }
+    const currentEntry = quiz[quiz.length - 1];
+    if (!currentEntry) {
+      return;
+    }
+    collectingQuestions = false;
+    splitAnswers(region.recognisedText ?? "", region.delimiter ?? "letter").forEach((text, i) => {
+      currentEntry.answers.push({ text, correct: region.correctAnswerIndices?.includes(i) ?? false });
+    });
+  });
+  return quiz;
+};
+
 const getCollectionItems = async (id: string, collectionAttributes: CollectionAttributes) => {
   const data = (await getDoc(doc(db, "collections", id))).data() as CollectionDocument | undefined;
 
@@ -33,8 +71,10 @@ const getCollectionItems = async (id: string, collectionAttributes: CollectionAt
 
   const result: Record<string, CollectionItem> = {};
 
-  Object.entries(data.files).forEach(([key, { name, url, attributes }]) => {
-    result[key] = applyTypedAttributes({ name, url }, collectionAttributes, attributes);
+  Object.entries(data.files).forEach(([key, { name, url, attributes, layout, textRegions }]) => {
+    const item = applyTypedAttributes({ name, url }, collectionAttributes, attributes);
+    const quiz = getQuiz(layout, textRegions);
+    result[key] = quiz ? { ...item, quiz } : item;
   });
 
   Object.entries(data.youtube_regular).forEach(([key, { name, imageUrl, attributes }]) => {

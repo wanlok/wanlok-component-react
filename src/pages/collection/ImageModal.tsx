@@ -28,6 +28,7 @@ import {
 } from "../../common/ImageUtils";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
 import { ControlGroup } from "../../components/ControlGroup";
+import { splitAnswers } from "../../utils/splitAnswers";
 
 const QUIZ_TYPE_ITEMS = [
   { label: "Question", value: "question" },
@@ -40,20 +41,6 @@ const ANSWER_DELIMITER_ITEMS = [
   { label: "Roman numerals (i. ..., ii. ..., iii. ..., ...)", value: "roman" },
   { label: "Dashes (- ..., - ..., - ..., ...)", value: "dash" }
 ];
-
-const ANSWER_DELIMITER_PATTERNS: { [key: string]: RegExp } = {
-  letter: /(?<![A-Za-z])(?=[A-Za-z][.)]\s)/,
-  number: /(?<!\d)(?=\d+[.)]\s)/,
-  roman: /(?<![A-Za-z])(?=[ivxlcdm]+[.)]\s)/i,
-  dash: /(?<!\S)(?=-\s)/
-};
-
-const ANSWER_LABEL_PATTERNS: { [key: string]: RegExp } = {
-  letter: /^[A-Za-z][.)]\s*/,
-  number: /^\d+[.)]\s*/,
-  roman: /^[ivxlcdm]+[.)]\s*/i,
-  dash: /^-\s*/
-};
 
 const DefaultTranslateContainer = ({
   translateLanguage,
@@ -95,10 +82,7 @@ const QuizAnswerContainer = ({
   onDelimiterChange: (delimiter: string) => void;
   onCorrectAnswerIndicesChange: (indices: number[]) => void;
 }) => {
-  const answers = text
-    .split(ANSWER_DELIMITER_PATTERNS[delimiter])
-    .map((answer) => answer.replace(ANSWER_LABEL_PATTERNS[delimiter], "").trim())
-    .filter((answer) => answer.length > 0);
+  const answers = splitAnswers(text, delimiter);
   return (
     <>
       <SelectInput label="Delimiter" items={ANSWER_DELIMITER_ITEMS} value={delimiter} onChange={onDelimiterChange} />
