@@ -8,6 +8,8 @@ const ANSWER_DELIMITER_PATTERNS: { [key: string]: RegExp } = {
   dash: /(?<!\S)(?=-\s)/
 };
 
+export const ANSWER_DELIMITER_KEYS = Object.keys(ANSWER_DELIMITER_PATTERNS);
+
 const ANSWER_LABEL_PATTERNS: { [key: string]: RegExp } = {
   letter_dot: /^[A-Za-z]\.\s*/,
   letter_paren: /^[A-Za-z]\)\s*/,

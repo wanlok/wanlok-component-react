@@ -29,6 +29,7 @@ import {
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
 import { ControlGroup } from "../../components/ControlGroup";
 import { splitAnswers } from "../../utils/splitAnswers";
+import { detectDelimiter } from "../../utils/detectDelimiter";
 
 const QUIZ_TYPE_ITEMS = [
   { label: "Question", value: "question" },
@@ -404,7 +405,10 @@ export const ImageModal = ({
       return;
     }
     const text = await recognizeText(base64, language);
-    setRegions((prev) => prev.map((r) => (r.id === region.id ? { ...r, recognisedText: text } : r)));
+    const delimiter = region.type === "answers" && !region.delimiter ? detectDelimiter(text) : undefined;
+    setRegions((prev) =>
+      prev.map((r) => (r.id === region.id ? { ...r, recognisedText: text, ...(delimiter && { delimiter }) } : r))
+    );
     if (controlGroupState === 3 && text && region.translateLanguage) {
       await performTranslation(region.id, text, getIsoLanguage(language), region.translateLanguage);
     }
@@ -486,7 +490,15 @@ export const ImageModal = ({
   };
 
   const onRegionTypeChange = (regionId: string, type: string) => {
-    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, type: type as TextRegion["type"] } : r)));
+    setRegions((prev) =>
+      prev.map((r) => {
+        if (r.id !== regionId) {
+          return r;
+        }
+        const delimiter = type === "answers" && !r.delimiter && r.recognisedText ? detectDelimiter(r.recognisedText) : r.delimiter;
+        return { ...r, type: type as TextRegion["type"], delimiter };
+      })
+    );
   };
 
   const onRegionDelimiterChange = (regionId: string, delimiter: string) => {

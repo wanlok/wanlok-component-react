@@ -9,7 +9,7 @@ import { splitAnswers } from "../../utils/splitAnswers";
 
 type QuizQuestionPart = { type: "text" | "image"; value: string };
 
-type QuizEntry = { questions: QuizQuestionPart[]; answers: { text: string; correct: boolean }[] };
+type QuizEntry = { question: QuizQuestionPart[]; answers: { text: string; correct: boolean }[] };
 
 type CollectionItem = Record<string, string | number | QuizEntry[]>;
 
@@ -34,16 +34,16 @@ const getQuiz = (layout: string | undefined, textRegions: TextRegion[] | undefin
     return undefined;
   }
   const quiz: QuizEntry[] = [];
-  let collectingQuestions = false;
+  let collectingQuestion = false;
   textRegions.forEach((region) => {
     const type = region.type ?? "question";
     if (type === "question") {
       const currentEntry = quiz[quiz.length - 1];
-      if (currentEntry && collectingQuestions) {
-        currentEntry.questions.push({ type: "text", value: region.recognisedText ?? "" });
+      if (currentEntry && collectingQuestion) {
+        currentEntry.question.push({ type: "text", value: region.recognisedText ?? "" });
       } else {
-        quiz.push({ questions: [{ type: "text", value: region.recognisedText ?? "" }], answers: [] });
-        collectingQuestions = true;
+        quiz.push({ question: [{ type: "text", value: region.recognisedText ?? "" }], answers: [] });
+        collectingQuestion = true;
       }
       return;
     }
@@ -54,7 +54,7 @@ const getQuiz = (layout: string | undefined, textRegions: TextRegion[] | undefin
     if (!currentEntry) {
       return;
     }
-    collectingQuestions = false;
+    collectingQuestion = false;
     splitAnswers(region.recognisedText ?? "", region.delimiter ?? "letter_dot").forEach((text, i) => {
       currentEntry.answers.push({ text, correct: region.correctAnswerIndices?.includes(i) ?? false });
     });
