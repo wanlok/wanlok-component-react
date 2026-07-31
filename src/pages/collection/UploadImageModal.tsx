@@ -2,7 +2,7 @@ import { Box } from "@mui/material";
 import { WModal } from "../../components/WModal";
 import { YesNoButtons } from "../../components/YesNoButtons";
 
-export const ImageClipboardModal = ({
+export const UploadImageModal = ({
   open,
   src,
   onUploadButtonClick,

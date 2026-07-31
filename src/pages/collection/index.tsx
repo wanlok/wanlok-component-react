@@ -6,8 +6,8 @@ import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { FolderModal } from "./FolderModal";
 import { ResetOrderConfirmationModal } from "./ResetOrderConfirmationModal";
-import { ImageClipboardModal } from "./ImageClipboardModal";
-import { useImageClipboard } from "./useImageClipboard";
+import { UploadImageModal } from "./UploadImageModal";
+import { useUploadImage } from "./useUploadImage";
 import { LeftContent } from "./LeftContent";
 import { LeftHeader } from "./LeftHeader";
 import { PanelRow } from "../../components/PanelRow";
@@ -49,7 +49,7 @@ export const CollectionPage = () => {
     updateCollectionSequences,
     deleteCollectionItem
   } = useCollection(getDocumentId(selectedFolder?.name), selectedFolder?.sequences, updateFolder);
-  const imageClipboardAttributes = useImageClipboard({
+  const uploadImageAttributes = useUploadImage({
     selectedFolder,
     onUpload: async (blob, name) => {
       const collectionId = getDocumentId(selectedFolder?.name);
@@ -197,12 +197,12 @@ export const CollectionPage = () => {
           await updateFolder({ name: newFolderName, attributes: newAttributes });
         }}
       />
-<ResetOrderConfirmationModal
+      <ResetOrderConfirmationModal
         open={resetOrderModalOpen}
         onClose={() => setResetOrderModalOpen(false)}
         onConfirm={resetFolderSequences}
       />
-      <ImageClipboardModal {...imageClipboardAttributes} />
+      <UploadImageModal {...uploadImageAttributes} />
     </LayoutPanel>
   );
 };

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Folder } from "../../services/Types";
+import { getDateTimeString } from "../../common/DateUtils";
 
-export const useImageClipboard = ({
+export const useUploadImage = ({
   selectedFolder,
   onUpload
 }: {
@@ -35,10 +36,9 @@ export const useImageClipboard = ({
 
   const onUploadButtonClick = async () => {
     if (imageBlobUrl) {
-      const name = `Screenshot ${new Date().toISOString().replace("T", " ").slice(0, 19)}`;
       URL.revokeObjectURL(imageBlobUrl.url);
       setImageBlobUrl(null);
-      await onUpload(imageBlobUrl.blob, name);
+      await onUpload(imageBlobUrl.blob, getDateTimeString(new Date()));
     }
   };
 
