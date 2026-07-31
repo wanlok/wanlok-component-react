@@ -40,7 +40,6 @@ export const VideoModal = ({
       open={open}
       onClose={onClose}
       width="80vw"
-      height="80dvh"
       tabs={[{ icon: <SmartDisplayIcon sx={{ fontSize: 24 }} />, label: "Video" }]}
       hideLeftLabel
       mobileSelectedTab={mobileSelectedTab}
@@ -83,7 +82,7 @@ export const VideoModal = ({
           src={`https://www.youtube.com/embed/${id}`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
           allowFullScreen
-          sx={{ display: "block", width: "100%", height: "100%", border: 0 }}
+          sx={{ display: "block", width: "100%", aspectRatio: "16/9", border: 0, backgroundColor: "common.black" }}
         />
       )}
     </WModal>
