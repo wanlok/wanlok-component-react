@@ -149,7 +149,7 @@ const RegionRow = ({
   onCorrectAnswerIndicesChange: (indices: number[]) => void;
   isTranslating: boolean;
 }) => (
-  <Stack>
+  <Stack data-region-id={region.id}>
     <ButtonBase
       sx={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", gap: 1, py: 1, pl: 1, ml: -1 }}
       onClick={onAvatarClick}
@@ -363,11 +363,17 @@ export const ImageModal = ({
   const [zoom, setZoom] = useState("fit");
   const imageCanvasRef = useRef<HTMLCanvasElement | null>(null);
   const imageScrollRef = useRef<HTMLDivElement>(null);
+  const rightScrollRef = useRef<HTMLDivElement>(null);
 
   const onAddRegionClick = () => {
-    setRegions((prev) => [...prev, { id: String(Date.now()), x: 80, y: 40, width: 240, height: 135 }]);
+    const container = imageScrollRef.current;
+    const x = (container?.scrollLeft ?? 0) + 80;
+    const y = (container?.scrollTop ?? 0) + 40;
+    setRegions((prev) => [...prev, { id: String(Date.now()), x, y, width: 240, height: 135 }]);
     setControlGroupState(0);
-    imageScrollRef.current?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    requestAnimationFrame(() => {
+      rightScrollRef.current?.scrollTo({ top: rightScrollRef.current.scrollHeight, behavior: "smooth" });
+    });
   };
 
   useEffect(() => {
@@ -519,24 +525,29 @@ export const ImageModal = ({
     );
   };
 
-  const onRegionAvatarClick = (regionId: string) => {
+  const onRegionSelect = (regionId: string | null) => {
     setSelectedRegionId(regionId);
     if (mobile) {
       setMobileSelectedTab(0);
     }
+    if (!regionId) {
+      return;
+    }
+    const row = rightScrollRef.current?.querySelector<HTMLElement>(`[data-region-id="${regionId}"]`);
+    row?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const onRegionAvatarClick = (regionId: string) => {
+    onRegionSelect(regionId);
     const region = regions.find((r) => r.id === regionId);
-    if (!region) {
-      return;
-    }
     const container = imageScrollRef.current;
-    if (!container) {
-      return;
+    if (region && container) {
+      container.scrollTo({
+        left: region.x - container.clientWidth / 2 + region.width / 2,
+        top: region.y - container.clientHeight / 2 + region.height / 2,
+        behavior: "smooth"
+      });
     }
-    container.scrollTo({
-      left: region.x - container.clientWidth / 2 + region.width / 2,
-      top: region.y - container.clientHeight / 2 + region.height / 2,
-      behavior: "smooth"
-    });
   };
 
   return (
@@ -608,6 +619,7 @@ export const ImageModal = ({
           </>
         ) : undefined
       }
+      rightScrollRef={rightScrollRef}
       rightBottom={
         <YesNoButtons
           yesLabel="Save"
@@ -658,7 +670,7 @@ export const ImageModal = ({
           scrollRef={imageScrollRef}
           fitScreen={zoom === "fit"}
           selectedId={selectedRegionId}
-          onSelectedIdChange={setSelectedRegionId}
+          onSelectedIdChange={onRegionSelect}
         />
         {!mobile && (
           <Stack sx={{ position: "absolute", flexDirection: "row", top: 8, left: 8, gap: "1px" }}>

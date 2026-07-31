@@ -1,6 +1,6 @@
 import { alpha, Modal, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { TabItem, WTabs } from "./WTabs";
-import { ReactNode } from "react";
+import { ReactNode, RefObject } from "react";
 
 type PanelProps = {
   tabs?: TabItem[];
@@ -10,6 +10,7 @@ type PanelProps = {
   top?: ReactNode;
   bottom?: ReactNode;
   children?: ReactNode;
+  scrollRef?: RefObject<HTMLDivElement>;
 };
 
 type RightPanelProps = {
@@ -20,9 +21,10 @@ type RightPanelProps = {
   rightTop?: ReactNode;
   rightBottom?: ReactNode;
   rightChildren?: ReactNode;
+  rightScrollRef?: RefObject<HTMLDivElement>;
 };
 
-const WModalContent = ({ tabs, selectedTab = 0, onTabChange, onClose, top, bottom, children }: PanelProps) => {
+const WModalContent = ({ tabs, selectedTab = 0, onTabChange, onClose, top, bottom, children, scrollRef }: PanelProps) => {
   const hasHeader = (tabs != null && tabs.length > 0) || top != null;
   return (
     <Stack sx={{ flex: 1, overflow: "hidden", backgroundColor: "background.default" }}>
@@ -34,7 +36,9 @@ const WModalContent = ({ tabs, selectedTab = 0, onTabChange, onClose, top, botto
           {top && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{top}</Stack>}
         </Stack>
       )}
-      <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>{children}</Stack>
+      <Stack ref={scrollRef} sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>
+        {children}
+      </Stack>
       {bottom && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{bottom}</Stack>}
     </Stack>
   );
@@ -60,7 +64,8 @@ export const WModal = ({
   onRightTabChange,
   rightTop,
   rightBottom,
-  rightChildren
+  rightChildren,
+  rightScrollRef
 }: {
   open: boolean;
   onClose: () => void;
@@ -143,6 +148,7 @@ export const WModal = ({
                   onTabChange={onRightTabChange}
                   top={rightTop}
                   bottom={rightBottom}
+                  scrollRef={rightScrollRef}
                 >
                   {rightChildren}
                 </WModalContent>
