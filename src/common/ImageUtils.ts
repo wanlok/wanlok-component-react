@@ -79,7 +79,7 @@ export const LANGUAGE_ITEMS = [
 
 export const recognizeText = async (imageBase64String: string, language: string) => {
   const { data } = await Tesseract.recognize(imageBase64String, language);
-  return data.text.trim();
+  return data.text.trim().replace(/\n+/g, " ").replace(/ {2,}/g, " ");
 };
 
 export const TRANSLATE_LANGUAGE_ITEMS = [
