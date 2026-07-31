@@ -433,9 +433,17 @@ export const ImageModal = ({
       hideLeftLabel
       top={
         mobile ? (
-          <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
-            <AddIcon sx={{ fontSize: 24 }} />
-          </WButton>
+          <>
+            <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
+              <AddIcon sx={{ fontSize: 24 }} />
+            </WButton>
+            <WButton onClick={() => setZoom("original")} sx={iconButtonSx}>
+              <ZoomInIcon sx={{ fontSize: 24 }} />
+            </WButton>
+            <WButton onClick={() => setZoom("fit")} sx={iconButtonSx}>
+              <ZoomOutIcon sx={{ fontSize: 24 }} />
+            </WButton>
+          </>
         ) : undefined
       }
       rightTabs={[
@@ -525,35 +533,22 @@ export const ImageModal = ({
           selectedId={selectedRegionId}
           onSelectedIdChange={setSelectedRegionId}
         />
-        <Stack
-          sx={{
-            position: "absolute",
-            top: 8,
-            left: 8,
-            gap: "1px"
-          }}
-        >
-          <WButton
-            onClick={() => setZoom("original")}
-            sx={{
-              ...iconButtonSx,
-              backgroundColor: alpha(palette.primary.main, 0.9),
-              "&:hover": { backgroundColor: palette.primary.main }
-            }}
-          >
-            <ZoomInIcon sx={{ fontSize: 28 }} />
-          </WButton>
-          <WButton
-            onClick={() => setZoom("fit")}
-            sx={{
-              ...iconButtonSx,
-              backgroundColor: alpha(palette.primary.main, 0.9),
-              "&:hover": { backgroundColor: palette.primary.main }
-            }}
-          >
-            <ZoomOutIcon sx={{ fontSize: 28 }} />
-          </WButton>
-        </Stack>
+        {!mobile && (
+          <Stack sx={{ position: "absolute", top: 8, left: 8, gap: "1px" }}>
+            <WButton
+              onClick={() => setZoom("original")}
+              sx={{ ...iconButtonSx, backgroundColor: alpha(palette.primary.main, 0.9), "&:hover": { backgroundColor: palette.primary.main } }}
+            >
+              <ZoomInIcon sx={{ fontSize: 28 }} />
+            </WButton>
+            <WButton
+              onClick={() => setZoom("fit")}
+              sx={{ ...iconButtonSx, backgroundColor: alpha(palette.primary.main, 0.9), "&:hover": { backgroundColor: palette.primary.main } }}
+            >
+              <ZoomOutIcon sx={{ fontSize: 28 }} />
+            </WButton>
+          </Stack>
+        )}
       </Box>
     </WModal>
   );
