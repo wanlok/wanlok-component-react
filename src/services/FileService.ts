@@ -1,4 +1,5 @@
 import { CloudinaryFileInfo } from "./Types";
+import { resizeImageBlob } from "../utils/resizeImageBlob";
 
 const cloudinaryUrl = `https://api.cloudinary.com/v1_1/${import.meta.env.VITE_CLOUDINARY_CLOUD_NAME}/raw/upload`;
 
@@ -16,9 +17,10 @@ const uploadImageBlob = async (
   mimeType: string
 ): Promise<{ [key: string]: CloudinaryFileInfo }> => {
   const ext = mimeTypeExtensions[mimeType];
+  const resizedBlob = mimeType === "image/svg+xml" ? blob : await resizeImageBlob(blob, mimeType);
   const formData = new FormData();
   formData.append("upload_preset", "wanlok-component");
-  formData.append("file", blob, ext ? `${name}.${ext}` : name);
+  formData.append("file", resizedBlob, ext ? `${name}.${ext}` : name);
 
   const response = await fetch(cloudinaryUrl, { method: "POST", body: formData });
   const { public_id, secure_url } = await response.json();
