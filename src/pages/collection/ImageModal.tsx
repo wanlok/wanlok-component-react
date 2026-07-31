@@ -543,7 +543,7 @@ export const ImageModal = ({
           onSelectedIdChange={setSelectedRegionId}
         />
         {!mobile && (
-          <Stack sx={{ position: "absolute", top: 8, left: 8, gap: "1px" }}>
+          <Stack sx={{ position: "absolute", flexDirection: "row", top: 8, left: 8, gap: "1px" }}>
             <WButton
               onClick={() => setZoom("original")}
               sx={{
