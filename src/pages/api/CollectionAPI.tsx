@@ -55,7 +55,7 @@ const getQuiz = (layout: string | undefined, textRegions: TextRegion[] | undefin
       return;
     }
     collectingQuestions = false;
-    splitAnswers(region.recognisedText ?? "", region.delimiter ?? "letter").forEach((text, i) => {
+    splitAnswers(region.recognisedText ?? "", region.delimiter ?? "letter_dot").forEach((text, i) => {
       currentEntry.answers.push({ text, correct: region.correctAnswerIndices?.includes(i) ?? false });
     });
   });

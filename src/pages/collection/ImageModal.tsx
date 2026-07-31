@@ -36,10 +36,13 @@ const QUIZ_TYPE_ITEMS = [
 ];
 
 const ANSWER_DELIMITER_ITEMS = [
-  { label: "Letters (A. ..., B. ..., C. ..., ...)", value: "letter" },
-  { label: "Numbers (1. ..., 2. ..., 3. ..., ...)", value: "number" },
-  { label: "Roman numerals (i. ..., ii. ..., iii. ..., ...)", value: "roman" },
-  { label: "Dashes (- ..., - ..., - ..., ...)", value: "dash" }
+  { label: "A. ..., B. ..., C. ..., D. ..., ...", value: "letter_dot" },
+  { label: "A) ..., B) ..., C) ..., D) ..., ...", value: "letter_paren" },
+  { label: "1. ..., 2. ..., 3. ..., 4. ..., ...", value: "number_dot" },
+  { label: "1) ..., 2) ..., 3) ..., 4) ..., ...", value: "number_paren" },
+  { label: "i. ..., ii. ..., iii. ..., iv. ..., ...", value: "roman_dot" },
+  { label: "i) ..., ii) ..., iii) ..., iv) ..., ...", value: "roman_paren" },
+  { label: "- ..., - ..., - ..., - ..., ...", value: "dash" }
 ];
 
 const DefaultTranslateContainer = ({
@@ -184,7 +187,7 @@ const RegionRow = ({
             {selectedLayout === "quiz" && region.type === "answers" && (
               <QuizAnswerContainer
                 text={region.recognisedText ?? ""}
-                delimiter={region.delimiter ?? "letter"}
+                delimiter={region.delimiter ?? "letter_dot"}
                 correctAnswerIndices={region.correctAnswerIndices}
                 onDelimiterChange={onDelimiterChange}
                 onCorrectAnswerIndicesChange={onCorrectAnswerIndicesChange}

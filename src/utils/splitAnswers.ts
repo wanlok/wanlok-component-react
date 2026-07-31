@@ -1,14 +1,20 @@
 const ANSWER_DELIMITER_PATTERNS: { [key: string]: RegExp } = {
-  letter: /(?<![A-Za-z])(?=[A-Za-z][.)]\s)/,
-  number: /(?<!\d)(?=\d+[.)]\s)/,
-  roman: /(?<![A-Za-z])(?=[ivxlcdm]+[.)]\s)/i,
+  letter_dot: /(?<![A-Za-z])(?=[A-Za-z]\.\s)/,
+  letter_paren: /(?<![A-Za-z])(?=[A-Za-z]\)\s)/,
+  number_dot: /(?<!\d)(?=\d+\.\s)/,
+  number_paren: /(?<!\d)(?=\d+\)\s)/,
+  roman_dot: /(?<![A-Za-z])(?=[ivxlcdm]+\.\s)/i,
+  roman_paren: /(?<![A-Za-z])(?=[ivxlcdm]+\)\s)/i,
   dash: /(?<!\S)(?=-\s)/
 };
 
 const ANSWER_LABEL_PATTERNS: { [key: string]: RegExp } = {
-  letter: /^[A-Za-z][.)]\s*/,
-  number: /^\d+[.)]\s*/,
-  roman: /^[ivxlcdm]+[.)]\s*/i,
+  letter_dot: /^[A-Za-z]\.\s*/,
+  letter_paren: /^[A-Za-z]\)\s*/,
+  number_dot: /^\d+\.\s*/,
+  number_paren: /^\d+\)\s*/,
+  roman_dot: /^[ivxlcdm]+\.\s*/i,
+  roman_paren: /^[ivxlcdm]+\)\s*/i,
   dash: /^-\s*/
 };
 
