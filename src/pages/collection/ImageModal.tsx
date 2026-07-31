@@ -4,6 +4,7 @@ import {
   Add as AddIcon,
   Close as CloseIcon,
   CropFree as CropFreeIcon,
+  SwapHoriz as SwapHorizIcon,
   ZoomIn as ZoomInIcon,
   ZoomOut as ZoomOutIcon,
   Image as ImageIcon,
@@ -27,6 +28,8 @@ import {
 import GoogleIcon from "../../assets/images/icons/google.png";
 import BingIcon from "../../assets/images/icons/bing.png";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
+import { ControlGroup } from "../../components/ControlGroup";
+import { Direction } from "../../services/Types";
 
 const RegionRow = ({
   region,
@@ -36,6 +39,8 @@ const RegionRow = ({
   isSelected,
   onAvatarClick,
   onDeleteClick,
+  onMoveUpClick,
+  onMoveDownClick,
   onLanguageChange,
   onTextChange,
   onTextBlur,
@@ -49,13 +54,15 @@ const RegionRow = ({
   isSelected: boolean;
   onAvatarClick: () => void;
   onDeleteClick: () => void;
+  onMoveUpClick: () => void;
+  onMoveDownClick: () => void;
   onLanguageChange: (language: string) => void;
   onTextChange: (text: string) => void;
   onTextBlur: () => void;
   onTranslateLanguageChange: (language: string) => void;
   isTranslating: boolean;
 }) => (
-  <Stack sx={{}}>
+  <Stack sx={{ position: "relative" }}>
     <ButtonBase
       sx={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", gap: 1, py: 1, pl: 1, ml: -1 }}
       onClick={onAvatarClick}
@@ -133,12 +140,22 @@ const RegionRow = ({
           </WButton>
         </Stack>
       )}
-      {controlGroupState === 2 && (
-        <WButton onClick={onDeleteClick} sx={iconButtonSx}>
-          <CloseIcon sx={{ fontSize: 24 }} />
-        </WButton>
-      )}
     </StyledContainer>
+    {controlGroupState === 1 && (
+      <ControlGroup
+        direction={Direction.right}
+        scrollHorizontally={false}
+        onLeftButtonClick={onMoveUpClick}
+        onRightButtonClick={onMoveDownClick}
+      />
+    )}
+    {controlGroupState === 2 && (
+      <ControlGroup
+        direction={Direction.right}
+        scrollHorizontally={false}
+        onDeleteButtonClick={onDeleteClick}
+      />
+    )}
   </Stack>
 );
 
@@ -198,27 +215,39 @@ const Recognitions = ({
   onRegionTextBlur: (regionId: string) => void;
   onRegionTranslateLanguageChange: (regionId: string, language: string) => void;
   translatingRegionIds: Set<string>;
-}) => (
-  <Stack sx={{ px: 2, pt: 1, pb: 2, gap: 1 }}>
-    {regions.map((region, i) => (
-      <RegionRow
-        key={region.id}
-        region={region}
-        index={i}
-        selectedLayout={selectedLayout}
-        controlGroupState={controlGroupState}
-        isSelected={region.id === selectedRegionId}
-        isTranslating={translatingRegionIds.has(region.id)}
-        onAvatarClick={() => onRegionAvatarClick(region.id)}
-        onDeleteClick={() => onRegionsChange(regions.filter((r) => r.id !== region.id))}
-        onLanguageChange={(language) => onRegionLanguageChange(region.id, language)}
-        onTextChange={(text) => onRegionTextChange(region.id, text)}
-        onTextBlur={() => onRegionTextBlur(region.id)}
-        onTranslateLanguageChange={(language) => onRegionTranslateLanguageChange(region.id, language)}
-      />
-    ))}
-  </Stack>
-);
+}) => {
+  const moveRegion = (fromIndex: number, toIndex: number) => {
+    if (toIndex < 0 || toIndex >= regions.length) {
+      return;
+    }
+    const next = [...regions];
+    [next[fromIndex], next[toIndex]] = [next[toIndex], next[fromIndex]];
+    onRegionsChange(next);
+  };
+  return (
+    <Stack sx={{ px: 2, pt: 1, pb: 2, gap: 1 }}>
+      {regions.map((region, i) => (
+        <RegionRow
+          key={region.id}
+          region={region}
+          index={i}
+          selectedLayout={selectedLayout}
+          controlGroupState={controlGroupState}
+          isSelected={region.id === selectedRegionId}
+          isTranslating={translatingRegionIds.has(region.id)}
+          onAvatarClick={() => onRegionAvatarClick(region.id)}
+          onDeleteClick={() => onRegionsChange(regions.filter((r) => r.id !== region.id))}
+          onMoveUpClick={() => moveRegion(i, i - 1)}
+          onMoveDownClick={() => moveRegion(i, i + 1)}
+          onLanguageChange={(language) => onRegionLanguageChange(region.id, language)}
+          onTextChange={(text) => onRegionTextChange(region.id, text)}
+          onTextBlur={() => onRegionTextBlur(region.id)}
+          onTranslateLanguageChange={(language) => onRegionTranslateLanguageChange(region.id, language)}
+        />
+      ))}
+    </Stack>
+  );
+};
 
 export const ImageModal = ({
   open,
@@ -475,6 +504,13 @@ export const ImageModal = ({
               <AddIcon sx={{ fontSize: 24 }} />
             </WButton>
             <WButton
+              isActivated={controlGroupState === 1}
+              onClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
+              sx={iconButtonSx}
+            >
+              <SwapHorizIcon sx={{ fontSize: 26 }} />
+            </WButton>
+            <WButton
               isActivated={controlGroupState === 2}
               onClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
               sx={iconButtonSx}
@@ -537,13 +573,21 @@ export const ImageModal = ({
           <Stack sx={{ position: "absolute", top: 8, left: 8, gap: "1px" }}>
             <WButton
               onClick={() => setZoom("original")}
-              sx={{ ...iconButtonSx, backgroundColor: alpha(palette.primary.main, 0.9), "&:hover": { backgroundColor: palette.primary.main } }}
+              sx={{
+                ...iconButtonSx,
+                backgroundColor: alpha(palette.primary.main, 0.9),
+                "&:hover": { backgroundColor: palette.primary.main }
+              }}
             >
               <ZoomInIcon sx={{ fontSize: 28 }} />
             </WButton>
             <WButton
               onClick={() => setZoom("fit")}
-              sx={{ ...iconButtonSx, backgroundColor: alpha(palette.primary.main, 0.9), "&:hover": { backgroundColor: palette.primary.main } }}
+              sx={{
+                ...iconButtonSx,
+                backgroundColor: alpha(palette.primary.main, 0.9),
+                "&:hover": { backgroundColor: palette.primary.main }
+              }}
             >
               <ZoomOutIcon sx={{ fontSize: 28 }} />
             </WButton>

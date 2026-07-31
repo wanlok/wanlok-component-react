@@ -1,4 +1,4 @@
-import { alpha, Stack, useMediaQuery, useTheme } from "@mui/material";
+import { alpha, Stack, useTheme } from "@mui/material";
 import { iconButtonSx, WButton } from "./WButton";
 import {
   Close as CloseIcon,
@@ -25,8 +25,7 @@ export const ControlGroup = ({
   onLeftButtonClick?: () => void;
   onRightButtonClick?: () => void;
 }) => {
-  const { breakpoints, palette } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("md"));
+  const { palette } = useTheme();
   const sx = {
     ...iconButtonSx,
     backgroundColor: alpha(palette.common.black, 0.6),
@@ -49,22 +48,22 @@ export const ControlGroup = ({
           <CloseIcon sx={{ fontSize: 24, color: "common.white" }} />
         </WButton>
       )}
-      {!scrollHorizontally && mobile && onLeftButtonClick && (
+      {!scrollHorizontally && onLeftButtonClick && (
         <WButton onClick={onLeftButtonClick} sx={sx}>
           <KeyboardArrowUpIcon sx={{ fontSize: 32, color: "common.white" }} />
         </WButton>
       )}
-      {!scrollHorizontally && mobile && onRightButtonClick && (
+      {!scrollHorizontally && onRightButtonClick && (
         <WButton onClick={onRightButtonClick} sx={sx}>
           <KeyboardArrowDownIcon sx={{ fontSize: 32, color: "common.white" }} />
         </WButton>
       )}
-      {(scrollHorizontally || !mobile) && onRightButtonClick && (
+      {scrollHorizontally && onRightButtonClick && (
         <WButton onClick={onRightButtonClick} sx={sx}>
           <KeyboardArrowRightIcon sx={{ fontSize: 32, color: "common.white" }} />
         </WButton>
       )}
-      {(scrollHorizontally || !mobile) && onLeftButtonClick && (
+      {scrollHorizontally && onLeftButtonClick && (
         <WButton onClick={onLeftButtonClick} sx={sx}>
           <KeyboardArrowLeftIcon sx={{ fontSize: 32, color: "common.white" }} />
         </WButton>

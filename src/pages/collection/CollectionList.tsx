@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Skeleton, Stack } from "@mui/material";
+import { Skeleton, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { ChartItem, CloudinaryFileInfo, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
@@ -34,6 +34,8 @@ export const CollectionList = ({
   onRightButtonClick: (type: string, id: string) => void;
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { breakpoints } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
 
   const gridTemplateColumns = { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" };
   return (
@@ -46,7 +48,7 @@ export const CollectionList = ({
             chartItem={chartItem}
             leftMost={i === 0}
             rightMost={i === charts.length - 1}
-            scrollHorizontally={false}
+            scrollHorizontally={!mobile}
             onDeleteButtonClick={() => onDeleteButtonClick("charts", uuid)}
             onLeftButtonClick={() => onLeftButtonClick("charts", uuid)}
             onRightButtonClick={() => onRightButtonClick("charts", uuid)}
@@ -62,7 +64,7 @@ export const CollectionList = ({
             aspectRatio="16/9"
             leftMost={i === 0}
             rightMost={i === files.length - 1}
-            scrollHorizontally={false}
+            scrollHorizontally={!mobile}
             controlGroupState={controlGroupState}
             onLeftButtonClick={() => onLeftButtonClick("files", id)}
             onRightButtonClick={() => onRightButtonClick("files", id)}
@@ -79,7 +81,7 @@ export const CollectionList = ({
             aspectRatio="16/9"
             leftMost={i === 0}
             rightMost={i === hyperlinks.length - 1}
-            scrollHorizontally={false}
+            scrollHorizontally={!mobile}
             controlGroupState={controlGroupState}
             onDeleteButtonClick={() => onDeleteButtonClick("hyperlinks", url)}
             onLeftButtonClick={() => onLeftButtonClick("hyperlinks", url)}
@@ -95,7 +97,7 @@ export const CollectionList = ({
             aspectRatio="92/43"
             leftMost={i === 0}
             rightMost={i === steam.length - 1}
-            scrollHorizontally={false}
+            scrollHorizontally={!mobile}
             controlGroupState={controlGroupState}
             onDeleteButtonClick={() => onDeleteButtonClick("steam", appId)}
             onLeftButtonClick={() => onLeftButtonClick("steam", appId)}
@@ -112,7 +114,7 @@ export const CollectionList = ({
             aspectRatio="16/9"
             leftMost={i === 0}
             rightMost={i === youTubeShortVideos.length - 1}
-            scrollHorizontally={false}
+            scrollHorizontally={!mobile}
             controlGroupState={controlGroupState}
             onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
             onLeftButtonClick={() => onLeftButtonClick("youtube_shorts", id)}
@@ -128,7 +130,7 @@ export const CollectionList = ({
             aspectRatio="16/9"
             leftMost={i === 0}
             rightMost={i === youTubeRegularVideos.length - 1}
-            scrollHorizontally={false}
+            scrollHorizontally={!mobile}
             controlGroupState={controlGroupState}
             onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}
             onLeftButtonClick={() => onLeftButtonClick("youtube_regular", id)}
