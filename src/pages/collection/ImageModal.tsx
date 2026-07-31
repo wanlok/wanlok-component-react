@@ -25,11 +25,8 @@ import {
   TRANSLATE_LANGUAGE_ITEMS,
   translateText
 } from "../../common/ImageUtils";
-import GoogleIcon from "../../assets/images/icons/google.png";
-import BingIcon from "../../assets/images/icons/bing.png";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
 import { ControlGroup } from "../../components/ControlGroup";
-import { Direction } from "../../services/Types";
 
 const RegionRow = ({
   region,
@@ -62,7 +59,7 @@ const RegionRow = ({
   onTranslateLanguageChange: (language: string) => void;
   isTranslating: boolean;
 }) => (
-  <Stack sx={{ position: "relative" }}>
+  <Stack>
     <ButtonBase
       sx={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", gap: 1, py: 1, pl: 1, ml: -1 }}
       onClick={onAvatarClick}
@@ -120,42 +117,18 @@ const RegionRow = ({
           </>
         )}
       </Stack>
-      {selectedLayout === "default+search" && controlGroupState !== 2 && region.recognisedText && (
-        <Stack sx={{ gap: "1px" }}>
-          <WButton
-            onClick={() =>
-              window.open(`https://www.google.com/search?q=${encodeURIComponent(region.recognisedText!)}`, "_blank")
-            }
-            sx={iconButtonSx}
-          >
-            <Box component="img" src={GoogleIcon} sx={{ width: 16, height: 16 }} />
-          </WButton>
-          <WButton
-            onClick={() =>
-              window.open(`https://www.bing.com/search?q=${encodeURIComponent(region.recognisedText!)}`, "_blank")
-            }
-            sx={iconButtonSx}
-          >
-            <Box component="img" src={BingIcon} sx={{ width: 20, height: 20 }} />
-          </WButton>
-        </Stack>
+      {selectedLayout === "default+search" && controlGroupState === 0 && region.recognisedText && (
+        <ControlGroup scrollHorizontally={false} searchQuery={region.recognisedText} />
       )}
+      {controlGroupState === 1 && (
+        <ControlGroup
+          scrollHorizontally={false}
+          onLeftButtonClick={onMoveUpClick}
+          onRightButtonClick={onMoveDownClick}
+        />
+      )}
+      {controlGroupState === 2 && <ControlGroup scrollHorizontally={false} onDeleteButtonClick={onDeleteClick} />}
     </StyledContainer>
-    {controlGroupState === 1 && (
-      <ControlGroup
-        direction={Direction.right}
-        scrollHorizontally={false}
-        onLeftButtonClick={onMoveUpClick}
-        onRightButtonClick={onMoveDownClick}
-      />
-    )}
-    {controlGroupState === 2 && (
-      <ControlGroup
-        direction={Direction.right}
-        scrollHorizontally={false}
-        onDeleteButtonClick={onDeleteClick}
-      />
-    )}
   </Stack>
 );
 
