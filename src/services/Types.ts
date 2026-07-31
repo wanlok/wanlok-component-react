@@ -79,6 +79,9 @@ export interface TextRegion {
   recognisedText?: string;
   translateLanguage?: string;
   translatedText?: string;
+  type?: "question" | "answers";
+  delimiter?: string;
+  correctAnswerIndices?: number[];
 }
 
 export interface CloudinaryFileInfo extends ParentInfo {

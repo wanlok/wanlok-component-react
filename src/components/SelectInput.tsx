@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, MenuItem, Select, Theme } from "@mui/material";
+import { FormControl, FormHelperText, FormLabel, MenuItem, Select, Theme } from "@mui/material";
 
 interface Item {
   label: string;
@@ -10,11 +10,12 @@ export interface SelectInputProps {
   items: Item[];
   value: string;
   onChange: (value: string) => void;
+  helperText?: string;
 }
 
 const height = 40;
 
-export const SelectInput = ({ label, items, value, onChange }: SelectInputProps) => {
+export const SelectInput = ({ label, items, value, onChange, helperText }: SelectInputProps) => {
   return (
     <FormControl>
       {label && (
@@ -66,6 +67,7 @@ export const SelectInput = ({ label, items, value, onChange }: SelectInputProps)
           );
         })}
       </Select>
+      {helperText && <FormHelperText sx={{ mt: 0.5, ml: 0, color: "text.secondary" }}>{helperText}</FormHelperText>}
     </FormControl>
   );
 };
