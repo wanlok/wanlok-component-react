@@ -9,7 +9,8 @@ import { TextInput } from "../../components/TextInput";
 import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
 import { applyCorrections, checkGrammar } from "../../services/GrammarService";
 import { StyledContainer } from "../../components/StyledContainer";
-import { Discussion } from "../../components/Discussion";
+import { DiscussionTop, DiscussionBottom, DiscussionMessages } from "../../components/Discussion";
+import { useDiscussion } from "../../components/useDiscussion";
 import { bottomSx, topSx } from "../../components/LayoutHeader";
 import { SelectInput } from "../../components/SelectInput";
 
@@ -62,6 +63,10 @@ export const ItemModal = ({
   const [nameHint, setNameHint] = useState("");
   const [contentHint, setContentHint] = useState("");
   const [mobileSelectedTab, setMobileSelectedTab] = useState(0);
+  const { isDeletingMessages, name: discussionName, onNameChange, onSendMessage, onToggleDeleteMessages, stackRef } = useDiscussion({
+    messages: kanbanItem.messages,
+    onAddMessage
+  });
 
   return (
     <WModal
@@ -109,12 +114,21 @@ export const ItemModal = ({
           )}
         </Stack>
       }
-      rightChildren={
-        <Discussion
-          messages={kanbanItem.messages}
+      rightTop={
+        <DiscussionTop
+          name={discussionName}
+          onNameChange={onNameChange}
           onRefresh={onRefresh}
-          onAddMessage={onAddMessage}
+          onToggleDeleteMessages={onToggleDeleteMessages}
+        />
+      }
+      rightBottom={<DiscussionBottom onSendMessage={onSendMessage} />}
+      rightChildren={
+        <DiscussionMessages
+          messages={kanbanItem.messages}
+          isDeletingMessages={isDeletingMessages}
           onDeleteMessage={onDeleteMessage}
+          stackRef={stackRef}
         />
       }
     >
