@@ -1,4 +1,4 @@
-import { FormControl, FormLabel, Stack, Typography } from "@mui/material";
+import { ButtonBase, Divider, FormControl, FormLabel, Stack, Typography } from "@mui/material";
 import { WCheckbox } from "./WCheckbox";
 
 export const CheckboxInput = ({
@@ -24,22 +24,38 @@ export const CheckboxInput = ({
       )}
       <Stack
         sx={{
-          gap: "1px",
+          backgroundColor: "common.white",
           borderColor: "divider",
           borderWidth: 1,
           borderStyle: "solid",
-          backgroundColor: "background.default"
+          "&:hover": { borderColor: "common.black" }
         }}
       >
         {items.map((item, i) => (
-          <Stack key={`item-${i}`} sx={{ flexDirection: "row", alignItems: "stretch", gap: "1px" }}>
-            <Stack sx={{ p: 1, backgroundColor: "common.white" }}>
-              <WCheckbox checked={values.includes(i)} onChange={() => onItemCheckedChange(i)} />
-            </Stack>
-            <Stack sx={{ flex: 1, justifyContent: "center", p: 1, backgroundColor: "common.white" }}>
-              <Typography variant="body2">{item}</Typography>
-            </Stack>
-          </Stack>
+          <>
+            {i !== 0 && <Divider sx={{ borderColor: "background.default" }} />}
+            <ButtonBase
+              key={`item-${i}`}
+              sx={{ flexDirection: "row", alignItems: "stretch", width: "100%" }}
+              onClick={() => onItemCheckedChange(i)}
+            >
+              <Stack sx={{ p: 1, backgroundColor: "common.white" }} onClick={(e) => e.stopPropagation()}>
+                <WCheckbox checked={values.includes(i)} onChange={() => onItemCheckedChange(i)} />
+              </Stack>
+              <Stack
+                sx={{
+                  flex: 1,
+                  justifyContent: "center",
+                  textAlign: "left",
+                  py: 1,
+                  pr: 1,
+                  backgroundColor: "common.white"
+                }}
+              >
+                <Typography variant="body1">{item}</Typography>
+              </Stack>
+            </ButtonBase>
+          </>
         ))}
       </Stack>
     </FormControl>
