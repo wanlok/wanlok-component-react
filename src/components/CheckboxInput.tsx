@@ -44,8 +44,7 @@ export const CheckboxInput = ({
                 sx={{
                   width: 20,
                   py: 1,
-                  pl: 1,
-                  backgroundColor: "common.white"
+                  pl: 1
                 }}
               >
                 {values.includes(i) && <DoneIcon sx={{ fontSize: 20, mt: "1px" }} />}
@@ -53,10 +52,7 @@ export const CheckboxInput = ({
               <Stack
                 sx={{
                   flex: 1,
-                  justifyContent: "center",
-                  textAlign: "left",
-                  p: 1,
-                  backgroundColor: "common.white"
+                  p: 1
                 }}
               >
                 <Typography variant="body1">{item}</Typography>
