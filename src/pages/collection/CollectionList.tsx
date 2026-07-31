@@ -15,6 +15,7 @@ export const CollectionList = ({
   loadingCount,
   controlGroupState,
   onFileClick,
+  onVideoClick,
   onDeleteButtonClick,
   onLeftButtonClick,
   onRightButtonClick
@@ -29,6 +30,7 @@ export const CollectionList = ({
   loadingCount: number;
   controlGroupState: number;
   onFileClick: (id: string, src: string, name: string) => void;
+  onVideoClick: (type: "youtube_regular" | "youtube_shorts", id: string, name: string, attributes: { [key: string]: string }) => void;
   onDeleteButtonClick: (type: string, id: string) => void;
   onLeftButtonClick: (type: string, id: string) => void;
   onRightButtonClick: (type: string, id: string) => void;
@@ -104,13 +106,13 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("steam", appId)}
           />
         ))}
-        {youTubeShortVideos.map(([id, { name, imageUrl }], i) => (
+        {youTubeShortVideos.map(([id, { name, imageUrl, attributes }], i) => (
           <ImageTitleLink
             key={`youtube-shorts-${i}`}
             imageUrl={imageUrl}
             imageSx={{ objectFit: "contain" }}
             name={name}
-            href={`${viewUrls.youtube_shorts}${id}`}
+            onClick={() => onVideoClick("youtube_shorts", id, name, attributes ?? {})}
             aspectRatio="16/9"
             leftMost={i === 0}
             rightMost={i === youTubeShortVideos.length - 1}
@@ -121,12 +123,12 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("youtube_shorts", id)}
           />
         ))}
-        {youTubeRegularVideos.map(([id, { name, imageUrl }], i) => (
+        {youTubeRegularVideos.map(([id, { name, imageUrl, attributes }], i) => (
           <ImageTitleLink
             key={`youtube-regular-${i}`}
             imageUrl={imageUrl}
             name={name}
-            href={`${viewUrls.youtube_regular}${id}`}
+            onClick={() => onVideoClick("youtube_regular", id, name, attributes ?? {})}
             aspectRatio="16/9"
             leftMost={i === 0}
             rightMost={i === youTubeRegularVideos.length - 1}

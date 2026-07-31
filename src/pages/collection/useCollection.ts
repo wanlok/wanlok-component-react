@@ -224,6 +224,23 @@ export const useCollection = (
     }
   };
 
+  const updateCollectionVideo = async (
+    type: "youtube_regular" | "youtube_shorts",
+    id: string,
+    name: string,
+    attributes: { [key: string]: string }
+  ) => {
+    if (collectionDocument && documentId) {
+      const newCollectionDocument = {
+        ...collectionDocument,
+        [type]: { ...collectionDocument[type], [id]: { ...collectionDocument[type][id], name, attributes } }
+      };
+      const docRef = doc(db, collectionName, documentId);
+      await updateDoc(docRef, newCollectionDocument);
+      setCollectionDocumentAndRef(newCollectionDocument);
+    }
+  };
+
   const addCollectionBlob = async (collectionId: string, blob: Blob, name: string) => {
     setLoadingCount((prev) => prev + 1);
     return new Promise<CollectionCounts>((resolve) => {
@@ -297,6 +314,7 @@ export const useCollection = (
     renameCollectionAttributeKey,
     updateCollectionSequences,
     updateCollectionFile,
+    updateCollectionVideo,
     addCollectionBlob,
     deleteCollection,
     renameCollection,

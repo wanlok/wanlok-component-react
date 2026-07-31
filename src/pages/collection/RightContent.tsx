@@ -13,6 +13,7 @@ import {
 } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
 import { ImageModal } from "./ImageModal";
+import { VideoModal } from "./VideoModal";
 import { TextInputWithButtons } from "../../components/TextInputWithButtons";
 import { StyledContainer } from "../../components/StyledContainer";
 import { getDocumentId } from "./useFolder";
@@ -34,7 +35,8 @@ export const RightContent = ({
   updateCollectionSequences,
   addCollectionItems,
   addCollectionFiles,
-  updateCollectionFile
+  updateCollectionFile,
+  updateCollectionVideo
 }: {
   isLoading: boolean;
   charts: [string, ChartItem][];
@@ -52,8 +54,20 @@ export const RightContent = ({
   addCollectionItems: (collectionId: string, text: string) => Promise<CollectionCounts | undefined>;
   addCollectionFiles: (collectionId: string) => Promise<{ counts: CollectionCounts; sequences?: string[]; attributes?: CollectionAttributes } | undefined>;
   updateCollectionFile: (id: string, name: string, attributes: { [key: string]: string }, layout: string, textRegions: TextRegion[]) => Promise<void>;
+  updateCollectionVideo: (
+    type: "youtube_regular" | "youtube_shorts",
+    id: string,
+    name: string,
+    attributes: { [key: string]: string }
+  ) => Promise<void>;
 }) => {
   const [selectedFile, setSelectedFile] = useState<{ id: string; src: string; name: string; attributes: { [key: string]: string }; layout: string; textRegions: TextRegion[] } | null>(null);
+  const [selectedVideo, setSelectedVideo] = useState<{
+    type: "youtube_regular" | "youtube_shorts";
+    id: string;
+    name: string;
+    attributes: { [key: string]: string };
+  } | null>(null);
 
   return (
     <>
@@ -62,6 +76,7 @@ export const RightContent = ({
           const file = files.find(([fileId]) => fileId === id);
           setSelectedFile({ id, src, name, attributes: file?.[1].attributes ?? {}, layout: file?.[1].layout ?? "default", textRegions: file?.[1].textRegions ?? [] });
         }}
+        onVideoClick={(type, id, name, attributes) => setSelectedVideo({ type, id, name, attributes })}
         isLoading={isLoading}
         charts={charts}
         files={files}
@@ -140,6 +155,19 @@ export const RightContent = ({
           }
         }}
         onClose={() => setSelectedFile(null)}
+      />
+      <VideoModal
+        open={Boolean(selectedVideo)}
+        id={selectedVideo?.id ?? ""}
+        name={selectedVideo?.name ?? ""}
+        attributes={selectedVideo?.attributes ?? {}}
+        folderAttributes={selectedFolder?.attributes ?? []}
+        onSaveButtonClick={async (name, attributes) => {
+          if (selectedVideo) {
+            await updateCollectionVideo(selectedVideo.type, selectedVideo.id, name, attributes);
+          }
+        }}
+        onClose={() => setSelectedVideo(null)}
       />
     </>
   );

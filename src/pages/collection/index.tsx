@@ -44,6 +44,7 @@ export const CollectionPage = () => {
     addCollectionFiles,
     addCollectionBlob,
     updateCollectionFile,
+    updateCollectionVideo,
     renameCollectionAttributeKey,
     renameCollection,
     updateCollectionSequences,
@@ -169,6 +170,7 @@ export const CollectionPage = () => {
         addCollectionItems={addCollectionItems}
         addCollectionFiles={addCollectionFiles}
         updateCollectionFile={updateCollectionFile}
+        updateCollectionVideo={updateCollectionVideo}
       />
       <FolderModal
         open={folderModalOpen}
