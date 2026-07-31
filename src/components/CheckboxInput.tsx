@@ -1,5 +1,5 @@
 import { ButtonBase, Divider, FormControl, FormLabel, Stack, Typography } from "@mui/material";
-import { WCheckbox } from "./WCheckbox";
+import { Done as DoneIcon } from "@mui/icons-material";
 
 export const CheckboxInput = ({
   label,
@@ -36,19 +36,26 @@ export const CheckboxInput = ({
             {i !== 0 && <Divider sx={{ borderColor: "background.default" }} />}
             <ButtonBase
               key={`item-${i}`}
+              component="div"
               sx={{ flexDirection: "row", alignItems: "stretch", width: "100%" }}
               onClick={() => onItemCheckedChange(i)}
             >
-              <Stack sx={{ p: 1, backgroundColor: "common.white" }} onClick={(e) => e.stopPropagation()}>
-                <WCheckbox checked={values.includes(i)} onChange={() => onItemCheckedChange(i)} />
+              <Stack
+                sx={{
+                  width: 20,
+                  py: 1,
+                  pl: 1,
+                  backgroundColor: "common.white"
+                }}
+              >
+                {values.includes(i) && <DoneIcon sx={{ fontSize: 20, mt: "1px" }} />}
               </Stack>
               <Stack
                 sx={{
                   flex: 1,
                   justifyContent: "center",
                   textAlign: "left",
-                  py: 1,
-                  pr: 1,
+                  p: 1,
                   backgroundColor: "common.white"
                 }}
               >
