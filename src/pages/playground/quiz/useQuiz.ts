@@ -19,7 +19,11 @@ export const useQuiz = () => {
     setIsLoading(true);
 
     const iframe = document.createElement("iframe");
-    iframe.style.display = "none";
+    iframe.style.position = "absolute";
+    iframe.style.width = "1px";
+    iframe.style.height = "1px";
+    iframe.style.left = "-9999px";
+    iframe.style.border = "0";
     document.body.appendChild(iframe);
 
     let observer: MutationObserver | undefined;
