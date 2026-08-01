@@ -4,7 +4,8 @@ import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
 import { BugReport as BugReportIcon, BugReportOutlined as BugReportOutlinedIcon } from "@mui/icons-material";
 import { PanelRow } from "../../components/PanelRow";
-import { Puzzle } from "./Puzzle";
+import { Puzzle } from "./puzzle";
+import { Quiz } from "./quiz";
 
 const iconSize = 24;
 
@@ -37,6 +38,7 @@ export const Playground = () => {
       }
     >
       {selectedFolder?.id === "puzzle" && <Puzzle />}
+      {selectedFolder?.id === "quiz" && <Quiz />}
     </LayoutPanel>
   );
 };

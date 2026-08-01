@@ -2,16 +2,12 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
-import { CollectionDocument, CollectionAttributes, Folder, TextRegion, TypedAttributes } from "../../services/Types";
+import { CollectionDocument, CollectionAttributes, Folder, Quiz, TextRegion, TypedAttributes } from "../../services/Types";
 import { setTypedAttributes } from "../../common/setTypedAttributes";
 import { toSlug } from "../../common/StringUtils";
 import { splitAnswers } from "../../utils/splitAnswers";
 
-type QuizQuestionPart = { type: "text" | "image"; value: string };
-
-type QuizEntry = { question: QuizQuestionPart[]; answers: { text: string; correct: boolean }[] };
-
-type CollectionItem = Record<string, string | number | QuizEntry[]>;
+type CollectionItem = Record<string, string | number | Quiz[]>;
 
 const getCollectionAttributes = async (id: string) => {
   const data = (await getDoc(doc(db, "configs", "folders"))).data() as { folders: Folder[] } | undefined;
@@ -29,11 +25,11 @@ const applyTypedAttributes = (
   return { ...base, ...typedAttributes };
 };
 
-const getQuiz = (layout: string | undefined, textRegions: TextRegion[] | undefined): QuizEntry[] | undefined => {
+export const getQuiz = (layout: string | undefined, textRegions: TextRegion[] | undefined): Quiz[] | undefined => {
   if (layout !== "quiz" || !textRegions) {
     return undefined;
   }
-  const quiz: QuizEntry[] = [];
+  const quiz: Quiz[] = [];
   let collectingQuestion = false;
   textRegions.forEach((region) => {
     const type = region.type ?? "question";
@@ -56,7 +52,10 @@ const getQuiz = (layout: string | undefined, textRegions: TextRegion[] | undefin
     }
     collectingQuestion = false;
     splitAnswers(region.recognisedText ?? "", region.delimiter ?? "letter_dot").forEach((text, i) => {
-      currentEntry.answers.push({ text, correct: region.correctAnswerIndices?.includes(i) ?? false });
+      currentEntry.answers.push({
+        content: [{ type: "text", value: text }],
+        correct: region.correctAnswerIndices?.includes(i) ?? false
+      });
     });
   });
   return quiz;
