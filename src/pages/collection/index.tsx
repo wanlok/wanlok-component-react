@@ -17,7 +17,6 @@ import { Folder as FolderIcon } from "@mui/icons-material";
 
 export const CollectionPage = () => {
   const {
-    serverHealth,
     isLoading: isFolderLoading,
     folders,
     selectedFolder,
@@ -102,7 +101,6 @@ export const CollectionPage = () => {
           <LeftHeader
             isLoading={isFolderLoading}
             numberOfFolders={folders.length}
-            serverHealth={serverHealth}
             folderControlGroupState={folderControlGroupState}
             onDeleteButtonClick={() => setFolderControlGroupState(folderControlGroupState === 1 ? 0 : 1)}
             onUploadButtonClick={uploadFolders}

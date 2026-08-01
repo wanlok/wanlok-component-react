@@ -15,7 +15,6 @@ import {
 } from "../../services/Types";
 import { useCollection } from "./useCollection";
 import { getDateTimeString } from "../../common/DateUtils";
-import { getServerHealth } from "../../services/ServerHealthService";
 import { getFiles } from "../../common/FileUtils";
 import { getCountsByUrlStrings } from "../../common/CountUtils";
 import { toSlug } from "../../common/StringUtils";
@@ -40,20 +39,15 @@ const download = (content?: string, fileName?: string) => {
 export const useFolder = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [serverHealth, setServerHealth] = useState<boolean>();
   const [folderDocument, setFolderDocument] = useState<FolderDocument | null | undefined>(undefined);
   const [selectedFolder, setSelectedFolder] = useState<Folder>();
   const { addCollectionItems, deleteCollection, getCollectionUrls } = useCollection();
 
   useEffect(() => {
-    const fetchServerHealth = async () => {
-      setServerHealth((await getServerHealth()) !== undefined);
-    };
     const fetchFolderDocument = async () => {
       const docRef = doc(db, collectionName, documentId);
       setFolderDocument(((await getDoc(docRef)).data() as FolderDocument) ?? null);
     };
-    fetchServerHealth();
     fetchFolderDocument();
   }, []);
 
@@ -244,7 +238,6 @@ export const useFolder = () => {
   };
 
   return {
-    serverHealth,
     isLoading: folderDocument === undefined,
     folders: folderDocument?.folders ?? [],
     selectedFolder,

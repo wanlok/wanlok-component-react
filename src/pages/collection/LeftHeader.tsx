@@ -30,7 +30,6 @@ export const LeftHeader = ({
 }: {
   isLoading: boolean;
   numberOfFolders: number;
-  serverHealth: boolean | undefined;
   folderControlGroupState: number;
   onDeleteButtonClick: () => void;
   onUploadButtonClick: () => void;
