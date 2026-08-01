@@ -53,7 +53,7 @@ export const routes = [
         icon: <BugReportOutlinedIcon sx={{ fontSize: iconSize }} />,
         icon_selected: <BugReportIcon sx={{ fontSize: iconSize }} />,
         name: "Playground",
-        path: "/components/:id?",
+        path: "/playground/:id?",
         element: <Playground />
         // children: [{ path: "/snapshot/:id2", element: <Playground /> }]
       }

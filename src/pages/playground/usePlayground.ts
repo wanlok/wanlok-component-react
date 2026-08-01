@@ -18,7 +18,7 @@ export const usePlayground = () => {
 
   const openFolder = useCallback(
     (folder: PlaygroundFolder) => {
-      navigate(`/components/${folder.id}`);
+      navigate(`/playground/${folder.id}`);
     },
     [navigate]
   );
