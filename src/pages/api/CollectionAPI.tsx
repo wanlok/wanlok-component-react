@@ -2,7 +2,15 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { db } from "../../firebase";
-import { CollectionDocument, CollectionAttributes, Folder, Quiz, TextRegion, TypedAttributes } from "../../services/Types";
+import {
+  ApiResponse,
+  CollectionDocument,
+  CollectionAttributes,
+  Folder,
+  Quiz,
+  TextRegion,
+  TypedAttributes
+} from "../../services/Types";
 import { setTypedAttributes } from "../../common/setTypedAttributes";
 import { toSlug } from "../../common/StringUtils";
 import { splitAnswers } from "../../utils/splitAnswers";
@@ -93,18 +101,23 @@ const getCollectionItems = async (id: string, collectionAttributes: CollectionAt
 
 export const useCollectionAPI = (id: string | undefined) => {
   const [items, setItems] = useState<Record<string, CollectionItem>>({});
+  const [status, setStatus] = useState("loading");
 
   useEffect(() => {
     if (!id) {
       return;
     }
+    setStatus("loading");
     const fetchItems = async () => {
-      setItems(await getCollectionItems(id, await getCollectionAttributes(id)));
+      const collectionItems = await getCollectionItems(id, await getCollectionAttributes(id));
+      setItems(collectionItems);
+      setStatus("ok");
     };
     fetchItems();
   }, [id]);
 
-  return { jsonString: JSON.stringify(items) };
+  const response: ApiResponse<Record<string, CollectionItem>> = { status, data: items };
+  return { jsonString: JSON.stringify(response) };
 };
 
 export const CollectionAPI = () => {

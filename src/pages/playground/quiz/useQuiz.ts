@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Quiz } from "../../../services/Types";
+import { ApiResponse, Quiz } from "../../../services/Types";
 
 const quizItems = [
   { label: "AWS Examinations", value: "aws-examinations" },
@@ -34,8 +34,12 @@ export const useQuiz = () => {
         return;
       }
       try {
-        const items = JSON.parse(root.textContent ?? "") as Record<string, { quiz?: Quiz[] }>;
-        setQuiz(Object.values(items).flatMap((item) => item.quiz ?? []));
+        const response = JSON.parse(root.textContent ?? "") as ApiResponse<Record<string, { quiz?: Quiz[] }>>;
+        if (response.status !== "ok") {
+          // Firestore fetch inside the iframe has not resolved yet.
+          return;
+        }
+        setQuiz(Object.values(response.data).flatMap((item) => item.quiz ?? []));
         setIsLoading(false);
         observer?.disconnect();
       } catch {

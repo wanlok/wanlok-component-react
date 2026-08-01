@@ -88,6 +88,8 @@ export type QuizContent = { type: "text" | "image"; value: string };
 
 export type Quiz = { question: QuizContent[]; answers: { content: QuizContent[]; correct: boolean }[] };
 
+export type ApiResponse<T> = { status: string; data: T };
+
 export interface CloudinaryFileInfo extends ParentInfo {
   name: string;
   mime_type: string;
