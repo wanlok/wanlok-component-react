@@ -12,7 +12,7 @@ const QuestionContainer = ({ number, question }: { number: number; question: Qui
         Question {number + 1}
       </Typography>
       {question.map(({ value }, i) => (
-        <Typography key={`question-part-${i}`} variant="body1">
+        <Typography key={`question-${number}-${i + 1}`} variant="body1">
           {value}
         </Typography>
       ))}
