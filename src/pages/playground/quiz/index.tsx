@@ -3,12 +3,12 @@ import { SelectInput } from "../../../components/SelectInput";
 import { useQuiz } from "./useQuiz";
 
 export const Quiz = () => {
-  const { folderItems, collectionId, setCollectionId, quiz } = useQuiz();
+  const { quizItems, selectedQuizItem, setSelectedQuizItem, quiz } = useQuiz();
 
   return (
     <Stack sx={{ flex: 1, minHeight: 0 }}>
-      <SelectInput items={folderItems} value={collectionId} onChange={setCollectionId} />
-      {collectionId && (
+      <SelectInput items={quizItems} value={selectedQuizItem} onChange={setSelectedQuizItem} />
+      {selectedQuizItem && (
         <Stack sx={{ flex: 1, overflow: "auto" }}>
           <Typography component="pre" variant="body2" sx={{ whiteSpace: "pre-wrap" }}>
             {JSON.stringify(quiz, null, 2)}

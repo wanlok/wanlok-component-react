@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { Quiz } from "../../../services/Types";
 
-const folderItems = [
+const quizItems = [
   { label: "AWS Examinations", value: "aws-examinations" },
   { label: "HKCEE Past Papers", value: "hkcee-past-papers" }
 ];
 
 export const useQuiz = () => {
-  const [collectionId, setCollectionId] = useState(folderItems[0].value);
+  const [selectedQuizItem, setSelectedQuizItem] = useState(quizItems[0].value);
   const [quiz, setQuiz] = useState<Quiz[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    if (!collectionId) {
+    if (!selectedQuizItem) {
       return;
     }
     setQuiz([]);
@@ -49,19 +49,19 @@ export const useQuiz = () => {
     };
 
     iframe.addEventListener("load", onLoad);
-    iframe.src = `${window.location.origin}${window.location.pathname}#/api/collections/${collectionId}`;
+    iframe.src = `${window.location.origin}${window.location.pathname}#/api/collections/${selectedQuizItem}`;
 
     return () => {
       iframe.removeEventListener("load", onLoad);
       observer?.disconnect();
       iframe.remove();
     };
-  }, [collectionId]);
+  }, [selectedQuizItem]);
 
   return {
-    folderItems,
-    collectionId,
-    setCollectionId,
+    quizItems,
+    selectedQuizItem,
+    setSelectedQuizItem,
     quiz,
     isLoading
   };
