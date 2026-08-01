@@ -1,5 +1,5 @@
 import { Stack, Typography } from "@mui/material";
-import { RestartAlt as RestartAltIcon } from "@mui/icons-material";
+import { Undo as UndoIcon } from "@mui/icons-material";
 import { WModal } from "../../../components/WModal";
 import { YesNoButtons } from "../../../components/YesNoButtons";
 
@@ -16,7 +16,7 @@ export const ResetModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      tabs={[{ icon: <RestartAltIcon sx={{ fontSize: 24 }} />, label: "Reset" }]}
+      tabs={[{ icon: <UndoIcon sx={{ fontSize: 24 }} />, label: "Reset Quiz" }]}
       bottom={
         <YesNoButtons
           onYesClick={() => {
@@ -29,7 +29,7 @@ export const ResetModal = ({
     >
       <Stack sx={{ p: 2 }}>
         <Typography variant="body1" sx={{ lineHeight: 1.5 }}>
-          Are you sure you want to reset all your answers?
+          Are you sure you want to reset the quiz?
         </Typography>
       </Stack>
     </WModal>

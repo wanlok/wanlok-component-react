@@ -87,9 +87,6 @@ export const Quiz = () => {
             <StyledContainer sx={{ flex: 1, p: 1 }}>
               <SelectInput items={quizItems} value={selectedQuizItem} onChange={setSelectedQuizItem} />
             </StyledContainer>
-            <Stack sx={{ flexDirection: "row" }}>
-              <WButton>Past Results</WButton>
-            </Stack>
           </Stack>
         }
         bottom={
