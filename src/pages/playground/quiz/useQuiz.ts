@@ -9,12 +9,14 @@ const folderItems = [
 export const useQuiz = () => {
   const [collectionId, setCollectionId] = useState(folderItems[0].value);
   const [quiz, setQuiz] = useState<Quiz[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (!collectionId) {
       return;
     }
     setQuiz([]);
+    setIsLoading(true);
 
     const iframe = document.createElement("iframe");
     iframe.style.display = "none";
@@ -30,6 +32,7 @@ export const useQuiz = () => {
       try {
         const items = JSON.parse(root.textContent ?? "") as Record<string, { quiz?: Quiz[] }>;
         setQuiz(Object.values(items).flatMap((item) => item.quiz ?? []));
+        setIsLoading(false);
         observer?.disconnect();
       } catch {
         // Firestore fetch inside the iframe hasn't resolved into JSON yet.
@@ -59,6 +62,7 @@ export const useQuiz = () => {
     folderItems,
     collectionId,
     setCollectionId,
-    quiz
+    quiz,
+    isLoading
   };
 };
