@@ -26,7 +26,11 @@ const collectionName = "collections";
 export const useCollection = (
   documentId?: string,
   collectionSequences?: CollectionSequences,
-  updateFolder?: (params: { counts?: CollectionCounts; sequences?: Partial<CollectionSequences>; attributes?: CollectionAttributes }) => void
+  updateFolder?: (params: {
+    counts?: CollectionCounts;
+    sequences?: Partial<CollectionSequences>;
+    attributes?: CollectionAttributes;
+  }) => void
 ) => {
   const [collectionDocument, setCollectionDocument] = useState<CollectionDocument | null | undefined>(undefined);
   const collectionDocumentRef = useRef<CollectionDocument | null | undefined>(undefined);
@@ -98,48 +102,53 @@ export const useCollection = (
     }
     const pendingCount = pdfPages ? pdfPages.length : 1;
     setLoadingCount((prev) => prev + pendingCount);
-    return new Promise<{ counts: CollectionCounts; sequences?: string[]; attributes?: CollectionAttributes }>((resolve) => {
-      uploadQueueRef.current = uploadQueueRef.current.then(async () => {
-        const rawFileInfos = pdfPages ? await uploadImageBlobs(pdfPages) : await uploadAndGetFileInfos(files);
-        const fileInfos = pdfPages
-          ? Object.fromEntries(
-              Object.entries(rawFileInfos).map(([id, info], i) => [
-                id,
-                { ...info, name: `Page ${i + 1}`, attributes: { File: file.name } }
-              ])
-            )
-          : rawFileInfos;
-        setLoadingCount((prev) => prev - pendingCount);
-        const docRef = doc(db, collectionName, collectionId);
-        let document;
-        const current = collectionDocumentRef.current;
-        if (current) {
-          document = {
-            ...current,
-            files: { ...current.files, ...fileInfos }
-          };
-          await updateDoc(docRef, document);
-        } else {
-          document = {
-            charts: {},
-            files: fileInfos,
-            hyperlinks: {},
-            steam: {},
-            youtube_regular: {},
-            youtube_shorts: {}
-          };
-          await setDoc(docRef, document);
-        }
-        setCollectionDocumentAndRef(document);
-        const counts = getCounts(document);
-        const sequences = pdfPages
-          ? appendSequences(collectionSequences?.files ?? [], Object.keys(current?.files ?? {}), Object.keys(fileInfos))
-          : undefined;
-        resolve({ counts, sequences, attributes: pdfPages ? [{ name: "File", type: "text" }] : undefined });
-      });
-    });
+    return new Promise<{ counts: CollectionCounts; sequences?: string[]; attributes?: CollectionAttributes }>(
+      (resolve) => {
+        uploadQueueRef.current = uploadQueueRef.current.then(async () => {
+          const rawFileInfos = pdfPages ? await uploadImageBlobs(pdfPages) : await uploadAndGetFileInfos(files);
+          const fileInfos = pdfPages
+            ? Object.fromEntries(
+                Object.entries(rawFileInfos).map(([id, info], i) => [
+                  id,
+                  { ...info, name: `Page ${i + 1}`, attributes: { File: file.name } }
+                ])
+              )
+            : rawFileInfos;
+          setLoadingCount((prev) => prev - pendingCount);
+          const docRef = doc(db, collectionName, collectionId);
+          let document;
+          const current = collectionDocumentRef.current;
+          if (current) {
+            document = {
+              ...current,
+              files: { ...current.files, ...fileInfos }
+            };
+            await updateDoc(docRef, document);
+          } else {
+            document = {
+              charts: {},
+              files: fileInfos,
+              hyperlinks: {},
+              steam: {},
+              youtube_regular: {},
+              youtube_shorts: {}
+            };
+            await setDoc(docRef, document);
+          }
+          setCollectionDocumentAndRef(document);
+          const counts = getCounts(document);
+          const sequences = pdfPages
+            ? appendSequences(
+                collectionSequences?.files ?? [],
+                Object.keys(current?.files ?? {}),
+                Object.keys(fileInfos)
+              )
+            : undefined;
+          resolve({ counts, sequences, attributes: pdfPages ? [{ name: "File", type: "text" }] : undefined });
+        });
+      }
+    );
   };
-
 
   const renameCollectionAttributeKey = async (oldKey: string, newKey: string) => {
     if (!collectionDocument || !documentId) {
@@ -212,11 +221,20 @@ export const useCollection = (
     return counts;
   };
 
-  const updateCollectionFile = async (id: string, name: string, attributes: { [key: string]: string }, layout: string, textRegions: TextRegion[]) => {
+  const updateCollectionFile = async (
+    id: string,
+    name: string,
+    attributes: { [key: string]: string },
+    layout: string,
+    textRegions: TextRegion[]
+  ) => {
     if (collectionDocument && documentId) {
       const newCollectionDocument = {
         ...collectionDocument,
-        files: { ...collectionDocument.files, [id]: { ...collectionDocument.files[id], name, attributes, layout, textRegions } }
+        files: {
+          ...collectionDocument.files,
+          [id]: { ...collectionDocument.files[id], name, attributes, layout, textRegions }
+        }
       };
       const docRef = doc(db, collectionName, documentId);
       await updateDoc(docRef, newCollectionDocument);
@@ -254,7 +272,14 @@ export const useCollection = (
           document = { ...current, files: { ...current.files, ...fileInfos } };
           await updateDoc(docRef, document);
         } else {
-          document = { charts: {}, files: fileInfos, hyperlinks: {}, steam: {}, youtube_regular: {}, youtube_shorts: {} };
+          document = {
+            charts: {},
+            files: fileInfos,
+            hyperlinks: {},
+            steam: {},
+            youtube_regular: {},
+            youtube_shorts: {}
+          };
           await setDoc(docRef, document);
         }
         setCollectionDocumentAndRef(document);

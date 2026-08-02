@@ -30,7 +30,12 @@ export const CollectionList = ({
   loadingCount: number;
   controlGroupState: number;
   onFileClick: (id: string, src: string, name: string) => void;
-  onVideoClick: (type: "youtube_regular" | "youtube_shorts", id: string, name: string, attributes: { [key: string]: string }) => void;
+  onVideoClick: (
+    type: "youtube_regular" | "youtube_shorts",
+    id: string,
+    name: string,
+    attributes: { [key: string]: string }
+  ) => void;
   onDeleteButtonClick: (type: string, id: string) => void;
   onLeftButtonClick: (type: string, id: string) => void;
   onRightButtonClick: (type: string, id: string) => void;
@@ -44,7 +49,6 @@ export const CollectionList = ({
     <Stack ref={containerRef} sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ display: "grid", gridTemplateColumns, gap: "1px" }}>
         {charts.map(([uuid, chartItem], i) => (
-
           <WChart
             key={`chart-${i}`}
             chartItem={chartItem}
@@ -77,7 +81,6 @@ export const CollectionList = ({
           <ImageTitleLink
             key={`hyperlinks-${i}`}
             imageUrl={`https://wanlok2025.github.io/screenshots/${id}.png`}
-
             name={url}
             href={url}
             aspectRatio="16/9"
