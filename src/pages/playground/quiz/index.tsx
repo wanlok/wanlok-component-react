@@ -121,7 +121,11 @@ export const Quiz = () => {
   return (
     <Stack sx={{ flex: 1, minHeight: 0 }}>
       <LayoutHeader
-        top={<Stack sx={topSx}></Stack>}
+        top={
+          <Stack sx={[topSx, { px: 2, alignItems: "center" }]}>
+            <Typography variant="body1">Quiz</Typography>
+          </Stack>
+        }
         bottom={
           <Stack sx={[bottomSx]}>
             <ControlBar
