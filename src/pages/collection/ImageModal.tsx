@@ -28,10 +28,17 @@ import {
 } from "../../common/ImageUtils";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
 import { ControlGroup } from "../../components/ControlGroup";
-import { regex } from "../../services/Types";
+import { regex, Rect } from "../../services/Types";
 import { splitAnswers } from "../../utils/splitAnswers";
 import { detectDelimiter } from "../../utils/detectDelimiter";
 import { detectNextTextRegion } from "../../utils/detectNextTextRegion";
+
+const LAYOUT_ITEMS = [
+  { label: "Default", value: "default", isAutoRegionDetectionEnabled: false },
+  { label: "Default + Search", value: "default+search", isAutoRegionDetectionEnabled: false },
+  { label: "Default + Translate", value: "default+translate", isAutoRegionDetectionEnabled: false },
+  { label: "Quiz", value: "quiz", isAutoRegionDetectionEnabled: true }
+];
 
 const QUIZ_TYPE_ITEMS = [
   { label: "Question", value: "question" },
@@ -359,14 +366,21 @@ export const ImageModal = ({
     const container = imageScrollRef.current;
     const defaultX = (container?.scrollLeft ?? 0) + 80;
     const defaultY = (container?.scrollTop ?? 0) + 40;
-    const lastTextRegion = regions.length > 0 ? regions[regions.length - 1] : null;
-    const x = lastTextRegion ? lastTextRegion.x : defaultX;
-    const y = lastTextRegion ? lastTextRegion.y + lastTextRegion.height : defaultY;
-    const width = 240;
-    const height = 135;
-    const canvas = await ensureImageCanvas();
-    const detectedRegion = canvas ? detectNextTextRegion(canvas, y) : null;
-    const newRegion: TextRegion = { id: String(Date.now()), ...(detectedRegion ?? { x, y, width, height }) };
+    const defaultWidth = 240;
+    const defaultHeight = 135;
+    const isAutoRegionDetectionEnabled =
+      LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isAutoRegionDetectionEnabled ?? false;
+    let region: Rect;
+    if (isAutoRegionDetectionEnabled) {
+      const lastRegion = regions.length > 0 ? regions[regions.length - 1] : null;
+      const y = lastRegion ? lastRegion.y + lastRegion.height : defaultY;
+      const canvas = await ensureImageCanvas();
+      const nextRegion = canvas ? detectNextTextRegion(canvas, y) : null;
+      region = nextRegion ?? { x: defaultX, y, width: defaultWidth, height: defaultHeight };
+    } else {
+      region = { x: defaultX, y: defaultY, width: defaultWidth, height: defaultHeight };
+    }
+    const newRegion: TextRegion = { id: String(Date.now()), ...region };
     setRegions((prev) => [...prev, newRegion]);
     setControlGroupState(0);
     scrollImageToRegion(newRegion);
@@ -635,16 +649,7 @@ export const ImageModal = ({
         desktopSelectedTab === 1 ? (
           <>
             <StyledContainer sx={{ flex: 1, p: 1 }}>
-              <SelectInput
-                items={[
-                  { label: "Default", value: "default" },
-                  { label: "Default + Search", value: "default+search" },
-                  { label: "Default + Translate", value: "default+translate" },
-                  { label: "Quiz", value: "quiz" }
-                ]}
-                value={selectedLayout}
-                onChange={onLayoutIndexChange}
-              />
+              <SelectInput items={LAYOUT_ITEMS} value={selectedLayout} onChange={onLayoutIndexChange} />
             </StyledContainer>
             <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
               <AddIcon sx={{ fontSize: 24 }} />
