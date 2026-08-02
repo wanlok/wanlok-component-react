@@ -1,6 +1,6 @@
 import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 import { db } from "../../firebase";
 import {
   ApiResponse,
@@ -69,7 +69,28 @@ export const getQuiz = (layout: string | undefined, textRegions: TextRegion[] | 
   return quiz;
 };
 
-const getCollectionItems = async (id: string, collectionAttributes: CollectionAttributes) => {
+const filterCollectionItems = (
+  result: Record<string, CollectionItem>,
+  collectionAttributes: CollectionAttributes,
+  filters: [string, string][]
+): Record<string, CollectionItem> => {
+  if (filters.length === 0) {
+    return result;
+  }
+  return Object.fromEntries(
+    Object.entries(result).filter(([, item]) =>
+      filters.every(([paramKey, paramValue]) => {
+        const attribute = collectionAttributes.find((a) => toSlug(a.name) === paramKey);
+        if (!attribute) {
+          return false;
+        }
+        return toSlug(String(item[attribute.name] ?? "")) === toSlug(paramValue);
+      })
+    )
+  );
+};
+
+const getCollectionItems = async (id: string, collectionAttributes: CollectionAttributes, filters: [string, string][]) => {
   const data = (await getDoc(doc(db, "collections", id))).data() as CollectionDocument | undefined;
 
   if (!data) {
@@ -96,12 +117,13 @@ const getCollectionItems = async (id: string, collectionAttributes: CollectionAt
     result[key] = applyTypedAttributes({ name, imageUrl }, collectionAttributes, attributes);
   });
 
-  return result;
+  return filterCollectionItems(result, collectionAttributes, filters);
 };
 
-export const useCollectionAPI = (id: string | undefined) => {
+export const useCollectionAPI = (id: string | undefined, filters: [string, string][]) => {
   const [items, setItems] = useState<Record<string, CollectionItem>>({});
   const [status, setStatus] = useState("loading");
+  const filtersKey = JSON.stringify(filters);
 
   useEffect(() => {
     if (!id) {
@@ -109,12 +131,12 @@ export const useCollectionAPI = (id: string | undefined) => {
     }
     setStatus("loading");
     const fetchItems = async () => {
-      const collectionItems = await getCollectionItems(id, await getCollectionAttributes(id));
+      const collectionItems = await getCollectionItems(id, await getCollectionAttributes(id), filters);
       setItems(collectionItems);
       setStatus("ok");
     };
     fetchItems();
-  }, [id]);
+  }, [id, filtersKey]);
 
   const response: ApiResponse<Record<string, CollectionItem>> = { status, data: items };
   return { jsonString: JSON.stringify(response) };
@@ -122,6 +144,7 @@ export const useCollectionAPI = (id: string | undefined) => {
 
 export const CollectionAPI = () => {
   const { id } = useParams();
-  const { jsonString } = useCollectionAPI(id);
+  const [searchParams] = useSearchParams();
+  const { jsonString } = useCollectionAPI(id, [...searchParams.entries()]);
   return <>{jsonString}</>;
 };

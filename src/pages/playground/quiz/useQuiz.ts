@@ -4,7 +4,8 @@ import { fetchCollection } from "../../../services/fetchCollection";
 
 const quizItems = [
   { label: "AWS Examinations", value: "aws-examinations" },
-  { label: "HKCEE Past Papers", value: "hkcee-past-papers" }
+  { label: "HKCEE CIT 2007 Paper 1", value: "hkcee-past-papers?subject=CIT 2007 Paper 1" },
+  { label: "HKCEE CIT 2008 Paper 2", value: "hkcee-past-papers?subject=CIT 2008 Paper 1" }
 ];
 
 export const useQuiz = () => {
