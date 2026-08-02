@@ -1,14 +1,16 @@
 import { Fragment } from "react";
-import { ButtonBase, Divider, FormControl, FormLabel, Stack, Typography } from "@mui/material";
+import { ButtonBase, Divider, FormControl, FormLabel, Stack, SxProps, Theme, Typography } from "@mui/material";
 import { Done as DoneIcon } from "@mui/icons-material";
 
 export const CheckboxInput = ({
   label,
+  labelSx,
   items,
   values,
   onChange
 }: {
   label?: string;
+  labelSx?: SxProps<Theme>;
   items: string[];
   values: number[];
   onChange: (values: number[]) => void;
@@ -19,7 +21,7 @@ export const CheckboxInput = ({
   return (
     <FormControl>
       {label && (
-        <FormLabel focused={false} sx={{ color: "text.primary", typography: "body2", mb: "4px" }}>
+        <FormLabel focused={false} sx={{ color: "text.primary", typography: "body2", mb: "4px", ...labelSx }}>
           {label}
         </FormLabel>
       )}

@@ -16,7 +16,7 @@ export const ResetModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      tabs={[{ icon: <UndoIcon sx={{ fontSize: 24 }} />, label: "Reset Quiz" }]}
+      tabs={[{ icon: <UndoIcon sx={{ fontSize: 20 }} />, label: "Reset Quiz" }]}
       bottom={
         <YesNoButtons
           onYesClick={() => {
