@@ -28,6 +28,7 @@ import {
 } from "../../common/ImageUtils";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
 import { ControlGroup } from "../../components/ControlGroup";
+import { regex } from "../../services/Types";
 import { splitAnswers } from "../../utils/splitAnswers";
 import { detectDelimiter } from "../../utils/detectDelimiter";
 
@@ -404,7 +405,11 @@ export const ImageModal = ({
     if (!base64) {
       return;
     }
-    const text = await recognizeText(base64, language);
+    const recognisedText = await recognizeText(base64, language);
+    const text =
+      selectedLayout === "quiz" && (region.type ?? "question") === "question"
+        ? recognisedText.replace(regex.QUESTION_NUMBER, "")
+        : recognisedText;
     const delimiter = region.type === "answers" && !region.delimiter ? detectDelimiter(text) : undefined;
     setRegions((prev) =>
       prev.map((r) => (r.id === region.id ? { ...r, recognisedText: text, ...(delimiter && { delimiter }) } : r))

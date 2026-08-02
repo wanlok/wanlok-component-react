@@ -178,7 +178,8 @@ export const regex = {
   HYPERLINK: /https?:\/\/[^\s"']+/g,
   STEAM: /https:\/\/store\.steampowered\.com\/[^\s]+/g,
   YOUTUBE:
-    /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:(?:watch\?v=([\w-]{11})(?:[^\s]*)?)|(?:embed\/([\w-]{11})(?:[^\s]*)?)|(?:shorts\/([\w-]{11})(?:[^\s]*)?))|youtu\.be\/([\w-]{11})(?:[^\s]*)?)/g
+    /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:(?:watch\?v=([\w-]{11})(?:[^\s]*)?)|(?:embed\/([\w-]{11})(?:[^\s]*)?)|(?:shorts\/([\w-]{11})(?:[^\s]*)?))|youtu\.be\/([\w-]{11})(?:[^\s]*)?)/g,
+  QUESTION_NUMBER: /^\s*(?:Q\s*)?(?:\d+|[A-Za-z])[.):]\s*/i
 };
 
 export interface YakijujuDocument {
