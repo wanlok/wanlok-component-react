@@ -16,22 +16,39 @@ const ImageTitleContent = ({
   imageSx,
   name,
   aspectRatio,
-  height
+  height,
+  badgeText
 }: {
   imageUrl: string;
   imageSx?: SxProps<Theme>;
   name?: string;
   aspectRatio?: string;
   height?: string;
+  badgeText?: string;
 }) => (
   <>
-    <Stack sx={{ aspectRatio, height }}>
+    <Stack sx={{ aspectRatio, height, position: "relative" }}>
       <Box
         component="img"
         src={imageUrl}
         alt=""
         sx={{ display: "block", objectFit: "cover", width: "100%", height: "100%", ...imageSx }}
       />
+      {badgeText && (
+        <Stack
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            height: 32,
+            px: 2,
+            justifyContent: "center",
+            backgroundColor: "success.main",
+            color: "common.white"
+          }}
+        >
+          <Typography variant="body2">{badgeText}</Typography>
+        </Stack>
+      )}
     </Stack>
     {name && (
       <Stack sx={{ p: 2 }}>
@@ -62,6 +79,7 @@ export const ImageTitleLink = ({
   onClick,
   height,
   aspectRatio,
+  badgeText,
   leftMost = false,
   rightMost = false,
   scrollHorizontally,
@@ -77,6 +95,7 @@ export const ImageTitleLink = ({
   onClick?: () => void;
   height?: string;
   aspectRatio?: string;
+  badgeText?: string;
   leftMost?: boolean;
   rightMost?: boolean;
   scrollHorizontally: boolean;
@@ -95,6 +114,7 @@ export const ImageTitleLink = ({
             name={name}
             aspectRatio={aspectRatio}
             height={height}
+            badgeText={badgeText}
           />
         </ButtonBase>
       ) : (
@@ -105,6 +125,7 @@ export const ImageTitleLink = ({
             name={name}
             aspectRatio={aspectRatio}
             height={height}
+            badgeText={badgeText}
           />
         </ButtonBase>
       )}

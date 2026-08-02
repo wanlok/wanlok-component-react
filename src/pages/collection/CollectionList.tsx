@@ -3,6 +3,7 @@ import { Skeleton, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { ChartItem, CloudinaryFileInfo, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { ImageTitleLink } from "../../components/ImageTitleLink";
+import { getQuiz } from "../api/CollectionAPI";
 
 export const CollectionList = ({
   isLoading,
@@ -60,23 +61,27 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("charts", uuid)}
           />
         ))}
-        {files.map(([id, { name, url }], i) => (
-          <ImageTitleLink
-            key={`files-${i}`}
-            imageUrl={url}
-            imageSx={{ objectPosition: "top" }}
-            name={name}
-            onClick={() => onFileClick(id, url, name)}
-            aspectRatio="16/9"
-            leftMost={i === 0}
-            rightMost={i === files.length - 1}
-            scrollHorizontally={!mobile}
-            controlGroupState={controlGroupState}
-            onLeftButtonClick={() => onLeftButtonClick("files", id)}
-            onRightButtonClick={() => onRightButtonClick("files", id)}
-            onDeleteButtonClick={() => onDeleteButtonClick("files", id)}
-          />
-        ))}
+        {files.map(([id, { name, url, layout, textRegions }], i) => {
+          const questionCount = getQuiz(layout, textRegions)?.length ?? 0;
+          return (
+            <ImageTitleLink
+              key={`files-${i}`}
+              imageUrl={url}
+              imageSx={{ objectPosition: "top" }}
+              name={name}
+              onClick={() => onFileClick(id, url, name)}
+              aspectRatio="16/9"
+              badgeText={layout === "quiz" && questionCount > 0 ? `${questionCount} questions` : undefined}
+              leftMost={i === 0}
+              rightMost={i === files.length - 1}
+              scrollHorizontally={!mobile}
+              controlGroupState={controlGroupState}
+              onLeftButtonClick={() => onLeftButtonClick("files", id)}
+              onRightButtonClick={() => onRightButtonClick("files", id)}
+              onDeleteButtonClick={() => onDeleteButtonClick("files", id)}
+            />
+          );
+        })}
         {hyperlinks.map(([url, id], i) => (
           <ImageTitleLink
             key={`hyperlinks-${i}`}
