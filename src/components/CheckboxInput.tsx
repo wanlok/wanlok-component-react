@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { ButtonBase, Divider, FormControl, FormLabel, Stack, Typography } from "@mui/material";
 import { Done as DoneIcon } from "@mui/icons-material";
 
@@ -32,10 +33,9 @@ export const CheckboxInput = ({
         }}
       >
         {items.map((item, i) => (
-          <>
+          <Fragment key={`item-${i}`}>
             {i !== 0 && <Divider sx={{ borderColor: "background.default" }} />}
             <ButtonBase
-              key={`item-${i}`}
               component="div"
               sx={{ flexDirection: "row", alignItems: "stretch", width: "100%" }}
               onClick={() => onItemCheckedChange(i)}
@@ -58,7 +58,7 @@ export const CheckboxInput = ({
                 <Typography variant="body1">{item}</Typography>
               </Stack>
             </ButtonBase>
-          </>
+          </Fragment>
         ))}
       </Stack>
     </FormControl>

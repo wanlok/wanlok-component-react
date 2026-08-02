@@ -6,6 +6,7 @@ import { BugReport as BugReportIcon, BugReportOutlined as BugReportOutlinedIcon 
 import { PanelRow } from "../../components/PanelRow";
 import { Puzzle } from "./puzzle";
 import { Quiz } from "./quiz";
+import { LeftHeader } from "./LeftHeader";
 
 const iconSize = 24;
 
@@ -19,6 +20,7 @@ export const Playground = () => {
       width={300}
       panel={
         <>
+          <LeftHeader />
           <WCardList
             items={folders}
             renderContent={(folder) => {

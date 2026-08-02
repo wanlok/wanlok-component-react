@@ -4,7 +4,7 @@ import { iconButtonSx, WButton } from "../../components/WButton";
 import { Add as AddIcon, Close as CloseIcon } from "@mui/icons-material";
 
 const Top = () => (
-  <Stack sx={[topSx, { alignItems: "center", px: 2 }]}>
+  <Stack sx={[topSx, { px: 2, alignItems: "center" }]}>
     <Typography variant="body1">Kanban</Typography>
   </Stack>
 );

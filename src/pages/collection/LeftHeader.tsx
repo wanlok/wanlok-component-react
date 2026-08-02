@@ -4,7 +4,7 @@ import { iconButtonSx, WButton } from "../../components/WButton";
 import { bottomSx, LayoutHeader, topSx } from "../../components/LayoutHeader";
 
 const Top = () => (
-  <Stack sx={[topSx, { alignItems: "center", px: 2 }]}>
+  <Stack sx={[topSx, { px: 2, alignItems: "center" }]}>
     <Typography variant="body1">Collections</Typography>
   </Stack>
 );
