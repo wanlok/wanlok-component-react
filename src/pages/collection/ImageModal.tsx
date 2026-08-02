@@ -392,6 +392,25 @@ export const ImageModal = ({
     }
   }, [open, name, attributes, layout]);
 
+  useEffect(() => {
+    if (!open || !selectedRegionId) {
+      return;
+    }
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key !== "Backspace" && e.key !== "Delete") {
+        return;
+      }
+      const target = e.target as HTMLElement | null;
+      if (target && ["INPUT", "TEXTAREA"].includes(target.tagName)) {
+        return;
+      }
+      setRegions((prev) => prev.filter((r) => r.id !== selectedRegionId));
+      setSelectedRegionId(null);
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open, selectedRegionId]);
+
   const ensureImageCanvas = async () => {
     if (!imageCanvasRef.current) {
       const img = new Image();
