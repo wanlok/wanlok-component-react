@@ -31,6 +31,7 @@ import { ControlGroup } from "../../components/ControlGroup";
 import { regex } from "../../services/Types";
 import { splitAnswers } from "../../utils/splitAnswers";
 import { detectDelimiter } from "../../utils/detectDelimiter";
+import { detectNextTextRegion } from "../../utils/detectNextTextRegion";
 
 const QUIZ_TYPE_ITEMS = [
   { label: "Question", value: "question" },
@@ -354,15 +355,25 @@ export const ImageModal = ({
   const imageScrollRef = useRef<HTMLDivElement>(null);
   const rightScrollRef = useRef<HTMLDivElement>(null);
 
-  const onAddRegionClick = () => {
+  const onAddRegionClick = async () => {
     const container = imageScrollRef.current;
-    const x = (container?.scrollLeft ?? 0) + 80;
-    const y = (container?.scrollTop ?? 0) + 40;
-    setRegions((prev) => [...prev, { id: String(Date.now()), x, y, width: 240, height: 135 }]);
+    const defaultX = (container?.scrollLeft ?? 0) + 80;
+    const defaultY = (container?.scrollTop ?? 0) + 40;
+    const lastTextRegion = regions.length > 0 ? regions[regions.length - 1] : null;
+    const x = lastTextRegion ? lastTextRegion.x : defaultX;
+    const y = lastTextRegion ? lastTextRegion.y + lastTextRegion.height : defaultY;
+    const width = 240;
+    const height = 135;
+    const canvas = await ensureImageCanvas();
+    const detectedRegion = canvas ? detectNextTextRegion(canvas, y) : null;
+    const newRegion: TextRegion = { id: String(Date.now()), ...(detectedRegion ?? { x, y, width, height }) };
+    setRegions((prev) => [...prev, newRegion]);
     setControlGroupState(0);
+    scrollImageToRegion(newRegion);
     requestAnimationFrame(() => {
       rightScrollRef.current?.scrollTo({ top: rightScrollRef.current.scrollHeight, behavior: "smooth" });
     });
+    await recognizeRegionText(newRegion, newRegion.recogniseLanguage ?? "eng");
   };
 
   useEffect(() => {
@@ -381,7 +392,7 @@ export const ImageModal = ({
     }
   }, [open, name, attributes, layout]);
 
-  const recognizeRegionText = async (region: TextRegion, language: string) => {
+  const ensureImageCanvas = async () => {
     if (!imageCanvasRef.current) {
       const img = new Image();
       img.crossOrigin = "anonymous";
@@ -396,7 +407,12 @@ export const ImageModal = ({
       canvas.getContext("2d")?.drawImage(img, 0, 0);
       imageCanvasRef.current = canvas;
     }
-    const base64 = getImageBase64String(imageCanvasRef.current, {
+    return imageCanvasRef.current;
+  };
+
+  const recognizeRegionText = async (region: TextRegion, language: string) => {
+    const canvas = await ensureImageCanvas();
+    const base64 = getImageBase64String(canvas, {
       x: Math.round(region.x),
       y: Math.round(region.y),
       width: Math.round(region.width),
@@ -500,7 +516,8 @@ export const ImageModal = ({
         if (r.id !== regionId) {
           return r;
         }
-        const delimiter = type === "answers" && !r.delimiter && r.recognisedText ? detectDelimiter(r.recognisedText) : r.delimiter;
+        const delimiter =
+          type === "answers" && !r.delimiter && r.recognisedText ? detectDelimiter(r.recognisedText) : r.delimiter;
         return { ...r, type: type as TextRegion["type"], delimiter };
       })
     );
@@ -541,16 +558,23 @@ export const ImageModal = ({
     row?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
+  const scrollImageToRegion = (region: TextRegion) => {
+    const container = imageScrollRef.current;
+    if (!container) {
+      return;
+    }
+    container.scrollTo({
+      left: region.x - container.clientWidth / 2 + region.width / 2,
+      top: region.y - container.clientHeight / 2 + region.height / 2,
+      behavior: "smooth"
+    });
+  };
+
   const onRegionAvatarClick = (regionId: string) => {
     onRegionSelect(regionId);
     const region = regions.find((r) => r.id === regionId);
-    const container = imageScrollRef.current;
-    if (region && container) {
-      container.scrollTo({
-        left: region.x - container.clientWidth / 2 + region.width / 2,
-        top: region.y - container.clientHeight / 2 + region.height / 2,
-        behavior: "smooth"
-      });
+    if (region) {
+      scrollImageToRegion(region);
     }
   };
 
