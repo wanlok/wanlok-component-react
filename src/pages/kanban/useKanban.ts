@@ -56,7 +56,7 @@ export const useKanban = () => {
   const addProject = async (name: string, columnNames: string[]) => {
     const document = await getDoc(docRef);
     const columns = columnNames.map((name) => ({ name, items: [] }));
-    const project = { id: uuidv4(), name, columns, created_at: new Date().toISOString() };
+    const project = { id: uuidv4(), name, columns, createdAt: new Date().toISOString() };
     let kanban;
     if (document.exists()) {
       const projects = document.data().projects ?? [];
@@ -101,7 +101,7 @@ export const useKanban = () => {
     if (!kanban || !selectedProject) {
       return;
     }
-    const newItem = { id: uuidv4(), name: "", content: "", created_at: new Date().toISOString(), messages: [] };
+    const newItem = { id: uuidv4(), name: "", content: "", createdAt: new Date().toISOString(), messages: [] };
     const columns = selectedProject.columns.map((column, i) =>
       i === 0 ? { ...column, items: [...column.items, newItem] } : column
     );
@@ -157,7 +157,7 @@ export const useKanban = () => {
     if (!kanban || !selectedProject) {
       return;
     }
-    const message = { name, text, created_at: new Date().toISOString() };
+    const message = { name, text, createdAt: new Date().toISOString() };
     const columns = selectedProject.columns.map((column, i) =>
       i === columnIndex
         ? {

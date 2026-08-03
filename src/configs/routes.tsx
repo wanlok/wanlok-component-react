@@ -3,7 +3,7 @@ import { Landing } from "../pages/landing";
 import { Playground } from "../pages/playground";
 import { CollectionPage } from "../pages/collection";
 import WANLOKImage from "../assets/images/wanlok.png";
-import WANLOKImage2 from "../assets/images/wanlok_2.png";
+import WANLOKImage2 from "../assets/images/wanlok2.png";
 import {
   BugReport as BugReportIcon,
   BugReportOutlined as BugReportOutlinedIcon,
@@ -24,7 +24,7 @@ export const routes = [
     children: [
       {
         icon: WANLOKImage,
-        icon_selected: WANLOKImage2,
+        iconSelected: WANLOKImage2,
         name: "Home",
         path: "/",
         element: <Landing />
@@ -37,21 +37,21 @@ export const routes = [
       },
       {
         icon: <KanbanOutlinedIcon sx={{ fontSize: iconSize }} />,
-        icon_selected: <KanbanIcon sx={{ fontSize: iconSize }} />,
+        iconSelected: <KanbanIcon sx={{ fontSize: iconSize }} />,
         name: "Kanban",
         path: "/kanban/:id?",
         element: <Kanban />
       },
       {
         icon: <FolderOutlinedIcon sx={{ fontSize: iconSize }} />,
-        icon_selected: <FolderIcon sx={{ fontSize: iconSize }} />,
+        iconSelected: <FolderIcon sx={{ fontSize: iconSize }} />,
         name: "Collections",
         path: "/collections/:id?",
         element: <CollectionPage />
       },
       {
         icon: <BugReportOutlinedIcon sx={{ fontSize: iconSize }} />,
-        icon_selected: <BugReportIcon sx={{ fontSize: iconSize }} />,
+        iconSelected: <BugReportIcon sx={{ fontSize: iconSize }} />,
         name: "Playground",
         path: "/playground/:id?",
         element: <Playground />

@@ -9,8 +9,8 @@ export const getCounts = (collectionDocument: CollectionDocument): CollectionCou
     files: toList(collectionDocument?.files).length,
     hyperlinks: toList(collectionDocument?.hyperlinks).length,
     steam: toList(collectionDocument?.steam).length,
-    youtube_regular: toList(collectionDocument?.youtube_regular).length,
-    youtube_shorts: toList(collectionDocument?.youtube_shorts).length
+    youtubeRegular: toList(collectionDocument?.youtubeRegular).length,
+    youtubeShorts: toList(collectionDocument?.youtubeShorts).length
   };
 };
 
@@ -25,7 +25,7 @@ export const getCountsByUrlStrings = (urlStrings: string[]): CollectionCounts =>
     files: 0,
     hyperlinks: hyperlinks.length,
     steam: steamUrlStrings.length,
-    youtube_regular: youTubeInfos.filter((info) => info.type === "youtube_regular").length,
-    youtube_shorts: youTubeInfos.filter((info) => info.type === "youtube_shorts").length
+    youtubeRegular: youTubeInfos.filter((info) => info.type === "youtubeRegular").length,
+    youtubeShorts: youTubeInfos.filter((info) => info.type === "youtubeShorts").length
   };
 };

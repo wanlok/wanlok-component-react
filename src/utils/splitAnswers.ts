@@ -1,22 +1,22 @@
 const ANSWER_DELIMITER_PATTERNS: { [key: string]: RegExp } = {
-  letter_dot: /(?<![A-Za-z])(?=[A-Za-z]\.\s)/,
-  letter_paren: /(?<![A-Za-z])(?=[A-Za-z]\)\s)/,
-  number_dot: /(?<!\d)(?=\d+\.\s)/,
-  number_paren: /(?<!\d)(?=\d+\)\s)/,
-  roman_dot: /(?<![A-Za-z])(?=[ivxlcdm]+\.\s)/i,
-  roman_paren: /(?<![A-Za-z])(?=[ivxlcdm]+\)\s)/i,
+  letterDot: /(?<![A-Za-z])(?=[A-Za-z]\.\s)/,
+  letterParen: /(?<![A-Za-z])(?=[A-Za-z]\)\s)/,
+  numberDot: /(?<!\d)(?=\d+\.\s)/,
+  numberParen: /(?<!\d)(?=\d+\)\s)/,
+  romanDot: /(?<![A-Za-z])(?=[ivxlcdm]+\.\s)/i,
+  romanParen: /(?<![A-Za-z])(?=[ivxlcdm]+\)\s)/i,
   dash: /(?<!\S)(?=-\s)/
 };
 
 export const ANSWER_DELIMITER_KEYS = Object.keys(ANSWER_DELIMITER_PATTERNS);
 
 const ANSWER_LABEL_PATTERNS: { [key: string]: RegExp } = {
-  letter_dot: /^[A-Za-z]\.\s*/,
-  letter_paren: /^[A-Za-z]\)\s*/,
-  number_dot: /^\d+\.\s*/,
-  number_paren: /^\d+\)\s*/,
-  roman_dot: /^[ivxlcdm]+\.\s*/i,
-  roman_paren: /^[ivxlcdm]+\)\s*/i,
+  letterDot: /^[A-Za-z]\.\s*/,
+  letterParen: /^[A-Za-z]\)\s*/,
+  numberDot: /^\d+\.\s*/,
+  numberParen: /^\d+\)\s*/,
+  romanDot: /^[ivxlcdm]+\.\s*/i,
+  romanParen: /^[ivxlcdm]+\)\s*/i,
   dash: /^-\s*/
 };
 

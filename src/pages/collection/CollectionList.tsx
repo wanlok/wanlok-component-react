@@ -33,7 +33,7 @@ export const CollectionList = ({
   controlGroupState: number;
   onFileClick: (id: string, src: string, name: string) => void;
   onVideoClick: (
-    type: "youtube_regular" | "youtube_shorts",
+    type: "youtubeRegular" | "youtubeShorts",
     id: string,
     name: string,
     attributes: { [key: string]: string }
@@ -126,15 +126,15 @@ export const CollectionList = ({
             imageUrl={imageUrl}
             imageSx={{ objectFit: "contain" }}
             name={name}
-            onClick={() => onVideoClick("youtube_shorts", id, name, attributes ?? {})}
+            onClick={() => onVideoClick("youtubeShorts", id, name, attributes ?? {})}
             aspectRatio="16/9"
             leftMost={i === 0}
             rightMost={i === youTubeShortVideos.length - 1}
             scrollHorizontally={!mobile}
             controlGroupState={controlGroupState}
-            onDeleteButtonClick={() => onDeleteButtonClick("youtube_shorts", id)}
-            onLeftButtonClick={() => onLeftButtonClick("youtube_shorts", id)}
-            onRightButtonClick={() => onRightButtonClick("youtube_shorts", id)}
+            onDeleteButtonClick={() => onDeleteButtonClick("youtubeShorts", id)}
+            onLeftButtonClick={() => onLeftButtonClick("youtubeShorts", id)}
+            onRightButtonClick={() => onRightButtonClick("youtubeShorts", id)}
           />
         ))}
         {youTubeRegularVideos.map(([id, { name, imageUrl, attributes }], i) => (
@@ -142,15 +142,15 @@ export const CollectionList = ({
             key={`youtube-regular-${i}`}
             imageUrl={imageUrl}
             name={name}
-            onClick={() => onVideoClick("youtube_regular", id, name, attributes ?? {})}
+            onClick={() => onVideoClick("youtubeRegular", id, name, attributes ?? {})}
             aspectRatio="16/9"
             leftMost={i === 0}
             rightMost={i === youTubeRegularVideos.length - 1}
             scrollHorizontally={!mobile}
             controlGroupState={controlGroupState}
-            onDeleteButtonClick={() => onDeleteButtonClick("youtube_regular", id)}
-            onLeftButtonClick={() => onLeftButtonClick("youtube_regular", id)}
-            onRightButtonClick={() => onRightButtonClick("youtube_regular", id)}
+            onDeleteButtonClick={() => onDeleteButtonClick("youtubeRegular", id)}
+            onLeftButtonClick={() => onLeftButtonClick("youtubeRegular", id)}
+            onRightButtonClick={() => onRightButtonClick("youtubeRegular", id)}
           />
         ))}
         {Array.from({ length: loadingCount }).map((_, i) => (

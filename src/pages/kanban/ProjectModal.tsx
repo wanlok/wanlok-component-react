@@ -57,11 +57,11 @@ export const ProjectModal = ({
       }
     >
       <Stack sx={{ gap: "1px", p: 2 }}>
-        {project?.created_at && (
+        {project?.createdAt && (
           <Stack sx={{ pb: 1 }}>
             <Typography variant="body2" sx={{ textAlign: "right" }}>
-              {getDisplayDateTimeString(new Date(project.created_at))} (
-              {getDaysSinceString(new Date(project.created_at))})
+              {getDisplayDateTimeString(new Date(project.createdAt))} (
+              {getDaysSinceString(new Date(project.createdAt))})
             </Typography>
           </Stack>
         )}

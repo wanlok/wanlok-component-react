@@ -9,7 +9,7 @@ export const useDiscussion = ({
   onAddMessage: (name: string, text: string) => void;
 }) => {
   const [isDeletingMessages, setIsDeletingMessages] = useState(false);
-  const [name, setName] = useState(() => localStorage.getItem("discussion_name") ?? "");
+  const [name, setName] = useState(() => localStorage.getItem("discussionName") ?? "");
   const stackRef = useRef<HTMLDivElement>(null);
   const numberOfMessagesRef = useRef(messages.length);
 
@@ -23,7 +23,7 @@ export const useDiscussion = ({
 
   const onNameChange = (value: string) => {
     setName(value);
-    localStorage.setItem("discussion_name", value);
+    localStorage.setItem("discussionName", value);
   };
 
   const onSendMessage = (text: string) => {

@@ -71,8 +71,8 @@ export const LeftContent = ({
             ? getDateString(
                 new Date(
                   allItems.reduce(
-                    (latest: string, item: KanbanItem) => (item.created_at > latest ? item.created_at : latest),
-                    allItems[0].created_at
+                    (latest: string, item: KanbanItem) => (item.createdAt > latest ? item.createdAt : latest),
+                    allItems[0].createdAt
                   )
                 )
               )
@@ -82,8 +82,8 @@ export const LeftContent = ({
             ? getDateString(
                 new Date(
                   allMessages.reduce(
-                    (latest: string, msg: Message) => (msg.created_at > latest ? msg.created_at : latest),
-                    allMessages[0].created_at
+                    (latest: string, msg: Message) => (msg.createdAt > latest ? msg.createdAt : latest),
+                    allMessages[0].createdAt
                   )
                 )
               )

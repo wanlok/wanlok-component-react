@@ -59,7 +59,7 @@ export const getQuiz = (layout: string | undefined, textRegions: TextRegion[] | 
       return;
     }
     collectingQuestion = false;
-    splitAnswers(region.recognisedText ?? "", region.delimiter ?? "letter_dot").forEach((text, i) => {
+    splitAnswers(region.recognisedText ?? "", region.delimiter ?? "letterDot").forEach((text, i) => {
       currentEntry.answers.push({
         content: [{ type: "text", value: text }],
         correct: region.correctAnswerIndices?.includes(i) ?? false
@@ -105,11 +105,11 @@ const getCollectionItems = async (id: string, collectionAttributes: CollectionAt
     result[key] = quiz ? { ...item, quiz } : item;
   });
 
-  Object.entries(data.youtube_regular).forEach(([key, { name, imageUrl, attributes }]) => {
+  Object.entries(data.youtubeRegular).forEach(([key, { name, imageUrl, attributes }]) => {
     result[key] = applyTypedAttributes({ name, imageUrl }, collectionAttributes, attributes);
   });
 
-  Object.entries(data.youtube_shorts).forEach(([key, { name, imageUrl, attributes }]) => {
+  Object.entries(data.youtubeShorts).forEach(([key, { name, imageUrl, attributes }]) => {
     result[key] = applyTypedAttributes({ name, imageUrl }, collectionAttributes, attributes);
   });
 

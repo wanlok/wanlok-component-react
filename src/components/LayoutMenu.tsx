@@ -42,7 +42,7 @@ export const LayoutMenu = () => {
                     }}
                   >
                     {(() => {
-                      const icon = selected ? route.icon_selected : route.icon;
+                      const icon = selected ? route.iconSelected : route.icon;
                       const renderedIcon =
                         typeof icon === "string" ? (
                           <Box

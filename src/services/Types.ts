@@ -18,14 +18,14 @@ export interface ComponentFolder {
 export interface Message {
   name: string;
   text: string;
-  created_at: string;
+  createdAt: string;
 }
 
 export interface KanbanItem {
   id: string;
   name: string;
   content: string;
-  created_at: string;
+  createdAt: string;
   messages: Message[];
 }
 
@@ -38,7 +38,7 @@ export interface KanbanProject {
   id: string;
   name: string;
   columns: KanbanColumn[];
-  created_at: string;
+  createdAt: string;
 }
 
 export interface Kanban {
@@ -56,13 +56,6 @@ export interface ChartItem {
   chart: string;
   x: number[];
   y: number[];
-}
-
-export interface FileInfo {
-  id?: string;
-  name?: string;
-  mime_type: string;
-  reject_reason?: string;
 }
 
 interface ParentInfo {
@@ -101,7 +94,7 @@ export type ApiResponse<T> = { status: string; data: T };
 
 export interface CloudinaryFileInfo extends ParentInfo {
   name: string;
-  mime_type: string;
+  mimeType: string;
   url: string;
   layout?: string;
   textRegions?: TextRegion[];
@@ -131,12 +124,12 @@ export interface CollectionDocument {
   files: { [key: string]: CloudinaryFileInfo };
   hyperlinks: { [key: string]: string };
   steam: { [key: string]: SteamInfo };
-  youtube_regular: { [key: string]: YouTubeInfo };
-  youtube_shorts: { [key: string]: YouTubeInfo };
+  youtubeRegular: { [key: string]: YouTubeInfo };
+  youtubeShorts: { [key: string]: YouTubeInfo };
 }
 
 export const isCollectionKey = (key: string): key is keyof CollectionDocument => {
-  return ["charts", "files", "hyperlinks", "steam", "youtube_regular", "youtube_shorts"].includes(key);
+  return ["charts", "files", "hyperlinks", "steam", "youtubeRegular", "youtubeShorts"].includes(key);
 };
 
 export type Attributes = { [key: string]: string };
@@ -156,8 +149,8 @@ export const emptyCollectionCounts: CollectionCounts = {
   files: 0,
   hyperlinks: 0,
   steam: 0,
-  youtube_regular: 0,
-  youtube_shorts: 0
+  youtubeRegular: 0,
+  youtubeShorts: 0
 };
 
 export type CollectionSequences = {
@@ -169,8 +162,8 @@ export const emptyCollectionSequences: CollectionSequences = {
   files: [],
   hyperlinks: [],
   steam: [],
-  youtube_regular: [],
-  youtube_shorts: []
+  youtubeRegular: [],
+  youtubeShorts: []
 };
 
 export const serverUrl = "https://wanlok.ddns.net";
@@ -179,8 +172,8 @@ export const viewUrls = {
   files: `${serverUrl}/files/`,
   hyperlinks: true,
   steam: "https://store.steampowered.com/agecheck/app/",
-  youtube_regular: "https://www.youtube.com/watch?v=",
-  youtube_shorts: "https://www.youtube.com/shorts/"
+  youtubeRegular: "https://www.youtube.com/watch?v=",
+  youtubeShorts: "https://www.youtube.com/shorts/"
 };
 
 export const regex = {

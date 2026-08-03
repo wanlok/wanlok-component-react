@@ -66,7 +66,7 @@ export const KanbanCardContent = ({ item, isDragIconHidden }: { item: KanbanItem
         {item.name || "No name"}
       </Typography>
       <Stack sx={{ flexDirection: "row" }}>
-        <Typography variant="body2">{getDateString(new Date(item.created_at))}</Typography>
+        <Typography variant="body2">{getDateString(new Date(item.createdAt))}</Typography>
         {item.messages.length > 0 && (
           <>
             <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />

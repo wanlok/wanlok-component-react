@@ -46,12 +46,12 @@ const QUIZ_TYPE_ITEMS = [
 ];
 
 const ANSWER_DELIMITER_ITEMS = [
-  { label: "A. ..., B. ..., C. ..., D. ..., ...", value: "letter_dot" },
-  { label: "A) ..., B) ..., C) ..., D) ..., ...", value: "letter_paren" },
-  { label: "1. ..., 2. ..., 3. ..., 4. ..., ...", value: "number_dot" },
-  { label: "1) ..., 2) ..., 3) ..., 4) ..., ...", value: "number_paren" },
-  { label: "i. ..., ii. ..., iii. ..., iv. ..., ...", value: "roman_dot" },
-  { label: "i) ..., ii) ..., iii) ..., iv) ..., ...", value: "roman_paren" },
+  { label: "A. ..., B. ..., C. ..., D. ..., ...", value: "letterDot" },
+  { label: "A) ..., B) ..., C) ..., D) ..., ...", value: "letterParen" },
+  { label: "1. ..., 2. ..., 3. ..., 4. ..., ...", value: "numberDot" },
+  { label: "1) ..., 2) ..., 3) ..., 4) ..., ...", value: "numberParen" },
+  { label: "i. ..., ii. ..., iii. ..., iv. ..., ...", value: "romanDot" },
+  { label: "i) ..., ii) ..., iii) ..., iv) ..., ...", value: "romanParen" },
   { label: "- ..., - ..., - ..., - ..., ...", value: "dash" }
 ];
 
@@ -197,7 +197,7 @@ const RegionRow = ({
             {selectedLayout === "quiz" && region.type === "answers" && (
               <QuizAnswerContainer
                 text={region.recognisedText ?? ""}
-                delimiter={region.delimiter ?? "letter_dot"}
+                delimiter={region.delimiter ?? "letterDot"}
                 correctAnswerIndices={region.correctAnswerIndices}
                 onDelimiterChange={onDelimiterChange}
                 onCorrectAnswerIndicesChange={onCorrectAnswerIndicesChange}

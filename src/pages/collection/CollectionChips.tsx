@@ -10,7 +10,7 @@ import { WChip } from "../../components/WChip";
 import SteamIcon from "../../assets/images/icons/steam.png";
 
 export const CollectionChips = ({ folder }: { folder: Folder }) => {
-  const { files, hyperlinks, steam, youtube_regular, youtube_shorts } = folder.counts;
+  const { files, hyperlinks, steam, youtubeRegular, youtubeShorts } = folder.counts;
   const isContainSequences = Object.values(folder.sequences).some((sequence) => sequence.length > 0);
   if (!isContainSequences && !Object.values(folder.counts).some((count) => count > 0)) {
     return <></>;
@@ -25,17 +25,17 @@ export const CollectionChips = ({ folder }: { folder: Folder }) => {
         <WChip icon={<LinkIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${hyperlinks}`} />
       )}
       {steam > 0 && <WChip icon={SteamIcon} label={`${steam}`} />}
-      {youtube_regular > 0 && youtube_shorts > 0 && (
+      {youtubeRegular > 0 && youtubeShorts > 0 && (
         <WChip
           icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />}
-          label={`${youtube_shorts} + ${youtube_regular}`}
+          label={`${youtubeShorts} + ${youtubeRegular}`}
         />
       )}
-      {youtube_regular === 0 && youtube_shorts > 0 && (
-        <WChip icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${youtube_shorts}`} />
+      {youtubeRegular === 0 && youtubeShorts > 0 && (
+        <WChip icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${youtubeShorts}`} />
       )}
-      {youtube_regular > 0 && youtube_shorts === 0 && (
-        <WChip icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${youtube_regular}`} />
+      {youtubeRegular > 0 && youtubeShorts === 0 && (
+        <WChip icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${youtubeRegular}`} />
       )}
     </Stack>
   );

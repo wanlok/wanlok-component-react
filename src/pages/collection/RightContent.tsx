@@ -55,7 +55,7 @@ export const RightContent = ({
   addCollectionFiles: (collectionId: string) => Promise<{ counts: CollectionCounts; sequences?: string[]; attributes?: CollectionAttributes } | undefined>;
   updateCollectionFile: (id: string, name: string, attributes: { [key: string]: string }, layout: string, textRegions: TextRegion[]) => Promise<void>;
   updateCollectionVideo: (
-    type: "youtube_regular" | "youtube_shorts",
+    type: "youtubeRegular" | "youtubeShorts",
     id: string,
     name: string,
     attributes: { [key: string]: string }
@@ -63,7 +63,7 @@ export const RightContent = ({
 }) => {
   const [selectedFile, setSelectedFile] = useState<{ id: string; src: string; name: string; attributes: { [key: string]: string }; layout: string; textRegions: TextRegion[] } | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<{
-    type: "youtube_regular" | "youtube_shorts";
+    type: "youtubeRegular" | "youtubeShorts";
     id: string;
     name: string;
     attributes: { [key: string]: string };

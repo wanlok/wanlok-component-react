@@ -134,8 +134,8 @@ export const ItemModal = ({
     >
       <Stack sx={{ p: 2 }}>
         <Typography variant="body2" sx={{ textAlign: "right" }}>
-          {getDisplayDateTimeString(new Date(kanbanItem.created_at))} (
-          {getDaysSinceString(new Date(kanbanItem.created_at))})
+          {getDisplayDateTimeString(new Date(kanbanItem.createdAt))} (
+          {getDaysSinceString(new Date(kanbanItem.createdAt))})
         </Typography>
       </Stack>
       <Stack sx={{ gap: "1px", px: 2, pb: 2 }}>

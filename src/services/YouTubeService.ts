@@ -23,7 +23,7 @@ export const extractYouTubeInfos = (urlStrings: string[]): { urlString: string; 
     if (match) {
       const [, watchId, embedId, shortsId, shareId] = match;
       const id = shortsId ?? watchId ?? embedId ?? shareId ?? "";
-      const type = shortsId ? "youtube_shorts" : "youtube_regular";
+      const type = shortsId ? "youtubeShorts" : "youtubeRegular";
       youTubeInfos.push({ urlString, id, type });
     }
   }
@@ -31,8 +31,8 @@ export const extractYouTubeInfos = (urlStrings: string[]): { urlString: string; 
 };
 
 export const getYouTubeRegularAndShortInfos = async (text: string) => {
-  const youtube_regular: { [key: string]: YouTubeInfo } = {};
-  const youtube_shorts: { [key: string]: YouTubeInfo } = {};
+  const youtubeRegular: { [key: string]: YouTubeInfo } = {};
+  const youtubeShorts: { [key: string]: YouTubeInfo } = {};
 
   const youTubeInfos = extractYouTubeInfos(extractUrlStrings(text, regex.YOUTUBE));
 
@@ -46,12 +46,12 @@ export const getYouTubeRegularAndShortInfos = async (text: string) => {
   ).filter(Boolean) as { id: string; type: string; value: YouTubeInfo }[];
 
   for (const { id, type, value } of results) {
-    if (type === "youtube_regular") {
-      youtube_regular[id] = value;
-    } else if (type === "youtube_shorts") {
-      youtube_shorts[id] = value;
+    if (type === "youtubeRegular") {
+      youtubeRegular[id] = value;
+    } else if (type === "youtubeShorts") {
+      youtubeShorts[id] = value;
     }
   }
 
-  return { youtube_regular, youtube_shorts };
+  return { youtubeRegular, youtubeShorts };
 };

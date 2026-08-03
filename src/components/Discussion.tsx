@@ -22,7 +22,7 @@ const MessageRow = ({
         <Typography variant="body2" sx={{ flex: 1 }}>
           {message.name}
         </Typography>
-        <Typography variant="body2">{getDisplayDateTimeString(new Date(message.created_at))}</Typography>
+        <Typography variant="body2">{getDisplayDateTimeString(new Date(message.createdAt))}</Typography>
       </Stack>
       <Typography variant="body1" sx={{ flex: 1, whiteSpace: "pre-wrap" }}>
         {message.text}

@@ -62,7 +62,7 @@ export const useCollection = (
     if (collectionId && text) {
       const { charts } = getChartItems(text);
       const { steam } = await getSteamInfos(text);
-      const { youtube_regular, youtube_shorts } = await getYouTubeRegularAndShortInfos(text);
+      const { youtubeRegular, youtubeShorts } = await getYouTubeRegularAndShortInfos(text);
       const { hyperlinks } = await getHyperlinks(text);
       const docRef = doc(db, collectionName, collectionId);
       let document;
@@ -73,12 +73,12 @@ export const useCollection = (
           files: { ...collectionDocument.files },
           hyperlinks: { ...collectionDocument.hyperlinks, ...hyperlinks },
           steam: { ...collectionDocument.steam, ...steam },
-          youtube_regular: { ...collectionDocument.youtube_regular, ...youtube_regular },
-          youtube_shorts: { ...collectionDocument.youtube_shorts, ...youtube_shorts }
+          youtubeRegular: { ...collectionDocument.youtubeRegular, ...youtubeRegular },
+          youtubeShorts: { ...collectionDocument.youtubeShorts, ...youtubeShorts }
         };
         await updateDoc(docRef, document);
       } else {
-        document = { charts, files: {}, hyperlinks, steam, youtube_regular, youtube_shorts };
+        document = { charts, files: {}, hyperlinks, steam, youtubeRegular, youtubeShorts };
         await setDoc(docRef, document);
       }
       setCollectionDocumentAndRef(document);
@@ -130,8 +130,8 @@ export const useCollection = (
               files: fileInfos,
               hyperlinks: {},
               steam: {},
-              youtube_regular: {},
-              youtube_shorts: {}
+              youtubeRegular: {},
+              youtubeShorts: {}
             };
             await setDoc(docRef, document);
           }
@@ -166,11 +166,11 @@ export const useCollection = (
       files: Object.fromEntries(
         Object.entries(collectionDocument.files).map(([id, item]) => [id, renameItemKey(item)])
       ),
-      youtube_regular: Object.fromEntries(
-        Object.entries(collectionDocument.youtube_regular).map(([id, item]) => [id, renameItemKey(item)])
+      youtubeRegular: Object.fromEntries(
+        Object.entries(collectionDocument.youtubeRegular).map(([id, item]) => [id, renameItemKey(item)])
       ),
-      youtube_shorts: Object.fromEntries(
-        Object.entries(collectionDocument.youtube_shorts).map(([id, item]) => [id, renameItemKey(item)])
+      youtubeShorts: Object.fromEntries(
+        Object.entries(collectionDocument.youtubeShorts).map(([id, item]) => [id, renameItemKey(item)])
       )
     };
     const docRef = doc(db, collectionName, documentId);
@@ -243,7 +243,7 @@ export const useCollection = (
   };
 
   const updateCollectionVideo = async (
-    type: "youtube_regular" | "youtube_shorts",
+    type: "youtubeRegular" | "youtubeShorts",
     id: string,
     name: string,
     attributes: { [key: string]: string }
@@ -277,8 +277,8 @@ export const useCollection = (
             files: fileInfos,
             hyperlinks: {},
             steam: {},
-            youtube_regular: {},
-            youtube_shorts: {}
+            youtubeRegular: {},
+            youtubeShorts: {}
           };
           await setDoc(docRef, document);
         }
@@ -332,8 +332,8 @@ export const useCollection = (
     files: toList(collectionDocument?.files, collectionSequences?.files),
     hyperlinks: toList(collectionDocument?.hyperlinks, collectionSequences?.hyperlinks),
     steam: toList(collectionDocument?.steam, collectionSequences?.steam),
-    youTubeRegularVideos: toList(collectionDocument?.youtube_regular, collectionSequences?.youtube_regular),
-    youTubeShortVideos: toList(collectionDocument?.youtube_shorts, collectionSequences?.youtube_shorts),
+    youTubeRegularVideos: toList(collectionDocument?.youtubeRegular, collectionSequences?.youtubeRegular),
+    youTubeShortVideos: toList(collectionDocument?.youtubeShorts, collectionSequences?.youtubeShorts),
     addCollectionItems,
     addCollectionFiles,
     renameCollectionAttributeKey,
