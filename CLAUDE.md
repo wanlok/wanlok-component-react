@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 npm run dev        # Dev server at http://localhost:5173
-npm run build      # Production build to ./build
+npm run build      # Production build to ./dist
 npm test           # Run tests in watch mode
 npm test -- --testPathPattern=<file>  # Run a single test file
 ./deploy.sh        # Build and deploy to wanlok.github.io (requires wanlok.github.io repo at sibling path)
@@ -29,7 +29,7 @@ npm test -- --testPathPattern=<file>  # Run a single test file
 **Firebase Firestore layout:**
 - `configs/kanban` — single document holding all kanban projects and their columns/items
 - `configs/folders` — single document holding all collection folders with metadata (attributes, counts, sequences)
-- `collections/<folder-id>` — one document per folder containing its items, keyed by content ID, across types: `charts`, `files`, `hyperlinks`, `steam`, `youtube_regular`, `youtube_shorts`
+- `collections/<folder-id>` — one document per folder containing its items, keyed by content ID, across types: `charts`, `files`, `hyperlinks`, `steam`, `youtubeRegular`, `youtubeShorts`
 - `discussions/<YYYYMMDD>` — one document per day with an array of chat messages; uses `onSnapshot` for real-time updates
 
 **Collection item ordering:** Firestore stores collection items as dicts (`{ [id]: item }`). Display order is maintained separately as a `sequences: string[]` per type inside the folder document. `toList()` in `src/common/ListDictUtils.ts` merges a dict with its sequence array to produce a stable ordered list.
@@ -46,14 +46,14 @@ npm test -- --testPathPattern=<file>  # Run a single test file
 
 **PanelRow:** Shared component for panel list items — takes `icon` (MUI icon element), `title` (string), and optional `children` for secondary content below the title.
 
-**Environment variables** (Firebase config, set in `.env`):
+**Environment variables** (Firebase config, set in `.env.local`):
 ```
-REACT_APP_FIREBASE_API_KEY
-REACT_APP_FIREBASE_AUTH_DOMAIN
-REACT_APP_FIREBASE_PROJECT_ID
-REACT_APP_FIREBASE_STORAGE_BUCKET
-REACT_APP_FIREBASE_MESSAGING_SENDER_ID
-REACT_APP_FIREBASE_APP_ID
+VITE_FIREBASE_API_KEY
+VITE_FIREBASE_AUTH_DOMAIN
+VITE_FIREBASE_PROJECT_ID
+VITE_FIREBASE_STORAGE_BUCKET
+VITE_FIREBASE_MESSAGING_SENDER_ID
+VITE_FIREBASE_APP_ID
 ```
 
 **Deployment:** `deploy.sh` builds the app, wipes the `wanlok.github.io` repo directory, copies the build output into it, and pushes. The app uses a hash router (`createHashRouter`) so all routes work as static files on GitHub Pages.
@@ -68,4 +68,4 @@ REACT_APP_FIREBASE_APP_ID
 
 **Firebase writes:** Only call Firebase (e.g. `updateDoc`, `setDoc`) on explicit user actions like a Save button click. Never trigger writes on text change, blur, or other intermediate events — use local state to buffer edits until the user confirms.
 
-**Firestore field naming:** Use snake_case for all Firestore document field names (e.g. `created_at`, not `createdAt`). TypeScript interface properties that map directly to Firestore fields follow the same convention.
+**Firestore field naming:** Use camelCase for all Firestore document field names (e.g. `createdAt`, not `created_at`). TypeScript interface properties that map directly to Firestore fields follow the same convention. Exception: fields that mirror an external API's response verbatim (e.g. Cloudinary's `public_id`/`secure_url`, YouTube oEmbed's `thumbnail_url`, Tesseract.js language codes like `chi_sim`) keep the external contract's naming rather than being converted.

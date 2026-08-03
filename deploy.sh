@@ -3,7 +3,7 @@
 REPOSITORY_PATH="/Users/wanlok/Files/Projects/wanlok-component-react"
 DEPLOY_PATH="/Users/wanlok/Files/Projects/wanlok.github.io"
 
-BUILD_PATH=$REPOSITORY_PATH/build
+BUILD_PATH=$REPOSITORY_PATH/dist
 
 cd $DEPLOY_PATH
 
