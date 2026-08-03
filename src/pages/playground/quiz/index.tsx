@@ -53,12 +53,14 @@ const AnswerContainer = ({
 };
 
 const ControlBar = ({
+  mobile,
   quizItems,
   selectedQuizItem,
   setSelectedQuizItem,
   onResetButtonClick,
   onSubmitButtonClick
 }: {
+  mobile: boolean;
   quizItems: { label: string; value: string }[];
   selectedQuizItem: string;
   setSelectedQuizItem: (value: string) => void;
@@ -70,14 +72,16 @@ const ControlBar = ({
       <StyledContainer sx={{ flex: 1, p: 1 }}>
         <SelectInput items={quizItems} value={selectedQuizItem} onChange={setSelectedQuizItem} />
       </StyledContainer>
-      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-        <WButton onClick={onResetButtonClick} sx={iconButtonSx}>
-          <UndoIcon sx={{ fontSize: 20 }} />
-        </WButton>
-        <WButton onClick={onSubmitButtonClick} sx={iconButtonSx}>
-          <SendIcon sx={{ fontSize: 20 }} />
-        </WButton>
-      </Stack>
+      {mobile && (
+        <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+          <WButton onClick={onResetButtonClick} sx={iconButtonSx}>
+            <UndoIcon sx={{ fontSize: 20 }} />
+          </WButton>
+          <WButton onClick={onSubmitButtonClick} sx={iconButtonSx}>
+            <SendIcon sx={{ fontSize: 20 }} />
+          </WButton>
+        </Stack>
+      )}
     </>
   );
 };
@@ -122,13 +126,24 @@ export const Quiz = () => {
     <Stack sx={{ flex: 1, minHeight: 0 }}>
       <LayoutHeader
         top={
-          <Stack sx={[topSx, { px: 2, alignItems: "center" }]}>
-            <Typography variant="body1">Quiz</Typography>
+          <Stack sx={{ flexDirection: "row" }}>
+            <Stack sx={[topSx, { flex: 1, px: 2, alignItems: "center" }]}>
+              <Typography variant="body1">Quiz</Typography>
+            </Stack>
+            <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+              <WButton onClick={() => setResetModalOpen(true)} sx={iconButtonSx}>
+                <UndoIcon sx={{ fontSize: 20 }} />
+              </WButton>
+              <WButton onClick={() => setSubmitModalOpen(true)} sx={iconButtonSx}>
+                <SendIcon sx={{ fontSize: 20 }} />
+              </WButton>
+            </Stack>
           </Stack>
         }
         bottom={
           <Stack sx={[bottomSx]}>
             <ControlBar
+              mobile={mobile}
               quizItems={quizItems}
               selectedQuizItem={selectedQuizItem}
               setSelectedQuizItem={setSelectedQuizItem}
@@ -141,6 +156,7 @@ export const Quiz = () => {
       {mobile && (
         <Stack sx={{ flexDirection: "row" }}>
           <ControlBar
+            mobile={mobile}
             quizItems={quizItems}
             selectedQuizItem={selectedQuizItem}
             setSelectedQuizItem={setSelectedQuizItem}
