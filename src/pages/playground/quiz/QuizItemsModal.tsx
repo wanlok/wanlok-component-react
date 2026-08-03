@@ -62,7 +62,7 @@ export const QuizItemsModal = ({
             <StyledContainer key={`quiz-item-${i}`} sx={{ flexDirection: "row", alignItems: "top" }}>
               <Stack sx={{ flex: 1, p: 1, gap: 1 }}>
                 <TextInput
-                  placeholder="Quiz Name"
+                  placeholder={`Quiz ${i + 1} Name`}
                   value={label}
                   onChange={(newLabel) => {
                     const newItems = [...items];
@@ -72,7 +72,7 @@ export const QuizItemsModal = ({
                   inputPropsSx={{ flex: 1 }}
                 />
                 <TextInput
-                  placeholder="Quiz Path"
+                  placeholder={`Quiz ${i + 1} Path`}
                   value={value}
                   onChange={(newValue) => {
                     const newItems = [...items];
