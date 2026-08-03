@@ -1,17 +1,49 @@
 import { useEffect, useState } from "react";
-import { Quiz } from "../../../services/Types";
+import { db } from "../../../firebase";
+import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { Quiz, QuizItem, QuizzesDocument } from "../../../services/Types";
 import { fetchCollection } from "../../../services/fetchCollection";
 
-const quizItems = [
-  { label: "AWS Examinations", value: "aws-examinations" },
-  { label: "HKCEE CIT 2007 Paper 1", value: "hkcee-past-papers?file=CIT 2007 Paper 1" },
-  { label: "HKCEE CIT 2008 Paper 2", value: "hkcee-past-papers?file=CIT 2008 Paper 1" }
-];
+const collectionName = "configs";
+const documentId = "quizzes";
 
 export const useQuiz = () => {
-  const [selectedQuizItem, setSelectedQuizItem] = useState(quizItems[0].value);
+  const [quizzesDocument, setQuizzesDocument] = useState<QuizzesDocument | null | undefined>(undefined);
+  const quizItems = quizzesDocument?.quizItems ?? [];
+
+  useEffect(() => {
+    const fetchQuizzesDocument = async () => {
+      const docRef = doc(db, collectionName, documentId);
+      setQuizzesDocument(((await getDoc(docRef)).data() as QuizzesDocument) ?? null);
+    };
+    fetchQuizzesDocument();
+  }, []);
+
+  const updateQuizItems = async (quizItems: QuizItem[]) => {
+    const docRef = doc(db, collectionName, documentId);
+    if (quizzesDocument) {
+      await updateDoc(docRef, { quizItems });
+    } else {
+      await setDoc(docRef, { quizItems });
+    }
+    setQuizzesDocument({ quizItems });
+  };
+
+  const [selectedQuizItem, setSelectedQuizItem] = useState("");
   const [quiz, setQuiz] = useState<Quiz[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    if (!selectedQuizItem && quizItems.length > 0) {
+      setSelectedQuizItem(quizItems[0].value);
+    }
+  }, [quizItems, selectedQuizItem]);
+
+  useEffect(() => {
+    if (selectedQuizItem && !quizItems.some((quizItem) => quizItem.value === selectedQuizItem)) {
+      setQuiz([]);
+    }
+  }, [quizItems, selectedQuizItem]);
 
   useEffect(() => {
     if (!selectedQuizItem) {
@@ -35,6 +67,7 @@ export const useQuiz = () => {
 
   return {
     quizItems,
+    updateQuizItems,
     selectedQuizItem,
     setSelectedQuizItem,
     quiz,

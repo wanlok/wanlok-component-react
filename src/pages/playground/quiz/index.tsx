@@ -7,9 +7,10 @@ import { StyledContainer } from "../../../components/StyledContainer";
 import { useQuiz } from "./useQuiz";
 import { QuizContent } from "../../../services/Types";
 import { iconButtonSx, WButton } from "../../../components/WButton";
-import { Send as SendIcon, Undo as UndoIcon } from "@mui/icons-material";
+import { Assignment as AssignmentIcon, Send as SendIcon, Undo as UndoIcon } from "@mui/icons-material";
 import { ResetModal } from "./ResetModal";
 import { SubmitModal } from "./SubmitModal";
+import { QuizItemsModal } from "./QuizItemsModal";
 
 const QuestionContainer = ({ number, question }: { number: number; question: QuizContent[] }) => {
   return (
@@ -53,35 +54,38 @@ const AnswerContainer = ({
 };
 
 const ControlBar = ({
-  mobile,
   quizItems,
   selectedQuizItem,
   setSelectedQuizItem,
+  onViewListButtonClick,
   onResetButtonClick,
   onSubmitButtonClick
 }: {
-  mobile: boolean;
   quizItems: { label: string; value: string }[];
   selectedQuizItem: string;
   setSelectedQuizItem: (value: string) => void;
+  onViewListButtonClick: () => void;
   onResetButtonClick: () => void;
   onSubmitButtonClick: () => void;
 }) => {
   return (
     <>
-      <StyledContainer sx={{ flex: 1, p: 1 }}>
-        <SelectInput items={quizItems} value={selectedQuizItem} onChange={setSelectedQuizItem} />
-      </StyledContainer>
-      {mobile && (
-        <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          <WButton onClick={onResetButtonClick} sx={iconButtonSx}>
-            <UndoIcon sx={{ fontSize: 20 }} />
-          </WButton>
-          <WButton onClick={onSubmitButtonClick} sx={iconButtonSx}>
-            <SendIcon sx={{ fontSize: 20 }} />
-          </WButton>
-        </Stack>
-      )}
+      <Stack sx={{ flex: 1, flexDirection: "row", gap: "1px" }}>
+        <WButton onClick={onViewListButtonClick} sx={iconButtonSx}>
+          <AssignmentIcon sx={{ fontSize: 24 }} />
+        </WButton>
+        <StyledContainer sx={{ flex: 1, p: 1 }}>
+          <SelectInput items={quizItems} value={selectedQuizItem} onChange={setSelectedQuizItem} />
+        </StyledContainer>
+      </Stack>
+      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+        <WButton onClick={onResetButtonClick} sx={iconButtonSx}>
+          <UndoIcon sx={{ fontSize: 20 }} />
+        </WButton>
+        <WButton onClick={onSubmitButtonClick} sx={iconButtonSx}>
+          <SendIcon sx={{ fontSize: 20 }} />
+        </WButton>
+      </Stack>
     </>
   );
 };
@@ -89,8 +93,9 @@ const ControlBar = ({
 export const Quiz = () => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
-  const { quizItems, selectedQuizItem, setSelectedQuizItem, quiz } = useQuiz();
+  const { quizItems, updateQuizItems, selectedQuizItem, setSelectedQuizItem, quiz } = useQuiz();
   const [selectedAnswerIndicesByQuestion, setSelectedAnswerIndicesByQuestion] = useState<number[][]>([]);
+  const [quizItemsModalOpen, setQuizItemsModalOpen] = useState(false);
   const [resetModalOpen, setResetModalOpen] = useState(false);
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -126,27 +131,17 @@ export const Quiz = () => {
     <Stack sx={{ flex: 1, minHeight: 0 }}>
       <LayoutHeader
         top={
-          <Stack sx={{ flexDirection: "row" }}>
-            <Stack sx={[topSx, { flex: 1, px: 2, alignItems: "center" }]}>
-              <Typography variant="body1">Quiz</Typography>
-            </Stack>
-            <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-              <WButton onClick={() => setResetModalOpen(true)} sx={iconButtonSx}>
-                <UndoIcon sx={{ fontSize: 20 }} />
-              </WButton>
-              <WButton onClick={() => setSubmitModalOpen(true)} sx={iconButtonSx}>
-                <SendIcon sx={{ fontSize: 20 }} />
-              </WButton>
-            </Stack>
+          <Stack sx={[topSx, { flex: 1, px: 2, alignItems: "center" }]}>
+            <Typography variant="body1">Quiz</Typography>
           </Stack>
         }
         bottom={
           <Stack sx={[bottomSx]}>
             <ControlBar
-              mobile={mobile}
               quizItems={quizItems}
               selectedQuizItem={selectedQuizItem}
               setSelectedQuizItem={setSelectedQuizItem}
+              onViewListButtonClick={() => setQuizItemsModalOpen(true)}
               onResetButtonClick={() => setResetModalOpen(true)}
               onSubmitButtonClick={() => setSubmitModalOpen(true)}
             />
@@ -156,32 +151,30 @@ export const Quiz = () => {
       {mobile && (
         <Stack sx={{ flexDirection: "row" }}>
           <ControlBar
-            mobile={mobile}
             quizItems={quizItems}
             selectedQuizItem={selectedQuizItem}
             setSelectedQuizItem={setSelectedQuizItem}
+            onViewListButtonClick={() => setQuizItemsModalOpen(true)}
             onResetButtonClick={() => setResetModalOpen(true)}
             onSubmitButtonClick={() => setSubmitModalOpen(true)}
           />
         </Stack>
       )}
-      {selectedQuizItem && (
-        <Stack ref={scrollRef} sx={{ flex: 1, overflow: "auto", gap: "1px" }}>
-          {quiz.map(({ question, answers }, i) => (
-            <Fragment key={`question-${i}`}>
-              {i > 0 && <Divider />}
-              <Stack data-question-index={i}>
-                <QuestionContainer number={i} question={question} />
-                <AnswerContainer
-                  answers={answers}
-                  selectedAnswerIndices={selectedAnswerIndicesByQuestion[i] ?? []}
-                  onChange={(selectedAnswerIndices) => onAnswerChange(i, selectedAnswerIndices)}
-                />
-              </Stack>
-            </Fragment>
-          ))}
-        </Stack>
-      )}
+      <Stack ref={scrollRef} sx={{ flex: 1, overflow: "auto", gap: "1px" }}>
+        {quiz.map(({ question, answers }, i) => (
+          <Fragment key={`question-${i}`}>
+            {i > 0 && <Divider />}
+            <Stack data-question-index={i}>
+              <QuestionContainer number={i} question={question} />
+              <AnswerContainer
+                answers={answers}
+                selectedAnswerIndices={selectedAnswerIndicesByQuestion[i] ?? []}
+                onChange={(selectedAnswerIndices) => onAnswerChange(i, selectedAnswerIndices)}
+              />
+            </Stack>
+          </Fragment>
+        ))}
+      </Stack>
       <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
         <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
           <Typography variant="body1">
@@ -194,6 +187,12 @@ export const Quiz = () => {
           </WButton>
         </Stack>
       </Stack>
+      <QuizItemsModal
+        open={quizItemsModalOpen}
+        onClose={() => setQuizItemsModalOpen(false)}
+        quizItems={quizItems}
+        updateQuizItems={updateQuizItems}
+      />
       <ResetModal
         open={resetModalOpen}
         onClose={() => setResetModalOpen(false)}
