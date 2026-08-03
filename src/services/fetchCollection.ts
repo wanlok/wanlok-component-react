@@ -1,13 +1,9 @@
 import { ApiResponse } from "./Types";
 
-export const fetchCollection = <T,>(id: string, signal?: AbortSignal): Promise<ApiResponse<T>> => {
+export const fetchCollection = <T>(id: string, signal?: AbortSignal): Promise<ApiResponse<T>> => {
   return new Promise((resolve, reject) => {
     const iframe = document.createElement("iframe");
-    iframe.style.position = "absolute";
-    iframe.style.width = "1px";
-    iframe.style.height = "1px";
-    iframe.style.left = "-9999px";
-    iframe.style.border = "0";
+    iframe.style.display = "none";
     document.body.appendChild(iframe);
 
     let observer: MutationObserver | undefined;
