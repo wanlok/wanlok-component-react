@@ -70,15 +70,13 @@ const ControlBar = ({
 }) => {
   return (
     <>
-      <Stack sx={{ flex: 1, flexDirection: "row", gap: "1px" }}>
+      <StyledContainer sx={{ flex: 1, p: 1 }}>
+        <SelectInput items={quizItems} value={selectedQuizItem} onChange={setSelectedQuizItem} />
+      </StyledContainer>
+      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
         <WButton onClick={onViewListButtonClick} sx={iconButtonSx}>
           <AssignmentIcon sx={{ fontSize: 24 }} />
         </WButton>
-        <StyledContainer sx={{ flex: 1, p: 1 }}>
-          <SelectInput items={quizItems} value={selectedQuizItem} onChange={setSelectedQuizItem} />
-        </StyledContainer>
-      </Stack>
-      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
         <WButton onClick={onResetButtonClick} sx={iconButtonSx}>
           <UndoIcon sx={{ fontSize: 20 }} />
         </WButton>
