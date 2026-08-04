@@ -77,13 +77,15 @@ export const VideoModal = ({
       }
     >
       {open && (
-        <Box
-          component="iframe"
-          src={`https://www.youtube.com/embed/${id}`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          allowFullScreen
-          sx={{ display: "block", width: "100%", aspectRatio: "16/9", border: 0, backgroundColor: "common.black" }}
-        />
+        <Stack sx={{ flex: 1, justifyContent: "center", backgroundColor: "common.black" }}>
+          <Box
+            component="iframe"
+            src={`https://www.youtube.com/embed/${id}`}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+            sx={{ display: "block", width: "100%", aspectRatio: "16/9", border: 0 }}
+          />
+        </Stack>
       )}
     </WModal>
   );
