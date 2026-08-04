@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   ChartItem,
   CloudinaryFileInfo,
@@ -61,6 +62,9 @@ export const RightContent = ({
     attributes: { [key: string]: string }
   ) => Promise<void>;
 }) => {
+  const navigate = useNavigate();
+  const { type: itemType, itemId } = useParams();
+  const folderId = getDocumentId(selectedFolder?.name);
   const [selectedFile, setSelectedFile] = useState<{ id: string; src: string; name: string; attributes: { [key: string]: string }; layout: string; textRegions: TextRegion[] } | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<{
     type: "youtubeRegular" | "youtubeShorts";
@@ -69,14 +73,42 @@ export const RightContent = ({
     attributes: { [key: string]: string };
   } | null>(null);
 
+  useEffect(() => {
+    if (!itemType || !itemId) {
+      return;
+    }
+    if (itemType === "files") {
+      const file = files.find(([id]) => id === itemId);
+      if (file) {
+        const [id, { name, url, attributes, layout, textRegions }] = file;
+        setSelectedFile({ id, src: url, name, attributes: attributes ?? {}, layout: layout ?? "default", textRegions: textRegions ?? [] });
+      }
+    } else if (itemType === "youtubeRegular" || itemType === "youtubeShorts") {
+      const videos = itemType === "youtubeRegular" ? youTubeRegularVideos : youTubeShortVideos;
+      const video = videos.find(([id]) => id === itemId);
+      if (video) {
+        const [id, { name, attributes }] = video;
+        setSelectedVideo({ type: itemType, id, name, attributes: attributes ?? {} });
+      }
+    }
+  }, [itemType, itemId, files, youTubeRegularVideos, youTubeShortVideos]);
+
   return (
     <>
       <CollectionList
         onFileClick={(id, src, name) => {
+          if (folderId) {
+            navigate(`/collections/${folderId}/files/${id}`);
+          }
           const file = files.find(([fileId]) => fileId === id);
           setSelectedFile({ id, src, name, attributes: file?.[1].attributes ?? {}, layout: file?.[1].layout ?? "default", textRegions: file?.[1].textRegions ?? [] });
         }}
-        onVideoClick={(type, id, name, attributes) => setSelectedVideo({ type, id, name, attributes })}
+        onVideoClick={(type, id, name, attributes) => {
+          if (folderId) {
+            navigate(`/collections/${folderId}/${type}/${id}`);
+          }
+          setSelectedVideo({ type, id, name, attributes });
+        }}
         isLoading={isLoading}
         charts={charts}
         files={files}
@@ -154,7 +186,12 @@ export const RightContent = ({
             await updateCollectionFile(selectedFile.id, name, attributes, layout, textRegions);
           }
         }}
-        onClose={() => setSelectedFile(null)}
+        onClose={() => {
+          setSelectedFile(null);
+          if (folderId) {
+            navigate(`/collections/${folderId}`);
+          }
+        }}
       />
       <VideoModal
         open={Boolean(selectedVideo)}
@@ -167,7 +204,12 @@ export const RightContent = ({
             await updateCollectionVideo(selectedVideo.type, selectedVideo.id, name, attributes);
           }
         }}
-        onClose={() => setSelectedVideo(null)}
+        onClose={() => {
+          setSelectedVideo(null);
+          if (folderId) {
+            navigate(`/collections/${folderId}`);
+          }
+        }}
       />
     </>
   );
