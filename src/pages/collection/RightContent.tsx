@@ -101,7 +101,7 @@ export const RightContent = ({
       <CollectionList
         onFileClick={(id, src, name) => {
           if (folderId) {
-            navigate(`/collections/${folderId}/${id}`);
+            navigate(`/collections/${folderId}/${id}/details`);
           }
           const file = files.find(([fileId]) => fileId === id);
           setSelectedFile({ id, src, name, attributes: file?.[1].attributes ?? {}, layout: file?.[1].layout ?? "default", textRegions: file?.[1].textRegions ?? [] });

@@ -11,6 +11,7 @@ import {
   ViewList as ViewListIcon
 } from "@mui/icons-material";
 import { useMediaQuery, useTheme } from "@mui/material";
+import { useNavigate, useParams } from "react-router-dom";
 import { WModal } from "../../components/WModal";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { YesNoButtons } from "../../components/YesNoButtons";
@@ -348,6 +349,8 @@ export const ImageModal = ({
 }) => {
   const { breakpoints, palette } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
+  const navigate = useNavigate();
+  const { id: folderId, itemId, tab } = useParams();
   const [editedName, setEditedName] = useState(name);
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
   const [regions, setRegions] = useState<TextRegion[]>(textRegions);
@@ -397,8 +400,8 @@ export const ImageModal = ({
       setRegions(textRegions);
       setSelectedLayout(layout);
       setControlGroupState(0);
-      setDesktopSelectedTab(0);
-      setMobileSelectedTab(0);
+      setDesktopSelectedTab(tab === "recognitions" ? 1 : 0);
+      setMobileSelectedTab(tab === "recognitions" ? 2 : 0);
       setSelectedRegionId(null);
       setTranslatingRegionIds(new Set());
       setZoom("fit");
@@ -639,12 +642,24 @@ export const ImageModal = ({
         { icon: <CropFreeIcon sx={{ fontSize: 24 }} />, label: "Recognitions" }
       ]}
       rightSelectedTab={desktopSelectedTab}
-      onRightTabChange={(tab) => {
-        setDesktopSelectedTab(tab);
+      onRightTabChange={(newTab) => {
+        setDesktopSelectedTab(newTab);
         setControlGroupState(0);
+        if (folderId && itemId) {
+          navigate(`/collections/${folderId}/${itemId}/${newTab === 1 ? "recognitions" : "details"}`, {
+            replace: true
+          });
+        }
       }}
       mobileSelectedTab={mobileSelectedTab}
-      onMobileSelectedTabChange={setMobileSelectedTab}
+      onMobileSelectedTabChange={(newTab) => {
+        setMobileSelectedTab(newTab);
+        if (folderId && itemId) {
+          navigate(`/collections/${folderId}/${itemId}/${newTab === 2 ? "recognitions" : "details"}`, {
+            replace: true
+          });
+        }
+      }}
       rightTop={
         desktopSelectedTab === 1 ? (
           <>
