@@ -24,7 +24,8 @@ const uploadImageBlob = async (
 
   const response = await fetch(cloudinaryUrl, { method: "POST", body: formData });
   const { public_id, secure_url } = await response.json();
-  return { [public_id]: { name, mimeType, url: secure_url } };
+  const id = public_id.replace(/\.[^./]+$/, "");
+  return { [id]: { name, mimeType, url: secure_url } };
 };
 
 export const uploadImageBlobs = async (blobs: { name: string; blob: Blob }[]) => {
