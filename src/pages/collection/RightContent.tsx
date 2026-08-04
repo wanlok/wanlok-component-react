@@ -63,7 +63,7 @@ export const RightContent = ({
   ) => Promise<void>;
 }) => {
   const navigate = useNavigate();
-  const { type: itemType, itemId } = useParams();
+  const { itemId } = useParams();
   const folderId = getDocumentId(selectedFolder?.name);
   const [selectedFile, setSelectedFile] = useState<{ id: string; src: string; name: string; attributes: { [key: string]: string }; layout: string; textRegions: TextRegion[] } | null>(null);
   const [selectedVideo, setSelectedVideo] = useState<{
@@ -74,38 +74,41 @@ export const RightContent = ({
   } | null>(null);
 
   useEffect(() => {
-    if (!itemType || !itemId) {
+    if (!itemId) {
       return;
     }
-    if (itemType === "files") {
-      const file = files.find(([id]) => id === itemId);
-      if (file) {
-        const [id, { name, url, attributes, layout, textRegions }] = file;
-        setSelectedFile({ id, src: url, name, attributes: attributes ?? {}, layout: layout ?? "default", textRegions: textRegions ?? [] });
-      }
-    } else if (itemType === "youtubeRegular" || itemType === "youtubeShorts") {
-      const videos = itemType === "youtubeRegular" ? youTubeRegularVideos : youTubeShortVideos;
-      const video = videos.find(([id]) => id === itemId);
-      if (video) {
-        const [id, { name, attributes }] = video;
-        setSelectedVideo({ type: itemType, id, name, attributes: attributes ?? {} });
-      }
+    const file = files.find(([id]) => id === itemId);
+    if (file) {
+      const [id, { name, url, attributes, layout, textRegions }] = file;
+      setSelectedFile({ id, src: url, name, attributes: attributes ?? {}, layout: layout ?? "default", textRegions: textRegions ?? [] });
+      return;
     }
-  }, [itemType, itemId, files, youTubeRegularVideos, youTubeShortVideos]);
+    const shortVideo = youTubeShortVideos.find(([id]) => id === itemId);
+    if (shortVideo) {
+      const [id, { name, attributes }] = shortVideo;
+      setSelectedVideo({ type: "youtubeShorts", id, name, attributes: attributes ?? {} });
+      return;
+    }
+    const regularVideo = youTubeRegularVideos.find(([id]) => id === itemId);
+    if (regularVideo) {
+      const [id, { name, attributes }] = regularVideo;
+      setSelectedVideo({ type: "youtubeRegular", id, name, attributes: attributes ?? {} });
+    }
+  }, [itemId, files, youTubeRegularVideos, youTubeShortVideos]);
 
   return (
     <>
       <CollectionList
         onFileClick={(id, src, name) => {
           if (folderId) {
-            navigate(`/collections/${folderId}/files/${id}`);
+            navigate(`/collections/${folderId}/${id}`);
           }
           const file = files.find(([fileId]) => fileId === id);
           setSelectedFile({ id, src, name, attributes: file?.[1].attributes ?? {}, layout: file?.[1].layout ?? "default", textRegions: file?.[1].textRegions ?? [] });
         }}
         onVideoClick={(type, id, name, attributes) => {
           if (folderId) {
-            navigate(`/collections/${folderId}/${type}/${id}`);
+            navigate(`/collections/${folderId}/${id}`);
           }
           setSelectedVideo({ type, id, name, attributes });
         }}

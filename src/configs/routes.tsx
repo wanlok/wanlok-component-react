@@ -46,7 +46,7 @@ export const routes = [
         icon: <FolderOutlinedIcon sx={{ fontSize: iconSize }} />,
         iconSelected: <FolderIcon sx={{ fontSize: iconSize }} />,
         name: "Collections",
-        path: "/collections/:id?/:type?/:itemId?",
+        path: "/collections/:id?/:itemId?",
         element: <CollectionPage />
       },
       {
