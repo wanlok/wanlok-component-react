@@ -95,7 +95,9 @@ const KanbanMobileLayout = ({
             </Stack>
           )}
           onContentClick={(column) => {
-            setSelectedColumnIndex(project.columns.indexOf(column));
+            if (column) {
+              setSelectedColumnIndex(project.columns.indexOf(column));
+            }
             setPanelOpened(false);
           }}
           renderRightContent={() => <Stack />}

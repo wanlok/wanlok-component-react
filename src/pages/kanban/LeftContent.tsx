@@ -103,7 +103,9 @@ export const LeftContent = ({
         );
       }}
       onContentClick={(project) => {
-        openProject(project);
+        if (project) {
+          openProject(project);
+        }
         setPanelOpened(false);
       }}
       renderRightContent={(project) => (

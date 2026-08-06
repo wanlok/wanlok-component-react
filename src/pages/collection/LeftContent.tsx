@@ -51,7 +51,9 @@ export const LeftContent = ({
           );
         }}
         onContentClick={(folder) => {
-          openFolder(folder);
+          if (folder) {
+            openFolder(folder);
+          }
           setPanelOpened(false);
         }}
         renderRightContent={(folder) => (

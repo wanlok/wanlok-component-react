@@ -28,7 +28,9 @@ export const Playground = () => {
               return <PanelRow icon={<Icon sx={{ fontSize: iconSize }} />} title={folder.name} />;
             }}
             onContentClick={(folder) => {
-              openFolder(folder);
+              if (folder) {
+                openFolder(folder);
+              }
               setPanelOpened(false);
             }}
             renderRightContent={() => <></>}

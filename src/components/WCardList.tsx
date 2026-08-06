@@ -1,14 +1,14 @@
 import { Fragment, ReactNode } from "react";
 import { Card, CardActionArea, CardContent, Divider, Stack, SxProps, Theme } from "@mui/material";
 
-export const WCard = ({
+export const WCard = <T,>({
   item,
   onClick,
   children,
   sx
 }: {
-  item?: { [key: string]: any };
-  onClick: (item?: any) => void;
+  item?: T;
+  onClick: (item?: T) => void;
   children?: ReactNode;
   sx?: SxProps<Theme>;
 }) => {
@@ -21,20 +21,20 @@ export const WCard = ({
   );
 };
 
-export const WCardList = ({
+export const WCardList = <T,>({
   items,
   renderContent,
   onContentClick,
   renderRightContent
 }: {
-  items: { [key: string]: any }[];
-  renderContent: (item: any) => ReactNode;
-  onContentClick: (item?: any) => void;
-  renderRightContent: (item: any) => ReactNode;
+  items: T[];
+  renderContent: (item: T) => ReactNode;
+  onContentClick: (item?: T) => void;
+  renderRightContent: (item: T) => ReactNode;
 }) => {
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
-      <Stack sx={{ gap: "0px" }}>
+      <Stack sx={{ flex: 1, backgroundColor: "common.white" }}>
         {items.map((item, index) => (
           <Fragment key={`card-list-${index}`}>
             {index > 0 && <Divider sx={{ ml: 7, mr: 0 }} />}
