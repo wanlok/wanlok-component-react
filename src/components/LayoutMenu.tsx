@@ -38,7 +38,8 @@ export const LayoutMenu = () => {
                       gap: "4px",
                       fontSize: 14,
                       p: 0,
-                      backgroundColor: "transparent"
+                      backgroundColor: "transparent",
+                      "&:hover": { backgroundColor: "action.hover" }
                     }}
                   >
                     {(() => {

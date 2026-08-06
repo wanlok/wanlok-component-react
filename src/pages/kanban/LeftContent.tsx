@@ -111,7 +111,10 @@ export const LeftContent = ({
       renderRightContent={(project) => (
         <Stack>
           {controlGroupState === 1 && (
-            <WButton onClick={() => deleteProject(project)} sx={{ ...iconButtonSx, backgroundColor: "transparent" }}>
+            <WButton
+              onClick={() => deleteProject(project)}
+              sx={{ ...iconButtonSx, backgroundColor: "transparent", "&:hover": { backgroundColor: "action.hover" } }}
+            >
               <CloseIcon sx={{ fontSize: 24 }} />
             </WButton>
           )}

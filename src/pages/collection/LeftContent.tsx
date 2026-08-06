@@ -59,7 +59,10 @@ export const LeftContent = ({
         renderRightContent={(folder) => (
           <Stack>
             {folderControlGroupState === 1 && (
-              <WButton onClick={() => deleteFolder(folder)} sx={{ ...iconButtonSx, backgroundColor: "transparent" }}>
+              <WButton
+                onClick={() => deleteFolder(folder)}
+                sx={{ ...iconButtonSx, backgroundColor: "transparent", "&:hover": { backgroundColor: "action.hover" } }}
+              >
                 <CloseIcon sx={{ fontSize: 24 }} />
               </WButton>
             )}

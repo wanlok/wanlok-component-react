@@ -198,7 +198,7 @@ export const KanbanCard = ({
             <WButton
               onClick={onDeleteItemClick}
               className="drag-cancel"
-              sx={{ ...iconButtonSx, backgroundColor: "transparent" }}
+              sx={{ ...iconButtonSx, backgroundColor: "transparent", "&:hover": { backgroundColor: "action.hover" } }}
             >
               <CloseIcon sx={{ fontSize: 24 }} />
             </WButton>
