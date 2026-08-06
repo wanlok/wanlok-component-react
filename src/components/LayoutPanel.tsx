@@ -1,4 +1,4 @@
-import { Dispatch, ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import { Stack, SxProps, Theme, useMediaQuery, useTheme } from "@mui/material";
 import { LayoutDivider } from "./LayoutDivider";
 import { WCard } from "./WCardList";
@@ -11,7 +11,7 @@ const TopCard = ({
   hideDropdownIcon
 }: {
   panelOpened: boolean;
-  setPanelOpened: Dispatch<React.SetStateAction<boolean>>;
+  setPanelOpened: Dispatch<SetStateAction<boolean>>;
   topChildren?: ReactNode;
   hideDropdownIcon: boolean;
 }) => (
@@ -35,7 +35,7 @@ export const LayoutPanel = ({
   children
 }: {
   panelOpened: boolean;
-  setPanelOpened: Dispatch<React.SetStateAction<boolean>>;
+  setPanelOpened: Dispatch<SetStateAction<boolean>>;
   width: number;
   panel: ReactNode;
   topChildren?: ReactNode;

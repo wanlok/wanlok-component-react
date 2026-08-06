@@ -1,4 +1,12 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import {
+  MouseEvent as ReactMouseEvent,
+  RefObject,
+  SyntheticEvent,
+  TouchEvent as ReactTouchEvent,
+  useEffect,
+  useRef,
+  useState
+} from "react";
 import { alpha, Box, Stack, useTheme } from "@mui/material";
 import { TextRegion } from "../../services/Types";
 
@@ -156,8 +164,8 @@ export const ImageRegionOverlay = ({
     interaction.current = null;
   };
 
-  const onMouseMove = (event: React.MouseEvent) => handleMove(event.clientX, event.clientY);
-  const onTouchMove = (event: React.TouchEvent) => handleMove(event.touches[0].clientX, event.touches[0].clientY);
+  const onMouseMove = (event: ReactMouseEvent) => handleMove(event.clientX, event.clientY);
+  const onTouchMove = (event: ReactTouchEvent) => handleMove(event.touches[0].clientX, event.touches[0].clientY);
   const onMouseUp = handleEnd;
   const onTouchEnd = handleEnd;
 
@@ -175,12 +183,12 @@ export const ImageRegionOverlay = ({
     };
   };
 
-  const onRegionMouseDown = (event: React.MouseEvent, regionId: string) => {
+  const onRegionMouseDown = (event: ReactMouseEvent, regionId: string) => {
     event.stopPropagation();
     handleRegionPointerDown(event.clientX, event.clientY, regionId);
   };
 
-  const onRegionTouchStart = (event: React.TouchEvent, regionId: string) => {
+  const onRegionTouchStart = (event: ReactTouchEvent, regionId: string) => {
     event.stopPropagation();
     handleRegionPointerDown(event.touches[0].clientX, event.touches[0].clientY, regionId);
   };
@@ -198,12 +206,12 @@ export const ImageRegionOverlay = ({
     };
   };
 
-  const onHandleMouseDown = (event: React.MouseEvent, regionId: string, handle: Handle) => {
+  const onHandleMouseDown = (event: ReactMouseEvent, regionId: string, handle: Handle) => {
     event.stopPropagation();
     handleHandlePointerDown(event.clientX, event.clientY, regionId, handle);
   };
 
-  const onHandleTouchStart = (event: React.TouchEvent, regionId: string, handle: Handle) => {
+  const onHandleTouchStart = (event: ReactTouchEvent, regionId: string, handle: Handle) => {
     event.stopPropagation();
     handleHandlePointerDown(event.touches[0].clientX, event.touches[0].clientY, regionId, handle);
   };
@@ -237,7 +245,7 @@ export const ImageRegionOverlay = ({
           src={src}
           alt={alt}
           sx={{ display: "block", ...(fitScreen && { maxWidth: "100%", maxHeight: "80dvh" }) }}
-          onLoad={(e: React.SyntheticEvent<HTMLImageElement>) => {
+          onLoad={(e: SyntheticEvent<HTMLImageElement>) => {
             setNaturalSize({ width: e.currentTarget.naturalWidth, height: e.currentTarget.naturalHeight });
           }}
         />

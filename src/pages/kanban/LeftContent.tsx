@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import { Divider, Stack } from "@mui/material";
 import { LayoutLoading } from "../../components/LayoutLoading";
 import {
@@ -15,7 +15,7 @@ import { iconButtonSx, WButton } from "../../components/WButton";
 import { PanelRow } from "../../components/PanelRow";
 import { OneLineTypography } from "../../components/OneLineTypography";
 
-const Row = ({ icon, count, dateString }: { icon: React.ReactNode; count: number; dateString?: string }) => (
+const Row = ({ icon, count, dateString }: { icon: ReactNode; count: number; dateString?: string }) => (
   <>
     <Stack sx={{ flexDirection: "row", gap: 1, px: 2, py: 1, alignItems: "center" }}>
       <Stack sx={{ width: 20, alignItems: "center", justifyContent: "center" }}>{icon}</Stack>
