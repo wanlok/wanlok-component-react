@@ -1,17 +1,17 @@
 import React from "react";
 import { useAnimate } from "@mui/x-charts/hooks";
-import { ChartContainer } from "@mui/x-charts/ChartContainer";
+import { ChartsContainer } from "@mui/x-charts/ChartsContainer";
 import { BarLabelProps, BarPlot } from "@mui/x-charts/BarChart";
 import { ChartsXAxis } from "@mui/x-charts/ChartsXAxis";
 import { ChartsYAxis } from "@mui/x-charts/ChartsYAxis";
 import { styled } from "@mui/material/styles";
-import { interpolateObject } from "@mui/x-charts-vendor/d3-interpolate";
+import { interpolateObject } from "d3-interpolate";
 
 const data = [5, 17, 11];
 
 export const LabelsAboveBars = () => {
   return (
-    <ChartContainer
+    <ChartsContainer
       xAxis={[{ scaleType: "band", data: ["A", "B", "C"] }]}
       series={[{ type: "bar", id: "base", data }]}
       height={400}
@@ -22,7 +22,7 @@ export const LabelsAboveBars = () => {
       <BarPlot barLabel="value" slots={{ barLabel: BarLabel }} />
       <ChartsXAxis />
       <ChartsYAxis />
-    </ChartContainer>
+    </ChartsContainer>
   );
 };
 

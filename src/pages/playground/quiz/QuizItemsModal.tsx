@@ -69,7 +69,7 @@ export const QuizItemsModal = ({
                     newItems[i] = { ...newItems[i], label: newLabel };
                     setItems(newItems);
                   }}
-                  inputPropsSx={{ flex: 1 }}
+                  inputSx={{ flex: 1 }}
                 />
                 <TextInput
                   placeholder={`Quiz ${i + 1} Path`}
@@ -79,7 +79,7 @@ export const QuizItemsModal = ({
                     newItems[i] = { ...newItems[i], value: newValue };
                     setItems(newItems);
                   }}
-                  inputPropsSx={{ flex: 1 }}
+                  inputSx={{ flex: 1 }}
                 />
               </Stack>
               {isDeleting && (

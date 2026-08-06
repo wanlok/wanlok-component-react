@@ -66,7 +66,7 @@ export const VideoModal = ({
                   label={attributeName}
                   value={editedAttributes[attributeName] ?? ""}
                   onChange={(value) => setEditedAttributes({ ...editedAttributes, [attributeName]: value })}
-                  inputPropsSx={{ flex: 1 }}
+                  inputSx={{ flex: 1 }}
                 />
               </StyledContainer>
             ))}

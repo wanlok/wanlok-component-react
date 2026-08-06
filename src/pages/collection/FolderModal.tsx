@@ -77,7 +77,7 @@ export const FolderModal = ({
             label="Name"
             value={folderName}
             onChange={(value) => setFolderName(value)}
-            inputPropsSx={{ flex: 1 }}
+            inputSx={{ flex: 1 }}
           />
         </StyledContainer>
         <Divider />
@@ -129,7 +129,7 @@ export const FolderModal = ({
                         newAttributes[i].name = value;
                         setAttributes(newAttributes);
                       }}
-                      inputPropsSx={{ flex: 1 }}
+                      inputSx={{ flex: 1 }}
                     />
                   </Stack>
                   <Stack sx={{ flex: 1 }}>

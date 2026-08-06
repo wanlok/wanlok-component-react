@@ -1,4 +1,5 @@
 import ReactApexChart, { Props } from "react-apexcharts";
+import ApexCharts from "apexcharts";
 import ReactDOMServer from "react-dom/server";
 
 const getOptions = (id: string, animated: boolean): Props => {
@@ -106,7 +107,7 @@ interface ApexChartsChartProps {
 
 export const ApexChartsChart = ({ id, animated }: ApexChartsChartProps) => {
   const options = getOptions(id, animated);
-  const series: ApexAxisChartSeries = [
+  const series: ApexCharts.ApexAxisChartSeries = [
     {
       name: "Line 1",
       data: [1, 3, 5, 7, 9, 11, 13, 15, 17, 19]

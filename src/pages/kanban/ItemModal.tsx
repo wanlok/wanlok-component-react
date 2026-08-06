@@ -147,7 +147,7 @@ export const ItemModal = ({
                 value={name}
                 onChange={setName}
                 helperText={nameHint}
-                inputPropsSx={{ flex: 1 }}
+                inputSx={{ flex: 1 }}
               />
             </StyledContainer>
             <StyledContainer sx={{ p: 1 }}>
@@ -157,7 +157,7 @@ export const ItemModal = ({
                 onChange={setContent}
                 helperText={contentHint}
                 minRows={4}
-                inputPropsSx={{ flex: 1 }}
+                inputSx={{ flex: 1 }}
               />
             </StyledContainer>
             <Stack sx={[topSx, { gap: "1px" }]}>

@@ -1,11 +1,11 @@
-import { useRef } from "react";
+import { ChangeEvent, KeyboardEvent, useRef } from "react";
 import { FormControl, FormHelperText, FormLabel, SxProps, TextField, Theme } from "@mui/material";
 
 const tabSpaces = "  ";
 
 const handleTab = (
   element: HTMLTextAreaElement | null,
-  event: React.KeyboardEvent<HTMLDivElement>,
+  event: KeyboardEvent<HTMLDivElement>,
   onChange: (value: string) => void
 ) => {
   if (element && event.key === "Tab") {
@@ -52,7 +52,7 @@ export const TextInput = ({
   tabAllowed = false,
   disabled = false,
   minRows,
-  inputPropsSx
+  inputSx
 }: {
   label?: string;
   placeholder?: string;
@@ -63,7 +63,7 @@ export const TextInput = ({
   tabAllowed?: boolean;
   disabled?: boolean;
   minRows?: number;
-  inputPropsSx?: SxProps<Theme>;
+  inputSx?: SxProps<Theme>;
 }) => {
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
   return (
@@ -76,16 +76,18 @@ export const TextInput = ({
         multiline
         minRows={minRows}
         disabled={disabled}
-        InputProps={{
-          sx: {
-            backgroundColor: "common.white",
-            borderRadius: 0,
-            ...inputPropsSx
+        slotProps={{
+          input: {
+            sx: {
+              backgroundColor: "common.white",
+              borderRadius: 0,
+              ...inputSx
+            }
           }
         }}
-        onChange={(event) => onChange(event.target.value)}
+        onChange={(event: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => onChange(event.target.value)}
         onBlur={onBlur}
-        onKeyDown={(event) => {
+        onKeyDown={(event: KeyboardEvent<HTMLDivElement>) => {
           if (tabAllowed) {
             handleTab(inputRef.current, event, onChange);
           }

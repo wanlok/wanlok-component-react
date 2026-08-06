@@ -66,7 +66,7 @@ export const ProjectModal = ({
           </Stack>
         )}
         <StyledContainer sx={{ p: 1 }}>
-          <TextInput label="Name" value={name} onChange={(value) => setName(value)} inputPropsSx={{ flex: 1 }} />
+          <TextInput label="Name" value={name} onChange={(value) => setName(value)} inputSx={{ flex: 1 }} />
         </StyledContainer>
         <StyledContainer sx={{ p: 1 }}>
           <Stack sx={{ gap: 1 }}>
@@ -91,7 +91,7 @@ export const ProjectModal = ({
                   newColumns[i] = value;
                   setColumns(newColumns);
                 }}
-                inputPropsSx={{ flex: 1 }}
+                inputSx={{ flex: 1 }}
               />
             ))}
           </Stack>

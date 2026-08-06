@@ -180,7 +180,7 @@ const RegionRow = ({
           value={region.recognisedText ?? ""}
           onChange={onTextChange}
           onBlur={onTextBlur}
-          inputPropsSx={{ flex: 1 }}
+          inputSx={{ flex: 1 }}
         />
         {selectedLayout === "quiz" && (
           <SelectInput label="Type" items={QUIZ_TYPE_ITEMS} value={region.type ?? "question"} onChange={onTypeChange} />
@@ -238,7 +238,7 @@ const Details = ({
   <Stack sx={{ p: 2, gap: 2 }}>
     <Stack sx={{ gap: "1px" }}>
       <StyledContainer sx={{ p: 1 }}>
-        <TextInput label="Name" value={editedName} onChange={onEditedNameChange} inputPropsSx={{ flex: 1 }} />
+        <TextInput label="Name" value={editedName} onChange={onEditedNameChange} inputSx={{ flex: 1 }} />
       </StyledContainer>
       {folderAttributes.map(({ name: attributeName }, i) => (
         <StyledContainer key={`attribute-${i}`} sx={{ p: 1 }}>
@@ -246,7 +246,7 @@ const Details = ({
             label={attributeName}
             value={editedAttributes[attributeName] ?? ""}
             onChange={(value) => onEditedAttributesChange({ ...editedAttributes, [attributeName]: value })}
-            inputPropsSx={{ flex: 1 }}
+            inputSx={{ flex: 1 }}
           />
         </StyledContainer>
       ))}

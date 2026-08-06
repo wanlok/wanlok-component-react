@@ -1,11 +1,12 @@
 import ReactDOMServer from "react-dom/server";
 import ReactApexChart, { Props as ApexChartProps } from "react-apexcharts";
+import ApexCharts from "apexcharts";
 import classes from "./LineChart.module.css";
 import { useEffect } from "react";
 import { getDimension } from "../../../common/getDimension";
 
 interface Series {
-  series: ApexAxisChartSeries;
+  series: ApexCharts.ApexAxisChartSeries;
   dataPointIndex: number;
   w: any;
 }
@@ -123,7 +124,7 @@ function Legend(seriesName: string, opts: any) {
 
 export function setX(
   apexChartProps: ApexChartProps,
-  series: ApexAxisChartSeries,
+  series: ApexCharts.ApexAxisChartSeries,
   x: string[],
   colour: string,
   xLabelOffset: number,
@@ -169,7 +170,7 @@ export const LineChart = ({
   chartWidth
 }: {
   options: ApexCharts.ApexOptions;
-  series: ApexAxisChartSeries;
+  series: ApexCharts.ApexAxisChartSeries;
   x: string[];
   xLabelOffset: number;
   xFormatter: (value: string) => string;
