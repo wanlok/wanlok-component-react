@@ -70,7 +70,7 @@ export const LayoutMenu = () => {
           })}
         </Stack>
       </LayoutDivider>
-      <Stack sx={{ flex: 1, height: mobile ? `calc(100dvh - ${layoutHeaderHeight}px)` : "100dvh", overflow: "auto" }}>
+      <Stack sx={{ flex: 1, overflow: "auto" }}>
         <Outlet />
       </Stack>
     </Stack>
