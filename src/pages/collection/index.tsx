@@ -5,6 +5,7 @@ import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { FolderModal } from "./FolderModal";
+import { DeleteFolderConfirmationModal } from "./DeleteFolderConfirmationModal";
 import { ResetOrderConfirmationModal } from "./ResetOrderConfirmationModal";
 import { UploadImageModal } from "./UploadImageModal";
 import { useUploadImage } from "./useUploadImage";
@@ -14,6 +15,7 @@ import { PanelRow } from "../../components/PanelRow";
 import { RightContent } from "./RightContent";
 import { RightHeader } from "./RightHeader";
 import { Folder as FolderIcon } from "@mui/icons-material";
+import { Folder } from "../../services/Types";
 
 export const CollectionPage = () => {
   const {
@@ -64,6 +66,7 @@ export const CollectionPage = () => {
   const [controlGroupState, setControlGroupState] = useState(0);
   const [folderModalOpen, setFolderModalOpen] = useState(false);
   const [resetOrderModalOpen, setResetOrderModalOpen] = useState(false);
+  const [folderToDelete, setFolderToDelete] = useState<Folder | undefined>(undefined);
   const {
     attributeKeys,
     attributeValues,
@@ -84,6 +87,10 @@ export const CollectionPage = () => {
     youTubeRegularVideos.length +
     youTubeShortVideos.length;
   const effectiveControlGroupState = count === 0 ? 0 : controlGroupState;
+
+  const onDeleteFolderButtonClick = (folder: Folder) => {
+    setFolderToDelete(folder);
+  };
 
   return (
     <LayoutPanel
@@ -111,7 +118,7 @@ export const CollectionPage = () => {
               openFolder(folder);
               setControlGroupState(0);
             }}
-            deleteFolder={deleteFolder}
+            onDeleteFolderButtonClick={onDeleteFolderButtonClick}
             addFolder={addFolder}
           />
         </>
@@ -197,6 +204,16 @@ export const CollectionPage = () => {
         open={resetOrderModalOpen}
         onClose={() => setResetOrderModalOpen(false)}
         onConfirm={resetFolderSequences}
+      />
+      <DeleteFolderConfirmationModal
+        open={Boolean(folderToDelete)}
+        folder={folderToDelete}
+        onClose={() => setFolderToDelete(undefined)}
+        onConfirm={() => {
+          if (folderToDelete) {
+            deleteFolder(folderToDelete);
+          }
+        }}
       />
       <UploadImageModal {...uploadImageAttributes} />
     </LayoutPanel>

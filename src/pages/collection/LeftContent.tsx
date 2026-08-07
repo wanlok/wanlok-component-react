@@ -22,7 +22,7 @@ export const LeftContent = ({
   folderControlGroupState,
   setPanelOpened,
   openFolder,
-  deleteFolder,
+  onDeleteFolderButtonClick,
   addFolder
 }: {
   isLoading: boolean;
@@ -31,7 +31,7 @@ export const LeftContent = ({
   folderControlGroupState: number;
   setPanelOpened: Dispatch<SetStateAction<boolean>>;
   openFolder: (folder: Folder) => void;
-  deleteFolder: (folder: Folder) => Promise<void>;
+  onDeleteFolderButtonClick: (folder: Folder) => void;
   addFolder: (name: string) => Promise<void>;
 }) => {
 
@@ -60,7 +60,7 @@ export const LeftContent = ({
           <Stack>
             {folderControlGroupState === 1 && (
               <WButton
-                onClick={() => deleteFolder(folder)}
+                onClick={() => onDeleteFolderButtonClick(folder)}
                 sx={{ ...iconButtonSx, backgroundColor: "transparent", "&:hover": { backgroundColor: "action.hover" } }}
               >
                 <CloseIcon sx={{ fontSize: 24 }} />
