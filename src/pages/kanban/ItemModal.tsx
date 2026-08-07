@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { ReactElement, useState } from "react";
 import { Divider, Stack, Typography } from "@mui/material";
 import { Assignment as AssignmentIcon, Chat as ChatIcon, Edit as EditIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
@@ -16,7 +16,7 @@ import { SelectInput } from "../../components/SelectInput";
 
 const parseContent = (text: string) => {
   const urlRegex = /https?:\/\/[^\s]+/g;
-  const parts: (string | JSX.Element)[] = [];
+  const parts: (string | ReactElement)[] = [];
   let lastIndex = 0;
   let match;
   while ((match = urlRegex.exec(text)) !== null) {

@@ -1,4 +1,3 @@
-import React from "react";
 import { useAnimate } from "@mui/x-charts/hooks";
 import { ChartsContainer } from "@mui/x-charts/ChartsContainer";
 import { BarLabelProps, BarPlot } from "@mui/x-charts/BarChart";
@@ -19,7 +18,7 @@ export const LabelsAboveBars = () => {
       margin={{ left: 0, right: 10 }}
       sx={{ flex: 0.5 }}
     >
-      <BarPlot barLabel="value" slots={{ barLabel: BarLabel }} />
+      <BarPlot slots={{ barLabel: BarLabel }} />
       <ChartsXAxis />
       <ChartsYAxis />
     </ChartsContainer>

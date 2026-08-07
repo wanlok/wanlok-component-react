@@ -14,7 +14,7 @@ npm test -- --testPathPattern=<file>  # Run a single test file
 
 ## Architecture
 
-**Stack:** React 18 + TypeScript, Vite, MUI v5, Firebase Firestore, react-router-dom v6 (hash router for GitHub Pages compatibility).
+**Stack:** React 19 + TypeScript, Vite, MUI v9, Firebase Firestore, react-router-dom v6 (hash router for GitHub Pages compatibility).
 
 **Routing:** `src/configs/routes.tsx` defines all routes. The top-level route renders `LayoutMenu` as the shell with nav icons on the left (desktop) or bottom (mobile). Child routes render into the `<Outlet>`. The `name` field on a route controls whether it appears in the nav.
 
@@ -66,6 +66,10 @@ VITE_FIREBASE_APP_ID
 
 **Variable naming:** Use full descriptive names, not abbreviations. Example: `column` not `col`, `project` not `p`. Exception: use single-letter counters (`i`, `j`, `k`) for index variables in map/filter callbacks, not prefixed variants like `ci` or `ii`.
 
+**React imports:** Never reference the bare `React.` namespace (e.g. `React.ReactNode`, `React.MouseEvent`, `React.StrictMode`). Import the specific type or export by name from `"react"` instead. If a React-exported name would collide with an unrelated global of the same name already used in the file (e.g. the DOM's native `MouseEvent`/`TouchEvent`, used in a raw `addEventListener` callback), import React's version under an alias (e.g. `MouseEvent as ReactMouseEvent`) rather than reintroducing the bare `React.` prefix.
+
 **Firebase writes:** Only call Firebase (e.g. `updateDoc`, `setDoc`) on explicit user actions like a Save button click. Never trigger writes on text change, blur, or other intermediate events — use local state to buffer edits until the user confirms.
 
 **Firestore field naming:** Use camelCase for all Firestore document field names (e.g. `createdAt`, not `created_at`). TypeScript interface properties that map directly to Firestore fields follow the same convention. Exception: fields that mirror an external API's response verbatim (e.g. Cloudinary's `public_id`/`secure_url`, YouTube oEmbed's `thumbnail_url`, Tesseract.js language codes like `chi_sim`) keep the external contract's naming rather than being converted.
+
+**Dependency versions:** Pin exact versions in `package.json` — no `^` or `~` ranges. `.npmrc` sets `save-exact=true` so `npm install <package>` writes exact pins automatically; don't hand-edit a version back to a range. This exists because a caret range on `@mui/x-charts` once silently resolved to a broken patch release (`@mui/x-charts-vendor@9.11.0` published with its vendor bundle files missing) — exact pins mean upgrades only happen deliberately, not as a side effect of an unrelated `npm install`.

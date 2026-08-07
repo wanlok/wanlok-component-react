@@ -10,7 +10,7 @@ type PanelProps = {
   top?: ReactNode;
   bottom?: ReactNode;
   children?: ReactNode;
-  scrollRef?: RefObject<HTMLDivElement>;
+  scrollRef?: RefObject<HTMLDivElement | null>;
 };
 
 type RightPanelProps = {
@@ -21,7 +21,7 @@ type RightPanelProps = {
   rightTop?: ReactNode;
   rightBottom?: ReactNode;
   rightChildren?: ReactNode;
-  rightScrollRef?: RefObject<HTMLDivElement>;
+  rightScrollRef?: RefObject<HTMLDivElement | null>;
 };
 
 const WModalContent = ({ tabs, selectedTab = 0, onTabChange, onClose, top, bottom, children, scrollRef }: PanelProps) => {

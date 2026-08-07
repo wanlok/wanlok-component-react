@@ -10,7 +10,7 @@ import { Close as CloseIcon, DragIndicator as DragIndicatorIcon } from "@mui/ico
 export const padding = 2;
 export const threshold = 4;
 
-const getColumnOffset = (stackRef: RefObject<HTMLDivElement>, x: number) => {
+const getColumnOffset = (stackRef: RefObject<HTMLDivElement | null>, x: number) => {
   const threshold = 0.25;
   const width = stackRef.current?.getBoundingClientRect().width ?? 0;
   const ratio = (x + padding * 8) / width;
@@ -18,7 +18,7 @@ const getColumnOffset = (stackRef: RefObject<HTMLDivElement>, x: number) => {
 };
 
 const getRowOffset = (
-  stackRef: RefObject<HTMLDivElement>,
+  stackRef: RefObject<HTMLDivElement | null>,
   y: number,
   draggedNode: HTMLElement,
   columnOffset: number
@@ -98,8 +98,8 @@ export const KanbanCard = ({
   onDeleteItemClick,
   draggable = true
 }: {
-  stackRef: RefObject<HTMLDivElement>;
-  stackRefs: RefObject<RefObject<HTMLDivElement>[]>;
+  stackRef: RefObject<HTMLDivElement | null>;
+  stackRefs: RefObject<RefObject<HTMLDivElement | null>[]>;
   item: KanbanItem;
   onDragStop: (item: KanbanItem, columnOffset: number, rowOffset: number) => void;
   onClick: () => void;

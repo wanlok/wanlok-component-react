@@ -100,7 +100,7 @@ export const ImageRegionOverlay = ({
   regions: TextRegion[];
   onRegionsChange: (regions: TextRegion[]) => void;
   onRegionMouseUp?: (regionId: string) => void;
-  scrollRef?: RefObject<HTMLDivElement>;
+  scrollRef?: RefObject<HTMLDivElement | null>;
   fitScreen?: boolean;
   selectedId?: string | null;
   onSelectedIdChange?: (id: string | null) => void;

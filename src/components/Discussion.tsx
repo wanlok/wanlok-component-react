@@ -80,7 +80,7 @@ export const DiscussionMessages = ({
   messages: Message[];
   isDeletingMessages: boolean;
   onDeleteMessage: (index: number) => void;
-  stackRef: RefObject<HTMLDivElement>;
+  stackRef: RefObject<HTMLDivElement | null>;
 }) => (
   <Stack ref={stackRef} sx={{ backgroundColor: "background.default", gap: 0.5 }}>
     {messages.length === 0 ? (

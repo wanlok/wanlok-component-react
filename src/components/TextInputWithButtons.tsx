@@ -25,7 +25,7 @@ export const TextInputWithButtons = ({
   const [value, setValue] = useState(initialValue ?? "");
   const [buttonHeight, setButtonHeight] = useState<number>();
   const [sufficientSpaces, setSufficientSpaces] = useState<boolean>(false);
-  const sufficientSpacesHeightRef = useRef<number>();
+  const sufficientSpacesHeightRef = useRef<number | undefined>(undefined);
 
   const stackRef = useRef<HTMLDivElement>(null);
 
