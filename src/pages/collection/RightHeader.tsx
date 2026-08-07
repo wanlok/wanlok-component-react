@@ -20,8 +20,10 @@ const Top = ({
   folder,
   resetButtonHidden,
   controlGroupState,
+  selectedAttributeValue,
   onEditFolderButtonClick,
   onResetButtonClick,
+  onRearrangeButtonClick,
   onDownloadButtonClick,
   onDeleteButtonClick
 }: {
@@ -29,8 +31,10 @@ const Top = ({
   folder: Folder | undefined;
   resetButtonHidden: boolean;
   controlGroupState: number;
+  selectedAttributeValue: string;
   onEditFolderButtonClick: () => void;
   onResetButtonClick: () => void;
+  onRearrangeButtonClick: () => void;
   onDownloadButtonClick: () => void;
   onDeleteButtonClick: () => void;
 }) => (
@@ -45,6 +49,14 @@ const Top = ({
             Reset Order
           </WButton>
         )}
+        <WButton
+          isActivated={controlGroupState === 2}
+          disabled={Boolean(selectedAttributeValue)}
+          onClick={onRearrangeButtonClick}
+          sx={iconButtonSx}
+        >
+          <SwapHorizIcon sx={{ fontSize: 26 }} />
+        </WButton>
         <WButton onClick={onDownloadButtonClick} rightIcon={<DownloadIcon sx={{ fontSize: 24 }} />}>
           Export
         </WButton>
@@ -66,23 +78,19 @@ const Top = ({
 );
 
 const Bottom = ({
-  controlGroupState,
   attributeKeys,
   attributeValues,
   selectedAttributeKey,
   selectedAttributeValue,
   onAttributeKeyChange,
-  onAttributeValueChange,
-  onRearrangeButtonClick
+  onAttributeValueChange
 }: {
-  controlGroupState: number;
   attributeKeys: { label: string; value: string }[];
   attributeValues: { label: string; value: string }[];
   selectedAttributeKey: string;
   selectedAttributeValue: string;
   onAttributeKeyChange: (value: string) => void;
   onAttributeValueChange: (value: string) => void;
-  onRearrangeButtonClick: () => void;
 }) => {
   return (
     <Stack sx={[bottomSx]}>
@@ -96,18 +104,6 @@ const Bottom = ({
           </Stack>
         )}
       </StyledContainer>
-      <Stack sx={{ flexDirection: "row", gap: 1 }}>
-        <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          <WButton
-            isActivated={controlGroupState === 2}
-            disabled={Boolean(selectedAttributeValue)}
-            onClick={onRearrangeButtonClick}
-            sx={iconButtonSx}
-          >
-            <SwapHorizIcon sx={{ fontSize: 26 }} />
-          </WButton>
-        </Stack>
-      </Stack>
     </Stack>
   );
 };
@@ -152,8 +148,10 @@ export const RightHeader = ({
         folder={folder}
         resetButtonHidden={resetButtonHidden}
         controlGroupState={controlGroupState}
+        selectedAttributeValue={selectedAttributeValue}
         onEditFolderButtonClick={onEditFolderButtonClick}
         onResetButtonClick={onResetButtonClick}
+        onRearrangeButtonClick={onRearrangeButtonClick}
         onDownloadButtonClick={onDownloadButtonClick}
         onDeleteButtonClick={onDeleteButtonClick}
       />
@@ -163,14 +161,12 @@ export const RightHeader = ({
         <></>
       ) : (
         <Bottom
-          controlGroupState={controlGroupState}
           attributeKeys={attributeKeys}
           attributeValues={attributeValues}
           selectedAttributeKey={selectedAttributeKey}
           selectedAttributeValue={selectedAttributeValue}
           onAttributeKeyChange={onAttributeKeyChange}
           onAttributeValueChange={onAttributeValueChange}
-          onRearrangeButtonClick={onRearrangeButtonClick}
         />
       )
     }
