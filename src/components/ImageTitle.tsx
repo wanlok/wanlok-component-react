@@ -58,7 +58,7 @@ const ImageTitleContent = ({
   </>
 );
 
-export const ImageTitleLink = ({
+export const ImageTitle = ({
   imageUrl,
   imageSx,
   name,

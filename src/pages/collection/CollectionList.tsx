@@ -4,7 +4,7 @@ import { CropFree as CropFreeIcon } from "@mui/icons-material";
 import { ChartItem, CloudinaryFileInfo, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { WChip } from "../../components/WChip";
-import { ImageTitleLink } from "../../components/ImageTitleLink";
+import { ImageTitle } from "../../components/ImageTitle";
 
 export const CollectionList = ({
   isLoading,
@@ -63,7 +63,7 @@ export const CollectionList = ({
           />
         ))}
         {files.map(([id, { name, url, textRegions }], i) => (
-          <ImageTitleLink
+          <ImageTitle
             key={`files-${i}`}
             imageUrl={url}
             imageSx={{ objectPosition: "top" }}
@@ -89,7 +89,7 @@ export const CollectionList = ({
           />
         ))}
         {hyperlinks.map(([url, id], i) => (
-          <ImageTitleLink
+          <ImageTitle
             key={`hyperlinks-${i}`}
             imageUrl={`https://wanlok2025.github.io/screenshots/${id}.png`}
             name={url}
@@ -105,7 +105,7 @@ export const CollectionList = ({
           />
         ))}
         {steam.map(([appId, { name, imageUrl }], i) => (
-          <ImageTitleLink
+          <ImageTitle
             key={`steam-${i}`}
             imageUrl={imageUrl}
             name={name}
@@ -121,7 +121,7 @@ export const CollectionList = ({
           />
         ))}
         {youTubeShortVideos.map(([id, { name, imageUrl, attributes }], i) => (
-          <ImageTitleLink
+          <ImageTitle
             key={`youtube-shorts-${i}`}
             imageUrl={imageUrl}
             imageSx={{ objectFit: "contain" }}
@@ -138,7 +138,7 @@ export const CollectionList = ({
           />
         ))}
         {youTubeRegularVideos.map(([id, { name, imageUrl, attributes }], i) => (
-          <ImageTitleLink
+          <ImageTitle
             key={`youtube-regular-${i}`}
             imageUrl={imageUrl}
             name={name}
