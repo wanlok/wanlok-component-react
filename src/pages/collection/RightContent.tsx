@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   ChartItem,
@@ -65,54 +64,40 @@ export const RightContent = ({
   const navigate = useNavigate();
   const { itemId } = useParams();
   const folderId = getDocumentId(selectedFolder?.name);
-  const [selectedFile, setSelectedFile] = useState<{ id: string; src: string; name: string; attributes: { [key: string]: string }; layout: string; textRegions: TextRegion[] } | null>(null);
-  const [selectedVideo, setSelectedVideo] = useState<{
-    type: "youtubeRegular" | "youtubeShorts";
-    id: string;
-    name: string;
-    attributes: { [key: string]: string };
-  } | null>(null);
 
-  useEffect(() => {
-    if (!itemId) {
-      return;
-    }
-    const file = files.find(([id]) => id === itemId);
-    if (file) {
-      const [id, { name, url, attributes, layout, textRegions }] = file;
-      setSelectedFile({ id, src: url, name, attributes: attributes ?? {}, layout: layout ?? "default", textRegions: textRegions ?? [] });
-      return;
-    }
-    const shortVideo = youTubeShortVideos.find(([id]) => id === itemId);
-    if (shortVideo) {
-      const [id, { name, attributes }] = shortVideo;
-      setSelectedVideo({ type: "youtubeShorts", id, name, attributes: attributes ?? {} });
-      return;
-    }
-    const regularVideo = youTubeRegularVideos.find(([id]) => id === itemId);
-    if (regularVideo) {
-      const [id, { name, attributes }] = regularVideo;
-      setSelectedVideo({ type: "youtubeRegular", id, name, attributes: attributes ?? {} });
-    }
-  }, [itemId, files, youTubeRegularVideos, youTubeShortVideos]);
+  const file = itemId ? files.find(([id]) => id === itemId) : undefined;
+  const selectedFile: { id: string; src: string; name: string; attributes: { [key: string]: string }; layout: string; textRegions: TextRegion[] } | null = file
+    ? {
+        id: file[0],
+        src: file[1].url,
+        name: file[1].name,
+        attributes: file[1].attributes ?? {},
+        layout: file[1].layout ?? "default",
+        textRegions: file[1].textRegions ?? []
+      }
+    : null;
+
+  const shortVideo = !file && itemId ? youTubeShortVideos.find(([id]) => id === itemId) : undefined;
+  const regularVideo = !file && !shortVideo && itemId ? youTubeRegularVideos.find(([id]) => id === itemId) : undefined;
+  const selectedVideo: { type: "youtubeRegular" | "youtubeShorts"; id: string; name: string; attributes: { [key: string]: string } } | null = shortVideo
+    ? { type: "youtubeShorts", id: shortVideo[0], name: shortVideo[1].name, attributes: shortVideo[1].attributes ?? {} }
+    : regularVideo
+      ? { type: "youtubeRegular", id: regularVideo[0], name: regularVideo[1].name, attributes: regularVideo[1].attributes ?? {} }
+      : null;
 
   return (
     <>
       <CollectionList
-        onFileClick={(id, src, name) => {
+        onFileClick={(id) => {
           if (folderId) {
             navigate(`/collections/${folderId}/${id}/details`);
           }
-          const file = files.find(([fileId]) => fileId === id);
-          setSelectedFile({ id, src, name, attributes: file?.[1].attributes ?? {}, layout: file?.[1].layout ?? "default", textRegions: file?.[1].textRegions ?? [] });
         }}
-        onVideoClick={(type, id, name, attributes) => {
+        onVideoClick={(_type, id) => {
           if (folderId) {
             navigate(`/collections/${folderId}/${id}`);
           }
-          setSelectedVideo({ type, id, name, attributes });
         }}
-        isLoading={isLoading}
         charts={charts}
         files={files}
         hyperlinks={hyperlinks}
@@ -177,6 +162,7 @@ export const RightContent = ({
         </StyledContainer>
       )}
       <ImageModal
+        key={`image-${selectedFile ? selectedFile.id : "closed"}`}
         open={Boolean(selectedFile)}
         src={selectedFile?.src ?? ""}
         name={selectedFile?.name ?? ""}
@@ -190,13 +176,13 @@ export const RightContent = ({
           }
         }}
         onClose={() => {
-          setSelectedFile(null);
           if (folderId) {
             navigate(`/collections/${folderId}`);
           }
         }}
       />
       <VideoModal
+        key={`video-${selectedVideo ? selectedVideo.id : "closed"}`}
         open={Boolean(selectedVideo)}
         id={selectedVideo?.id ?? ""}
         name={selectedVideo?.name ?? ""}
@@ -208,7 +194,6 @@ export const RightContent = ({
           }
         }}
         onClose={() => {
-          setSelectedVideo(null);
           if (folderId) {
             navigate(`/collections/${folderId}`);
           }

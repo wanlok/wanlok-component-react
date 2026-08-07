@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Box, Stack, Typography } from "@mui/material";
 import { ViewList as ViewListIcon, SmartDisplay as SmartDisplayIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
@@ -25,13 +25,6 @@ export const VideoModal = ({
 }) => {
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
   const [mobileSelectedTab, setMobileSelectedTab] = useState(0);
-
-  useEffect(() => {
-    if (open) {
-      setEditedAttributes(attributes);
-      setMobileSelectedTab(0);
-    }
-  }, [open, attributes]);
 
   return (
     <WModal

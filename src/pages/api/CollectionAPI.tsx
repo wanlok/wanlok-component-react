@@ -33,7 +33,7 @@ const applyTypedAttributes = (
   return { ...base, ...typedAttributes };
 };
 
-export const getQuiz = (layout: string | undefined, textRegions: TextRegion[] | undefined): Quiz[] | undefined => {
+const getQuiz = (layout: string | undefined, textRegions: TextRegion[] | undefined): Quiz[] | undefined => {
   if (layout !== "quiz" || !textRegions) {
     return undefined;
   }
@@ -120,7 +120,7 @@ const getCollectionItems = async (id: string, collectionAttributes: CollectionAt
   return filterCollectionItems(result, collectionAttributes, filters);
 };
 
-export const useCollectionAPI = (id: string | undefined, filters: [string, string][]) => {
+const useCollectionAPI = (id: string | undefined, filters: [string, string][]) => {
   const [items, setItems] = useState<Record<string, CollectionItem>>({});
   const [status, setStatus] = useState("loading");
   const filtersKey = JSON.stringify(filters);
@@ -129,6 +129,7 @@ export const useCollectionAPI = (id: string | undefined, filters: [string, strin
     if (!id) {
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- resetting to "loading" before a fetch, same shape as React's own data-fetching docs example
     setStatus("loading");
     const fetchItems = async () => {
       const collectionItems = await getCollectionItems(id, await getCollectionAttributes(id), filters);
@@ -136,6 +137,8 @@ export const useCollectionAPI = (id: string | undefined, filters: [string, strin
       setStatus("ok");
     };
     fetchItems();
+    // filtersKey (not filters) is intentional: filters is a fresh array reference on every call, filtersKey is the stable value to key the effect on
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, filtersKey]);
 
   const response: ApiResponse<Record<string, CollectionItem>> = { status, data: items };

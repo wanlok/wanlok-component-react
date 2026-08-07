@@ -19,7 +19,7 @@ const submitHyperlinks = async (urls: string[]) => {
 };
 
 export const getHyperlinks = async (text: string) => {
-  let hyperlinks: { [key: string]: string } = {};
+  const hyperlinks: { [key: string]: string } = {};
   const urlStrings = extractUrlStrings(text, regex.HYPERLINK, [
     ...extractUrlStrings(text, regex.STEAM),
     ...extractUrlStrings(text, regex.YOUTUBE)

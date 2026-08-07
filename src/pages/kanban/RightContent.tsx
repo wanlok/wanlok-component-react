@@ -157,6 +157,7 @@ export const KanbanColumnLayout = ({
 
   return (
     <Stack sx={{ flex: 1, flexDirection: "row", overflow: "hidden" }}>
+      {/* eslint-disable-next-line react-hooks/refs -- stackRefs.current is the array itself, set once at mount and never reassigned; reading it during render is stable */}
       {project.columns.map(({ name, items }, i) => {
         const stackRef = stackRefs.current[i];
         return (

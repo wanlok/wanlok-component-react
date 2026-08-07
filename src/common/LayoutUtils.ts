@@ -1,4 +1,4 @@
-export const seperate = (list: [string, any][][], current: [string, any][]) => {
+export const seperate = <T>(list: [string, T][][], current: [string, T][]) => {
   const sum = list
     .slice(0, list.indexOf(current))
     .map((l) => l.length)

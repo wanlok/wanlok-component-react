@@ -1,15 +1,17 @@
 import { v4 } from "uuid";
 import { ChartItem } from "./Types";
 
-const isChartItem = (jsonObject: any): boolean => {
+const isChartItem = (jsonObject: unknown): jsonObject is ChartItem => {
+  if (!jsonObject || typeof jsonObject !== "object") {
+    return false;
+  }
+  const candidate = jsonObject as Record<string, unknown>;
   return (
-    jsonObject &&
-    typeof jsonObject === "object" &&
-    typeof jsonObject.chart === "string" &&
-    Array.isArray(jsonObject.x) &&
-    jsonObject.x.every((i: any) => typeof i === "number") &&
-    Array.isArray(jsonObject.y) &&
-    jsonObject.y.every((i: any) => typeof i === "number")
+    typeof candidate.chart === "string" &&
+    Array.isArray(candidate.x) &&
+    candidate.x.every((i: unknown) => typeof i === "number") &&
+    Array.isArray(candidate.y) &&
+    candidate.y.every((i: unknown) => typeof i === "number")
   );
 };
 
@@ -26,7 +28,9 @@ export const getChartItems = (text: string) => {
       if (isChartItem(jsonObject)) {
         charts[v4()] = jsonObject;
       }
-    } catch {}
+    } catch {
+      // ignore chunks that aren't valid JSON
+    }
   }
 
   return { charts };

@@ -356,8 +356,8 @@ export const ImageModal = ({
   const [regions, setRegions] = useState<TextRegion[]>(textRegions);
   const [selectedLayout, setSelectedLayout] = useState(layout);
   const [controlGroupState, setControlGroupState] = useState(0);
-  const [desktopSelectedTab, setDesktopSelectedTab] = useState(0);
-  const [mobileSelectedTab, setMobileSelectedTab] = useState(0);
+  const [desktopSelectedTab, setDesktopSelectedTab] = useState(tab === "recognitions" ? 1 : 0);
+  const [mobileSelectedTab, setMobileSelectedTab] = useState(tab === "recognitions" ? 2 : 0);
   const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
   const [translatingRegionIds, setTranslatingRegionIds] = useState<Set<string>>(new Set());
   const [zoom, setZoom] = useState("fit");
@@ -383,6 +383,7 @@ export const ImageModal = ({
     } else {
       region = { x: defaultX, y: defaultY, width: defaultWidth, height: defaultHeight };
     }
+    // eslint-disable-next-line react-hooks/purity -- onAddRegionClick only runs from a click handler, never during render
     const newRegion: TextRegion = { id: String(Date.now()), ...region };
     setRegions((prev) => [...prev, newRegion]);
     setControlGroupState(0);
@@ -392,22 +393,6 @@ export const ImageModal = ({
     });
     await recognizeRegionText(newRegion, newRegion.recogniseLanguage ?? "eng");
   };
-
-  useEffect(() => {
-    if (open) {
-      setEditedName(name);
-      setEditedAttributes(attributes);
-      setRegions(textRegions);
-      setSelectedLayout(layout);
-      setControlGroupState(0);
-      setDesktopSelectedTab(tab === "recognitions" ? 1 : 0);
-      setMobileSelectedTab(tab === "recognitions" ? 2 : 0);
-      setSelectedRegionId(null);
-      setTranslatingRegionIds(new Set());
-      setZoom("fit");
-      imageCanvasRef.current = null;
-    }
-  }, [open, name, attributes, layout]);
 
   useEffect(() => {
     if (!open || !selectedRegionId) {

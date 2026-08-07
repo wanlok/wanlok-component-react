@@ -7,7 +7,6 @@ import { WChip } from "../../components/WChip";
 import { ImageTitle } from "../../components/ImageTitle";
 
 export const CollectionList = ({
-  isLoading,
   charts,
   files,
   hyperlinks,
@@ -22,7 +21,6 @@ export const CollectionList = ({
   onLeftButtonClick,
   onRightButtonClick
 }: {
-  isLoading: boolean;
   charts: [string, ChartItem][];
   files: [string, CloudinaryFileInfo][];
   hyperlinks: [string, string][];

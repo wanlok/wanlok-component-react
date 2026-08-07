@@ -40,7 +40,7 @@ npm test -- --testPathPattern=<file>  # Run a single test file
 - `src/services/` — external API integrations (Steam, YouTube oEmbed, Cloudinary image upload, server health check, hyperlink/chart parsing)
 - `src/components/` — reusable UI components prefixed with `W` (e.g. `WModal`, `WButton`, `WChart`) and layout primitives (`LayoutMenu`, `LayoutPanel`, `LayoutHeader`, `PanelRow`, `DropdownIcon`)
 
-**Icons:** Use MUI icons from `@mui/icons-material` — no PNG icon imports. `WButton` accepts `leftIcon` and `rightIcon` props (pass a MUI icon element). Use the exported `iconButtonSx` constant from `WButton.tsx` for icon-only square buttons.
+**Icons:** Use MUI icons from `@mui/icons-material` — no PNG icon imports. `WButton` accepts `leftIcon` and `rightIcon` props (pass a MUI icon element). Use the exported `iconButtonSx` constant from `WButtonSx.ts` for icon-only square buttons.
 
 **LayoutHeader:** Exports `topSx` (`height: 45`) and `bottomSx` (`height: 55`) for consistent header row styling. Hidden on mobile — do not put mobile-critical controls inside it.
 

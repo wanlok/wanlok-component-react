@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Divider, Stack, Typography } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { WModal } from "../../../components/WModal";
@@ -26,12 +26,6 @@ export const SubmitModal = ({
     isAnswerCorrect(selectedAnswerIndicesByQuestion[i] ?? [], answers)
   ).length;
   const scorePercentage = quiz.length > 0 ? Math.round((correctCount / quiz.length) * 100) : 0;
-
-  useEffect(() => {
-    if (open) {
-      setShowCorrectAnswers(false);
-    }
-  }, [open]);
 
   return (
     <WModal

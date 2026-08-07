@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useRef, useState } from "react";
 import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { SelectInput } from "../../../components/SelectInput";
 import { CheckboxInput } from "../../../components/CheckboxInput";
@@ -98,9 +98,13 @@ export const Quiz = () => {
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  // Adjust state during render (https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes):
+  // reset the answer selections whenever a new quiz loads, without resetting sibling modal-open state.
+  const [prevQuiz, setPrevQuiz] = useState(quiz);
+  if (quiz !== prevQuiz) {
+    setPrevQuiz(quiz);
     setSelectedAnswerIndicesByQuestion(quiz.map(() => []));
-  }, [quiz]);
+  }
 
   const onNextQuestionButtonClick = () => {
     const nextQuestionIndex = selectedAnswerIndicesByQuestion.findIndex(
@@ -186,6 +190,7 @@ export const Quiz = () => {
         </Stack>
       </Stack>
       <QuizItemsModal
+        key={`quiz-items-modal-${quizItemsModalOpen ? "open" : "closed"}`}
         open={quizItemsModalOpen}
         onClose={() => setQuizItemsModalOpen(false)}
         quizItems={quizItems}
@@ -203,6 +208,7 @@ export const Quiz = () => {
         }}
       />
       <SubmitModal
+        key={`submit-modal-${submitModalOpen ? "open" : "closed"}`}
         open={submitModalOpen}
         quiz={quiz}
         selectedAnswerIndicesByQuestion={selectedAnswerIndicesByQuestion}

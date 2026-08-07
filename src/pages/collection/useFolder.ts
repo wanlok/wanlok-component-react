@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { db } from "../../firebase";
 import { deleteDoc, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { useNavigate, useParams } from "react-router-dom";
@@ -40,7 +40,6 @@ export const useFolder = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [folderDocument, setFolderDocument] = useState<FolderDocument | null | undefined>(undefined);
-  const [selectedFolder, setSelectedFolder] = useState<Folder>();
   const { addCollectionItems, deleteCollection, getCollectionUrls } = useCollection();
 
   useEffect(() => {
@@ -58,22 +57,14 @@ export const useFolder = () => {
     [navigate]
   );
 
+  const folders = useMemo(() => folderDocument?.folders ?? [], [folderDocument]);
+  const selectedFolder = id ? folders.find((f) => getDocumentId(f.name) === id) : undefined;
+
   useEffect(() => {
-    if (folderDocument) {
-      const folders = folderDocument.folders;
-      if (folders.length > 0) {
-        let folder: Folder | undefined = undefined;
-        if (id) {
-          folder = folders.find((f) => getDocumentId(f.name) === id);
-        }
-        if (folder) {
-          setSelectedFolder(folder);
-        } else {
-          openFolder(folders[0]);
-        }
-      }
+    if (folders.length > 0 && !selectedFolder) {
+      openFolder(folders[0]);
     }
-  }, [folderDocument, id, openFolder]);
+  }, [folders, selectedFolder, openFolder]);
 
   const addFolder = async (name: string) => {
     if (name.length > 0 && /^[a-zA-Z0-9 ]+$/.test(name)) {
@@ -196,14 +187,16 @@ export const useFolder = () => {
   };
 
   const uploadFolders = async () => {
-    let files = await getFiles();
+    const files = await getFiles();
     if (files.length > 0) {
       const fileReader = new FileReader();
       fileReader.onload = () => {
         let jsonObject;
         try {
           jsonObject = JSON.parse(fileReader.result as string);
-        } catch (e) {}
+        } catch {
+          // leave jsonObject undefined on parse failure
+        }
         if (
           jsonObject !== null &&
           typeof jsonObject === "object" &&
@@ -226,7 +219,7 @@ export const useFolder = () => {
   const downloadFolders = async () => {
     const folders = folderDocument?.folders;
     if (folders) {
-      let map: { [name: string]: string[] } = await Promise.all(
+      const map: { [name: string]: string[] } = await Promise.all(
         folderDocument?.folders.map(async (folder) => {
           const id = getDocumentId(folder.name);
           const urls = await getCollectionUrls(id);

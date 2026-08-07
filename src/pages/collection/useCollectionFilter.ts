@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { CloudinaryFileInfo, Folder, YouTubeInfo } from "../../services/Types";
 import { toSlug } from "../../common/StringUtils";
@@ -19,6 +19,38 @@ export const useCollectionFilter = (
     folder?.attributes.find((attribute) => toSlug(attribute.name) === selectedAttributeKey)?.name ??
     selectedAttributeKey;
 
+  const attributeKeys = useMemo(
+    () => [
+      { label: "All", value: "" },
+      ...(folder?.attributes ?? []).map(({ name }) => ({ label: name, value: toSlug(name) }))
+    ],
+    [folder?.attributes]
+  );
+
+  const hasUncategorised =
+    Boolean(selectedAttributeKey) &&
+    [...files, ...youTubeRegularVideos, ...youTubeShortVideos].some(
+      ([, item]) => !item.attributes?.[originalAttributeKey]
+    );
+
+  const attributeValues = useMemo(
+    () => [
+      ...(hasUncategorised ? [{ label: "All (Uncategorised)", value: uncategorisedValue }] : []),
+      ...[
+        ...new Set(
+          [
+            ...files.map(([, item]) => item.attributes?.[originalAttributeKey]),
+            ...youTubeRegularVideos.map(([, item]) => item.attributes?.[originalAttributeKey]),
+            ...youTubeShortVideos.map(([, item]) => item.attributes?.[originalAttributeKey])
+          ].filter((v): v is string => Boolean(v))
+        )
+      ]
+        .sort()
+        .map((value) => ({ label: value, value: toSlug(value) }))
+    ],
+    [hasUncategorised, files, youTubeRegularVideos, youTubeShortVideos, originalAttributeKey]
+  );
+
   const prevFolderNameRef = useRef<string | undefined>(undefined);
 
   useEffect(() => {
@@ -33,6 +65,11 @@ export const useCollectionFilter = (
       );
     }
     prevFolderNameRef.current = folder?.name;
+    // setSearchParams's identity is not stable across renders in this react-router-dom version: it changes
+    // every time the URL changes, including from this effect's own setSearchParams call. Including it here
+    // would re-run this effect (and re-delete key/value) on every unrelated search-param change, not just
+    // when the folder actually changes.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [folder?.name]);
 
   useEffect(() => {
@@ -46,13 +83,8 @@ export const useCollectionFilter = (
         { replace: true }
       );
     }
-  }, [selectedAttributeKey, folder?.attributes]);
-
-  const hasUncategorised =
-    Boolean(selectedAttributeKey) &&
-    [...files, ...youTubeRegularVideos, ...youTubeShortVideos].some(
-      ([, item]) => !item.attributes?.[originalAttributeKey]
-    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- see setSearchParams note above
+  }, [selectedAttributeKey, attributeKeys]);
 
   useEffect(() => {
     if (!hasUncategorised && selectedAttributeValue === uncategorisedValue) {
@@ -64,27 +96,8 @@ export const useCollectionFilter = (
         { replace: true }
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- see setSearchParams note above
   }, [hasUncategorised, selectedAttributeValue]);
-
-  const attributeKeys = [
-    { label: "All", value: "" },
-    ...(folder?.attributes ?? []).map(({ name }) => ({ label: name, value: toSlug(name) }))
-  ];
-
-  const attributeValues = [
-    ...(hasUncategorised ? [{ label: "All (Uncategorised)", value: uncategorisedValue }] : []),
-    ...[
-      ...new Set(
-        [
-          ...files.map(([, item]) => item.attributes?.[originalAttributeKey]),
-          ...youTubeRegularVideos.map(([, item]) => item.attributes?.[originalAttributeKey]),
-          ...youTubeShortVideos.map(([, item]) => item.attributes?.[originalAttributeKey])
-        ].filter((v): v is string => Boolean(v))
-      )
-    ]
-      .sort()
-      .map((value) => ({ label: value, value: toSlug(value) }))
-  ];
 
   useEffect(() => {
     if (selectedAttributeKey && !selectedAttributeValue && attributeValues.length > 0) {
@@ -96,6 +109,10 @@ export const useCollectionFilter = (
         { replace: true }
       );
     }
+    // attributeValues is a new array reference on every render (files/videos come from an unmemoized toList()),
+    // so depending on it directly would re-run this effect, and force the value back to attributeValues[0], on
+    // every unrelated render. setSearchParams is omitted for the same reason as the effects above.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedAttributeKey, selectedAttributeValue, attributeValues.length]);
 
   const matchesFilter = (attributes: { [key: string]: string } | undefined) =>

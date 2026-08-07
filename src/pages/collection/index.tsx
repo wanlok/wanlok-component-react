@@ -1,7 +1,7 @@
 import { useCollection } from "./useCollection";
 import { useCollectionFilter } from "./useCollectionFilter";
 import { toSlug } from "../../common/StringUtils";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { FolderModal } from "./FolderModal";
@@ -83,12 +83,7 @@ export const CollectionPage = () => {
     steam.length +
     youTubeRegularVideos.length +
     youTubeShortVideos.length;
-
-  useEffect(() => {
-    if (count === 0) {
-      setControlGroupState(0);
-    }
-  }, [count]);
+  const effectiveControlGroupState = count === 0 ? 0 : controlGroupState;
 
   return (
     <LayoutPanel
@@ -129,21 +124,21 @@ export const CollectionPage = () => {
         isLoading={isCollectionLoading}
         folder={selectedFolder}
         resetButtonHidden={!isFolderSorted()}
-        controlGroupState={controlGroupState}
+        controlGroupState={effectiveControlGroupState}
         attributeKeys={attributeKeys}
         attributeValues={attributeValues}
         selectedAttributeKey={selectedAttributeKey}
         selectedAttributeValue={selectedAttributeValue}
         onAttributeKeyChange={(value) => {
           onAttributeKeyChange(value);
-          if (controlGroupState === 2) {
+          if (effectiveControlGroupState === 2) {
             setControlGroupState(0);
           }
         }}
         onAttributeValueChange={onAttributeValueChange}
         onEditFolderButtonClick={() => setFolderModalOpen(true)}
-        onDeleteButtonClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
-        onRearrangeButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
+        onDeleteButtonClick={() => setControlGroupState(effectiveControlGroupState === 3 ? 0 : 3)}
+        onRearrangeButtonClick={() => setControlGroupState(effectiveControlGroupState === 2 ? 0 : 2)}
         onResetButtonClick={() => setResetOrderModalOpen(true)}
         onDownloadButtonClick={() => {
           if (selectedFolder) {
@@ -159,7 +154,7 @@ export const CollectionPage = () => {
         steam={steam}
         youTubeRegularVideos={filteredYouTubeRegularVideos}
         youTubeShortVideos={filteredYouTubeShortVideos}
-        controlGroupState={controlGroupState}
+        controlGroupState={effectiveControlGroupState}
         selectedFolder={selectedFolder}
         deleteCollectionItem={deleteCollectionItem}
         updateFolder={updateFolder}
@@ -171,6 +166,7 @@ export const CollectionPage = () => {
         updateCollectionVideo={updateCollectionVideo}
       />
       <FolderModal
+        key={`folder-modal-${folderModalOpen ? (selectedFolder?.name ?? "new") : "closed"}`}
         open={folderModalOpen}
         onClose={() => setFolderModalOpen(false)}
         selectedFolder={selectedFolder}

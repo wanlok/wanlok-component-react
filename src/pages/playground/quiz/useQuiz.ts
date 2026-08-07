@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { db } from "../../../firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { Quiz, QuizItem, QuizzesDocument } from "../../../services/Types";
@@ -9,7 +9,7 @@ const documentId = "quizzes";
 
 export const useQuiz = () => {
   const [quizzesDocument, setQuizzesDocument] = useState<QuizzesDocument | null | undefined>(undefined);
-  const quizItems = quizzesDocument?.quizItems ?? [];
+  const quizItems = useMemo(() => quizzesDocument?.quizItems ?? [], [quizzesDocument]);
 
   useEffect(() => {
     const fetchQuizzesDocument = async () => {
@@ -33,14 +33,19 @@ export const useQuiz = () => {
   const [quiz, setQuiz] = useState<Quiz[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  useEffect(() => {
+  // Adjust state during render (https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes):
+  // default selectedQuizItem to the first quiz item once quizItems loads, without an effect.
+  const [prevQuizItems, setPrevQuizItems] = useState(quizItems);
+  if (quizItems !== prevQuizItems) {
+    setPrevQuizItems(quizItems);
     if (!selectedQuizItem && quizItems.length > 0) {
       setSelectedQuizItem(quizItems[0].value);
     }
-  }, [quizItems, selectedQuizItem]);
+  }
 
   useEffect(() => {
     if (selectedQuizItem && !quizItems.some((quizItem) => quizItem.value === selectedQuizItem)) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- clears stale quiz data when the selected item was externally removed from quizItems, not a prop mirror
       setQuiz([]);
     }
   }, [quizItems, selectedQuizItem]);
@@ -49,6 +54,7 @@ export const useQuiz = () => {
     if (!selectedQuizItem) {
       return;
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- resetting before a fetch, same shape as React's own data-fetching docs example
     setQuiz([]);
     setIsLoading(true);
 

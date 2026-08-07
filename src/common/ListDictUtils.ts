@@ -1,4 +1,4 @@
-export const isAllEmpty = (dict: { [key: string]: any }) => {
+export const isAllEmpty = (dict: object) => {
   return Object.values(dict).every(
     (value) => typeof value === "object" && value !== null && Object.keys(value).length === 0
   );
@@ -33,7 +33,7 @@ export const toDict = <T, U = T>(list: T[], key: keyof T, mapper?: (item: T) => 
   return dict;
 };
 
-export const groupList = (list: any[], numberOfItemPerGroup: number) => {
+export const groupList = <T>(list: T[], numberOfItemPerGroup: number) => {
   return list.reduce(
     (a, item, index) => {
       const i = Math.floor(index / numberOfItemPerGroup);
@@ -43,6 +43,7 @@ export const groupList = (list: any[], numberOfItemPerGroup: number) => {
       a[i].push(item);
       return a;
     },
-    [] as Array<Array<any>>
+    [] as T[][]
   );
 };
+

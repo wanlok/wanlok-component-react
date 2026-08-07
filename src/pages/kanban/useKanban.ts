@@ -1,5 +1,5 @@
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { v4 as uuidv4 } from "uuid";
 import { db } from "../../firebase";
@@ -13,7 +13,6 @@ export const useKanban = () => {
   const navigate = useNavigate();
 
   const [kanban, setKanban] = useState<Kanban>();
-  const [selectedProject, setSelectedProject] = useState<KanbanProject>();
 
   const fetched = useRef<boolean>(false);
 
@@ -41,17 +40,14 @@ export const useKanban = () => {
     setKanban((await getDoc(docRef)).data() as Kanban | undefined);
   };
 
+  const projects = useMemo(() => kanban?.projects ?? [], [kanban]);
+  const selectedProject = projects.find((project) => project.id === id);
+
   useEffect(() => {
-    const projects = kanban?.projects ?? [];
-    if (projects.length > 0) {
-      const project = projects.find((project) => project.id === id);
-      if (project) {
-        setSelectedProject(project);
-      } else {
-        openProject(projects[0]);
-      }
+    if (projects.length > 0 && !selectedProject) {
+      openProject(projects[0]);
     }
-  }, [id, kanban, openProject]);
+  }, [projects, selectedProject, openProject]);
 
   const addProject = async (name: string, columnNames: string[]) => {
     const document = await getDoc(docRef);
@@ -84,7 +80,6 @@ export const useKanban = () => {
     const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
     await updateDoc(docRef, { projects });
     setKanban({ ...kanban, projects });
-    setSelectedProject(updatedProject);
   };
 
   const deleteProject = async (project: KanbanProject) => {
@@ -94,7 +89,6 @@ export const useKanban = () => {
     const projects = kanban.projects.filter((p) => p.id !== project.id);
     updateDoc(docRef, { projects });
     setKanban({ projects });
-    setSelectedProject(undefined);
   };
 
   const addItem = () => {
@@ -109,7 +103,6 @@ export const useKanban = () => {
     const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
     updateDoc(docRef, { projects });
     setKanban({ ...kanban, projects });
-    setSelectedProject(updatedProject);
   };
 
   const deleteItem = (columnIndex: number, itemIndex: number) => {
@@ -123,7 +116,6 @@ export const useKanban = () => {
     const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
     updateDoc(docRef, { projects });
     setKanban({ ...kanban, projects });
-    setSelectedProject(updatedProject);
   };
 
   const updateItem = (columnIndex: number, itemIndex: number, name: string, content: string) => {
@@ -139,7 +131,6 @@ export const useKanban = () => {
     const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
     updateDoc(docRef, { projects });
     setKanban({ ...kanban, projects });
-    setSelectedProject(updatedProject);
   };
 
   const moveItem = (columns: KanbanColumn[]) => {
@@ -150,7 +141,6 @@ export const useKanban = () => {
     const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
     updateDoc(docRef, { projects });
     setKanban({ ...kanban, projects });
-    setSelectedProject(updatedProject);
   };
 
   const addMessage = (columnIndex: number, itemIndex: number, name: string, text: string) => {
@@ -172,7 +162,6 @@ export const useKanban = () => {
     const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
     updateDoc(docRef, { projects });
     setKanban({ ...kanban, projects });
-    setSelectedProject(updatedProject);
   };
 
   const deleteMessage = (columnIndex: number, itemIndex: number, messageIndex: number) => {
@@ -195,7 +184,6 @@ export const useKanban = () => {
     const projects = kanban.projects.map((project) => (project.id === selectedProject.id ? updatedProject : project));
     updateDoc(docRef, { projects });
     setKanban({ ...kanban, projects });
-    setSelectedProject(updatedProject);
   };
 
   return {

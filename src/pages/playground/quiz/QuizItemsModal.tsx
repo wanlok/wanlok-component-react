@@ -1,7 +1,7 @@
 import { Stack } from "@mui/material";
 import { StyledContainer } from "../../../components/StyledContainer";
 import { TextInput } from "../../../components/TextInput";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { iconButtonSx, WButton } from "../../../components/WButton";
 import { QuizItem } from "../../../services/Types";
 import { WModal } from "../../../components/WModal";
@@ -19,15 +19,8 @@ export const QuizItemsModal = ({
   quizItems: QuizItem[];
   updateQuizItems: (quizItems: QuizItem[]) => Promise<void>;
 }) => {
-  const [items, setItems] = useState<QuizItem[]>([]);
+  const [items, setItems] = useState<QuizItem[]>(quizItems.map((quizItem) => ({ ...quizItem })));
   const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    if (open) {
-      setItems([...quizItems.map((quizItem) => ({ ...quizItem }))]);
-      setIsDeleting(false);
-    }
-  }, [open, quizItems]);
 
   return (
     <WModal

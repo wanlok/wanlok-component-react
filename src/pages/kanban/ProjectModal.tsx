@@ -4,7 +4,7 @@ import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { WModal } from "../../components/WModal";
 import { YesNoButtons } from "../../components/YesNoButtons";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { KanbanProject } from "../../services/Types";
 import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
 
@@ -27,20 +27,10 @@ export const ProjectModal = ({
   project?: KanbanProject;
   onSaveButtonClick: (name: string, columns: string[]) => void;
 }) => {
-  const [name, setName] = useState("");
-  const [columns, setColumns] = useState<string[]>(["To Do", "In Progress", "Ready To Deploy", "Done"]);
-
-  useEffect(() => {
-    if (open) {
-      if (project) {
-        setName(project.name);
-        setColumns(project.columns.map((column) => column.name));
-      } else {
-        setName("");
-        setColumns(["To Do", "In Progress", "Ready To Deploy", "Done"]);
-      }
-    }
-  }, [open, project]);
+  const [name, setName] = useState(project?.name ?? "");
+  const [columns, setColumns] = useState<string[]>(
+    project ? project.columns.map((column) => column.name) : ["To Do", "In Progress", "Ready To Deploy", "Done"]
+  );
 
   return (
     <WModal

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 export interface PlaygroundFolder {
@@ -14,7 +14,6 @@ export const folders: PlaygroundFolder[] = [
 export const usePlayground = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [selectedFolder, setSelectedFolder] = useState<PlaygroundFolder>();
 
   const openFolder = useCallback(
     (folder: PlaygroundFolder) => {
@@ -23,19 +22,13 @@ export const usePlayground = () => {
     [navigate]
   );
 
+  const selectedFolder = id ? folders.find((f) => f.id === id) : undefined;
+
   useEffect(() => {
-    if (folders.length > 0) {
-      let folder: PlaygroundFolder | undefined = undefined;
-      if (id) {
-        folder = folders.find((f) => f.id === id);
-      }
-      if (folder) {
-        setSelectedFolder(folder);
-      } else {
-        openFolder(folders[0]);
-      }
+    if (folders.length > 0 && !selectedFolder) {
+      openFolder(folders[0]);
     }
-  }, [id, openFolder]);
+  }, [selectedFolder, openFolder]);
 
   return { selectedFolder, openFolder };
 };

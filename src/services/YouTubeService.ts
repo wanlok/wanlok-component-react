@@ -12,7 +12,9 @@ export const fetchYouTubeInfo = async (urlString: string) => {
       const oembed = await response.json();
       youTubeInfo = { name: oembed.title, imageUrl: oembed.thumbnail_url };
     }
-  } catch (e) {}
+  } catch {
+    // leave youTubeInfo undefined on failure
+  }
   return youTubeInfo;
 };
 

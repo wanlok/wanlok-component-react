@@ -118,6 +118,7 @@ export const Kanban = () => {
         />
       )}
       <ProjectModal
+        key={`project-modal-${opened ? (isEditing ? (selectedProject?.id ?? "edit") : "new") : "closed"}`}
         open={opened}
         onClose={() => setOpened(false)}
         project={isEditing ? selectedProject : undefined}

@@ -2,7 +2,7 @@ import { Divider, Stack, Typography } from "@mui/material";
 import { StyledContainer } from "../../components/StyledContainer";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { CollectionAttributes, Folder } from "../../services/Types";
 import { WModal } from "../../components/WModal";
@@ -25,17 +25,11 @@ export const FolderModal = ({
   selectedFolder?: Folder;
   updateFolderAttributes: (folderName: string, attributes: CollectionAttributes) => Promise<void>;
 }) => {
-  const [folderName, setFolderName] = useState("");
-  const [attributes, setAttributes] = useState<CollectionAttributes>([]);
+  const [folderName, setFolderName] = useState(selectedFolder?.name ?? "");
+  const [attributes, setAttributes] = useState<CollectionAttributes>(
+    selectedFolder ? selectedFolder.attributes.map((attribute) => ({ ...attribute })) : []
+  );
   const [isDeleting, setIsDeleting] = useState(false);
-
-  useEffect(() => {
-    if (open && selectedFolder) {
-      setFolderName(selectedFolder.name);
-      setAttributes([...selectedFolder.attributes.map((attribute) => ({ ...attribute }))]);
-      setIsDeleting(false);
-    }
-  }, [open, selectedFolder]);
 
   const nameCounts = new Map<string, number[]>();
   attributes.forEach(({ name }, i) => {

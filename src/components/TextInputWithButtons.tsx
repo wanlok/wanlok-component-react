@@ -82,8 +82,10 @@ export const TextInputWithButtons = ({
             rightIcon={icon}
             sx={{ width: title && !sufficientSpaces ? undefined : buttonHeight, height: buttonHeight, p: title && !sufficientSpaces ? undefined : 0 }}
             onClick={() => {
-              onClick && onClick();
-              onClickWithText && getText(onClickWithText);
+              onClick?.();
+              if (onClickWithText) {
+                getText(onClickWithText);
+              }
             }}
           >
             {!sufficientSpaces && title}

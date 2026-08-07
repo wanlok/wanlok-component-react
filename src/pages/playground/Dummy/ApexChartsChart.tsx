@@ -2,6 +2,11 @@ import ReactApexChart, { Props } from "react-apexcharts";
 import ApexCharts from "apexcharts";
 import ReactDOMServer from "react-dom/server";
 
+interface LegendFormatterOpts {
+  seriesIndex: number;
+  w: { globals: { seriesNames: string[]; colors: string[] } };
+}
+
 const getOptions = (id: string, animated: boolean): Props => {
   return {
     chart: {
@@ -63,7 +68,7 @@ const getOptions = (id: string, animated: boolean): Props => {
       onItemHover: {
         highlightDataSeries: false
       },
-      formatter: function (seriesName: string, opts: any) {
+      formatter: function (seriesName: string, opts: LegendFormatterOpts) {
         return opts.w.globals.seriesNames.length > 1 ? ReactDOMServer.renderToString(Legend(seriesName, opts)) : null;
       },
       markers: {
@@ -79,7 +84,7 @@ const getOptions = (id: string, animated: boolean): Props => {
   };
 };
 
-const Legend = (seriesName: string, opts: any) => {
+const Legend = (seriesName: string, opts: LegendFormatterOpts) => {
   const colour = opts.w.globals.colors[opts.seriesIndex];
   return (
     <>

@@ -9,7 +9,9 @@ export const startAnimationLoop = (framePerSecond: number, callback: () => Promi
       running = true;
       try {
         await callback();
-      } catch (e) {}
+      } catch {
+        // ignore callback errors, keep the animation loop running
+      }
       running = false;
     }
     handle = requestAnimationFrame(loop);

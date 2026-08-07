@@ -14,7 +14,9 @@ export const fetchSteamInfo = async (appId: string) => {
         imageUrl: header_image as string
       };
     }
-  } catch (e) {}
+  } catch {
+    // leave steamInfo undefined on failure
+  }
   return steamInfo;
 };
 

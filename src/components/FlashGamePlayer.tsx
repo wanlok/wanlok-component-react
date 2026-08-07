@@ -74,7 +74,7 @@ export const FlashGamePlayer = ({
     player.load(filePath);
 
     const intervalId = setInterval(() => {
-      const shadow = (player as any).shadowRoot;
+      const shadow = (player as unknown as HTMLElement).shadowRoot;
       const canvas = shadow?.querySelector("canvas") as HTMLCanvasElement | null;
       if (canvas) {
         setPlayerCanvas(canvas);
