@@ -5,7 +5,7 @@ import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";
 import { FolderModal } from "./FolderModal";
-import { DeleteFolderConfirmationModal } from "./DeleteFolderConfirmationModal";
+import { DeleteConfirmationModal } from "../../components/DeleteConfirmationModal";
 import { ResetOrderConfirmationModal } from "./ResetOrderConfirmationModal";
 import { UploadImageModal } from "./UploadImageModal";
 import { useUploadImage } from "./useUploadImage";
@@ -205,13 +205,15 @@ export const CollectionPage = () => {
         onClose={() => setResetOrderModalOpen(false)}
         onConfirm={resetFolderSequences}
       />
-      <DeleteFolderConfirmationModal
+      <DeleteConfirmationModal
         open={Boolean(folderToDelete)}
-        folder={folderToDelete}
+        title="Delete Folder"
+        name={folderToDelete?.name}
         onClose={() => setFolderToDelete(undefined)}
         onConfirm={() => {
           if (folderToDelete) {
             deleteFolder(folderToDelete);
+            setFolderControlGroupState(0);
           }
         }}
       />

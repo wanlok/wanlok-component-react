@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useKanban } from "./useKanban";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { ProjectModal } from "./ProjectModal";
+import { DeleteConfirmationModal } from "../../components/DeleteConfirmationModal";
 import { RightHeader } from "./RightHeader";
 import { RightContent } from "./RightContent";
 import { ViewKanban as KanbanIcon } from "@mui/icons-material";
@@ -9,6 +10,7 @@ import { PanelRow } from "../../components/PanelRow";
 import { ItemModal } from "./ItemModal";
 import { LeftContent } from "./LeftContent";
 import { LeftHeader } from "./LeftHeader";
+import { KanbanProject } from "../../services/Types";
 
 export const Kanban = () => {
   const {
@@ -32,6 +34,7 @@ export const Kanban = () => {
   const [selectedItem, setSelectedItem] = useState<{ i: number; j: number } | null>(null);
   const [opened, setOpened] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [projectToDelete, setProjectToDelete] = useState<KanbanProject | undefined>(undefined);
 
   const onAddButtonClick = () => {
     setIsEditing(false);
@@ -44,6 +47,10 @@ export const Kanban = () => {
     }
     setIsEditing(true);
     setOpened(true);
+  };
+
+  const onDeleteProjectButtonClick = (project: KanbanProject) => {
+    setProjectToDelete(project);
   };
 
   return (
@@ -69,7 +76,7 @@ export const Kanban = () => {
               openProject(project);
               setControlGroupState(0);
             }}
-            deleteProject={deleteProject}
+            onDeleteProjectButtonClick={onDeleteProjectButtonClick}
           />
         </>
       }
@@ -129,6 +136,18 @@ export const Kanban = () => {
             addProject(name, columns);
           }
           setOpened(false);
+        }}
+      />
+      <DeleteConfirmationModal
+        open={Boolean(projectToDelete)}
+        title="Delete Project"
+        name={projectToDelete?.name}
+        onClose={() => setProjectToDelete(undefined)}
+        onConfirm={() => {
+          if (projectToDelete) {
+            deleteProject(projectToDelete);
+            setControlGroupState(0);
+          }
         }}
       />
     </LayoutPanel>

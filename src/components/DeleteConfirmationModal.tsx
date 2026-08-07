@@ -1,17 +1,18 @@
 import { Stack, Typography } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { WModal } from "../../components/WModal";
-import { YesNoButtons } from "../../components/YesNoButtons";
-import { Folder } from "../../services/Types";
+import { WModal } from "./WModal";
+import { YesNoButtons } from "./YesNoButtons";
 
-export const DeleteFolderConfirmationModal = ({
+export const DeleteConfirmationModal = ({
   open,
-  folder,
+  title,
+  name,
   onClose,
   onConfirm
 }: {
   open: boolean;
-  folder: Folder | undefined;
+  title: string;
+  name: string | undefined;
   onClose: () => void;
   onConfirm: () => void;
 }) => {
@@ -19,7 +20,7 @@ export const DeleteFolderConfirmationModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      tabs={[{ icon: <CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />, label: "Delete Folder" }]}
+      tabs={[{ icon: <CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />, label: title }]}
       bottom={
         <YesNoButtons
           onYesClick={() => {
@@ -32,7 +33,7 @@ export const DeleteFolderConfirmationModal = ({
     >
       <Stack sx={{ gap: 2, p: 2 }}>
         <Typography variant="body1" sx={{ lineHeight: 1.5 }}>
-          Are you sure you want to delete "{folder?.name}"? This action cannot be undone.
+          Are you sure you want to delete "{name}"? This action cannot be undone.
         </Typography>
       </Stack>
     </WModal>

@@ -44,7 +44,7 @@ export const LeftContent = ({
   controlGroupState,
   setPanelOpened,
   openProject,
-  deleteProject
+  onDeleteProjectButtonClick
 }: {
   isLoading: boolean;
   kanban: Kanban | undefined;
@@ -52,7 +52,7 @@ export const LeftContent = ({
   controlGroupState: number;
   setPanelOpened: Dispatch<SetStateAction<boolean>>;
   openProject: (project: KanbanProject) => void;
-  deleteProject: (project: KanbanProject) => Promise<void>;
+  onDeleteProjectButtonClick: (project: KanbanProject) => void;
 }) => {
   if (isLoading) {
     return <LayoutLoading />;
@@ -112,7 +112,7 @@ export const LeftContent = ({
         <Stack>
           {controlGroupState === 1 && (
             <WButton
-              onClick={() => deleteProject(project)}
+              onClick={() => onDeleteProjectButtonClick(project)}
               sx={{ ...iconButtonSx, backgroundColor: "transparent", "&:hover": { backgroundColor: "action.hover" } }}
             >
               <CloseIcon sx={{ fontSize: 24 }} />
