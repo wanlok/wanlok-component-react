@@ -49,6 +49,7 @@ export const WModal = ({
   onClose,
   width,
   height,
+  isFullScreen = false,
   mobileSelectedTab = 0,
   onMobileSelectedTabChange,
   hideLeftLabel,
@@ -71,6 +72,7 @@ export const WModal = ({
   onClose: () => void;
   width?: number | string;
   height?: number | string;
+  isFullScreen?: boolean;
   mobileSelectedTab?: number;
   onMobileSelectedTabChange?: (tab: number) => void;
   hideLeftLabel?: boolean;
@@ -78,6 +80,7 @@ export const WModal = ({
   RightPanelProps) => {
   const { palette, breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
+  const fullScreen = mobile || isFullScreen;
   const leftTabs = tabs ?? [];
   const leftTabCount = leftTabs.length;
 
@@ -100,13 +103,13 @@ export const WModal = ({
           bottom: 0,
           margin: "auto",
           flexDirection: mobile && rightChildren ? "column" : "row",
-          width: mobile ? "100vw" : (width ?? (rightChildren !== undefined ? 800 : rightWidth)),
-          height: mobile ? "100dvh" : (height ?? "fit-content"),
-          maxHeight: mobile ? undefined : "80dvh",
+          width: fullScreen ? "100vw" : (width ?? (rightChildren !== undefined ? 800 : rightWidth)),
+          height: fullScreen ? "100dvh" : (height ?? "fit-content"),
+          maxHeight: fullScreen ? undefined : "80dvh",
           overflow: "hidden",
           gap: mobile && rightChildren ? 0 : "1px",
           backgroundColor: rightChildren ? "common.white" : undefined,
-          borderWidth: mobile ? 0 : 1,
+          borderWidth: fullScreen ? 0 : 1,
           borderStyle: "solid",
           borderColor: "divider"
         }}
