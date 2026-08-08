@@ -73,3 +73,5 @@ VITE_FIREBASE_APP_ID
 **Firestore field naming:** Use camelCase for all Firestore document field names (e.g. `createdAt`, not `created_at`). TypeScript interface properties that map directly to Firestore fields follow the same convention. Exception: fields that mirror an external API's response verbatim (e.g. Cloudinary's `public_id`/`secure_url`, YouTube oEmbed's `thumbnail_url`, Tesseract.js language codes like `chi_sim`) keep the external contract's naming rather than being converted.
 
 **Dependency versions:** Pin exact versions in `package.json` — no `^` or `~` ranges. `.npmrc` sets `save-exact=true` so `npm install <package>` writes exact pins automatically; don't hand-edit a version back to a range. This exists because a caret range on `@mui/x-charts` once silently resolved to a broken patch release (`@mui/x-charts-vendor@9.11.0` published with its vendor bundle files missing) — exact pins mean upgrades only happen deliberately, not as a side effect of an unrelated `npm install`.
+
+**Testing with Playwright:** Ask before using Playwright (or any browser automation) to test a feature — don't launch a dev server and drive the browser unprompted.

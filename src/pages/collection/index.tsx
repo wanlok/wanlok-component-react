@@ -79,6 +79,8 @@ export const CollectionPage = () => {
     filteredYouTubeShortVideos
   } = useCollectionFilter(selectedFolder, files, youTubeRegularVideos, youTubeShortVideos);
 
+  const effectiveFolderControlGroupState = folders.length === 0 ? 0 : folderControlGroupState;
+
   const count =
     charts.length +
     files.length +
@@ -103,8 +105,8 @@ export const CollectionPage = () => {
           <LeftHeader
             isLoading={isFolderLoading}
             numberOfFolders={folders.length}
-            folderControlGroupState={folderControlGroupState}
-            onDeleteButtonClick={() => setFolderControlGroupState(folderControlGroupState === 1 ? 0 : 1)}
+            folderControlGroupState={effectiveFolderControlGroupState}
+            onDeleteButtonClick={() => setFolderControlGroupState(effectiveFolderControlGroupState === 1 ? 0 : 1)}
             onUploadButtonClick={uploadFolders}
             onDownloadButtonClick={downloadFolders}
           />
@@ -112,7 +114,7 @@ export const CollectionPage = () => {
             isLoading={isFolderLoading}
             folders={folders}
             selectedFolder={selectedFolder}
-            folderControlGroupState={folderControlGroupState}
+            folderControlGroupState={effectiveFolderControlGroupState}
             setPanelOpened={setPanelOpened}
             openFolder={(folder) => {
               openFolder(folder);

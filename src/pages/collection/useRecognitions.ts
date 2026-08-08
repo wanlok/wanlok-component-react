@@ -266,11 +266,13 @@ export const useRecognitions = ({
     }
   };
 
+  const effectiveControlGroupState = regions.length === 0 ? 0 : controlGroupState;
+
   return {
     regions,
     setRegions,
     selectedLayout,
-    controlGroupState,
+    controlGroupState: effectiveControlGroupState,
     setControlGroupState,
     selectedRegionId,
     translatingRegionIds,

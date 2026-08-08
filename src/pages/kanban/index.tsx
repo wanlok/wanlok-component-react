@@ -53,6 +53,13 @@ export const Kanban = () => {
     setProjectToDelete(project);
   };
 
+  const numberOfProjects = kanban?.projects.length ?? 0;
+  const numberOfItems = selectedProject?.columns.flatMap((column) => column.items).length ?? 0;
+  const effectiveControlGroupState =
+    (controlGroupState === 1 && numberOfProjects === 0) || (controlGroupState === 2 && numberOfItems === 0)
+      ? 0
+      : controlGroupState;
+
   return (
     <LayoutPanel
       panelOpened={panelOpened}
@@ -62,15 +69,15 @@ export const Kanban = () => {
         <>
           <LeftHeader
             isLoading={isLoading}
-            controlGroupState={controlGroupState}
+            controlGroupState={effectiveControlGroupState}
             onAddButtonClick={onAddButtonClick}
-            onDeleteButtonClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
+            onDeleteButtonClick={() => setControlGroupState(effectiveControlGroupState === 1 ? 0 : 1)}
           />
           <LeftContent
             isLoading={isLoading}
             kanban={kanban}
             selectedProject={selectedProject}
-            controlGroupState={controlGroupState}
+            controlGroupState={effectiveControlGroupState}
             setPanelOpened={setPanelOpened}
             openProject={(project) => {
               openProject(project);
@@ -85,15 +92,15 @@ export const Kanban = () => {
       <RightHeader
         isLoading={isLoading}
         project={selectedProject}
-        controlGroupState={controlGroupState}
+        controlGroupState={effectiveControlGroupState}
         onEditButtonClick={onEditButtonClick}
         onAddItemButtonClick={addItem}
-        onDeleteItemButtonClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
+        onDeleteItemButtonClick={() => setControlGroupState(effectiveControlGroupState === 2 ? 0 : 2)}
       />
       <RightContent
         isLoading={isLoading}
         project={selectedProject}
-        controlGroupState={controlGroupState}
+        controlGroupState={effectiveControlGroupState}
         onDragStop={moveItem}
         onClick={(i, j) => setSelectedItem({ i, j })}
         onDeleteItemClick={(i, j) => deleteItem(i, j)}
