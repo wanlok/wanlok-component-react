@@ -6,7 +6,7 @@ import { TextInput } from "../../components/TextInput";
 import { StyledContainer } from "../../components/StyledContainer";
 import { YesNoButtons } from "../../components/YesNoButtons";
 
-export const VideoModal = ({
+export const YouTubeModal = ({
   open,
   id,
   name,

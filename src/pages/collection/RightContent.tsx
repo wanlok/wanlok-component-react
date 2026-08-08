@@ -13,7 +13,7 @@ import {
 } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
 import { ImageRecognitionModal } from "./ImageRecognitionModal";
-import { VideoModal } from "./VideoModal";
+import { YouTubeModal } from "./YouTubeModal";
 import { TextInputWithButtons } from "../../components/TextInputWithButtons";
 import { StyledContainer } from "../../components/StyledContainer";
 import { getDocumentId } from "./useFolder";
@@ -181,8 +181,8 @@ export const RightContent = ({
           }
         }}
       />
-      <VideoModal
-        key={`video-${selectedVideo ? selectedVideo.id : "closed"}`}
+      <YouTubeModal
+        key={`youtube-${selectedVideo ? selectedVideo.id : "closed"}`}
         open={Boolean(selectedVideo)}
         id={selectedVideo?.id ?? ""}
         name={selectedVideo?.name ?? ""}
