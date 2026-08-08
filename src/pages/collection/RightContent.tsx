@@ -12,7 +12,7 @@ import {
   YouTubeInfo
 } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
-import { ImageModal } from "./ImageModal";
+import { ImageRecognitionModal } from "./ImageRecognitionModal";
 import { VideoModal } from "./VideoModal";
 import { TextInputWithButtons } from "../../components/TextInputWithButtons";
 import { StyledContainer } from "../../components/StyledContainer";
@@ -161,7 +161,7 @@ export const RightContent = ({
           />
         </StyledContainer>
       )}
-      <ImageModal
+      <ImageRecognitionModal
         key={`image-${selectedFile ? selectedFile.id : "closed"}`}
         open={Boolean(selectedFile)}
         src={selectedFile?.src ?? ""}
