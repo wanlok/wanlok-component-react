@@ -85,6 +85,25 @@ export const RightContent = ({
       ? { type: "youtubeRegular", id: regularVideo[0], name: regularVideo[1].name, attributes: regularVideo[1].attributes ?? {} }
       : null;
 
+  const previewableItems: { type: "files" | "youtubeShorts" | "youtubeRegular"; id: string }[] = [
+    ...files.map(([id]): { type: "files"; id: string } => ({ type: "files", id })),
+    ...youTubeShortVideos.map(([id]): { type: "youtubeShorts"; id: string } => ({ type: "youtubeShorts", id })),
+    ...youTubeRegularVideos.map(([id]): { type: "youtubeRegular"; id: string } => ({ type: "youtubeRegular", id }))
+  ];
+  const selectedItemIndex = itemId ? previewableItems.findIndex((item) => item.id === itemId) : -1;
+  const previousItem = selectedItemIndex > 0 ? previewableItems[selectedItemIndex - 1] : undefined;
+  const nextItem =
+    selectedItemIndex >= 0 && selectedItemIndex < previewableItems.length - 1
+      ? previewableItems[selectedItemIndex + 1]
+      : undefined;
+
+  const navigateToItem = (item: { type: "files" | "youtubeShorts" | "youtubeRegular"; id: string } | undefined) => {
+    if (!item || !folderId) {
+      return;
+    }
+    navigate(item.type === "files" ? `/collections/${folderId}/${item.id}/details` : `/collections/${folderId}/${item.id}`);
+  };
+
   return (
     <>
       <CollectionList
@@ -170,6 +189,8 @@ export const RightContent = ({
         layout={selectedFile?.layout ?? "default"}
         textRegions={selectedFile?.textRegions ?? []}
         folderAttributes={selectedFolder?.attributes ?? []}
+        onPreviousClick={previousItem ? () => navigateToItem(previousItem) : undefined}
+        onNextClick={nextItem ? () => navigateToItem(nextItem) : undefined}
         onSaveButtonClick={async (name, attributes, layout, textRegions) => {
           if (selectedFile) {
             await updateCollectionFile(selectedFile.id, name, attributes, layout, textRegions);
@@ -188,6 +209,8 @@ export const RightContent = ({
         name={selectedVideo?.name ?? ""}
         attributes={selectedVideo?.attributes ?? {}}
         folderAttributes={selectedFolder?.attributes ?? []}
+        onPreviousClick={previousItem ? () => navigateToItem(previousItem) : undefined}
+        onNextClick={nextItem ? () => navigateToItem(nextItem) : undefined}
         onSaveButtonClick={async (name, attributes) => {
           if (selectedVideo) {
             await updateCollectionVideo(selectedVideo.type, selectedVideo.id, name, attributes);

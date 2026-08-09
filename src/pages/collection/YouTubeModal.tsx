@@ -14,6 +14,8 @@ export const YouTubeModal = ({
   name,
   attributes,
   folderAttributes,
+  onPreviousClick,
+  onNextClick,
   onSaveButtonClick,
   onClose
 }: {
@@ -22,6 +24,8 @@ export const YouTubeModal = ({
   name: string;
   attributes: { [key: string]: string };
   folderAttributes: { name: string }[];
+  onPreviousClick?: () => void;
+  onNextClick?: () => void;
   onSaveButtonClick: (name: string, attributes: { [key: string]: string }) => void;
   onClose: () => void;
 }) => {
@@ -105,6 +109,8 @@ export const YouTubeModal = ({
               onDetailsClick={onDetailsClick}
               tabs={rightTabs}
               selectedTab={0}
+              onPreviousClick={onPreviousClick}
+              onNextClick={onNextClick}
             />
           )}
         </Box>

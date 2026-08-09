@@ -59,6 +59,8 @@ export const ImageRecognitionModal = ({
   layout,
   textRegions,
   folderAttributes,
+  onPreviousClick,
+  onNextClick,
   onSaveButtonClick,
   onClose
 }: {
@@ -69,6 +71,8 @@ export const ImageRecognitionModal = ({
   layout: string;
   textRegions: TextRegion[];
   folderAttributes: { name: string }[];
+  onPreviousClick?: () => void;
+  onNextClick?: () => void;
   onSaveButtonClick: (
     name: string,
     attributes: { [key: string]: string },
@@ -282,6 +286,8 @@ export const ImageRecognitionModal = ({
             onDetailsClick={onDetailsClick}
             tabs={rightTabs}
             selectedTab={desktopSelectedTab}
+            onPreviousClick={onPreviousClick}
+            onNextClick={onNextClick}
             scrollbarWidths={scrollbarWidths}
           />
         )}
