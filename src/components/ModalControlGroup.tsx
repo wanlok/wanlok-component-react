@@ -4,10 +4,10 @@ import {
   Fullscreen as FullscreenIcon,
   FullscreenExit as FullscreenExitIcon,
   KeyboardArrowLeft as KeyboardArrowLeftIcon,
-  KeyboardArrowRight as KeyboardArrowRightIcon,
-  ViewList as ViewListIcon
+  KeyboardArrowRight as KeyboardArrowRightIcon
 } from "@mui/icons-material";
 import { iconButtonSx, WButton } from "./WButton";
+import { TabItem } from "./WTabs";
 
 const iconSize = 64;
 const space = 8;
@@ -17,8 +17,10 @@ export const ModalControlGroup = ({
   onNextClick,
   isFullScreen,
   onFullScreenClick,
-  isDetailsHidden,
+  isRightHidden,
   onDetailsClick,
+  tabs,
+  selectedTab,
   scrollbarWidths = { right: 0, bottom: 0 },
   topLeftChildren
 }: {
@@ -26,8 +28,10 @@ export const ModalControlGroup = ({
   onNextClick?: () => void;
   isFullScreen: boolean;
   onFullScreenClick: () => void;
-  isDetailsHidden: boolean;
+  isRightHidden: boolean;
   onDetailsClick: () => void;
+  tabs: TabItem[];
+  selectedTab: number;
   scrollbarWidths?: { bottom: number; right: number };
   topLeftChildren?: ReactNode;
 }) => {
@@ -90,11 +94,7 @@ export const ModalControlGroup = ({
             {isFullScreen ? <FullscreenExitIcon sx={{ fontSize: 30 }} /> : <FullscreenIcon sx={{ fontSize: 30 }} />}
           </WButton>
           <WButton onClick={onDetailsClick} sx={overlayButtonSx}>
-            {isDetailsHidden ? (
-              <ViewListIcon sx={{ fontSize: 24 }} />
-            ) : (
-              <KeyboardArrowRightIcon sx={{ fontSize: 32 }} />
-            )}
+            {isRightHidden ? tabs[selectedTab]?.icon : <KeyboardArrowRightIcon sx={{ fontSize: 32 }} />}
           </WButton>
         </Stack>
       </Stack>

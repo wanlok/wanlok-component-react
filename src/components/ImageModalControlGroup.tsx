@@ -2,6 +2,7 @@ import { alpha, Stack, useTheme } from "@mui/material";
 import { ZoomIn as ZoomInIcon, ZoomOut as ZoomOutIcon } from "@mui/icons-material";
 import { iconButtonSx, WButton } from "./WButton";
 import { ModalControlGroup } from "./ModalControlGroup";
+import { TabItem } from "./WTabs";
 
 export const ImageModalTopControlGroup = ({
   onZoomInClick,
@@ -25,8 +26,10 @@ export const ImageModalControlGroup = ({
   onZoomOutClick,
   isFullScreen,
   onFullScreenClick,
-  isDetailsHidden,
+  isRightHidden,
   onDetailsClick,
+  tabs,
+  selectedTab,
   onPreviousClick,
   onNextClick,
   scrollbarWidths
@@ -35,8 +38,10 @@ export const ImageModalControlGroup = ({
   onZoomOutClick: () => void;
   isFullScreen: boolean;
   onFullScreenClick: () => void;
-  isDetailsHidden: boolean;
+  isRightHidden: boolean;
   onDetailsClick: () => void;
+  tabs: TabItem[];
+  selectedTab: number;
   onPreviousClick?: () => void;
   onNextClick?: () => void;
   scrollbarWidths: { right: number; bottom: number };
@@ -55,8 +60,10 @@ export const ImageModalControlGroup = ({
       onNextClick={onNextClick}
       isFullScreen={isFullScreen}
       onFullScreenClick={onFullScreenClick}
-      isDetailsHidden={isDetailsHidden}
+      isRightHidden={isRightHidden}
       onDetailsClick={onDetailsClick}
+      tabs={tabs}
+      selectedTab={selectedTab}
       scrollbarWidths={scrollbarWidths}
       topLeftChildren={
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>

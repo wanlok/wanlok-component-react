@@ -86,11 +86,11 @@ export const ImageRecognitionModal = ({
   const [desktopSelectedTab, setDesktopSelectedTab] = useState(tab === "recognitions" ? 1 : 0);
   const [mobileSelectedTab, setMobileSelectedTab] = useState(tab === "recognitions" ? 2 : 0);
   const [zoom, setZoom] = useState("fit");
-  const { isFullScreen, onFullScreenClick, exitFullScreen, isDetailsHidden, onDetailsClick } = useModalControlGroup();
+  const { isFullScreen, onFullScreenClick, exitFullScreen, isRightHidden, onDetailsClick } = useModalControlGroup();
   const [scrollbarWidths, setScrollbarWidths] = useState({ bottom: 0, right: 0 });
   const imageScrollRef = useRef<HTMLDivElement>(null);
   const rightScrollRef = useRef<HTMLDivElement>(null);
-  const detailsHidden = mobile ? false : isDetailsHidden;
+  const rightHidden = mobile ? false : isRightHidden;
 
   useEffect(() => {
     const element = imageScrollRef.current;
@@ -148,6 +148,11 @@ export const ImageRecognitionModal = ({
     onClose();
   };
 
+  const rightTabs = [
+    { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
+    { icon: <VisibilityIcon sx={{ fontSize: 28 }} />, label: "Recognitions" }
+  ];
+
   return (
     <WModal
       open={open}
@@ -170,14 +175,7 @@ export const ImageRecognitionModal = ({
           </>
         ) : undefined
       }
-      rightTabs={
-        detailsHidden
-          ? undefined
-          : [
-              { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
-              { icon: <VisibilityIcon sx={{ fontSize: 28 }} />, label: "Recognitions" }
-            ]
-      }
+      rightTabs={rightHidden ? undefined : rightTabs}
       rightSelectedTab={desktopSelectedTab}
       onRightTabChange={(newTab) => {
         setDesktopSelectedTab(newTab);
@@ -198,7 +196,7 @@ export const ImageRecognitionModal = ({
         }
       }}
       rightTop={
-        !detailsHidden && desktopSelectedTab === 1 ? (
+        !rightHidden && desktopSelectedTab === 1 ? (
           <RecognitionsTop
             selectedLayout={selectedLayout}
             controlGroupState={controlGroupState}
@@ -211,7 +209,7 @@ export const ImageRecognitionModal = ({
       }
       rightScrollRef={rightScrollRef}
       rightBottom={
-        detailsHidden ? undefined : (
+        rightHidden ? undefined : (
           <YesNoButtons
             yesLabel="Save"
             onYesClick={() => {
@@ -224,7 +222,7 @@ export const ImageRecognitionModal = ({
         )
       }
       rightChildren={
-        detailsHidden ? undefined : desktopSelectedTab === 0 ? (
+        rightHidden ? undefined : desktopSelectedTab === 0 ? (
           <Details
             editedName={editedName}
             onEditedNameChange={setEditedName}
@@ -280,8 +278,10 @@ export const ImageRecognitionModal = ({
             onZoomOutClick={() => setZoom("fit")}
             isFullScreen={isFullScreen}
             onFullScreenClick={onFullScreenClick}
-            isDetailsHidden={isDetailsHidden}
+            isRightHidden={isRightHidden}
             onDetailsClick={onDetailsClick}
+            tabs={rightTabs}
+            selectedTab={desktopSelectedTab}
             scrollbarWidths={scrollbarWidths}
           />
         )}
