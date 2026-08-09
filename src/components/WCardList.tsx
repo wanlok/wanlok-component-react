@@ -23,11 +23,13 @@ export const WCard = <T,>({
 
 export const WCardList = <T,>({
   items,
+  getDepth,
   renderContent,
   onContentClick,
   renderRightContent
 }: {
   items: T[];
+  getDepth?: (item: T) => number;
   renderContent: (item: T) => ReactNode;
   onContentClick: (item?: T) => void;
   renderRightContent: (item: T) => ReactNode;
@@ -35,17 +37,20 @@ export const WCardList = <T,>({
   return (
     <Stack sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ flex: 1, backgroundColor: "common.white" }}>
-        {items.map((item, index) => (
-          <Fragment key={`card-list-${index}`}>
-            {index > 0 && <Divider sx={{ ml: 7, mr: 0 }} />}
-            <Stack sx={{ flexDirection: "row" }}>
-              <WCard item={item} onClick={onContentClick} sx={{ flex: 1 }}>
-                {renderContent(item)}
-              </WCard>
-              {renderRightContent(item)}
-            </Stack>
-          </Fragment>
-        ))}
+        {items.map((item, index) => {
+          const space = (getDepth?.(item) ?? 0) * 2;
+          return (
+            <Fragment key={`card-list-${index}`}>
+              <Stack sx={{ flexDirection: "row", ml: space }}>
+                <WCard item={item} onClick={onContentClick} sx={{ flex: 1 }}>
+                  {renderContent(item)}
+                </WCard>
+                {renderRightContent(item)}
+              </Stack>
+              {index !== items.length - 1 && <Divider sx={{ ml: space + 7 }} />}
+            </Fragment>
+          );
+        })}
       </Stack>
     </Stack>
   );
