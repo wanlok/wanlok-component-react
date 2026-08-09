@@ -44,9 +44,15 @@ const Top = ({
     </Stack>
     {folder && !isLoading && (
       <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+        <WButton onClick={onDownloadButtonClick} sx={iconButtonSx}>
+          <DownloadIcon sx={{ fontSize: 24 }} />
+        </WButton>
+        <WButton onClick={() => window.open(`#/api/collections/${toSlug(folder.name)}`, "_blank")} sx={iconButtonSx}>
+          <ApiIcon sx={{ fontSize: 24 }} />
+        </WButton>
         {!resetButtonHidden && (
-          <WButton onClick={onResetButtonClick} rightIcon={<UndoIcon sx={{ fontSize: 20 }} />}>
-            Reset Order
+          <WButton onClick={onResetButtonClick} sx={iconButtonSx}>
+            <UndoIcon sx={{ fontSize: 20 }} />
           </WButton>
         )}
         <WButton
@@ -56,15 +62,6 @@ const Top = ({
           sx={iconButtonSx}
         >
           <SwapHorizIcon sx={{ fontSize: 26 }} />
-        </WButton>
-        <WButton onClick={onDownloadButtonClick} rightIcon={<DownloadIcon sx={{ fontSize: 24 }} />}>
-          Export
-        </WButton>
-        <WButton
-          onClick={() => window.open(`#/api/collections/${toSlug(folder.name)}`, "_blank")}
-          rightIcon={<ApiIcon sx={{ fontSize: 24 }} />}
-        >
-          API
         </WButton>
         <WButton onClick={onEditFolderButtonClick} sx={iconButtonSx}>
           <EditIcon sx={{ fontSize: 18 }} />
