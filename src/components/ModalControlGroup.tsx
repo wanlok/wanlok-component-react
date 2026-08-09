@@ -10,6 +10,7 @@ import {
 import { iconButtonSx, WButton } from "./WButton";
 
 const iconSize = 64;
+const space = 8;
 
 export const ModalControlGroup = ({
   onPreviousClick,
@@ -37,8 +38,6 @@ export const ModalControlGroup = ({
     backgroundColor: alpha(palette.primary.main, 0.9),
     "&:hover": { backgroundColor: palette.primary.main }
   };
-
-  const space = isFullScreen ? 0 : 8;
 
   const top = space;
   const bottom = space + scrollbarWidths.bottom;

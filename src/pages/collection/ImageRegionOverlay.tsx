@@ -7,8 +7,9 @@ import {
   useRef,
   useState
 } from "react";
-import { alpha, Box, Stack, useTheme } from "@mui/material";
+import { alpha, Box, useTheme } from "@mui/material";
 import { TextRegion } from "../../services/Types";
+import { ImageModalImage } from "../../components/ImageModalImage";
 
 export type { TextRegion };
 
@@ -221,112 +222,88 @@ export const ImageRegionOverlay = ({
   };
 
   return (
-    <Stack
-      ref={scrollRef}
-      sx={
-        fitScreen
-          ? {
-              height: "100%",
-              overflow: "hidden",
-              alignItems: "center",
-              justifyContent: "center",
-              backgroundColor: "common.black"
-            }
-          : { height: "100%", overflow: "auto", alignItems: "flex-start", backgroundColor: "common.black" }
-      }
+    <ImageModalImage
+      src={src}
+      alt={alt}
+      fitScreen={fitScreen}
+      fullScreen={fullScreen}
+      scrollRef={scrollRef}
+      onImageLoad={(e: SyntheticEvent<HTMLImageElement>) => {
+        setNaturalSize({ width: e.currentTarget.naturalWidth, height: e.currentTarget.naturalHeight });
+        onImageLoad?.();
+      }}
     >
       <Box
-        sx={{
-          position: "relative",
-          lineHeight: 0,
-          m: "auto",
-          ...(fitScreen && fullScreen
-            ? { display: "flex", height: "100%", maxWidth: "100%", alignItems: "center", justifyContent: "center" }
-            : { display: "inline-block", ...(fitScreen && { maxWidth: "100%" }) })
-        }}
+        component="svg"
+        ref={svgRef}
+        {...(fitScreen && naturalSize.width > 0 && { viewBox: `0 0 ${naturalSize.width} ${naturalSize.height}` })}
+        sx={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "visible" }}
+        onMouseDown={() => onSelectedIdChange?.(null)}
+        onTouchStart={() => onSelectedIdChange?.(null)}
+        onMouseMove={onMouseMove}
+        onTouchMove={onTouchMove}
+        onMouseUp={onMouseUp}
+        onTouchEnd={onTouchEnd}
+        onMouseLeave={onMouseUp}
       >
-        <Box
-          component="img"
-          src={src}
-          alt={alt}
-          sx={{ display: "block", ...(fitScreen && { maxWidth: "100%", maxHeight: fullScreen ? "100%" : "80dvh" }) }}
-          onLoad={(e: SyntheticEvent<HTMLImageElement>) => {
-            setNaturalSize({ width: e.currentTarget.naturalWidth, height: e.currentTarget.naturalHeight });
-            onImageLoad?.();
-          }}
-        />
-        <Box
-          component="svg"
-          ref={svgRef}
-          {...(fitScreen && naturalSize.width > 0 && { viewBox: `0 0 ${naturalSize.width} ${naturalSize.height}` })}
-          sx={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "visible" }}
-          onMouseDown={() => onSelectedIdChange?.(null)}
-          onTouchStart={() => onSelectedIdChange?.(null)}
-          onMouseMove={onMouseMove}
-          onTouchMove={onTouchMove}
-          onMouseUp={onMouseUp}
-          onTouchEnd={onTouchEnd}
-          onMouseLeave={onMouseUp}
-        >
-          {regions.map((region, i) => {
-            const isSelected = region.id === selectedId;
-            const avatarRadius = 16;
-            const avatarCx = region.x - 24;
-            const avatarCy = region.y + 16;
-            return (
-              <g key={region.id}>
-                <circle
-                  cx={avatarCx}
-                  cy={avatarCy}
-                  r={avatarRadius}
-                  fill={isSelected ? palette.common.black : palette.primary.main}
-                  style={{ pointerEvents: "none" }}
-                />
-                <text
-                  x={avatarCx}
-                  y={avatarCy}
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  fill={isSelected ? palette.common.white : palette.primary.contrastText}
-                  fontSize={12}
-                  style={{ userSelect: "none", pointerEvents: "none", fontFamily: typography.fontFamily }}
-                >
-                  {i + 1}
-                </text>
-                <rect
-                  x={region.x}
-                  y={region.y}
-                  width={region.width}
-                  height={region.height}
-                  fill={alpha(palette.primary.main, 0.4)}
-                  stroke={palette.primary.main}
-                  strokeWidth={1}
-                  style={{ cursor: "move" }}
-                  onMouseDown={(e) => onRegionMouseDown(e, region.id)}
-                  onTouchStart={(e) => onRegionTouchStart(e, region.id)}
-                />
-                {isSelected &&
-                  HANDLES.map((handle) => {
-                    const pos = getHandlePosition(region, handle);
-                    return (
-                      <rect
-                        key={handle}
-                        x={pos.x}
-                        y={pos.y}
-                        width={HANDLE_SIZE}
-                        height={HANDLE_SIZE}
-                        fill={palette.primary.main}
-                        style={{ cursor: HANDLE_CURSORS[handle] }}
-                        onMouseDown={(e) => onHandleMouseDown(e, region.id, handle)}
-                        onTouchStart={(e) => onHandleTouchStart(e, region.id, handle)}
-                      />
-                    );
-                  })}
-              </g>
-            );
-          })}
-        </Box>
+        {regions.map((region, i) => {
+          const isSelected = region.id === selectedId;
+          const avatarRadius = 16;
+          const avatarCx = region.x - 24;
+          const avatarCy = region.y + 16;
+          return (
+            <g key={region.id}>
+              <circle
+                cx={avatarCx}
+                cy={avatarCy}
+                r={avatarRadius}
+                fill={isSelected ? palette.common.black : palette.primary.main}
+                style={{ pointerEvents: "none" }}
+              />
+              <text
+                x={avatarCx}
+                y={avatarCy}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fill={isSelected ? palette.common.white : palette.primary.contrastText}
+                fontSize={12}
+                style={{ userSelect: "none", pointerEvents: "none", fontFamily: typography.fontFamily }}
+              >
+                {i + 1}
+              </text>
+              <rect
+                x={region.x}
+                y={region.y}
+                width={region.width}
+                height={region.height}
+                fill={alpha(palette.primary.main, 0.4)}
+                stroke={palette.primary.main}
+                strokeWidth={1}
+                style={{ cursor: "move" }}
+                onMouseDown={(e) => onRegionMouseDown(e, region.id)}
+                onTouchStart={(e) => onRegionTouchStart(e, region.id)}
+              />
+              {isSelected &&
+                HANDLES.map((handle) => {
+                  const pos = getHandlePosition(region, handle);
+                  return (
+                    <rect
+                      key={handle}
+                      x={pos.x}
+                      y={pos.y}
+                      width={HANDLE_SIZE}
+                      height={HANDLE_SIZE}
+                      fill={palette.primary.main}
+                      style={{ cursor: HANDLE_CURSORS[handle] }}
+                      onMouseDown={(e) => onHandleMouseDown(e, region.id, handle)}
+                      onTouchStart={(e) => onHandleTouchStart(e, region.id, handle)}
+                    />
+                  );
+                })}
+            </g>
+          );
+        })}
       </Box>
-    </Stack>
+    </ImageModalImage>
   );
 };
