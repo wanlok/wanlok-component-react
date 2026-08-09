@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export const useModalControlGroup = () => {
   const [isFullScreen, setIsFullScreen] = useState(
@@ -8,12 +8,22 @@ export const useModalControlGroup = () => {
     () => typeof window !== "undefined" && localStorage.getItem("isModalDetailsHidden") === "true"
   );
 
-  const onFullScreenClick = () => {
-    setIsFullScreen((current) => {
-      const next = !current;
+  useEffect(() => {
+    const onFullscreenChange = () => {
+      const next = document.fullscreenElement !== null;
+      setIsFullScreen(next);
       localStorage.setItem("isModalFullScreen", String(next));
-      return next;
-    });
+    };
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
+  }, []);
+
+  const onFullScreenClick = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    } else {
+      document.documentElement.requestFullscreen().catch(() => {});
+    }
   };
 
   const onDetailsClick = () => {

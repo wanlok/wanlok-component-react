@@ -2,8 +2,8 @@ import { useEffect, useRef, useState } from "react";
 import { Box, Stack } from "@mui/material";
 import {
   Add as AddIcon,
-  CropFree as CropFreeIcon,
   Image as ImageIcon,
+  Visibility as VisibilityIcon,
   ViewList as ViewListIcon
 } from "@mui/icons-material";
 import { useMediaQuery, useTheme } from "@mui/material";
@@ -170,7 +170,7 @@ export const ImageRecognitionModal = ({
           ? undefined
           : [
               { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
-              { icon: <CropFreeIcon sx={{ fontSize: 24 }} />, label: "Recognitions" }
+              { icon: <VisibilityIcon sx={{ fontSize: 28 }} />, label: "Recognitions" }
             ]
       }
       rightSelectedTab={desktopSelectedTab}
