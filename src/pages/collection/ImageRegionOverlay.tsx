@@ -108,7 +108,7 @@ export const ImageRegionOverlay = ({
   fullScreen?: boolean;
   selectedId?: string | null;
   onSelectedIdChange?: (id: string | null) => void;
-  onImageLoad?: () => void;
+  onImageLoad?: (naturalSize: { width: number; height: number }) => void;
 }) => {
   const { palette, typography } = useTheme();
   const svgRef = useRef<SVGSVGElement>(null);
@@ -229,8 +229,9 @@ export const ImageRegionOverlay = ({
       fullScreen={fullScreen}
       scrollRef={scrollRef}
       onImageLoad={(e: SyntheticEvent<HTMLImageElement>) => {
-        setNaturalSize({ width: e.currentTarget.naturalWidth, height: e.currentTarget.naturalHeight });
-        onImageLoad?.();
+        const size = { width: e.currentTarget.naturalWidth, height: e.currentTarget.naturalHeight };
+        setNaturalSize(size);
+        onImageLoad?.(size);
       }}
     >
       <Box

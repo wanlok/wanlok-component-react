@@ -19,7 +19,7 @@ export const SelectInput = ({ label, items, value, onChange, helperText }: Selec
   return (
     <FormControl>
       {label && (
-        <FormLabel focused={false} sx={{ color: "text.primary", typography: "body2", mb: "4px" }}>
+        <FormLabel focused={false} sx={{ color: "text.secondary", typography: "body2", mb: "4px" }}>
           {label}
         </FormLabel>
       )}

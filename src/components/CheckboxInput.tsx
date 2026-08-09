@@ -21,7 +21,7 @@ export const CheckboxInput = ({
   return (
     <FormControl>
       {label && (
-        <FormLabel focused={false} sx={{ color: "text.primary", typography: "body2", mb: "4px", ...labelSx }}>
+        <FormLabel focused={false} sx={{ color: "text.secondary", typography: "body2", mb: "4px", ...labelSx }}>
           {label}
         </FormLabel>
       )}

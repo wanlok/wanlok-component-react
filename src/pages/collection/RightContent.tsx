@@ -66,14 +66,23 @@ export const RightContent = ({
   const folderId = getDocumentId(selectedFolder?.name);
 
   const file = itemId ? files.find(([id]) => id === itemId) : undefined;
-  const selectedFile: { id: string; src: string; name: string; attributes: { [key: string]: string }; layout: string; textRegions: TextRegion[] } | null = file
+  const selectedFile: {
+    id: string;
+    src: string;
+    name: string;
+    attributes: { [key: string]: string };
+    layout: string;
+    textRegions: TextRegion[];
+    type: string;
+  } | null = file
     ? {
         id: file[0],
         src: file[1].url,
         name: file[1].name,
         attributes: file[1].attributes ?? {},
         layout: file[1].layout ?? "default",
-        textRegions: file[1].textRegions ?? []
+        textRegions: file[1].textRegions ?? [],
+        type: file[1].mimeType
       }
     : null;
 
@@ -189,6 +198,7 @@ export const RightContent = ({
         layout={selectedFile?.layout ?? "default"}
         textRegions={selectedFile?.textRegions ?? []}
         folderAttributes={selectedFolder?.attributes ?? []}
+        type={selectedFile?.type ?? ""}
         onPreviousClick={previousItem ? () => navigateToItem(previousItem) : undefined}
         onNextClick={nextItem ? () => navigateToItem(nextItem) : undefined}
         onSaveButtonClick={async (name, attributes, layout, textRegions) => {

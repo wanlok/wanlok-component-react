@@ -18,19 +18,23 @@ import { useModalControlGroup } from "../../components/useModalControlGroup";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
 import { Recognitions, RecognitionsTop } from "./Recognitions";
 import { useRecognitions } from "./useRecognitions";
+import { ImageMetaContainer } from "../../components/ImageMetaContainer";
+import { ImageMeta } from "../../services/Types";
 
 const Details = ({
   editedName,
   onEditedNameChange,
   editedAttributes,
   onEditedAttributesChange,
-  folderAttributes
+  folderAttributes,
+  imageMeta
 }: {
   editedName: string;
   onEditedNameChange: (name: string) => void;
   editedAttributes: { [key: string]: string };
   onEditedAttributesChange: (attributes: { [key: string]: string }) => void;
   folderAttributes: { name: string }[];
+  imageMeta: ImageMeta | undefined;
 }) => (
   <Stack sx={{ p: 2, gap: 2 }}>
     <Stack sx={{ gap: "1px" }}>
@@ -48,6 +52,7 @@ const Details = ({
         </StyledContainer>
       ))}
     </Stack>
+    <ImageMetaContainer imageMeta={imageMeta} />
   </Stack>
 );
 
@@ -59,6 +64,7 @@ export const ImageRecognitionModal = ({
   layout,
   textRegions,
   folderAttributes,
+  type,
   onPreviousClick,
   onNextClick,
   onSaveButtonClick,
@@ -71,6 +77,7 @@ export const ImageRecognitionModal = ({
   layout: string;
   textRegions: TextRegion[];
   folderAttributes: { name: string }[];
+  type: string;
   onPreviousClick?: () => void;
   onNextClick?: () => void;
   onSaveButtonClick: (
@@ -92,6 +99,7 @@ export const ImageRecognitionModal = ({
   const [zoom, setZoom] = useState("fit");
   const { isFullScreen, onFullScreenClick, exitFullScreen, isRightHidden, onDetailsClick } = useModalControlGroup();
   const [scrollbarWidths, setScrollbarWidths] = useState({ bottom: 0, right: 0 });
+  const [imageMeta, setImageMeta] = useState<ImageMeta | undefined>(undefined);
   const imageScrollRef = useRef<HTMLDivElement>(null);
   const rightScrollRef = useRef<HTMLDivElement>(null);
   const rightHidden = mobile ? false : isRightHidden;
@@ -233,6 +241,7 @@ export const ImageRecognitionModal = ({
             editedAttributes={editedAttributes}
             onEditedAttributesChange={setEditedAttributes}
             folderAttributes={folderAttributes}
+            imageMeta={imageMeta}
           />
         ) : (
           <Recognitions
@@ -266,7 +275,8 @@ export const ImageRecognitionModal = ({
           fullScreen={mobile || isFullScreen}
           selectedId={selectedRegionId}
           onSelectedIdChange={onRegionSelect}
-          onImageLoad={() => {
+          onImageLoad={(size) => {
+            setImageMeta({ ...size, type });
             const element = imageScrollRef.current;
             if (element) {
               setScrollbarWidths({

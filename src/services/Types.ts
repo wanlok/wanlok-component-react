@@ -100,6 +100,8 @@ export interface CloudinaryFileInfo extends ParentInfo {
   textRegions?: TextRegion[];
 }
 
+export type ImageMeta = { width: number; height: number; type: string };
+
 export interface SteamInfo extends ParentInfo {
   name: string;
   imageUrl: string;
