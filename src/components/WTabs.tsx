@@ -46,9 +46,11 @@ export const WTabs = ({
             color: "text.primary",
             textTransform: "none",
             letterSpacing: "normal",
+            height: 56,
             minHeight: 56,
             fontSize: 16,
-            justifyContent: "flex-start"
+            justifyContent: "flex-start",
+            overflow: "visible"
           },
           "& .MuiTab-root.Mui-selected": {
             color: "text.primary"
