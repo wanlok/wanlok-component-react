@@ -92,8 +92,10 @@ export const ImageRegionOverlay = ({
   onRegionMouseUp,
   scrollRef,
   fitScreen,
+  fullScreen,
   selectedId,
-  onSelectedIdChange
+  onSelectedIdChange,
+  onImageLoad
 }: {
   src: string;
   alt: string;
@@ -102,8 +104,10 @@ export const ImageRegionOverlay = ({
   onRegionMouseUp?: (regionId: string) => void;
   scrollRef?: RefObject<HTMLDivElement | null>;
   fitScreen?: boolean;
+  fullScreen?: boolean;
   selectedId?: string | null;
   onSelectedIdChange?: (id: string | null) => void;
+  onImageLoad?: () => void;
 }) => {
   const { palette, typography } = useTheme();
   const svgRef = useRef<SVGSVGElement>(null);
@@ -234,19 +238,21 @@ export const ImageRegionOverlay = ({
       <Box
         sx={{
           position: "relative",
-          display: "inline-block",
           lineHeight: 0,
           m: "auto",
-          ...(fitScreen && { maxWidth: "100%" })
+          ...(fitScreen && fullScreen
+            ? { display: "flex", height: "100%", maxWidth: "100%", alignItems: "center", justifyContent: "center" }
+            : { display: "inline-block", ...(fitScreen && { maxWidth: "100%" }) })
         }}
       >
         <Box
           component="img"
           src={src}
           alt={alt}
-          sx={{ display: "block", ...(fitScreen && { maxWidth: "100%", maxHeight: "80dvh" }) }}
+          sx={{ display: "block", ...(fitScreen && { maxWidth: "100%", maxHeight: fullScreen ? "100%" : "80dvh" }) }}
           onLoad={(e: SyntheticEvent<HTMLImageElement>) => {
             setNaturalSize({ width: e.currentTarget.naturalWidth, height: e.currentTarget.naturalHeight });
+            onImageLoad?.();
           }}
         />
         <Box

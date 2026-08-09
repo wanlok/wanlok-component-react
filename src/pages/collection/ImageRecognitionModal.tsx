@@ -1,6 +1,11 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Box, Stack } from "@mui/material";
-import { Add as AddIcon, CropFree as CropFreeIcon, Image as ImageIcon, ViewList as ViewListIcon } from "@mui/icons-material";
+import {
+  Add as AddIcon,
+  CropFree as CropFreeIcon,
+  Image as ImageIcon,
+  ViewList as ViewListIcon
+} from "@mui/icons-material";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { WModal } from "../../components/WModal";
@@ -9,6 +14,7 @@ import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
 import { StyledContainer } from "../../components/StyledContainer";
 import { ImageModalControlGroup, ImageModalTopControlGroup } from "../../components/ImageModalControlGroup";
+import { useModalControlGroup } from "../../components/useModalControlGroup";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
 import { Recognitions, RecognitionsTop } from "./Recognitions";
 import { useRecognitions } from "./useRecognitions";
@@ -80,8 +86,28 @@ export const ImageRecognitionModal = ({
   const [desktopSelectedTab, setDesktopSelectedTab] = useState(tab === "recognitions" ? 1 : 0);
   const [mobileSelectedTab, setMobileSelectedTab] = useState(tab === "recognitions" ? 2 : 0);
   const [zoom, setZoom] = useState("fit");
+  const { isFullScreen, onFullScreenClick, isDetailsHidden, onDetailsClick } = useModalControlGroup();
+  const [scrollbarWidths, setScrollbarWidths] = useState({ bottom: 0, right: 0 });
   const imageScrollRef = useRef<HTMLDivElement>(null);
   const rightScrollRef = useRef<HTMLDivElement>(null);
+  const detailsHidden = mobile ? false : isDetailsHidden;
+
+  useEffect(() => {
+    const element = imageScrollRef.current;
+    if (!element) {
+      return;
+    }
+    const updateScrollbarWidths = () => {
+      setScrollbarWidths({
+        bottom: element.offsetHeight - element.clientHeight,
+        right: element.offsetWidth - element.clientWidth
+      });
+    };
+    updateScrollbarWidths();
+    const resizeObserver = new ResizeObserver(updateScrollbarWidths);
+    resizeObserver.observe(element);
+    return () => resizeObserver.disconnect();
+  }, [zoom]);
 
   const {
     regions,
@@ -123,6 +149,7 @@ export const ImageRecognitionModal = ({
       onClose={onClose}
       width="80vw"
       height="80dvh"
+      isFullScreen={isFullScreen}
       tabs={[{ icon: <ImageIcon sx={{ fontSize: 24 }} />, label: "Image" }]}
       hideLeftLabel
       top={
@@ -138,10 +165,14 @@ export const ImageRecognitionModal = ({
           </>
         ) : undefined
       }
-      rightTabs={[
-        { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
-        { icon: <CropFreeIcon sx={{ fontSize: 24 }} />, label: "Recognitions" }
-      ]}
+      rightTabs={
+        detailsHidden
+          ? undefined
+          : [
+              { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
+              { icon: <CropFreeIcon sx={{ fontSize: 24 }} />, label: "Recognitions" }
+            ]
+      }
       rightSelectedTab={desktopSelectedTab}
       onRightTabChange={(newTab) => {
         setDesktopSelectedTab(newTab);
@@ -162,7 +193,7 @@ export const ImageRecognitionModal = ({
         }
       }}
       rightTop={
-        desktopSelectedTab === 1 ? (
+        !detailsHidden && desktopSelectedTab === 1 ? (
           <RecognitionsTop
             selectedLayout={selectedLayout}
             controlGroupState={controlGroupState}
@@ -175,18 +206,20 @@ export const ImageRecognitionModal = ({
       }
       rightScrollRef={rightScrollRef}
       rightBottom={
-        <YesNoButtons
-          yesLabel="Save"
-          onYesClick={() => {
-            onSaveButtonClick(editedName, editedAttributes, selectedLayout, regions);
-            onClose();
-          }}
-          noLabel="Cancel"
-          onNoClick={onClose}
-        />
+        detailsHidden ? undefined : (
+          <YesNoButtons
+            yesLabel="Save"
+            onYesClick={() => {
+              onSaveButtonClick(editedName, editedAttributes, selectedLayout, regions);
+              onClose();
+            }}
+            noLabel="Cancel"
+            onNoClick={onClose}
+          />
+        )
       }
       rightChildren={
-        desktopSelectedTab === 0 ? (
+        detailsHidden ? undefined : desktopSelectedTab === 0 ? (
           <Details
             editedName={editedName}
             onEditedNameChange={setEditedName}
@@ -223,11 +256,29 @@ export const ImageRecognitionModal = ({
           onRegionMouseUp={onRegionMouseUp}
           scrollRef={imageScrollRef}
           fitScreen={zoom === "fit"}
+          fullScreen={mobile || isFullScreen}
           selectedId={selectedRegionId}
           onSelectedIdChange={onRegionSelect}
+          onImageLoad={() => {
+            const element = imageScrollRef.current;
+            if (element) {
+              setScrollbarWidths({
+                bottom: element.offsetHeight - element.clientHeight,
+                right: element.offsetWidth - element.clientWidth
+              });
+            }
+          }}
         />
         {!mobile && (
-          <ImageModalControlGroup onZoomInClick={() => setZoom("original")} onZoomOutClick={() => setZoom("fit")} />
+          <ImageModalControlGroup
+            onZoomInClick={() => setZoom("original")}
+            onZoomOutClick={() => setZoom("fit")}
+            isFullScreen={isFullScreen}
+            onFullScreenClick={onFullScreenClick}
+            isDetailsHidden={isDetailsHidden}
+            onDetailsClick={onDetailsClick}
+            scrollbarWidths={scrollbarWidths}
+          />
         )}
       </Box>
     </WModal>
