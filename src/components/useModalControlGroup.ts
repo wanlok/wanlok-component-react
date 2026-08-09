@@ -26,6 +26,12 @@ export const useModalControlGroup = () => {
     }
   };
 
+  const exitFullScreen = () => {
+    if (document.fullscreenElement) {
+      document.exitFullscreen().catch(() => {});
+    }
+  };
+
   const onDetailsClick = () => {
     setIsDetailsHidden((current) => {
       const next = !current;
@@ -34,5 +40,5 @@ export const useModalControlGroup = () => {
     });
   };
 
-  return { isFullScreen, onFullScreenClick, isDetailsHidden, onDetailsClick };
+  return { isFullScreen, onFullScreenClick, exitFullScreen, isDetailsHidden, onDetailsClick };
 };
