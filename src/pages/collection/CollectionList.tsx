@@ -1,10 +1,11 @@
 import { useRef } from "react";
-import { Skeleton, Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Divider, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { CropFree as CropFreeIcon } from "@mui/icons-material";
 import { ChartItem, CloudinaryFileInfo, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { WChip } from "../../components/WChip";
 import { ImageTitle } from "../../components/ImageTitle";
+import { getAttributeFileName } from "../../utils/getAttributeFileName";
 
 export const CollectionList = ({
   charts,
@@ -60,32 +61,52 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("charts", uuid)}
           />
         ))}
-        {files.map(([id, { name, url, textRegions }], i) => (
-          <ImageTitle
-            key={`files-${i}`}
-            imageUrl={url}
-            imageSx={{ objectPosition: "top" }}
-            name={name}
-            onClick={() => onFileClick(id, url, name)}
-            aspectRatio="16/9"
-            bottomChildren={
-              textRegions?.length ? (
-                <WChip
-                  icon={<CropFreeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />}
-                  label={`${textRegions.length}`}
-                  sx={{ backgroundColor: "common.white" }}
-                />
-              ) : undefined
-            }
-            leftMost={i === 0}
-            rightMost={i === files.length - 1}
-            scrollHorizontally={!mobile}
-            controlGroupState={controlGroupState}
-            onLeftButtonClick={() => onLeftButtonClick("files", id)}
-            onRightButtonClick={() => onRightButtonClick("files", id)}
-            onDeleteButtonClick={() => onDeleteButtonClick("files", id)}
-          />
-        ))}
+        {files.map(([id, { name, url, textRegions, attributes }], i) => {
+          const fileName = getAttributeFileName(attributes);
+          return (
+            <ImageTitle
+              key={`files-${i}`}
+              imageUrl={url}
+              imageSx={{ objectPosition: "top" }}
+              name={name}
+              onClick={() => onFileClick(id, url, name)}
+              aspectRatio="16/9"
+              bottomChildren={
+                <>
+                  {fileName && (
+                    <Typography variant="body2" sx={{ color: "common.white" }}>
+                      {fileName}
+                    </Typography>
+                  )}
+                </>
+              }
+              rightChildren={
+                <Stack sx={{ justifyContent: "center" }}>
+                  {textRegions?.length && (
+                    <Avatar
+                      sx={{
+                        width: 32,
+                        height: 32,
+                        fontSize: 12,
+                        backgroundColor: "background.default",
+                        color: "common.black"
+                      }}
+                    >
+                      {textRegions?.length}
+                    </Avatar>
+                  )}
+                </Stack>
+              }
+              leftMost={i === 0}
+              rightMost={i === files.length - 1}
+              scrollHorizontally={!mobile}
+              controlGroupState={controlGroupState}
+              onLeftButtonClick={() => onLeftButtonClick("files", id)}
+              onRightButtonClick={() => onRightButtonClick("files", id)}
+              onDeleteButtonClick={() => onDeleteButtonClick("files", id)}
+            />
+          );
+        })}
         {hyperlinks.map(([url, id], i) => (
           <ImageTitle
             key={`hyperlinks-${i}`}

@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Box, ButtonBase, Stack, SxProps, Theme, Typography } from "@mui/material";
 import { ControlGroup } from "./ControlGroup";
+import { OneLineTypography } from "./OneLineTypography";
 import { Direction } from "../services/Types";
 
 const imageTitleSx = {
@@ -18,7 +19,8 @@ const ImageTitleContent = ({
   name,
   aspectRatio,
   height,
-  bottomChildren
+  bottomChildren,
+  rightChildren
 }: {
   imageUrl: string;
   imageSx?: SxProps<Theme>;
@@ -26,37 +28,53 @@ const ImageTitleContent = ({
   aspectRatio?: string;
   height?: string;
   bottomChildren?: ReactNode;
-}) => (
-  <>
-    <Stack sx={{ aspectRatio, height, position: "relative" }}>
-      <Box
-        component="img"
-        src={imageUrl}
-        alt=""
-        sx={{ display: "block", objectFit: "cover", width: "100%", height: "100%", ...imageSx }}
-      />
-      {bottomChildren && <Stack sx={{ position: "absolute", bottom: 0, left: 0, p: 1 }}>{bottomChildren}</Stack>}
-    </Stack>
-    {name && (
-      <Stack sx={{ p: 2 }}>
-        <Typography
-          variant="body1"
-          sx={{
-            display: "-webkit-box",
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            color: "common.white",
-            wordBreak: name.indexOf(" ") > 0 ? undefined : "break-all"
-          }}
-        >
-          {name}
-        </Typography>
+  rightChildren?: ReactNode;
+}) => {
+  const typographySx: SxProps<Theme> = {
+    color: "common.white",
+    wordBreak: name && name.indexOf(" ") > 0 ? undefined : "break-all"
+  };
+  return (
+    <>
+      <Stack sx={{ aspectRatio, height, position: "relative" }}>
+        <Box
+          component="img"
+          src={imageUrl}
+          alt=""
+          sx={{ display: "block", objectFit: "cover", width: "100%", height: "100%", ...imageSx }}
+        />
       </Stack>
-    )}
-  </>
-);
+      <Stack sx={{ flexDirection: "row", px: 2, gap: 2, height: 80 }}>
+        <Stack sx={{ flex: 1, gap: 0.5, justifyContent: "center" }}>
+          {name &&
+            (bottomChildren ? (
+              <OneLineTypography variant="body1" sx={typographySx}>
+                {name}
+              </OneLineTypography>
+            ) : (
+              <Typography
+                variant="body1"
+                sx={[
+                  {
+                    overflow: "hidden",
+                    display: "-webkit-box",
+                    WebkitBoxOrient: "vertical",
+                    WebkitLineClamp: 2,
+                    textOverflow: "ellipsis"
+                  },
+                  typographySx
+                ]}
+              >
+                {name}
+              </Typography>
+            ))}
+          {bottomChildren}
+        </Stack>
+        {rightChildren}
+      </Stack>
+    </>
+  );
+};
 
 export const ImageTitle = ({
   imageUrl,
@@ -67,6 +85,7 @@ export const ImageTitle = ({
   height,
   aspectRatio,
   bottomChildren,
+  rightChildren,
   leftMost = false,
   rightMost = false,
   scrollHorizontally,
@@ -83,6 +102,7 @@ export const ImageTitle = ({
   height?: string;
   aspectRatio?: string;
   bottomChildren?: ReactNode;
+  rightChildren?: ReactNode;
   leftMost?: boolean;
   rightMost?: boolean;
   scrollHorizontally: boolean;
@@ -102,6 +122,7 @@ export const ImageTitle = ({
             aspectRatio={aspectRatio}
             height={height}
             bottomChildren={bottomChildren}
+            rightChildren={rightChildren}
           />
         </ButtonBase>
       ) : (
@@ -113,6 +134,7 @@ export const ImageTitle = ({
             aspectRatio={aspectRatio}
             height={height}
             bottomChildren={bottomChildren}
+            rightChildren={rightChildren}
           />
         </ButtonBase>
       )}

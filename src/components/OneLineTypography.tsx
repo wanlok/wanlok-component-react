@@ -12,7 +12,14 @@ export const OneLineTypography = ({
 }) => (
   <Typography
     variant={variant}
-    sx={{ overflow: "hidden", display: "-webkit-box", WebkitBoxOrient: "vertical", WebkitLineClamp: 1, ...sx }}
+    sx={{
+      overflow: "hidden",
+      display: "-webkit-box",
+      WebkitBoxOrient: "vertical",
+      WebkitLineClamp: 1,
+      textOverflow: "ellipsis",
+      ...sx
+    }}
   >
     {children}
   </Typography>
