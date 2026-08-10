@@ -180,7 +180,7 @@ export const CollectionList = ({
                 sx={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%" }}
               />
             </Stack>
-            <Stack sx={{ p: 2, gap: 1 }}>
+            <Stack sx={{ p: 2, gap: 1, height: 48 }}>
               <Skeleton variant="rectangular" />
               <Skeleton variant="rectangular" sx={{ width: "40%" }} />
             </Stack>
