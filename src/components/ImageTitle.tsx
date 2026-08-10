@@ -44,8 +44,8 @@ const ImageTitleContent = ({
           sx={{ display: "block", objectFit: "cover", width: "100%", height: "100%", ...imageSx }}
         />
       </Stack>
-      <Stack sx={{ flexDirection: "row", px: 2, gap: 2, height: 80 }}>
-        <Stack sx={{ flex: 1, gap: 0.5, justifyContent: "center" }}>
+      <Stack sx={{ flexDirection: "row", p: 2, gap: 2, height: 48 }}>
+        <Stack sx={{ flex: 1, gap: 0.5 }}>
           {name &&
             (bottomChildren ? (
               <OneLineTypography variant="body1" sx={typographySx}>
