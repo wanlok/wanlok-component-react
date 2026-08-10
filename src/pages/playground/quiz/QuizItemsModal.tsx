@@ -30,7 +30,7 @@ export const QuizItemsModal = ({
       top={
         <>
           <WButton onClick={() => setItems([...items, { label: "", value: "" }])} sx={iconButtonSx}>
-            <AddIcon sx={{ fontSize: 24 }} />
+            <AddIcon sx={{ fontSize: 26 }} />
           </WButton>
           <WButton isActivated={isDeleting} onClick={() => setIsDeleting(!isDeleting)} sx={iconButtonSx}>
             <CloseIcon sx={{ fontSize: 24 }} />

@@ -192,7 +192,7 @@ export const useRecognitions = ({
   const onLayoutIndexChange = async (value: string) => {
     setSelectedLayout(value);
     setControlGroupState(0);
-    if (value !== "default+translate") {
+    if (value !== "translate") {
       return;
     }
     regions.forEach(async (region) => {

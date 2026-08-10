@@ -1,4 +1,5 @@
 import { FormControl, FormHelperText, FormLabel, MenuItem, Select, Theme } from "@mui/material";
+import { KeyboardArrowDown as KeyboardArrowDownIcon } from "@mui/icons-material";
 
 interface Item {
   label: string;
@@ -29,6 +30,7 @@ export const SelectInput = ({ label, items, value, onChange, helperText }: Selec
           onChange(event.target.value);
         }}
         displayEmpty
+        IconComponent={KeyboardArrowDownIcon}
         inputProps={{
           "aria-label": "Without label"
         }}
@@ -54,8 +56,10 @@ export const SelectInput = ({ label, items, value, onChange, helperText }: Selec
           },
           "& .MuiSelect-icon": {
             color: "common.black",
-            top: 6,
-            right: 4
+            fontSize: 32,
+            top: "50%",
+            right: 4,
+            transform: "translateY(-50%)"
           }
         })}
       >

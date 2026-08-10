@@ -34,7 +34,6 @@ export const LeftContent = ({
   onDeleteFolderButtonClick: (folder: Folder) => void;
   addFolder: (name: string) => Promise<void>;
 }) => {
-
   if (isLoading) {
     return <LayoutLoading />;
   }
@@ -74,7 +73,7 @@ export const LeftContent = ({
           placeholder="Add Folder"
           rightButtons={[
             {
-              icon: <AddIcon sx={{ fontSize: 24 }} />,
+              icon: <AddIcon sx={{ fontSize: 26 }} />,
               onClickWithText: (text) => addFolder(text)
             }
           ]}

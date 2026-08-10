@@ -20,7 +20,7 @@ const Bottom = ({
 }) => (
   <Stack sx={[bottomSx, { gap: "1px" }]}>
     <WButton onClick={onAddButtonClick} sx={iconButtonSx}>
-      <AddIcon sx={{ fontSize: 24 }} />
+      <AddIcon sx={{ fontSize: 26 }} />
     </WButton>
     <WButton isActivated={controlGroupState === 1} sx={iconButtonSx} onClick={onDeleteButtonClick}>
       <CloseIcon sx={{ fontSize: 24 }} />

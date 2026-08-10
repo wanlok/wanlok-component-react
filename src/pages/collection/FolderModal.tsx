@@ -67,12 +67,7 @@ export const FolderModal = ({
     >
       <Stack sx={{ gap: 2, p: 2 }}>
         <StyledContainer sx={{ p: 1 }}>
-          <TextInput
-            label="Name"
-            value={folderName}
-            onChange={(value) => setFolderName(value)}
-            inputSx={{ flex: 1 }}
-          />
+          <TextInput label="Name" value={folderName} onChange={(value) => setFolderName(value)} inputSx={{ flex: 1 }} />
         </StyledContainer>
         <Divider />
         <Stack sx={{ gap: 1 }}>
@@ -89,7 +84,7 @@ export const FolderModal = ({
               }}
               sx={iconButtonSx}
             >
-              <AddIcon sx={{ fontSize: 24 }} />
+              <AddIcon sx={{ fontSize: 26 }} />
             </WButton>
             <WButton isActivated={isDeleting} onClick={() => setIsDeleting(!isDeleting)} sx={iconButtonSx}>
               <CloseIcon sx={{ fontSize: 24 }} />

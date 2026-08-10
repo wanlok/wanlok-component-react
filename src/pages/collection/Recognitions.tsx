@@ -12,8 +12,8 @@ import { TextRegion } from "./ImageRegionOverlay";
 
 export const LAYOUT_ITEMS = [
   { label: "Default", value: "default", isAutoRegionDetectionEnabled: false },
-  { label: "Default + Search", value: "default+search", isAutoRegionDetectionEnabled: false },
-  { label: "Default + Translate", value: "default+translate", isAutoRegionDetectionEnabled: false },
+  { label: "Search", value: "search", isAutoRegionDetectionEnabled: false },
+  { label: "Translate", value: "translate", isAutoRegionDetectionEnabled: false },
   { label: "Quiz", value: "quiz", isAutoRegionDetectionEnabled: true }
 ];
 
@@ -32,7 +32,7 @@ const ANSWER_DELIMITER_ITEMS = [
   { label: "- ..., - ..., - ..., - ..., ...", value: "dash" }
 ];
 
-const DefaultTranslateContainer = ({
+const TranslateContainer = ({
   translateLanguage,
   translatedText,
   isTranslating,
@@ -161,10 +161,10 @@ const RegionRow = ({
         {selectedLayout === "quiz" && (
           <SelectInput label="Type" items={QUIZ_TYPE_ITEMS} value={region.type ?? "question"} onChange={onTypeChange} />
         )}
-        {["default+translate", "quiz"].includes(selectedLayout) && (
+        {["translate", "quiz"].includes(selectedLayout) && (
           <>
-            {selectedLayout === "default+translate" && (
-              <DefaultTranslateContainer
+            {selectedLayout === "translate" && (
+              <TranslateContainer
                 translateLanguage={region.translateLanguage ?? ""}
                 translatedText={region.translatedText ?? ""}
                 isTranslating={isTranslating}
@@ -183,7 +183,7 @@ const RegionRow = ({
           </>
         )}
       </Stack>
-      {selectedLayout === "default+search" && controlGroupState === 0 && region.recognisedText && (
+      {selectedLayout === "search" && controlGroupState === 0 && region.recognisedText && (
         <ControlGroup scrollHorizontally={false} searchQuery={region.recognisedText} />
       )}
       {controlGroupState === 1 && (
@@ -218,7 +218,7 @@ export const RecognitionsTop = ({
       <SelectInput items={LAYOUT_ITEMS} value={selectedLayout} onChange={onLayoutChange} />
     </StyledContainer>
     <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
-      <AddIcon sx={{ fontSize: 24 }} />
+      <AddIcon sx={{ fontSize: 26 }} />
     </WButton>
     <WButton isActivated={controlGroupState === 1} onClick={onRearrangeButtonClick} sx={iconButtonSx}>
       <SwapHorizIcon sx={{ fontSize: 26 }} />

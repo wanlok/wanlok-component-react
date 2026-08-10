@@ -178,7 +178,7 @@ export const ImageRecognitionModal = ({
         mobile ? (
           <>
             <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
-              <AddIcon sx={{ fontSize: 24 }} />
+              <AddIcon sx={{ fontSize: 26 }} />
             </WButton>
             <ImageModalTopControlGroup
               onZoomInClick={() => setZoom("original")}
