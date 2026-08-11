@@ -296,8 +296,8 @@ export const ImageRecognitionModal = ({
             onDetailsClick={onDetailsClick}
             tabs={rightTabs}
             selectedTab={desktopSelectedTab}
-            onPreviousClick={onPreviousClick}
-            onNextClick={onNextClick}
+            onPreviousClick={desktopSelectedTab === 1 ? undefined : onPreviousClick}
+            onNextClick={desktopSelectedTab === 1 ? undefined : onNextClick}
             scrollbarWidths={scrollbarWidths}
           />
         )}
