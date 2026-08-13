@@ -20,10 +20,20 @@ import { Recognitions, RecognitionsTop } from "./Recognitions";
 import { useRecognitions } from "./useRecognitions";
 import { ImageMetaContainer } from "../../components/ImageMetaContainer";
 import { ImageMeta } from "../../services/Types";
+import { SelectInput } from "../../components/SelectInput";
+
+const IMAGE_ALIGNMENT_ITEMS = [
+  { label: "Top", value: "top" },
+  { label: "Center", value: "center" },
+  { label: "Bottom", value: "bottom" }
+];
 
 const Details = ({
   editedName,
   onEditedNameChange,
+  src,
+  editedImageAlignment,
+  onEditedImageAlignmentChange,
   editedAttributes,
   onEditedAttributesChange,
   folderAttributes,
@@ -31,6 +41,9 @@ const Details = ({
 }: {
   editedName: string;
   onEditedNameChange: (name: string) => void;
+  src: string;
+  editedImageAlignment: string;
+  onEditedImageAlignmentChange: (imageAlignment: string) => void;
   editedAttributes: { [key: string]: string };
   onEditedAttributesChange: (attributes: { [key: string]: string }) => void;
   folderAttributes: { name: string }[];
@@ -40,6 +53,33 @@ const Details = ({
     <Stack sx={{ gap: "1px" }}>
       <StyledContainer sx={{ p: 1 }}>
         <TextInput label="Name" value={editedName} onChange={onEditedNameChange} inputSx={{ flex: 1 }} />
+      </StyledContainer>
+      <StyledContainer sx={{ flexDirection: "row", gap: 1, p: 1 }}>
+        <Stack sx={{ flex: 1 }}>
+          <SelectInput
+            label="Image Alignment"
+            items={IMAGE_ALIGNMENT_ITEMS}
+            value={editedImageAlignment}
+            onChange={onEditedImageAlignmentChange}
+          />
+        </Stack>
+        <Box sx={{ aspectRatio: "16/9", position: "relative" }}>
+          <Box
+            component="img"
+            src={src}
+            alt=""
+            sx={{
+              display: "block",
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: editedImageAlignment
+            }}
+          />
+        </Box>
       </StyledContainer>
       {folderAttributes.map(({ name: attributeName }, i) => (
         <StyledContainer key={`attribute-${i}`} sx={{ p: 1 }}>
@@ -60,6 +100,7 @@ export const ImageRecognitionModal = ({
   open,
   src,
   name,
+  imageAlignment,
   attributes,
   layout,
   textRegions,
@@ -73,6 +114,7 @@ export const ImageRecognitionModal = ({
   open: boolean;
   src: string;
   name: string;
+  imageAlignment: string;
   attributes: { [key: string]: string };
   layout: string;
   textRegions: TextRegion[];
@@ -82,6 +124,7 @@ export const ImageRecognitionModal = ({
   onNextClick?: () => void;
   onSaveButtonClick: (
     name: string,
+    imageAlignment: string,
     attributes: { [key: string]: string },
     layout: string,
     textRegions: TextRegion[]
@@ -93,6 +136,7 @@ export const ImageRecognitionModal = ({
   const navigate = useNavigate();
   const { id: folderId, itemId, tab } = useParams();
   const [editedName, setEditedName] = useState(name);
+  const [editedImageAlignment, setEditedImageAlignment] = useState(imageAlignment);
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
   const [desktopSelectedTab, setDesktopSelectedTab] = useState(tab === "recognitions" ? 1 : 0);
   const [mobileSelectedTab, setMobileSelectedTab] = useState(tab === "recognitions" ? 2 : 0);
@@ -225,7 +269,7 @@ export const ImageRecognitionModal = ({
           <YesNoButtons
             yesLabel="Save"
             onYesClick={() => {
-              onSaveButtonClick(editedName, editedAttributes, selectedLayout, regions);
+              onSaveButtonClick(editedName, editedImageAlignment, editedAttributes, selectedLayout, regions);
               closeModal();
             }}
             noLabel="Cancel"
@@ -238,6 +282,9 @@ export const ImageRecognitionModal = ({
           <Details
             editedName={editedName}
             onEditedNameChange={setEditedName}
+            src={src}
+            editedImageAlignment={editedImageAlignment}
+            onEditedImageAlignmentChange={setEditedImageAlignment}
             editedAttributes={editedAttributes}
             onEditedAttributesChange={setEditedAttributes}
             folderAttributes={folderAttributes}

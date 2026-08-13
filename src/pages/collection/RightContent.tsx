@@ -53,7 +53,14 @@ export const RightContent = ({
   updateCollectionSequences: (type: string, id: string, direction: Direction) => void;
   addCollectionItems: (collectionId: string, text: string) => Promise<CollectionCounts | undefined>;
   addCollectionFiles: (collectionId: string) => Promise<{ counts: CollectionCounts; sequences?: string[]; attributes?: CollectionAttributes } | undefined>;
-  updateCollectionFile: (id: string, name: string, attributes: { [key: string]: string }, layout: string, textRegions: TextRegion[]) => Promise<void>;
+  updateCollectionFile: (
+    id: string,
+    name: string,
+    imageAlignment: string,
+    attributes: { [key: string]: string },
+    layout: string,
+    textRegions: TextRegion[]
+  ) => Promise<void>;
   updateCollectionVideo: (
     type: "youtubeRegular" | "youtubeShorts",
     id: string,
@@ -70,6 +77,7 @@ export const RightContent = ({
     id: string;
     src: string;
     name: string;
+    imageAlignment: string;
     attributes: { [key: string]: string };
     layout: string;
     textRegions: TextRegion[];
@@ -79,6 +87,7 @@ export const RightContent = ({
         id: file[0],
         src: file[1].url,
         name: file[1].name,
+        imageAlignment: file[1].imageAlignment ?? "top",
         attributes: file[1].attributes ?? {},
         layout: file[1].layout ?? "default",
         textRegions: file[1].textRegions ?? [],
@@ -194,6 +203,7 @@ export const RightContent = ({
         open={Boolean(selectedFile)}
         src={selectedFile?.src ?? ""}
         name={selectedFile?.name ?? ""}
+        imageAlignment={selectedFile?.imageAlignment ?? "top"}
         attributes={selectedFile?.attributes ?? {}}
         layout={selectedFile?.layout ?? "default"}
         textRegions={selectedFile?.textRegions ?? []}
@@ -201,9 +211,9 @@ export const RightContent = ({
         type={selectedFile?.type ?? ""}
         onPreviousClick={previousItem ? () => navigateToItem(previousItem) : undefined}
         onNextClick={nextItem ? () => navigateToItem(nextItem) : undefined}
-        onSaveButtonClick={async (name, attributes, layout, textRegions) => {
+        onSaveButtonClick={async (name, imageAlignment, attributes, layout, textRegions) => {
           if (selectedFile) {
-            await updateCollectionFile(selectedFile.id, name, attributes, layout, textRegions);
+            await updateCollectionFile(selectedFile.id, name, imageAlignment, attributes, layout, textRegions);
           }
         }}
         onClose={() => {

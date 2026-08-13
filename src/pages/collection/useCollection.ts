@@ -224,6 +224,7 @@ export const useCollection = (
   const updateCollectionFile = async (
     id: string,
     name: string,
+    imageAlignment: string,
     attributes: { [key: string]: string },
     layout: string,
     textRegions: TextRegion[]
@@ -233,7 +234,7 @@ export const useCollection = (
         ...collectionDocument,
         files: {
           ...collectionDocument.files,
-          [id]: { ...collectionDocument.files[id], name, attributes, layout, textRegions }
+          [id]: { ...collectionDocument.files[id], name, imageAlignment, attributes, layout, textRegions }
         }
       };
       const docRef = doc(db, collectionName, documentId);

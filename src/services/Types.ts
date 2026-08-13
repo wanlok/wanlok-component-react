@@ -98,6 +98,7 @@ export interface CloudinaryFileInfo extends ParentInfo {
   url: string;
   layout?: string;
   textRegions?: TextRegion[];
+  imageAlignment?: string;
 }
 
 export type ImageMeta = { width: number; height: number; type: string };
