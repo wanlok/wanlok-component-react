@@ -56,7 +56,7 @@ export const RightContent = ({
   updateCollectionFile: (
     id: string,
     name: string,
-    imageAlignment: string,
+    previewAlignment: string,
     attributes: { [key: string]: string },
     layout: string,
     textRegions: TextRegion[]
@@ -77,7 +77,7 @@ export const RightContent = ({
     id: string;
     src: string;
     name: string;
-    imageAlignment: string;
+    previewAlignment: string;
     attributes: { [key: string]: string };
     layout: string;
     textRegions: TextRegion[];
@@ -87,7 +87,7 @@ export const RightContent = ({
         id: file[0],
         src: file[1].url,
         name: file[1].name,
-        imageAlignment: file[1].imageAlignment ?? "top",
+        previewAlignment: file[1].previewAlignment ?? "top",
         attributes: file[1].attributes ?? {},
         layout: file[1].layout ?? "default",
         textRegions: file[1].textRegions ?? [],
@@ -203,7 +203,7 @@ export const RightContent = ({
         open={Boolean(selectedFile)}
         src={selectedFile?.src ?? ""}
         name={selectedFile?.name ?? ""}
-        imageAlignment={selectedFile?.imageAlignment ?? "top"}
+        previewAlignment={selectedFile?.previewAlignment ?? "top"}
         attributes={selectedFile?.attributes ?? {}}
         layout={selectedFile?.layout ?? "default"}
         textRegions={selectedFile?.textRegions ?? []}
@@ -211,9 +211,9 @@ export const RightContent = ({
         type={selectedFile?.type ?? ""}
         onPreviousClick={previousItem ? () => navigateToItem(previousItem) : undefined}
         onNextClick={nextItem ? () => navigateToItem(nextItem) : undefined}
-        onSaveButtonClick={async (name, imageAlignment, attributes, layout, textRegions) => {
+        onSaveButtonClick={async (name, previewAlignment, attributes, layout, textRegions) => {
           if (selectedFile) {
-            await updateCollectionFile(selectedFile.id, name, imageAlignment, attributes, layout, textRegions);
+            await updateCollectionFile(selectedFile.id, name, previewAlignment, attributes, layout, textRegions);
           }
         }}
         onClose={() => {

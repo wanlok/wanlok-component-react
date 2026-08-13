@@ -22,7 +22,7 @@ import { ImageMetaContainer } from "../../components/ImageMetaContainer";
 import { ImageMeta } from "../../services/Types";
 import { SelectInput } from "../../components/SelectInput";
 
-const IMAGE_ALIGNMENT_ITEMS = [
+const PREVIEW_ALIGNMENT_ITEMS = [
   { label: "Top", value: "top" },
   { label: "Center", value: "center" },
   { label: "Bottom", value: "bottom" }
@@ -32,8 +32,8 @@ const Details = ({
   editedName,
   onEditedNameChange,
   src,
-  editedImageAlignment,
-  onEditedImageAlignmentChange,
+  editedPreviewAlignment,
+  onEditedPreviewAlignmentChange,
   editedAttributes,
   onEditedAttributesChange,
   folderAttributes,
@@ -42,8 +42,8 @@ const Details = ({
   editedName: string;
   onEditedNameChange: (name: string) => void;
   src: string;
-  editedImageAlignment: string;
-  onEditedImageAlignmentChange: (imageAlignment: string) => void;
+  editedPreviewAlignment: string;
+  onEditedPreviewAlignmentChange: (previewAlignment: string) => void;
   editedAttributes: { [key: string]: string };
   onEditedAttributesChange: (attributes: { [key: string]: string }) => void;
   folderAttributes: { name: string }[];
@@ -57,13 +57,13 @@ const Details = ({
       <StyledContainer sx={{ flexDirection: "row", gap: 1, p: 1 }}>
         <Stack sx={{ flex: 1 }}>
           <SelectInput
-            label="Image Alignment"
-            items={IMAGE_ALIGNMENT_ITEMS}
-            value={editedImageAlignment}
-            onChange={onEditedImageAlignmentChange}
+            label="Preview Alignment"
+            items={PREVIEW_ALIGNMENT_ITEMS}
+            value={editedPreviewAlignment}
+            onChange={onEditedPreviewAlignmentChange}
           />
         </Stack>
-        <Box sx={{ aspectRatio: "16/9", position: "relative" }}>
+        <Stack sx={{ aspectRatio: "16/9", position: "relative" }}>
           <Box
             component="img"
             src={src}
@@ -76,10 +76,10 @@ const Details = ({
               width: "100%",
               height: "100%",
               objectFit: "cover",
-              objectPosition: editedImageAlignment
+              objectPosition: editedPreviewAlignment
             }}
           />
-        </Box>
+        </Stack>
       </StyledContainer>
       {folderAttributes.map(({ name: attributeName }, i) => (
         <StyledContainer key={`attribute-${i}`} sx={{ p: 1 }}>
@@ -100,7 +100,7 @@ export const ImageRecognitionModal = ({
   open,
   src,
   name,
-  imageAlignment,
+  previewAlignment,
   attributes,
   layout,
   textRegions,
@@ -114,7 +114,7 @@ export const ImageRecognitionModal = ({
   open: boolean;
   src: string;
   name: string;
-  imageAlignment: string;
+  previewAlignment: string;
   attributes: { [key: string]: string };
   layout: string;
   textRegions: TextRegion[];
@@ -124,7 +124,7 @@ export const ImageRecognitionModal = ({
   onNextClick?: () => void;
   onSaveButtonClick: (
     name: string,
-    imageAlignment: string,
+    previewAlignment: string,
     attributes: { [key: string]: string },
     layout: string,
     textRegions: TextRegion[]
@@ -136,7 +136,7 @@ export const ImageRecognitionModal = ({
   const navigate = useNavigate();
   const { id: folderId, itemId, tab } = useParams();
   const [editedName, setEditedName] = useState(name);
-  const [editedImageAlignment, setEditedImageAlignment] = useState(imageAlignment);
+  const [editedPreviewAlignment, setEditedPreviewAlignment] = useState(previewAlignment);
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
   const [desktopSelectedTab, setDesktopSelectedTab] = useState(tab === "recognitions" ? 1 : 0);
   const [mobileSelectedTab, setMobileSelectedTab] = useState(tab === "recognitions" ? 2 : 0);
@@ -269,7 +269,7 @@ export const ImageRecognitionModal = ({
           <YesNoButtons
             yesLabel="Save"
             onYesClick={() => {
-              onSaveButtonClick(editedName, editedImageAlignment, editedAttributes, selectedLayout, regions);
+              onSaveButtonClick(editedName, editedPreviewAlignment, editedAttributes, selectedLayout, regions);
               closeModal();
             }}
             noLabel="Cancel"
@@ -283,8 +283,8 @@ export const ImageRecognitionModal = ({
             editedName={editedName}
             onEditedNameChange={setEditedName}
             src={src}
-            editedImageAlignment={editedImageAlignment}
-            onEditedImageAlignmentChange={setEditedImageAlignment}
+            editedPreviewAlignment={editedPreviewAlignment}
+            onEditedPreviewAlignmentChange={setEditedPreviewAlignment}
             editedAttributes={editedAttributes}
             onEditedAttributesChange={setEditedAttributes}
             folderAttributes={folderAttributes}

@@ -61,13 +61,13 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("charts", uuid)}
           />
         ))}
-        {files.map(([id, { name, url, imageAlignment, textRegions, attributes }], i) => {
+        {files.map(([id, { name, url, previewAlignment, textRegions, attributes }], i) => {
           const fileName = getAttributeFileName(attributes);
           return (
             <ImageTitle
               key={`files-${i}`}
               imageUrl={url}
-              imageSx={{ objectPosition: imageAlignment ?? "top" }}
+              imageSx={{ objectPosition: previewAlignment ?? "top" }}
               name={name}
               onClick={() => onFileClick(id, url, name)}
               aspectRatio="16/9"
