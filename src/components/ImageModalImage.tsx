@@ -20,17 +20,14 @@ export const ImageModalImage = ({
 }) => (
   <Stack
     ref={scrollRef}
-    sx={
-      fitScreen
-        ? {
-            height: "100%",
-            overflow: "hidden",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "common.black"
-          }
-        : { height: "100%", overflow: "auto", alignItems: "flex-start", backgroundColor: "common.black" }
-    }
+    sx={{
+      height: "100%",
+      backgroundColor: "common.black",
+      userSelect: "none",
+      ...(fitScreen
+        ? { alignItems: "center", justifyContent: "center" }
+        : { overflow: "auto", alignItems: "flex-start" })
+    }}
   >
     <Box
       sx={{
