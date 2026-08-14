@@ -1,10 +1,11 @@
 import { useRef } from "react";
-import { Avatar, Divider, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Avatar, Divider, Skeleton, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { CropFree as CropFreeIcon } from "@mui/icons-material";
 import { ChartItem, CloudinaryFileInfo, CollectionAttributes, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { WChip } from "../../components/WChip";
 import { ImageTitle } from "../../components/ImageTitle";
+import { OneLineTypography } from "../../components/OneLineTypography";
 import { getVisibleAttributeText } from "../../utils/getVisibleAttributeText";
 
 export const CollectionList = ({
@@ -75,9 +76,9 @@ export const CollectionList = ({
               aspectRatio="16/9"
               bottomChildren={
                 visibleAttributeText ? (
-                  <Typography variant="body2" sx={{ color: "common.white" }}>
+                  <OneLineTypography variant="body2" sx={{ color: "common.white" }}>
                     {visibleAttributeText}
-                  </Typography>
+                  </OneLineTypography>
                 ) : undefined
               }
               rightChildren={
@@ -151,9 +152,9 @@ export const CollectionList = ({
               aspectRatio="16/9"
               bottomChildren={
                 visibleAttributeText ? (
-                  <Typography variant="body2" sx={{ color: "common.white" }}>
+                  <OneLineTypography variant="body2" sx={{ color: "common.white" }}>
                     {visibleAttributeText}
-                  </Typography>
+                  </OneLineTypography>
                 ) : undefined
               }
               leftMost={i === 0}
@@ -177,9 +178,9 @@ export const CollectionList = ({
               aspectRatio="16/9"
               bottomChildren={
                 visibleAttributeText ? (
-                  <Typography variant="body2" sx={{ color: "common.white" }}>
+                  <OneLineTypography variant="body2" sx={{ color: "common.white" }}>
                     {visibleAttributeText}
-                  </Typography>
+                  </OneLineTypography>
                 ) : undefined
               }
               leftMost={i === 0}
