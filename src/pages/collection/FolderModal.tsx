@@ -95,23 +95,24 @@ export const FolderModal = ({
               <StyledContainer
                 key={`attribute-${i}`}
                 isError={duplicateIndices.has(i)}
-                sx={{ flexDirection: "row", alignItems: "center", gap: 1 }}
+                sx={{ flexDirection: "row", gap: 1 }}
               >
                 <Stack
                   sx={{
                     flex: 1,
                     flexDirection: "row",
                     py: 1,
-                    pl: 1,
-                    pr: isDeleting ? 0 : 1,
-                    gap: 1,
-                    alignItems: "center",
-                    justifyContent: "center",
-                    backgroundColor: "background.default"
+                    pr: isDeleting ? 0 : 1
                   }}
                 >
-                  <Stack sx={{ flex: 1 }}>
+                  <Stack sx={{ pt: 1, width: 32, textAlign: "center" }}>
+                    <Typography variant="body1" sx={{ color: "text.secondary" }}>
+                      {i + 1}
+                    </Typography>
+                  </Stack>
+                  <Stack sx={{ flex: 1, gap: 1 }}>
                     <TextInput
+                      placeholder="Attribute Name"
                       value={name}
                       onChange={(value) => {
                         const newAttributes = [...attributes];
@@ -120,8 +121,6 @@ export const FolderModal = ({
                       }}
                       inputSx={{ flex: 1 }}
                     />
-                  </Stack>
-                  <Stack sx={{ flex: 1 }}>
                     <SelectInput
                       items={options}
                       value={type}
