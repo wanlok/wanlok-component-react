@@ -4,10 +4,17 @@ import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
 import { useState } from "react";
 import { iconButtonSx, WButton } from "../../components/WButton";
-import { CollectionAttributes, Folder } from "../../services/Types";
+import { CollectionAttributes, Direction, Folder } from "../../services/Types";
 import { WModal } from "../../components/WModal";
 import { YesNoButtons } from "../../components/YesNoButtons";
-import { Add as AddIcon, Close as CloseIcon, Edit as EditIcon } from "@mui/icons-material";
+import {
+  Add as AddIcon,
+  Close as CloseIcon,
+  Edit as EditIcon,
+  KeyboardArrowDown as KeyboardArrowDownIcon,
+  KeyboardArrowUp as KeyboardArrowUpIcon,
+  SwapHoriz as SwapHorizIcon
+} from "@mui/icons-material";
 
 const options = [
   { label: "Text", value: "text" },
@@ -29,7 +36,22 @@ export const FolderModal = ({
   const [attributes, setAttributes] = useState<CollectionAttributes>(
     selectedFolder ? selectedFolder.attributes.map((attribute) => ({ ...attribute })) : []
   );
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [controlGroupState, setControlGroupState] = useState(0);
+
+  const moveAttribute = (index: number, direction: Direction) => {
+    const newAttributes = [...attributes];
+    if (direction === Direction.left && index > 0) {
+      const temp = newAttributes[index];
+      newAttributes[index] = newAttributes[index - 1];
+      newAttributes[index - 1] = temp;
+      setAttributes(newAttributes);
+    } else if (direction === Direction.right && index < newAttributes.length - 1) {
+      const temp = newAttributes[index];
+      newAttributes[index] = newAttributes[index + 1];
+      newAttributes[index + 1] = temp;
+      setAttributes(newAttributes);
+    }
+  };
 
   const nameCounts = new Map<string, number[]>();
   attributes.forEach(({ name }, i) => {
@@ -86,7 +108,18 @@ export const FolderModal = ({
             >
               <AddIcon sx={{ fontSize: 26 }} />
             </WButton>
-            <WButton isActivated={isDeleting} onClick={() => setIsDeleting(!isDeleting)} sx={iconButtonSx}>
+            <WButton
+              isActivated={controlGroupState === 2}
+              onClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
+              sx={iconButtonSx}
+            >
+              <SwapHorizIcon sx={{ fontSize: 26 }} />
+            </WButton>
+            <WButton
+              isActivated={controlGroupState === 3}
+              onClick={() => setControlGroupState(controlGroupState === 3 ? 0 : 3)}
+              sx={iconButtonSx}
+            >
               <CloseIcon sx={{ fontSize: 24 }} />
             </WButton>
           </Stack>
@@ -102,7 +135,7 @@ export const FolderModal = ({
                     flex: 1,
                     flexDirection: "row",
                     py: 1,
-                    pr: isDeleting ? 0 : 1
+                    pr: controlGroupState === 0 ? 1 : 0
                   }}
                 >
                   <Stack sx={{ pt: 1, width: 32, textAlign: "center" }}>
@@ -135,7 +168,21 @@ export const FolderModal = ({
                     />
                   </Stack>
                 </Stack>
-                {isDeleting && (
+                {controlGroupState === 2 && (
+                  <Stack sx={{ gap: "1px" }}>
+                    {i > 0 && (
+                      <WButton onClick={() => moveAttribute(i, Direction.left)} sx={iconButtonSx}>
+                        <KeyboardArrowUpIcon sx={{ fontSize: 24 }} />
+                      </WButton>
+                    )}
+                    {i < attributes.length - 1 && (
+                      <WButton onClick={() => moveAttribute(i, Direction.right)} sx={iconButtonSx}>
+                        <KeyboardArrowDownIcon sx={{ fontSize: 24 }} />
+                      </WButton>
+                    )}
+                  </Stack>
+                )}
+                {controlGroupState === 3 && (
                   <WButton onClick={() => setAttributes(attributes.filter((_, j) => j !== i))} sx={iconButtonSx}>
                     <CloseIcon sx={{ fontSize: 24 }} />
                   </WButton>
