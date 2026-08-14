@@ -110,7 +110,7 @@ export const FolderModal = ({
                 if (!attributes) {
                   return;
                 }
-                setAttributes([...attributes, { name: "", type: "text" }]);
+                setAttributes([...attributes, { name: "", type: "text", visible: true }]);
               }}
               sx={iconButtonSx}
             >
