@@ -13,7 +13,9 @@ import {
   Edit as EditIcon,
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon,
-  SwapHoriz as SwapHorizIcon
+  SwapHoriz as SwapHorizIcon,
+  Visibility as VisibilityIcon,
+  VisibilityOff as VisibilityOffIcon
 } from "@mui/icons-material";
 
 const options = [
@@ -51,6 +53,12 @@ export const FolderModal = ({
       newAttributes[index + 1] = temp;
       setAttributes(newAttributes);
     }
+  };
+
+  const toggleAttributeVisible = (index: number) => {
+    const newAttributes = [...attributes];
+    newAttributes[index] = { ...newAttributes[index], visible: !newAttributes[index].visible };
+    setAttributes(newAttributes);
   };
 
   const nameCounts = new Map<string, number[]>();
@@ -109,6 +117,13 @@ export const FolderModal = ({
               <AddIcon sx={{ fontSize: 26 }} />
             </WButton>
             <WButton
+              isActivated={controlGroupState === 1}
+              onClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
+              sx={iconButtonSx}
+            >
+              <VisibilityIcon sx={{ fontSize: 26 }} />
+            </WButton>
+            <WButton
               isActivated={controlGroupState === 2}
               onClick={() => setControlGroupState(controlGroupState === 2 ? 0 : 2)}
               sx={iconButtonSx}
@@ -124,7 +139,7 @@ export const FolderModal = ({
             </WButton>
           </Stack>
           <Stack sx={{ gap: "1px" }}>
-            {attributes.map(({ name, type }, i) => (
+            {attributes.map(({ name, type, visible }, i) => (
               <StyledContainer
                 key={`attribute-${i}`}
                 isError={duplicateIndices.has(i)}
@@ -168,6 +183,11 @@ export const FolderModal = ({
                     />
                   </Stack>
                 </Stack>
+                {controlGroupState === 1 && (
+                  <WButton onClick={() => toggleAttributeVisible(i)} sx={iconButtonSx}>
+                    {visible ? <VisibilityIcon sx={{ fontSize: 24 }} /> : <VisibilityOffIcon sx={{ fontSize: 24 }} />}
+                  </WButton>
+                )}
                 {controlGroupState === 2 && (
                   <Stack sx={{ gap: "1px" }}>
                     {i > 0 && (

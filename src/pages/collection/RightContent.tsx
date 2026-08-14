@@ -143,6 +143,7 @@ export const RightContent = ({
         youTubeShortVideos={youTubeShortVideos}
         loadingCount={isLoading ? 8 : loadingCount}
         controlGroupState={controlGroupState}
+        folderAttributes={selectedFolder?.attributes ?? []}
         onDeleteButtonClick={async (type, id) => {
           const counts = await deleteCollectionItem(type, id);
           if (counts) {

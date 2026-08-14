@@ -1,11 +1,11 @@
 import { useRef } from "react";
 import { Avatar, Divider, Skeleton, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { CropFree as CropFreeIcon } from "@mui/icons-material";
-import { ChartItem, CloudinaryFileInfo, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
+import { ChartItem, CloudinaryFileInfo, CollectionAttributes, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { WChip } from "../../components/WChip";
 import { ImageTitle } from "../../components/ImageTitle";
-import { getAttributeFileName } from "../../utils/getAttributeFileName";
+import { getVisibleAttributeText } from "../../utils/getVisibleAttributeText";
 
 export const CollectionList = ({
   charts,
@@ -16,6 +16,7 @@ export const CollectionList = ({
   youTubeShortVideos,
   loadingCount,
   controlGroupState,
+  folderAttributes,
   onFileClick,
   onVideoClick,
   onDeleteButtonClick,
@@ -30,6 +31,7 @@ export const CollectionList = ({
   youTubeShortVideos: [string, YouTubeInfo][];
   loadingCount: number;
   controlGroupState: number;
+  folderAttributes: CollectionAttributes;
   onFileClick: (id: string, src: string, name: string) => void;
   onVideoClick: (
     type: "youtubeRegular" | "youtubeShorts",
@@ -62,7 +64,7 @@ export const CollectionList = ({
           />
         ))}
         {files.map(([id, { name, url, previewAlignment, textRegions, attributes }], i) => {
-          const fileName = getAttributeFileName(attributes);
+          const visibleAttributeText = getVisibleAttributeText(folderAttributes, attributes);
           return (
             <ImageTitle
               key={`files-${i}`}
@@ -72,13 +74,11 @@ export const CollectionList = ({
               onClick={() => onFileClick(id, url, name)}
               aspectRatio="16/9"
               bottomChildren={
-                <>
-                  {fileName && (
-                    <Typography variant="body2" sx={{ color: "common.white" }}>
-                      {fileName}
-                    </Typography>
-                  )}
-                </>
+                visibleAttributeText ? (
+                  <Typography variant="body2" sx={{ color: "common.white" }}>
+                    {visibleAttributeText}
+                  </Typography>
+                ) : undefined
               }
               rightChildren={
                 <Stack sx={{ justifyContent: "center" }}>
@@ -139,39 +139,59 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("steam", appId)}
           />
         ))}
-        {youTubeShortVideos.map(([id, { name, imageUrl, attributes }], i) => (
-          <ImageTitle
-            key={`youtube-shorts-${i}`}
-            imageUrl={imageUrl}
-            imageSx={{ objectFit: "contain" }}
-            name={name}
-            onClick={() => onVideoClick("youtubeShorts", id, name, attributes ?? {})}
-            aspectRatio="16/9"
-            leftMost={i === 0}
-            rightMost={i === youTubeShortVideos.length - 1}
-            scrollHorizontally={!mobile}
-            controlGroupState={controlGroupState}
-            onDeleteButtonClick={() => onDeleteButtonClick("youtubeShorts", id)}
-            onLeftButtonClick={() => onLeftButtonClick("youtubeShorts", id)}
-            onRightButtonClick={() => onRightButtonClick("youtubeShorts", id)}
-          />
-        ))}
-        {youTubeRegularVideos.map(([id, { name, imageUrl, attributes }], i) => (
-          <ImageTitle
-            key={`youtube-regular-${i}`}
-            imageUrl={imageUrl}
-            name={name}
-            onClick={() => onVideoClick("youtubeRegular", id, name, attributes ?? {})}
-            aspectRatio="16/9"
-            leftMost={i === 0}
-            rightMost={i === youTubeRegularVideos.length - 1}
-            scrollHorizontally={!mobile}
-            controlGroupState={controlGroupState}
-            onDeleteButtonClick={() => onDeleteButtonClick("youtubeRegular", id)}
-            onLeftButtonClick={() => onLeftButtonClick("youtubeRegular", id)}
-            onRightButtonClick={() => onRightButtonClick("youtubeRegular", id)}
-          />
-        ))}
+        {youTubeShortVideos.map(([id, { name, imageUrl, attributes }], i) => {
+          const visibleAttributeText = getVisibleAttributeText(folderAttributes, attributes);
+          return (
+            <ImageTitle
+              key={`youtube-shorts-${i}`}
+              imageUrl={imageUrl}
+              imageSx={{ objectFit: "contain" }}
+              name={name}
+              onClick={() => onVideoClick("youtubeShorts", id, name, attributes ?? {})}
+              aspectRatio="16/9"
+              bottomChildren={
+                visibleAttributeText ? (
+                  <Typography variant="body2" sx={{ color: "common.white" }}>
+                    {visibleAttributeText}
+                  </Typography>
+                ) : undefined
+              }
+              leftMost={i === 0}
+              rightMost={i === youTubeShortVideos.length - 1}
+              scrollHorizontally={!mobile}
+              controlGroupState={controlGroupState}
+              onDeleteButtonClick={() => onDeleteButtonClick("youtubeShorts", id)}
+              onLeftButtonClick={() => onLeftButtonClick("youtubeShorts", id)}
+              onRightButtonClick={() => onRightButtonClick("youtubeShorts", id)}
+            />
+          );
+        })}
+        {youTubeRegularVideos.map(([id, { name, imageUrl, attributes }], i) => {
+          const visibleAttributeText = getVisibleAttributeText(folderAttributes, attributes);
+          return (
+            <ImageTitle
+              key={`youtube-regular-${i}`}
+              imageUrl={imageUrl}
+              name={name}
+              onClick={() => onVideoClick("youtubeRegular", id, name, attributes ?? {})}
+              aspectRatio="16/9"
+              bottomChildren={
+                visibleAttributeText ? (
+                  <Typography variant="body2" sx={{ color: "common.white" }}>
+                    {visibleAttributeText}
+                  </Typography>
+                ) : undefined
+              }
+              leftMost={i === 0}
+              rightMost={i === youTubeRegularVideos.length - 1}
+              scrollHorizontally={!mobile}
+              controlGroupState={controlGroupState}
+              onDeleteButtonClick={() => onDeleteButtonClick("youtubeRegular", id)}
+              onLeftButtonClick={() => onLeftButtonClick("youtubeRegular", id)}
+              onRightButtonClick={() => onRightButtonClick("youtubeRegular", id)}
+            />
+          );
+        })}
         {Array.from({ length: loadingCount }).map((_, i) => (
           <Stack key={`pending-${i}`} sx={{ bgcolor: "background.default" }}>
             <Stack sx={{ aspectRatio: "16/9", position: "relative" }}>

@@ -139,7 +139,7 @@ export type Attributes = { [key: string]: string };
 
 export type TypedAttributes = { [key: string]: number | string };
 
-export type CollectionAttributes = { name: string; type: "text" | "number" }[];
+export type CollectionAttributes = { name: string; type: "text" | "number"; visible?: boolean }[];
 
 export const emptyCollectionAttributes: CollectionAttributes = [];
 
