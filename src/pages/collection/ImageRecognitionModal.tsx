@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Box, Stack } from "@mui/material";
 import {
   Add as AddIcon,
+  Close as CloseIcon,
   Image as ImageIcon,
   Visibility as VisibilityIcon,
   ViewList as ViewListIcon
@@ -218,6 +219,13 @@ export const ImageRecognitionModal = ({
       isFullScreen={isFullScreen}
       tabs={[{ icon: <ImageIcon sx={{ fontSize: 24 }} />, label: "Image" }]}
       hideLeftLabel
+      bottom={
+        mobile ? (
+          <WButton onClick={closeModal} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
+            Cancel
+          </WButton>
+        ) : undefined
+      }
       top={
         mobile ? (
           <>

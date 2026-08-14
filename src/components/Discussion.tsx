@@ -56,17 +56,26 @@ export const DiscussionTop = ({
       onChange={onNameChange}
       rightButtons={[
         { icon: <RefreshIcon sx={{ fontSize: 24 }} />, onClick: onRefresh },
-        { icon: <CloseIcon sx={{ fontSize: 24 }} />, title: "Delete", onClick: onToggleDeleteMessages }
+        { icon: <CloseIcon sx={{ fontSize: 24 }} />, onClick: onToggleDeleteMessages }
       ]}
     />
   </StyledContainer>
 );
 
-export const DiscussionBottom = ({ onSendMessage }: { onSendMessage: (text: string) => void }) => (
+export const DiscussionBottom = ({
+  onSendMessage,
+  onClose
+}: {
+  onSendMessage: (text: string) => void;
+  onClose?: () => void;
+}) => (
   <StyledContainer sx={{ flex: 1 }}>
     <TextInputWithButtons
       placeholder="Add a message"
-      rightButtons={[{ icon: <SendIcon sx={{ fontSize: 20 }} />, onClickWithText: onSendMessage }]}
+      rightButtons={[
+        { icon: <SendIcon sx={{ fontSize: 20 }} />, onClickWithText: onSendMessage },
+        ...(onClose ? [{ icon: <CloseIcon sx={{ fontSize: 24 }} />, onClick: onClose }] : [])
+      ]}
     />
   </StyledContainer>
 );
@@ -101,4 +110,3 @@ export const DiscussionMessages = ({
     )}
   </Stack>
 );
-

@@ -11,5 +11,5 @@ export const getVisibleAttributeText = (
     .filter(({ visible }) => visible)
     .map(({ name }) => attributes[name])
     .filter((value) => value)
-    .join(" / ");
+    .join(", ");
 };

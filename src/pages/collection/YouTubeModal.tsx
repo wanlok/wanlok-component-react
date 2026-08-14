@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Box, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { ViewList as ViewListIcon, SmartDisplay as SmartDisplayIcon } from "@mui/icons-material";
+import { Close as CloseIcon, ViewList as ViewListIcon, SmartDisplay as SmartDisplayIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
 import { TextInput } from "../../components/TextInput";
 import { StyledContainer } from "../../components/StyledContainer";
+import { WButton } from "../../components/WButton";
 import { YesNoButtons } from "../../components/YesNoButtons";
 import { ModalControlGroup } from "../../components/ModalControlGroup";
 import { useModalControlGroup } from "../../components/useModalControlGroup";
@@ -50,6 +51,13 @@ export const YouTubeModal = ({
       isFullScreen={isFullScreen}
       tabs={[{ icon: <SmartDisplayIcon sx={{ fontSize: 24 }} />, label: "Video" }]}
       hideLeftLabel
+      bottom={
+        mobile ? (
+          <WButton onClick={closeModal} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
+            Cancel
+          </WButton>
+        ) : undefined
+      }
       mobileSelectedTab={mobileSelectedTab}
       onMobileSelectedTabChange={setMobileSelectedTab}
       rightTabs={isRightHidden ? undefined : rightTabs}

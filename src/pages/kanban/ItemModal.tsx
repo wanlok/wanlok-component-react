@@ -1,6 +1,11 @@
 import { ReactElement, useState } from "react";
-import { Divider, Stack, Typography } from "@mui/material";
-import { Assignment as AssignmentIcon, Chat as ChatIcon, Edit as EditIcon } from "@mui/icons-material";
+import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import {
+  Assignment as AssignmentIcon,
+  Chat as ChatIcon,
+  Close as CloseIcon,
+  Edit as EditIcon
+} from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
 import { KanbanProject } from "../../services/Types";
 import { WButton } from "../../components/WButton";
@@ -55,6 +60,8 @@ export const ItemModal = ({
   onDeleteMessage: (messageIndex: number) => void;
   onClose: () => void;
 }) => {
+  const { breakpoints } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
   const kanbanItem = project.columns[item.i].items[item.j];
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(kanbanItem.name);
@@ -63,7 +70,14 @@ export const ItemModal = ({
   const [nameHint, setNameHint] = useState("");
   const [contentHint, setContentHint] = useState("");
   const [mobileSelectedTab, setMobileSelectedTab] = useState(0);
-  const { isDeletingMessages, name: discussionName, onNameChange, onSendMessage, onToggleDeleteMessages, stackRef } = useDiscussion({
+  const {
+    isDeletingMessages,
+    name: discussionName,
+    onNameChange,
+    onSendMessage,
+    onToggleDeleteMessages,
+    stackRef
+  } = useDiscussion({
     messages: kanbanItem.messages,
     onAddMessage
   });
@@ -74,7 +88,7 @@ export const ItemModal = ({
       onMobileSelectedTabChange={setMobileSelectedTab}
       open={true}
       onClose={onClose}
-      tabs={[{ icon: <AssignmentIcon sx={{ fontSize: 24 }} />, label: isEditing ? "Edit Task" : "Task" }]}
+      tabs={[{ icon: <AssignmentIcon sx={{ fontSize: 24 }} />, label: "Task" }]}
       rightTabs={[{ icon: <ChatIcon sx={{ fontSize: 24 }} />, label: "Discussion" }]}
       top={
         <StyledContainer sx={{ flex: 1, p: 1 }}>
@@ -104,13 +118,20 @@ export const ItemModal = ({
               onNoClick={() => setIsEditing(false)}
             />
           ) : (
-            <WButton
-              onClick={() => setIsEditing(true)}
-              rightIcon={<EditIcon sx={{ fontSize: 18, mt: -0.1 }} />}
-              sx={{ flex: 1 }}
-            >
-              Edit
-            </WButton>
+            <>
+              <WButton
+                onClick={() => setIsEditing(true)}
+                rightIcon={<EditIcon sx={{ fontSize: 18, mt: -0.1 }} />}
+                sx={{ flex: 1 }}
+              >
+                Edit
+              </WButton>
+              {mobile && (
+                <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
+                  Cancel
+                </WButton>
+              )}
+            </>
           )}
         </Stack>
       }
@@ -122,7 +143,7 @@ export const ItemModal = ({
           onToggleDeleteMessages={onToggleDeleteMessages}
         />
       }
-      rightBottom={<DiscussionBottom onSendMessage={onSendMessage} />}
+      rightBottom={<DiscussionBottom onSendMessage={onSendMessage} onClose={mobile ? onClose : undefined} />}
       rightChildren={
         <DiscussionMessages
           messages={kanbanItem.messages}
@@ -142,13 +163,7 @@ export const ItemModal = ({
         {isEditing ? (
           <>
             <StyledContainer sx={{ p: 1 }}>
-              <TextInput
-                label="Name"
-                value={name}
-                onChange={setName}
-                helperText={nameHint}
-                inputSx={{ flex: 1 }}
-              />
+              <TextInput label="Name" value={name} onChange={setName} helperText={nameHint} inputSx={{ flex: 1 }} />
             </StyledContainer>
             <StyledContainer sx={{ p: 1 }}>
               <TextInput

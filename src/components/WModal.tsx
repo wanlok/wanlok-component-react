@@ -6,7 +6,6 @@ type PanelProps = {
   tabs?: TabItem[];
   selectedTab?: number;
   onTabChange?: (tab: number) => void;
-  onClose?: () => void;
   top?: ReactNode;
   bottom?: ReactNode;
   children?: ReactNode;
@@ -24,15 +23,21 @@ type RightPanelProps = {
   rightScrollRef?: RefObject<HTMLDivElement | null>;
 };
 
-const WModalContent = ({ tabs, selectedTab = 0, onTabChange, onClose, top, bottom, children, scrollRef }: PanelProps) => {
+const WModalContent = ({
+  tabs,
+  selectedTab = 0,
+  onTabChange,
+  top,
+  bottom,
+  children,
+  scrollRef
+}: PanelProps) => {
   const hasHeader = (tabs != null && tabs.length > 0) || top != null;
   return (
     <Stack sx={{ flex: 1, overflow: "hidden", backgroundColor: "background.default" }}>
       {hasHeader && (
         <Stack sx={{ gap: "1px" }}>
-          {tabs && tabs.length > 0 && (
-            <WTabs value={selectedTab} tabs={tabs} onChange={onTabChange ?? (() => {})} onClose={onClose} />
-          )}
+          {tabs && tabs.length > 0 && <WTabs value={selectedTab} tabs={tabs} onChange={onTabChange ?? (() => {})} />}
           {top && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{top}</Stack>}
         </Stack>
       )}
@@ -126,7 +131,6 @@ export const WModal = ({
                 onTabChange?.(newTab);
               }
             }}
-            onClose={onClose}
             top={mobileSelectedTab < leftTabCount ? top : rightTop}
             bottom={mobileSelectedTab < leftTabCount ? bottom : rightBottom}
           >
