@@ -172,12 +172,12 @@ export const FolderModal = ({
                   <Stack sx={{ gap: "1px" }}>
                     {i > 0 && (
                       <WButton onClick={() => moveAttribute(i, Direction.left)} sx={iconButtonSx}>
-                        <KeyboardArrowUpIcon sx={{ fontSize: 24 }} />
+                        <KeyboardArrowUpIcon sx={{ fontSize: 32 }} />
                       </WButton>
                     )}
                     {i < attributes.length - 1 && (
                       <WButton onClick={() => moveAttribute(i, Direction.right)} sx={iconButtonSx}>
-                        <KeyboardArrowDownIcon sx={{ fontSize: 24 }} />
+                        <KeyboardArrowDownIcon sx={{ fontSize: 32 }} />
                       </WButton>
                     )}
                   </Stack>
