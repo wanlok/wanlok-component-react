@@ -63,7 +63,7 @@ const Details = ({
             onChange={onEditedPreviewAlignmentChange}
           />
         </Stack>
-        <Stack sx={{ aspectRatio: "16/9", position: "relative" }}>
+        <Stack sx={{ height: 64, aspectRatio: "16/9", position: "relative" }}>
           <Box
             component="img"
             src={src}
