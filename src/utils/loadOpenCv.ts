@@ -1,35 +1,35 @@
 import type { CV } from "@techstark/opencv-js";
+import openCvUrl from "@techstark/opencv-js/dist/opencv.js?url";
 
 type OpenCvModule = CV & { onRuntimeInitialized?: () => void };
 
+declare global {
+  interface Window {
+    cv?: OpenCvModule | Promise<OpenCvModule>;
+  }
+}
+
 let cvPromise: Promise<CV> | null = null;
 
+// Loaded as a classic <script> tag (opencv.js's UMD "browser globals" fallback) rather than via a
+// JS import, so it runs completely outside Rollup's CJS/ESM interop. In production builds, that
+// interop layer was producing a wrapper for the module's Promise-based export that structurally
+// looked like a Promise but wasn't a genuine native one, breaking native await ("Method
+// Promise.prototype.then called on incompatible receiver"). window.cv ends up as the real,
+// browser-native Promise the UMD module itself constructs, with nothing bundler-related touching it.
 export const loadOpenCv = () => {
   if (!cvPromise) {
     cvPromise = (async () => {
-      const cvModule = await import("@techstark/opencv-js");
-      const maybeCv = (cvModule.default ?? cvModule) as unknown;
-      // The default export can itself be thenable, resolving once the WASM runtime is ready, or
-      // the (possibly not-yet-initialized) module object directly, depending on load timing. Adopt
-      // it manually via its own .then rather than `instanceof Promise` + native await — in
-      // production builds this can be a bundler-transformed object that structurally looks like a
-      // Promise but isn't a genuine native one, which breaks native await's internal fast path.
-      const hasThen =
-        maybeCv && typeof maybeCv === "object" && typeof (maybeCv as { then?: unknown }).then === "function";
-      if (hasThen) {
-        return await new Promise<CV>((resolve, reject) => {
-          (maybeCv as { then: (onFulfilled: (v: CV) => void, onRejected: (e: unknown) => void) => void }).then(
-            resolve,
-            reject
-          );
+      if (!window.cv) {
+        await new Promise<void>((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = openCvUrl;
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error("Failed to load OpenCV.js"));
+          document.head.appendChild(script);
         });
       }
-      const cv = maybeCv as OpenCvModule;
-      if (!cv.Mat) {
-        await new Promise<void>((resolve) => {
-          cv.onRuntimeInitialized = () => resolve();
-        });
-      }
+      const cv = await window.cv!;
       return cv as CV;
     })();
   }
