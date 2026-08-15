@@ -141,7 +141,6 @@ export const useRecognitions = ({
     const newIndex = regions.length;
     setRegions((prev) => [...prev, newRegion]);
     setControlGroupState(0);
-    scrollImageToRegion(newRegion);
     requestAnimationFrame(() => {
       rightScrollRef.current?.scrollTo({ top: rightScrollRef.current.scrollHeight, behavior: "smooth" });
     });
