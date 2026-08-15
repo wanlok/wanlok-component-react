@@ -140,6 +140,7 @@ export const ItemModal = ({
           name={discussionName}
           onNameChange={onNameChange}
           onRefresh={onRefresh}
+          isDeletingMessages={isDeletingMessages}
           onToggleDeleteMessages={onToggleDeleteMessages}
         />
       }

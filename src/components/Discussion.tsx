@@ -6,6 +6,7 @@ import { iconButtonSx, WButton } from "./WButton";
 import { TextInputWithButtons } from "./TextInputWithButtons";
 import { getDisplayDateTimeString } from "../common/DateUtils";
 import { StyledContainer } from "./StyledContainer";
+import { EmptyPlaceholder } from "./EmptyPlaceholder";
 
 const MessageRow = ({
   message,
@@ -42,11 +43,13 @@ export const DiscussionTop = ({
   name,
   onNameChange,
   onRefresh,
+  isDeletingMessages,
   onToggleDeleteMessages
 }: {
   name: string;
   onNameChange: (name: string) => void;
   onRefresh: () => void;
+  isDeletingMessages: boolean;
   onToggleDeleteMessages: () => void;
 }) => (
   <StyledContainer sx={{ flex: 1 }}>
@@ -56,7 +59,7 @@ export const DiscussionTop = ({
       onChange={onNameChange}
       rightButtons={[
         { icon: <RefreshIcon sx={{ fontSize: 24 }} />, onClick: onRefresh },
-        { icon: <CloseIcon sx={{ fontSize: 24 }} />, onClick: onToggleDeleteMessages }
+        { icon: <CloseIcon sx={{ fontSize: 24 }} />, isActivated: isDeletingMessages, onClick: onToggleDeleteMessages }
       ]}
     />
   </StyledContainer>
@@ -91,13 +94,12 @@ export const DiscussionMessages = ({
   onDeleteMessage: (index: number) => void;
   stackRef: RefObject<HTMLDivElement | null>;
 }) => (
-  <Stack ref={stackRef} sx={{ backgroundColor: "background.default", gap: 0.5 }}>
+  <Stack
+    ref={stackRef}
+    sx={{ flex: messages.length === 0 ? 1 : undefined, backgroundColor: "background.default", gap: 0.5 }}
+  >
     {messages.length === 0 ? (
-      <Stack sx={{ p: 2, backgroundColor: "common.white" }}>
-        <Typography variant="body1" sx={{ color: "text.disabled" }}>
-          No messages
-        </Typography>
-      </Stack>
+      <EmptyPlaceholder />
     ) : (
       messages.map((message, i) => (
         <MessageRow

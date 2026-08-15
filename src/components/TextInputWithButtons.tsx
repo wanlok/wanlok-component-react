@@ -7,6 +7,7 @@ import { WButton } from "./WButton";
 interface ButtonContent {
   icon: ReactNode;
   title?: string;
+  isActivated?: boolean;
   onClickWithText?: (text: string) => void;
   onClick?: () => void;
 }
@@ -76,10 +77,11 @@ export const TextInputWithButtons = ({
         />
       </Stack>
       <Stack sx={{ flexDirection: sufficientSpaces ? "column" : "row", gap: "1px" }}>
-        {rightButtons.map(({ icon, title, onClick, onClickWithText }, index) => (
+        {rightButtons.map(({ icon, title, isActivated, onClick, onClickWithText }, index) => (
           <WButton
             key={`right-button-${index}`}
             rightIcon={icon}
+            isActivated={isActivated}
             sx={{ width: title && !sufficientSpaces ? undefined : buttonHeight, height: buttonHeight, p: title && !sufficientSpaces ? undefined : 0 }}
             onClick={() => {
               onClick?.();
