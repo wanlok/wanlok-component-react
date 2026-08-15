@@ -1,10 +1,5 @@
 import { Avatar, ButtonBase, Skeleton, Stack, Typography } from "@mui/material";
-import {
-  Add as AddIcon,
-  AutoFixHigh as AutoFixHighIcon,
-  Close as CloseIcon,
-  SwapHoriz as SwapHorizIcon
-} from "@mui/icons-material";
+import { Add as AddIcon, Close as CloseIcon, SwapHoriz as SwapHorizIcon } from "@mui/icons-material";
 import { SelectInput } from "../../components/SelectInput";
 import { StyledContainer } from "../../components/StyledContainer";
 import { CheckboxInput } from "../../components/CheckboxInput";
@@ -167,32 +162,49 @@ const RegionRow = ({
   const rect = getPointsBoundingBox(region.points);
   const isPolygonEnabled = LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isPolygonEnabled ?? false;
   return (
-    <Stack data-region-index={index}>
-      <ButtonBase
-        sx={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", gap: 1, py: 1, pl: 1, ml: -1 }}
-        onClick={onAvatarClick}
-      >
-        <Avatar
+    <Stack data-region-index={index} sx={{ gap: "1px" }}>
+      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+        <ButtonBase
           sx={{
-            width: 32,
-            height: 32,
-            fontSize: 12,
-            backgroundColor: isSelected ? "common.black" : "background.default",
-            color: isSelected ? "common.white" : "common.black"
+            flexDirection: "row",
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "flex-start",
+            gap: 1,
+            py: 1,
+            pl: 1,
+            pr: 1,
+            ml: -1
           }}
+          onClick={onAvatarClick}
         >
-          {index + 1}
-        </Avatar>
-        <Typography variant="body2">
-          {isPolygonEnabled
-            ? `x: ${Math.round(rect.x)}, y: ${Math.round(rect.y)}, points: ${region.points.length}`
-            : `x: ${Math.round(rect.x)}, y: ${Math.round(rect.y)}, w: ${Math.round(rect.width)}, h: ${Math.round(rect.height)}`}
-        </Typography>
-      </ButtonBase>
+          <Avatar
+            sx={{
+              width: 32,
+              height: 32,
+              fontSize: 12,
+              backgroundColor: isSelected ? "common.black" : "background.default",
+              color: isSelected ? "common.white" : "common.black"
+            }}
+          >
+            {index + 1}
+          </Avatar>
+          <Typography variant="body2">
+            {isPolygonEnabled
+              ? `x: ${Math.round(rect.x)}, y: ${Math.round(rect.y)}, points: ${region.points.length}`
+              : `x: ${Math.round(rect.x)}, y: ${Math.round(rect.y)}, w: ${Math.round(rect.width)}, h: ${Math.round(rect.height)}`}
+          </Typography>
+        </ButtonBase>
+        {isPolygonEnabled && (
+          <WButton onClick={onAutoExpandClick} disabled={isAutoExpanding}>
+            Auto Expand
+          </WButton>
+        )}
+      </Stack>
       <StyledContainer sx={{ flexDirection: "row" }}>
         <Stack sx={{ flex: 1, p: 1, gap: 1 }}>
           {selectedLayout === "regions" ? (
-            <Stack sx={{ flexDirection: "row", alignItems: "flex-end", gap: 1 }}>
+            <>
               <TextInput
                 label="Name"
                 value={region.recognisedText ?? ""}
@@ -200,10 +212,7 @@ const RegionRow = ({
                 onBlur={onTextBlur}
                 inputSx={{ flex: 1 }}
               />
-              <WButton onClick={onAutoExpandClick} disabled={isAutoExpanding} sx={iconButtonSx}>
-                <AutoFixHighIcon sx={{ fontSize: 22 }} />
-              </WButton>
-            </Stack>
+            </>
           ) : (
             <>
               <SelectInput
