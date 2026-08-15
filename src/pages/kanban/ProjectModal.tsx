@@ -1,4 +1,5 @@
 import { Stack, Typography } from "@mui/material";
+import { Add as AddIcon, Edit as EditIcon } from "@mui/icons-material";
 import { StyledContainer } from "../../components/StyledContainer";
 import { TextInput } from "../../components/TextInput";
 import { SelectInput } from "../../components/SelectInput";
@@ -36,7 +37,12 @@ export const ProjectModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      pages={[{ label: project ? "Edit Project" : "Create Project" }]}
+      pages={[
+        {
+          icon: project ? <EditIcon sx={{ fontSize: 18, mt: 0.1 }} /> : <AddIcon sx={{ fontSize: 26, mt: -0.1 }} />,
+          label: project ? "Edit Project" : "Create Project"
+        }
+      ]}
       bottom={
         <YesNoButtons
           yesLabel="Save"
@@ -50,8 +56,8 @@ export const ProjectModal = ({
         {project?.createdAt && (
           <Stack sx={{ pb: 1 }}>
             <Typography variant="body2" sx={{ textAlign: "right" }}>
-              {getDisplayDateTimeString(new Date(project.createdAt))} (
-              {getDaysSinceString(new Date(project.createdAt))})
+              {getDisplayDateTimeString(new Date(project.createdAt))} ({getDaysSinceString(new Date(project.createdAt))}
+              )
             </Typography>
           </Stack>
         )}

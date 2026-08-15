@@ -81,7 +81,7 @@ export const FolderModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      pages={[{ icon: <EditIcon sx={{ fontSize: 18, mt: -0.1 }} />, label: "Edit Folder" }]}
+      pages={[{ icon: <EditIcon sx={{ fontSize: 18, mt: 0.1 }} />, label: "Edit Folder" }]}
       bottom={
         <YesNoButtons
           yesLabel="Save"

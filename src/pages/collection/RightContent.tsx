@@ -141,7 +141,7 @@ export const RightContent = ({
         steam={steam}
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
-        loadingCount={isLoading ? 8 : loadingCount}
+        loadingCount={isLoading || !selectedFolder ? 8 : loadingCount}
         controlGroupState={controlGroupState}
         folderAttributes={selectedFolder?.attributes ?? []}
         onDeleteButtonClick={async (type, id) => {

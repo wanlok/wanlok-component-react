@@ -208,7 +208,7 @@ export const ImageRecognitionModal = ({
 
   const rightPages = [
     { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
-    { icon: <VisibilityIcon sx={{ fontSize: 28 }} />, label: `Recognitions (${regions.length})` }
+    { icon: <VisibilityIcon sx={{ fontSize: 28, mt: "-2px" }} />, label: `Recognitions (${regions.length})` }
   ];
 
   return (
