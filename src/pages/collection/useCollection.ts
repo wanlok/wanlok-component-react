@@ -9,7 +9,7 @@ import {
   viewUrls,
   CollectionSequences,
   Direction,
-  TextRegion
+  Region
 } from "../../services/Types";
 import { appendSequences, isAllEmpty, toList } from "../../common/ListDictUtils";
 import { getFiles } from "../../common/FileUtils";
@@ -227,14 +227,14 @@ export const useCollection = (
     previewAlignment: string,
     attributes: { [key: string]: string },
     layout: string,
-    textRegions: TextRegion[]
+    regions: Region[]
   ) => {
     if (collectionDocument && documentId) {
       const newCollectionDocument = {
         ...collectionDocument,
         files: {
           ...collectionDocument.files,
-          [id]: { ...collectionDocument.files[id], name, previewAlignment, attributes, layout, textRegions }
+          [id]: { ...collectionDocument.files[id], name, previewAlignment, attributes, layout, regions }
         }
       };
       const docRef = doc(db, collectionName, documentId);

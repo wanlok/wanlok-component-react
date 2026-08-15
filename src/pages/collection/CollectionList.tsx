@@ -76,7 +76,7 @@ export const CollectionList = ({
             onRightButtonClick={() => onRightButtonClick("charts", uuid)}
           />
         ))}
-        {files.map(([id, { name, url, previewAlignment, textRegions, attributes }], i) => {
+        {files.map(([id, { name, url, previewAlignment, regions, attributes }], i) => {
           const visibleAttributeText = getVisibleAttributeText(folderAttributes, attributes);
           return (
             <ImageTitle
@@ -95,7 +95,7 @@ export const CollectionList = ({
               }
               rightChildren={
                 <Stack sx={{ justifyContent: "center" }}>
-                  {textRegions?.length && (
+                  {regions?.length && (
                     <Avatar
                       sx={{
                         width: 32,
@@ -105,7 +105,7 @@ export const CollectionList = ({
                         color: "common.black"
                       }}
                     >
-                      {textRegions?.length}
+                      {regions?.length}
                     </Avatar>
                   )}
                 </Stack>

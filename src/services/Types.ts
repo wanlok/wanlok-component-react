@@ -10,6 +10,11 @@ export interface Rect {
   height: number;
 }
 
+export interface RegionPoint {
+  x: number;
+  y: number;
+}
+
 export interface ComponentFolder {
   id: string;
   name: string;
@@ -62,12 +67,8 @@ interface ParentInfo {
   attributes?: { [key: string]: string };
 }
 
-export interface TextRegion {
-  id: string;
-  x: number;
-  y: number;
-  width: number;
-  height: number;
+export interface Region {
+  points: RegionPoint[];
   recogniseLanguage?: string;
   recognisedText?: string;
   translateLanguage?: string;
@@ -97,7 +98,7 @@ export interface CloudinaryFileInfo extends ParentInfo {
   mimeType: string;
   url: string;
   layout?: string;
-  textRegions?: TextRegion[];
+  regions?: Region[];
   previewAlignment?: string;
 }
 

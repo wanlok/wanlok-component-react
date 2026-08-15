@@ -8,7 +8,7 @@ import {
   CollectionAttributes,
   Folder,
   Quiz,
-  TextRegion,
+  Region,
   TypedAttributes
 } from "../../services/Types";
 import { setTypedAttributes } from "../../common/setTypedAttributes";
@@ -33,13 +33,13 @@ const applyTypedAttributes = (
   return { ...base, ...typedAttributes };
 };
 
-const getQuiz = (layout: string | undefined, textRegions: TextRegion[] | undefined): Quiz[] | undefined => {
-  if (layout !== "quiz" || !textRegions) {
+const getQuiz = (layout: string | undefined, regions: Region[] | undefined): Quiz[] | undefined => {
+  if (layout !== "quiz" || !regions) {
     return undefined;
   }
   const quiz: Quiz[] = [];
   let collectingQuestion = false;
-  textRegions.forEach((region) => {
+  regions.forEach((region) => {
     const type = region.type ?? "question";
     if (type === "question") {
       const currentEntry = quiz[quiz.length - 1];
@@ -99,9 +99,9 @@ const getCollectionItems = async (id: string, collectionAttributes: CollectionAt
 
   const result: Record<string, CollectionItem> = {};
 
-  Object.entries(data.files).forEach(([key, { name, url, attributes, layout, textRegions }]) => {
+  Object.entries(data.files).forEach(([key, { name, url, attributes, layout, regions }]) => {
     const item = applyTypedAttributes({ name, url }, collectionAttributes, attributes);
-    const quiz = getQuiz(layout, textRegions);
+    const quiz = getQuiz(layout, regions);
     result[key] = quiz ? { ...item, quiz } : item;
   });
 

@@ -6,16 +6,17 @@ import { CheckboxInput } from "../../components/CheckboxInput";
 import { TextInput } from "../../components/TextInput";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { ControlGroup } from "../../components/ControlGroup";
-import { LANGUAGE_ITEMS, TRANSLATE_LANGUAGE_ITEMS } from "../../common/ImageUtils";
+import { getPointsBoundingBox, LANGUAGE_ITEMS, TRANSLATE_LANGUAGE_ITEMS } from "../../common/ImageUtils";
 import { splitAnswers } from "../../utils/splitAnswers";
-import { TextRegion } from "./ImageRegionOverlay";
+import { Region } from "./ImageRegionOverlay";
 import { EmptyPlaceholder } from "../../components/EmptyPlaceholder";
 
 export const LAYOUT_ITEMS = [
-  { label: "Default", value: "default", isAutoRegionDetectionEnabled: false },
-  { label: "Search", value: "search", isAutoRegionDetectionEnabled: false },
-  { label: "Translate", value: "translate", isAutoRegionDetectionEnabled: false },
-  { label: "Quiz", value: "quiz", isAutoRegionDetectionEnabled: true }
+  { label: "Default", value: "default", isTextRecognitionEnabled: true, isAutoRegionDetectionEnabled: false },
+  { label: "Search", value: "search", isTextRecognitionEnabled: true, isAutoRegionDetectionEnabled: false },
+  { label: "Translate", value: "translate", isTextRecognitionEnabled: true, isAutoRegionDetectionEnabled: false },
+  { label: "Quiz", value: "quiz", isTextRecognitionEnabled: true, isAutoRegionDetectionEnabled: true },
+  { label: "Regions", value: "regions", isTextRecognitionEnabled: false, isAutoRegionDetectionEnabled: false }
 ];
 
 const QUIZ_TYPE_ITEMS = [
@@ -106,7 +107,7 @@ const RegionRow = ({
   onCorrectAnswerIndicesChange,
   isTranslating
 }: {
-  region: TextRegion;
+  region: Region;
   index: number;
   selectedLayout: string;
   controlGroupState: number;
@@ -123,8 +124,10 @@ const RegionRow = ({
   onDelimiterChange: (delimiter: string) => void;
   onCorrectAnswerIndicesChange: (indices: number[]) => void;
   isTranslating: boolean;
-}) => (
-  <Stack data-region-id={region.id}>
+}) => {
+  const rect = getPointsBoundingBox(region.points);
+  return (
+  <Stack data-region-index={index}>
     <ButtonBase
       sx={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", gap: 1, py: 1, pl: 1, ml: -1 }}
       onClick={onAvatarClick}
@@ -141,24 +144,36 @@ const RegionRow = ({
         {index + 1}
       </Avatar>
       <Typography variant="body2">
-        x: {Math.round(region.x)} y: {Math.round(region.y)} w: {Math.round(region.width)} h: {Math.round(region.height)}
+        x: {Math.round(rect.x)} y: {Math.round(rect.y)} w: {Math.round(rect.width)} h: {Math.round(rect.height)}
       </Typography>
     </ButtonBase>
     <StyledContainer sx={{ flexDirection: "row" }}>
       <Stack sx={{ flex: 1, p: 1, gap: 1 }}>
-        <SelectInput
-          label="Recognise Language"
-          items={LANGUAGE_ITEMS}
-          value={region.recogniseLanguage ?? "eng"}
-          onChange={onLanguageChange}
-        />
-        <TextInput
-          label="Text"
-          value={region.recognisedText ?? ""}
-          onChange={onTextChange}
-          onBlur={onTextBlur}
-          inputSx={{ flex: 1 }}
-        />
+        {selectedLayout === "regions" ? (
+          <TextInput
+            label="Name"
+            value={region.recognisedText ?? ""}
+            onChange={onTextChange}
+            onBlur={onTextBlur}
+            inputSx={{ flex: 1 }}
+          />
+        ) : (
+          <>
+            <SelectInput
+              label="Recognise Language"
+              items={LANGUAGE_ITEMS}
+              value={region.recogniseLanguage ?? "eng"}
+              onChange={onLanguageChange}
+            />
+            <TextInput
+              label="Text"
+              value={region.recognisedText ?? ""}
+              onChange={onTextChange}
+              onBlur={onTextBlur}
+              inputSx={{ flex: 1 }}
+            />
+          </>
+        )}
         {selectedLayout === "quiz" && (
           <SelectInput label="Type" items={QUIZ_TYPE_ITEMS} value={region.type ?? "question"} onChange={onTypeChange} />
         )}
@@ -197,7 +212,8 @@ const RegionRow = ({
       {controlGroupState === 2 && <ControlGroup scrollHorizontally={false} onDeleteButtonClick={onDeleteClick} />}
     </StyledContainer>
   </Stack>
-);
+  );
+};
 
 export const RecognitionsTop = ({
   selectedLayout,
@@ -235,7 +251,7 @@ export const Recognitions = ({
   onRegionsChange,
   selectedLayout,
   controlGroupState,
-  selectedRegionId,
+  selectedRegionIndex,
   onRegionAvatarClick,
   onRegionTypeChange,
   onRegionLanguageChange,
@@ -244,22 +260,22 @@ export const Recognitions = ({
   onRegionTranslateLanguageChange,
   onRegionDelimiterChange,
   onRegionCorrectAnswerIndicesChange,
-  translatingRegionIds
+  translatingRegionIndices
 }: {
-  regions: TextRegion[];
-  onRegionsChange: (regions: TextRegion[]) => void;
+  regions: Region[];
+  onRegionsChange: (regions: Region[]) => void;
   selectedLayout: string;
   controlGroupState: number;
-  selectedRegionId: string | null;
-  onRegionAvatarClick: (regionId: string) => void;
-  onRegionTypeChange: (regionId: string, type: string) => void;
-  onRegionLanguageChange: (regionId: string, language: string) => void;
-  onRegionTextChange: (regionId: string, text: string) => void;
-  onRegionTextBlur: (regionId: string) => void;
-  onRegionTranslateLanguageChange: (regionId: string, language: string) => void;
-  onRegionDelimiterChange: (regionId: string, delimiter: string) => void;
-  onRegionCorrectAnswerIndicesChange: (regionId: string, indices: number[]) => void;
-  translatingRegionIds: Set<string>;
+  selectedRegionIndex: number | null;
+  onRegionAvatarClick: (index: number) => void;
+  onRegionTypeChange: (index: number, type: string) => void;
+  onRegionLanguageChange: (index: number, language: string) => void;
+  onRegionTextChange: (index: number, text: string) => void;
+  onRegionTextBlur: (index: number) => void;
+  onRegionTranslateLanguageChange: (index: number, language: string) => void;
+  onRegionDelimiterChange: (index: number, delimiter: string) => void;
+  onRegionCorrectAnswerIndicesChange: (index: number, indices: number[]) => void;
+  translatingRegionIndices: Set<number>;
 }) => {
   const moveRegion = (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= regions.length) {
@@ -276,24 +292,24 @@ export const Recognitions = ({
     <Stack sx={{ px: 2, pt: 1, pb: 2, gap: 1 }}>
       {regions.map((region, i) => (
         <RegionRow
-          key={region.id}
+          key={i}
           region={region}
           index={i}
           selectedLayout={selectedLayout}
           controlGroupState={controlGroupState}
-          isSelected={region.id === selectedRegionId}
-          isTranslating={translatingRegionIds.has(region.id)}
-          onAvatarClick={() => onRegionAvatarClick(region.id)}
-          onDeleteClick={() => onRegionsChange(regions.filter((r) => r.id !== region.id))}
+          isSelected={i === selectedRegionIndex}
+          isTranslating={translatingRegionIndices.has(i)}
+          onAvatarClick={() => onRegionAvatarClick(i)}
+          onDeleteClick={() => onRegionsChange(regions.filter((_, j) => j !== i))}
           onMoveUpClick={() => moveRegion(i, i - 1)}
           onMoveDownClick={() => moveRegion(i, i + 1)}
-          onTypeChange={(type) => onRegionTypeChange(region.id, type)}
-          onLanguageChange={(language) => onRegionLanguageChange(region.id, language)}
-          onTextChange={(text) => onRegionTextChange(region.id, text)}
-          onTextBlur={() => onRegionTextBlur(region.id)}
-          onTranslateLanguageChange={(language) => onRegionTranslateLanguageChange(region.id, language)}
-          onDelimiterChange={(delimiter) => onRegionDelimiterChange(region.id, delimiter)}
-          onCorrectAnswerIndicesChange={(indices) => onRegionCorrectAnswerIndicesChange(region.id, indices)}
+          onTypeChange={(type) => onRegionTypeChange(i, type)}
+          onLanguageChange={(language) => onRegionLanguageChange(i, language)}
+          onTextChange={(text) => onRegionTextChange(i, text)}
+          onTextBlur={() => onRegionTextBlur(i)}
+          onTranslateLanguageChange={(language) => onRegionTranslateLanguageChange(i, language)}
+          onDelimiterChange={(delimiter) => onRegionDelimiterChange(i, delimiter)}
+          onCorrectAnswerIndicesChange={(indices) => onRegionCorrectAnswerIndicesChange(i, indices)}
         />
       ))}
     </Stack>

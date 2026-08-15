@@ -16,7 +16,7 @@ import { TextInput } from "../../components/TextInput";
 import { StyledContainer } from "../../components/StyledContainer";
 import { ImageModalControlGroup, ImageModalTopControlGroup } from "../../components/ImageModalControlGroup";
 import { useModalControlGroup } from "../../components/useModalControlGroup";
-import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
+import { ImageRegionOverlay, Region } from "./ImageRegionOverlay";
 import { LAYOUT_ITEMS, Recognitions, RecognitionsTop } from "./Recognitions";
 import { useRecognitions } from "./useRecognitions";
 import { ImageMetaContainer } from "../../components/ImageMetaContainer";
@@ -104,7 +104,7 @@ export const ImageRecognitionModal = ({
   previewAlignment,
   attributes,
   layout,
-  textRegions,
+  regions: initialRegions,
   folderAttributes,
   type,
   onPreviousClick,
@@ -118,7 +118,7 @@ export const ImageRecognitionModal = ({
   previewAlignment: string;
   attributes: { [key: string]: string };
   layout: string;
-  textRegions: TextRegion[];
+  regions: Region[];
   folderAttributes: { name: string }[];
   type: string;
   onPreviousClick?: () => void;
@@ -128,7 +128,7 @@ export const ImageRecognitionModal = ({
     previewAlignment: string,
     attributes: { [key: string]: string },
     layout: string,
-    textRegions: TextRegion[]
+    regions: Region[]
   ) => void;
   onClose: () => void;
 }) => {
@@ -172,8 +172,8 @@ export const ImageRecognitionModal = ({
     selectedLayout,
     controlGroupState,
     setControlGroupState,
-    selectedRegionId,
-    translatingRegionIds,
+    selectedRegionIndex,
+    translatingRegionIndices,
     onAddRegionClick,
     onRegionMouseUp,
     onRegionLanguageChange,
@@ -191,7 +191,7 @@ export const ImageRecognitionModal = ({
     open,
     src,
     layout,
-    textRegions,
+    regions: initialRegions,
     imageScrollRef,
     rightScrollRef,
     onRegionSelected: () => {
@@ -313,7 +313,7 @@ export const ImageRecognitionModal = ({
             onRegionsChange={setRegions}
             selectedLayout={selectedLayout}
             controlGroupState={controlGroupState}
-            selectedRegionId={selectedRegionId}
+            selectedRegionIndex={selectedRegionIndex}
             onRegionAvatarClick={onRegionAvatarClick}
             onRegionTypeChange={onRegionTypeChange}
             onRegionLanguageChange={onRegionLanguageChange}
@@ -322,7 +322,7 @@ export const ImageRecognitionModal = ({
             onRegionTranslateLanguageChange={onRegionTranslateLanguageChange}
             onRegionDelimiterChange={onRegionDelimiterChange}
             onRegionCorrectAnswerIndicesChange={onRegionCorrectAnswerIndicesChange}
-            translatingRegionIds={translatingRegionIds}
+            translatingRegionIndices={translatingRegionIndices}
           />
         )
       }
@@ -337,8 +337,8 @@ export const ImageRecognitionModal = ({
           scrollRef={imageScrollRef}
           fitScreen={zoom === "fit"}
           fullScreen={mobile || isFullScreen}
-          selectedId={selectedRegionId}
-          onSelectedIdChange={onRegionSelect}
+          selectedIndex={selectedRegionIndex}
+          onSelectedIndexChange={onRegionSelect}
           onImageLoad={(size) => {
             setImageMeta({ ...size, type });
             const element = imageScrollRef.current;

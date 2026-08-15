@@ -1,5 +1,20 @@
 import Tesseract from "tesseract.js";
-import { Rect } from "../services/Types";
+import { Rect, RegionPoint } from "../services/Types";
+
+export const getRectPoints = (rect: Rect): RegionPoint[] => [
+  { x: rect.x, y: rect.y },
+  { x: rect.x + rect.width, y: rect.y },
+  { x: rect.x + rect.width, y: rect.y + rect.height },
+  { x: rect.x, y: rect.y + rect.height }
+];
+
+export const getPointsBoundingBox = (points: RegionPoint[]): Rect => {
+  const xs = points.map((p) => p.x);
+  const ys = points.map((p) => p.y);
+  const x = Math.min(...xs);
+  const y = Math.min(...ys);
+  return { x, y, width: Math.max(...xs) - x, height: Math.max(...ys) - y };
+};
 
 export const scaleRect = (rect: Rect) => {
   const dpr = window.devicePixelRatio || 1;

@@ -2,20 +2,22 @@ import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import {
   getImageBase64String,
   getIsoLanguage,
+  getPointsBoundingBox,
+  getRectPoints,
   recognizeText,
   translateText
 } from "../../common/ImageUtils";
 import { regex, Rect } from "../../services/Types";
 import { detectDelimiter } from "../../utils/detectDelimiter";
 import { detectNextTextRegion } from "../../utils/detectNextTextRegion";
-import { TextRegion } from "./ImageRegionOverlay";
+import { Region } from "./ImageRegionOverlay";
 import { LAYOUT_ITEMS } from "./Recognitions";
 
 export const useRecognitions = ({
   open,
   src,
   layout,
-  textRegions,
+  regions: initialRegions,
   imageScrollRef,
   rightScrollRef,
   onRegionSelected
@@ -23,26 +25,27 @@ export const useRecognitions = ({
   open: boolean;
   src: string;
   layout: string;
-  textRegions: TextRegion[];
+  regions: Region[];
   imageScrollRef: RefObject<HTMLDivElement | null>;
   rightScrollRef: RefObject<HTMLDivElement | null>;
   onRegionSelected?: () => void;
 }) => {
-  const [regions, setRegions] = useState<TextRegion[]>(textRegions);
+  const [regions, setRegions] = useState<Region[]>(initialRegions);
   const [selectedLayout, setSelectedLayout] = useState(layout);
   const [controlGroupState, setControlGroupState] = useState(0);
-  const [selectedRegionId, setSelectedRegionId] = useState<string | null>(null);
-  const [translatingRegionIds, setTranslatingRegionIds] = useState<Set<string>>(new Set());
+  const [selectedRegionIndex, setSelectedRegionIndex] = useState<number | null>(null);
+  const [translatingRegionIndices, setTranslatingRegionIndices] = useState<Set<number>>(new Set());
   const imageCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const scrollImageToRegion = (region: TextRegion) => {
+  const scrollImageToRegion = (region: Region) => {
     const container = imageScrollRef.current;
     if (!container) {
       return;
     }
+    const rect = getPointsBoundingBox(region.points);
     container.scrollTo({
-      left: region.x - container.clientWidth / 2 + region.width / 2,
-      top: region.y - container.clientHeight / 2 + region.height / 2,
+      left: rect.x - container.clientWidth / 2 + rect.width / 2,
+      top: rect.y - container.clientHeight / 2 + rect.height / 2,
       behavior: "smooth"
     });
   };
@@ -65,28 +68,34 @@ export const useRecognitions = ({
     return imageCanvasRef.current;
   };
 
-  const performTranslation = async (regionId: string, text: string, sourceLanguage: string, targetLanguage: string) => {
-    setTranslatingRegionIds((prev) => new Set(prev).add(regionId));
+  const performTranslation = async (index: number, text: string, sourceLanguage: string, targetLanguage: string) => {
+    setTranslatingRegionIndices((prev) => new Set(prev).add(index));
     if (sourceLanguage === targetLanguage) {
-      setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, translatedText: text } : r)));
+      setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, translatedText: text } : r)));
     } else {
       const translatedText = await translateText(text, sourceLanguage, targetLanguage);
-      setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, translatedText } : r)));
+      setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, translatedText } : r)));
     }
-    setTranslatingRegionIds((prev) => {
+    setTranslatingRegionIndices((prev) => {
       const next = new Set(prev);
-      next.delete(regionId);
+      next.delete(index);
       return next;
     });
   };
 
-  const recognizeRegionText = async (region: TextRegion, language: string) => {
+  const recognizeRegionText = async (index: number, region: Region, language: string) => {
+    const isTextRecognitionEnabled =
+      LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isTextRecognitionEnabled ?? true;
+    if (!isTextRecognitionEnabled) {
+      return;
+    }
     const canvas = await ensureImageCanvas();
+    const rect = getPointsBoundingBox(region.points);
     const base64 = getImageBase64String(canvas, {
-      x: Math.round(region.x),
-      y: Math.round(region.y),
-      width: Math.round(region.width),
-      height: Math.round(region.height)
+      x: Math.round(rect.x),
+      y: Math.round(rect.y),
+      width: Math.round(rect.width),
+      height: Math.round(rect.height)
     });
     if (!base64) {
       return;
@@ -98,10 +107,10 @@ export const useRecognitions = ({
         : recognisedText;
     const delimiter = region.type === "answers" && !region.delimiter ? detectDelimiter(text) : undefined;
     setRegions((prev) =>
-      prev.map((r) => (r.id === region.id ? { ...r, recognisedText: text, ...(delimiter && { delimiter }) } : r))
+      prev.map((r, i) => (i === index ? { ...r, recognisedText: text, ...(delimiter && { delimiter }) } : r))
     );
     if (controlGroupState === 3 && text && region.translateLanguage) {
-      await performTranslation(region.id, text, getIsoLanguage(language), region.translateLanguage);
+      await performTranslation(index, text, getIsoLanguage(language), region.translateLanguage);
     }
   };
 
@@ -113,36 +122,38 @@ export const useRecognitions = ({
     const defaultHeight = 135;
     const isAutoRegionDetectionEnabled =
       LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isAutoRegionDetectionEnabled ?? false;
-    let region: Rect;
+    let rect: Rect;
     if (isAutoRegionDetectionEnabled) {
       const lastRegion = regions.length > 0 ? regions[regions.length - 1] : null;
-      const y = lastRegion ? lastRegion.y + lastRegion.height : defaultY;
+      const lastRegionRect = lastRegion ? getPointsBoundingBox(lastRegion.points) : null;
+      const y = lastRegionRect ? lastRegionRect.y + lastRegionRect.height : defaultY;
       const canvas = await ensureImageCanvas();
       const nextRegion = canvas ? detectNextTextRegion(canvas, y) : null;
-      region = nextRegion ?? { x: defaultX, y, width: defaultWidth, height: defaultHeight };
+      rect = nextRegion ?? { x: defaultX, y, width: defaultWidth, height: defaultHeight };
     } else {
-      region = { x: defaultX, y: defaultY, width: defaultWidth, height: defaultHeight };
+      rect = { x: defaultX, y: defaultY, width: defaultWidth, height: defaultHeight };
     }
-    const newRegion: TextRegion = { id: String(Date.now()), ...region };
+    const newRegion: Region = { points: getRectPoints(rect) };
+    const newIndex = regions.length;
     setRegions((prev) => [...prev, newRegion]);
     setControlGroupState(0);
     scrollImageToRegion(newRegion);
     requestAnimationFrame(() => {
       rightScrollRef.current?.scrollTo({ top: rightScrollRef.current.scrollHeight, behavior: "smooth" });
     });
-    await recognizeRegionText(newRegion, newRegion.recogniseLanguage ?? "eng");
+    await recognizeRegionText(newIndex, newRegion, newRegion.recogniseLanguage ?? "eng");
   };
 
   const onDeleteSelectedRegionClick = useCallback(() => {
-    if (!selectedRegionId) {
+    if (selectedRegionIndex === null) {
       return;
     }
-    setRegions((prev) => prev.filter((r) => r.id !== selectedRegionId));
-    setSelectedRegionId(null);
-  }, [selectedRegionId]);
+    setRegions((prev) => prev.filter((_, i) => i !== selectedRegionIndex));
+    setSelectedRegionIndex(null);
+  }, [selectedRegionIndex]);
 
   useEffect(() => {
-    if (!open || !selectedRegionId) {
+    if (!open || selectedRegionIndex === null) {
       return;
     }
     const onKeyDown = (e: KeyboardEvent) => {
@@ -157,39 +168,39 @@ export const useRecognitions = ({
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, selectedRegionId, onDeleteSelectedRegionClick]);
+  }, [open, selectedRegionIndex, onDeleteSelectedRegionClick]);
 
-  const onRegionMouseUp = async (regionId: string) => {
-    const region = regions.find((r) => r.id === regionId);
+  const onRegionMouseUp = async (index: number) => {
+    const region = regions[index];
     if (!region) {
       return;
     }
-    await recognizeRegionText(region, region.recogniseLanguage ?? "eng");
+    await recognizeRegionText(index, region, region.recogniseLanguage ?? "eng");
   };
 
-  const onRegionLanguageChange = async (regionId: string, language: string) => {
-    const region = regions.find((r) => r.id === regionId);
+  const onRegionLanguageChange = async (index: number, language: string) => {
+    const region = regions[index];
     if (!region) {
       return;
     }
-    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, recogniseLanguage: language } : r)));
-    await recognizeRegionText(region, language);
+    setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, recogniseLanguage: language } : r)));
+    await recognizeRegionText(index, region, language);
   };
 
-  const onRegionTextChange = (regionId: string, text: string) => {
-    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, recognisedText: text } : r)));
+  const onRegionTextChange = (index: number, text: string) => {
+    setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, recognisedText: text } : r)));
   };
 
-  const onRegionTextBlur = async (regionId: string) => {
+  const onRegionTextBlur = async (index: number) => {
     if (controlGroupState !== 3) {
       return;
     }
-    const region = regions.find((r) => r.id === regionId);
+    const region = regions[index];
     if (!region || !region.recognisedText || !region.translateLanguage) {
       return;
     }
     await performTranslation(
-      regionId,
+      index,
       region.recognisedText,
       getIsoLanguage(region.recogniseLanguage ?? "eng"),
       region.translateLanguage
@@ -202,7 +213,7 @@ export const useRecognitions = ({
     if (value !== "translate") {
       return;
     }
-    regions.forEach(async (region) => {
+    regions.forEach(async (region, index) => {
       if (!region.recognisedText || region.translatedText) {
         return;
       }
@@ -211,7 +222,7 @@ export const useRecognitions = ({
         return;
       }
       await performTranslation(
-        region.id,
+        index,
         region.recognisedText,
         getIsoLanguage(region.recogniseLanguage ?? "eng"),
         targetLanguage
@@ -219,55 +230,55 @@ export const useRecognitions = ({
     });
   };
 
-  const onRegionTypeChange = (regionId: string, type: string) => {
+  const onRegionTypeChange = (index: number, type: string) => {
     setRegions((prev) =>
-      prev.map((r) => {
-        if (r.id !== regionId) {
+      prev.map((r, i) => {
+        if (i !== index) {
           return r;
         }
         const delimiter =
           type === "answers" && !r.delimiter && r.recognisedText ? detectDelimiter(r.recognisedText) : r.delimiter;
-        return { ...r, type: type as TextRegion["type"], delimiter };
+        return { ...r, type: type as Region["type"], delimiter };
       })
     );
   };
 
-  const onRegionDelimiterChange = (regionId: string, delimiter: string) => {
-    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, delimiter } : r)));
+  const onRegionDelimiterChange = (index: number, delimiter: string) => {
+    setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, delimiter } : r)));
   };
 
-  const onRegionCorrectAnswerIndicesChange = (regionId: string, correctAnswerIndices: number[]) => {
-    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, correctAnswerIndices } : r)));
+  const onRegionCorrectAnswerIndicesChange = (index: number, correctAnswerIndices: number[]) => {
+    setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, correctAnswerIndices } : r)));
   };
 
-  const onRegionTranslateLanguageChange = async (regionId: string, translateLanguage: string) => {
-    const region = regions.find((r) => r.id === regionId);
+  const onRegionTranslateLanguageChange = async (index: number, translateLanguage: string) => {
+    const region = regions[index];
     if (!region || !region.recognisedText) {
-      setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, translateLanguage } : r)));
+      setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, translateLanguage } : r)));
       return;
     }
-    setRegions((prev) => prev.map((r) => (r.id === regionId ? { ...r, translateLanguage } : r)));
+    setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, translateLanguage } : r)));
     await performTranslation(
-      regionId,
+      index,
       region.recognisedText,
       getIsoLanguage(region.recogniseLanguage ?? "eng"),
       translateLanguage
     );
   };
 
-  const onRegionSelect = (regionId: string | null) => {
-    setSelectedRegionId(regionId);
+  const onRegionSelect = (index: number | null) => {
+    setSelectedRegionIndex(index);
     onRegionSelected?.();
-    if (!regionId) {
+    if (index === null) {
       return;
     }
-    const row = rightScrollRef.current?.querySelector<HTMLElement>(`[data-region-id="${regionId}"]`);
+    const row = rightScrollRef.current?.querySelector<HTMLElement>(`[data-region-index="${index}"]`);
     row?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
-  const onRegionAvatarClick = (regionId: string) => {
-    onRegionSelect(regionId);
-    const region = regions.find((r) => r.id === regionId);
+  const onRegionAvatarClick = (index: number) => {
+    onRegionSelect(index);
+    const region = regions[index];
     if (region) {
       scrollImageToRegion(region);
     }
@@ -281,8 +292,8 @@ export const useRecognitions = ({
     selectedLayout,
     controlGroupState: effectiveControlGroupState,
     setControlGroupState,
-    selectedRegionId,
-    translatingRegionIds,
+    selectedRegionIndex,
+    translatingRegionIndices,
     onAddRegionClick,
     onRegionMouseUp,
     onRegionLanguageChange,

@@ -15,10 +15,10 @@ export const YesNoButtons = ({
   onNoClick?: () => void;
 }) => (
   <>
-    <WButton disabled={yesDisabled} onClick={onYesClick} rightIcon={<DoneIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
+    <WButton disabled={yesDisabled} onClick={onYesClick} sx={{ flex: 1 }}>
       {yesLabel}
     </WButton>
-    <WButton onClick={onNoClick} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
+    <WButton onClick={onNoClick} sx={{ flex: 1 }}>
       {noLabel}
     </WButton>
   </>

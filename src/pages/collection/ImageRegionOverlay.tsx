@@ -8,22 +8,23 @@ import {
   useState
 } from "react";
 import { alpha, Box, useTheme } from "@mui/material";
-import { TextRegion } from "../../services/Types";
+import { Region, Rect } from "../../services/Types";
+import { getPointsBoundingBox, getRectPoints } from "../../common/ImageUtils";
 import { ImageModalImage } from "../../components/ImageModalImage";
 
-export type { TextRegion };
+export type { Region };
 
 type Handle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
 
 type Interaction =
-  | { type: "drag"; regionId: string; startMouseX: number; startMouseY: number; startX: number; startY: number }
+  | { type: "drag"; index: number; startMouseX: number; startMouseY: number; startX: number; startY: number }
   | {
       type: "resize";
-      regionId: string;
+      index: number;
       handle: Handle;
       startMouseX: number;
       startMouseY: number;
-      startRegion: TextRegion;
+      startRect: Rect;
     };
 
 const HANDLE_SIZE = 12;
@@ -41,8 +42,8 @@ const HANDLE_CURSORS: Record<Handle, string> = {
   w: "ew-resize"
 };
 
-const getHandlePosition = (region: TextRegion, handle: Handle) => {
-  const { x, y, width, height } = region;
+const getHandlePosition = (rect: Rect, handle: Handle) => {
+  const { x, y, width, height } = rect;
   const half = HANDLE_SIZE / 2;
   switch (handle) {
     case "nw":
@@ -64,25 +65,25 @@ const getHandlePosition = (region: TextRegion, handle: Handle) => {
   }
 };
 
-const applyResize = (startRegion: TextRegion, handle: Handle, dx: number, dy: number): TextRegion => {
-  let { x, y, width, height } = startRegion;
+const applyResize = (startRect: Rect, handle: Handle, dx: number, dy: number): Rect => {
+  let { x, y, width, height } = startRect;
   if (handle.includes("e")) {
-    width = Math.max(MIN_SIZE, startRegion.width + dx);
+    width = Math.max(MIN_SIZE, startRect.width + dx);
   }
   if (handle.includes("s")) {
-    height = Math.max(MIN_SIZE, startRegion.height + dy);
+    height = Math.max(MIN_SIZE, startRect.height + dy);
   }
   if (handle.includes("w")) {
-    const newWidth = Math.max(MIN_SIZE, startRegion.width - dx);
-    x = startRegion.x + startRegion.width - newWidth;
+    const newWidth = Math.max(MIN_SIZE, startRect.width - dx);
+    x = startRect.x + startRect.width - newWidth;
     width = newWidth;
   }
   if (handle.includes("n")) {
-    const newHeight = Math.max(MIN_SIZE, startRegion.height - dy);
-    y = startRegion.y + startRegion.height - newHeight;
+    const newHeight = Math.max(MIN_SIZE, startRect.height - dy);
+    y = startRect.y + startRect.height - newHeight;
     height = newHeight;
   }
-  return { ...startRegion, x, y, width, height };
+  return { x, y, width, height };
 };
 
 export const ImageRegionOverlay = ({
@@ -94,20 +95,20 @@ export const ImageRegionOverlay = ({
   scrollRef,
   fitScreen,
   fullScreen,
-  selectedId,
-  onSelectedIdChange,
+  selectedIndex,
+  onSelectedIndexChange,
   onImageLoad
 }: {
   src: string;
   alt: string;
-  regions: TextRegion[];
-  onRegionsChange: (regions: TextRegion[]) => void;
-  onRegionMouseUp?: (regionId: string) => void;
+  regions: Region[];
+  onRegionsChange: (regions: Region[]) => void;
+  onRegionMouseUp?: (index: number) => void;
   scrollRef?: RefObject<HTMLDivElement | null>;
   fitScreen?: boolean;
   fullScreen?: boolean;
-  selectedId?: string | null;
-  onSelectedIdChange?: (id: string | null) => void;
+  selectedIndex?: number | null;
+  onSelectedIndexChange?: (index: number | null) => void;
   onImageLoad?: (naturalSize: { width: number; height: number }) => void;
 }) => {
   const { palette, typography } = useTheme();
@@ -146,25 +147,33 @@ export const ImageRegionOverlay = ({
     }
     const { x, y } = getSvgPoint(clientX, clientY);
     if (interaction.current.type === "drag") {
-      const { regionId, startMouseX, startMouseY, startX, startY } = interaction.current;
+      const { index, startMouseX, startMouseY, startX, startY } = interaction.current;
       const dx = x - startMouseX;
       const dy = y - startMouseY;
       onRegionsChange(
-        regions.map((region) => (region.id === regionId ? { ...region, x: startX + dx, y: startY + dy } : region))
+        regions.map((region, i) => {
+          if (i !== index) {
+            return region;
+          }
+          const rect = getPointsBoundingBox(region.points);
+          return { ...region, points: getRectPoints({ ...rect, x: startX + dx, y: startY + dy }) };
+        })
       );
     } else {
-      const { regionId, handle, startMouseX, startMouseY, startRegion } = interaction.current;
+      const { index, handle, startMouseX, startMouseY, startRect } = interaction.current;
       const dx = x - startMouseX;
       const dy = y - startMouseY;
       onRegionsChange(
-        regions.map((region) => (region.id === regionId ? applyResize(startRegion, handle, dx, dy) : region))
+        regions.map((region, i) =>
+          i === index ? { ...region, points: getRectPoints(applyResize(startRect, handle, dx, dy)) } : region
+        )
       );
     }
   };
 
   const handleEnd = () => {
     if (interaction.current) {
-      onRegionMouseUp?.(interaction.current.regionId);
+      onRegionMouseUp?.(interaction.current.index);
     }
     interaction.current = null;
   };
@@ -174,51 +183,51 @@ export const ImageRegionOverlay = ({
   const onMouseUp = handleEnd;
   const onTouchEnd = handleEnd;
 
-  const handleRegionPointerDown = (clientX: number, clientY: number, regionId: string) => {
-    onSelectedIdChange?.(regionId);
+  const handleRegionPointerDown = (clientX: number, clientY: number, index: number) => {
+    onSelectedIndexChange?.(index);
     const { x, y } = getSvgPoint(clientX, clientY);
-    const region = regions.find((r) => r.id === regionId)!;
+    const rect = getPointsBoundingBox(regions[index].points);
     interaction.current = {
       type: "drag",
-      regionId,
+      index,
       startMouseX: x,
       startMouseY: y,
-      startX: region.x,
-      startY: region.y
+      startX: rect.x,
+      startY: rect.y
     };
   };
 
-  const onRegionMouseDown = (event: ReactMouseEvent, regionId: string) => {
+  const onRegionMouseDown = (event: ReactMouseEvent, index: number) => {
     event.stopPropagation();
-    handleRegionPointerDown(event.clientX, event.clientY, regionId);
+    handleRegionPointerDown(event.clientX, event.clientY, index);
   };
 
-  const onRegionTouchStart = (event: ReactTouchEvent, regionId: string) => {
+  const onRegionTouchStart = (event: ReactTouchEvent, index: number) => {
     event.stopPropagation();
-    handleRegionPointerDown(event.touches[0].clientX, event.touches[0].clientY, regionId);
+    handleRegionPointerDown(event.touches[0].clientX, event.touches[0].clientY, index);
   };
 
-  const handleHandlePointerDown = (clientX: number, clientY: number, regionId: string, handle: Handle) => {
+  const handleHandlePointerDown = (clientX: number, clientY: number, index: number, handle: Handle) => {
     const { x, y } = getSvgPoint(clientX, clientY);
-    const region = regions.find((r) => r.id === regionId)!;
+    const rect = getPointsBoundingBox(regions[index].points);
     interaction.current = {
       type: "resize",
-      regionId,
+      index,
       handle,
       startMouseX: x,
       startMouseY: y,
-      startRegion: { ...region }
+      startRect: rect
     };
   };
 
-  const onHandleMouseDown = (event: ReactMouseEvent, regionId: string, handle: Handle) => {
+  const onHandleMouseDown = (event: ReactMouseEvent, index: number, handle: Handle) => {
     event.stopPropagation();
-    handleHandlePointerDown(event.clientX, event.clientY, regionId, handle);
+    handleHandlePointerDown(event.clientX, event.clientY, index, handle);
   };
 
-  const onHandleTouchStart = (event: ReactTouchEvent, regionId: string, handle: Handle) => {
+  const onHandleTouchStart = (event: ReactTouchEvent, index: number, handle: Handle) => {
     event.stopPropagation();
-    handleHandlePointerDown(event.touches[0].clientX, event.touches[0].clientY, regionId, handle);
+    handleHandlePointerDown(event.touches[0].clientX, event.touches[0].clientY, index, handle);
   };
 
   return (
@@ -239,8 +248,8 @@ export const ImageRegionOverlay = ({
         ref={svgRef}
         {...(fitScreen && naturalSize.width > 0 && { viewBox: `0 0 ${naturalSize.width} ${naturalSize.height}` })}
         sx={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "visible" }}
-        onMouseDown={() => onSelectedIdChange?.(null)}
-        onTouchStart={() => onSelectedIdChange?.(null)}
+        onMouseDown={() => onSelectedIndexChange?.(null)}
+        onTouchStart={() => onSelectedIndexChange?.(null)}
         onMouseMove={onMouseMove}
         onTouchMove={onTouchMove}
         onMouseUp={onMouseUp}
@@ -248,12 +257,13 @@ export const ImageRegionOverlay = ({
         onMouseLeave={onMouseUp}
       >
         {regions.map((region, i) => {
-          const isSelected = region.id === selectedId;
+          const rect = getPointsBoundingBox(region.points);
+          const isSelected = i === selectedIndex;
           const avatarRadius = 16;
-          const avatarCx = region.x - 24;
-          const avatarCy = region.y + 16;
+          const avatarCx = rect.x - 24;
+          const avatarCy = rect.y + 16;
           return (
-            <g key={region.id}>
+            <g key={i}>
               <circle
                 cx={avatarCx}
                 cy={avatarCy}
@@ -273,20 +283,20 @@ export const ImageRegionOverlay = ({
                 {i + 1}
               </text>
               <rect
-                x={region.x}
-                y={region.y}
-                width={region.width}
-                height={region.height}
+                x={rect.x}
+                y={rect.y}
+                width={rect.width}
+                height={rect.height}
                 fill={alpha(palette.primary.main, 0.4)}
                 stroke={palette.primary.main}
                 strokeWidth={1}
                 style={{ cursor: "move" }}
-                onMouseDown={(e) => onRegionMouseDown(e, region.id)}
-                onTouchStart={(e) => onRegionTouchStart(e, region.id)}
+                onMouseDown={(e) => onRegionMouseDown(e, i)}
+                onTouchStart={(e) => onRegionTouchStart(e, i)}
               />
               {isSelected &&
                 HANDLES.map((handle) => {
-                  const pos = getHandlePosition(region, handle);
+                  const pos = getHandlePosition(rect, handle);
                   return (
                     <rect
                       key={handle}
@@ -296,8 +306,8 @@ export const ImageRegionOverlay = ({
                       height={HANDLE_SIZE}
                       fill={palette.primary.main}
                       style={{ cursor: HANDLE_CURSORS[handle] }}
-                      onMouseDown={(e) => onHandleMouseDown(e, region.id, handle)}
-                      onTouchStart={(e) => onHandleTouchStart(e, region.id, handle)}
+                      onMouseDown={(e) => onHandleMouseDown(e, i, handle)}
+                      onTouchStart={(e) => onHandleTouchStart(e, i, handle)}
                     />
                   );
                 })}

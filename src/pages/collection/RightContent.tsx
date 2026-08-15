@@ -7,8 +7,8 @@ import {
   CollectionSequences,
   Direction,
   Folder,
+  Region,
   SteamInfo,
-  TextRegion,
   YouTubeInfo
 } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
@@ -59,7 +59,7 @@ export const RightContent = ({
     previewAlignment: string,
     attributes: { [key: string]: string },
     layout: string,
-    textRegions: TextRegion[]
+    regions: Region[]
   ) => Promise<void>;
   updateCollectionVideo: (
     type: "youtubeRegular" | "youtubeShorts",
@@ -80,7 +80,7 @@ export const RightContent = ({
     previewAlignment: string;
     attributes: { [key: string]: string };
     layout: string;
-    textRegions: TextRegion[];
+    regions: Region[];
     type: string;
   } | null = file
     ? {
@@ -90,7 +90,7 @@ export const RightContent = ({
         previewAlignment: file[1].previewAlignment ?? "top",
         attributes: file[1].attributes ?? {},
         layout: file[1].layout ?? "default",
-        textRegions: file[1].textRegions ?? [],
+        regions: file[1].regions ?? [],
         type: file[1].mimeType
       }
     : null;
@@ -207,14 +207,14 @@ export const RightContent = ({
         previewAlignment={selectedFile?.previewAlignment ?? "top"}
         attributes={selectedFile?.attributes ?? {}}
         layout={selectedFile?.layout ?? "default"}
-        textRegions={selectedFile?.textRegions ?? []}
+        regions={selectedFile?.regions ?? []}
         folderAttributes={selectedFolder?.attributes ?? []}
         type={selectedFile?.type ?? ""}
         onPreviousClick={previousItem ? () => navigateToItem(previousItem) : undefined}
         onNextClick={nextItem ? () => navigateToItem(nextItem) : undefined}
-        onSaveButtonClick={async (name, previewAlignment, attributes, layout, textRegions) => {
+        onSaveButtonClick={async (name, previewAlignment, attributes, layout, regions) => {
           if (selectedFile) {
-            await updateCollectionFile(selectedFile.id, name, previewAlignment, attributes, layout, textRegions);
+            await updateCollectionFile(selectedFile.id, name, previewAlignment, attributes, layout, regions);
           }
         }}
         onClose={() => {
