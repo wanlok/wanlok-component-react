@@ -211,6 +211,8 @@ export const ImageRecognitionModal = ({
     { icon: <VisibilityIcon sx={{ fontSize: 28, mt: "-2px" }} />, label: `Recognitions (${regions.length})` }
   ];
 
+  const isPolygonEnabled = LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isPolygonEnabled ?? false;
+
   return (
     <WModal
       open={open}
@@ -339,6 +341,7 @@ export const ImageRecognitionModal = ({
           fullScreen={mobile || isFullScreen}
           selectedIndex={selectedRegionIndex}
           onSelectedIndexChange={onRegionSelect}
+          isPolygonEnabled={isPolygonEnabled}
           onImageLoad={(size) => {
             setImageMeta({ ...size, type });
             const element = imageScrollRef.current;

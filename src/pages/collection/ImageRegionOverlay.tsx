@@ -8,7 +8,7 @@ import {
   useState
 } from "react";
 import { alpha, Box, useTheme } from "@mui/material";
-import { Region, Rect } from "../../services/Types";
+import { Region, RegionPoint, Rect } from "../../services/Types";
 import { getPointsBoundingBox, getRectPoints } from "../../common/ImageUtils";
 import { ImageModalImage } from "../../components/ImageModalImage";
 
@@ -17,18 +17,14 @@ export type { Region };
 type Handle = "nw" | "n" | "ne" | "e" | "se" | "s" | "sw" | "w";
 
 type Interaction =
-  | { type: "drag"; index: number; startMouseX: number; startMouseY: number; startX: number; startY: number }
-  | {
-      type: "resize";
-      index: number;
-      handle: Handle;
-      startMouseX: number;
-      startMouseY: number;
-      startRect: Rect;
-    };
+  | { type: "drag"; index: number; startMouseX: number; startMouseY: number; startPoints: RegionPoint[] }
+  | { type: "resize"; index: number; handle: Handle; startMouseX: number; startMouseY: number; startRect: Rect }
+  | { type: "movePoint"; index: number; pointIndex: number };
 
 const HANDLE_SIZE = 12;
 const MIN_SIZE = 20;
+const MIN_POLYGON_POINTS = 3;
+const DOUBLE_TAP_MS = 300;
 const HANDLES: Handle[] = ["nw", "ne", "se", "sw"];
 
 const HANDLE_CURSORS: Record<Handle, string> = {
@@ -97,6 +93,7 @@ export const ImageRegionOverlay = ({
   fullScreen,
   selectedIndex,
   onSelectedIndexChange,
+  isPolygonEnabled,
   onImageLoad
 }: {
   src: string;
@@ -109,11 +106,13 @@ export const ImageRegionOverlay = ({
   fullScreen?: boolean;
   selectedIndex?: number | null;
   onSelectedIndexChange?: (index: number | null) => void;
+  isPolygonEnabled?: boolean;
   onImageLoad?: (naturalSize: { width: number; height: number }) => void;
 }) => {
   const { palette, typography } = useTheme();
   const svgRef = useRef<SVGSVGElement>(null);
   const interaction = useRef<Interaction | null>(null);
+  const lastTap = useRef<{ index: number; pointIndex: number; time: number } | null>(null);
   const [naturalSize, setNaturalSize] = useState({ width: 0, height: 0 });
 
   useEffect(() => {
@@ -147,25 +146,28 @@ export const ImageRegionOverlay = ({
     }
     const { x, y } = getSvgPoint(clientX, clientY);
     if (interaction.current.type === "drag") {
-      const { index, startMouseX, startMouseY, startX, startY } = interaction.current;
+      const { index, startMouseX, startMouseY, startPoints } = interaction.current;
       const dx = x - startMouseX;
       const dy = y - startMouseY;
       onRegionsChange(
-        regions.map((region, i) => {
-          if (i !== index) {
-            return region;
-          }
-          const rect = getPointsBoundingBox(region.points);
-          return { ...region, points: getRectPoints({ ...rect, x: startX + dx, y: startY + dy }) };
-        })
+        regions.map((region, i) =>
+          i === index ? { ...region, points: startPoints.map((p) => ({ x: p.x + dx, y: p.y + dy })) } : region
+        )
       );
-    } else {
+    } else if (interaction.current.type === "resize") {
       const { index, handle, startMouseX, startMouseY, startRect } = interaction.current;
       const dx = x - startMouseX;
       const dy = y - startMouseY;
       onRegionsChange(
         regions.map((region, i) =>
           i === index ? { ...region, points: getRectPoints(applyResize(startRect, handle, dx, dy)) } : region
+        )
+      );
+    } else {
+      const { index, pointIndex } = interaction.current;
+      onRegionsChange(
+        regions.map((region, i) =>
+          i === index ? { ...region, points: region.points.map((p, j) => (j === pointIndex ? { x, y } : p)) } : region
         )
       );
     }
@@ -186,14 +188,12 @@ export const ImageRegionOverlay = ({
   const handleRegionPointerDown = (clientX: number, clientY: number, index: number) => {
     onSelectedIndexChange?.(index);
     const { x, y } = getSvgPoint(clientX, clientY);
-    const rect = getPointsBoundingBox(regions[index].points);
     interaction.current = {
       type: "drag",
       index,
       startMouseX: x,
       startMouseY: y,
-      startX: rect.x,
-      startY: rect.y
+      startPoints: regions[index].points.map((p) => ({ ...p }))
     };
   };
 
@@ -228,6 +228,65 @@ export const ImageRegionOverlay = ({
   const onHandleTouchStart = (event: ReactTouchEvent, index: number, handle: Handle) => {
     event.stopPropagation();
     handleHandlePointerDown(event.touches[0].clientX, event.touches[0].clientY, index, handle);
+  };
+
+  const removeVertex = (index: number, pointIndex: number) => {
+    onRegionsChange(
+      regions.map((region, i) => {
+        if (i !== index || region.points.length <= MIN_POLYGON_POINTS) {
+          return region;
+        }
+        return { ...region, points: region.points.filter((_, j) => j !== pointIndex) };
+      })
+    );
+  };
+
+  const onVertexMouseDown = (event: ReactMouseEvent, index: number, pointIndex: number) => {
+    event.stopPropagation();
+    interaction.current = { type: "movePoint", index, pointIndex };
+  };
+
+  const onVertexTouchStart = (event: ReactTouchEvent, index: number, pointIndex: number) => {
+    event.stopPropagation();
+    const now = event.timeStamp;
+    const last = lastTap.current;
+    if (last && last.index === index && last.pointIndex === pointIndex && now - last.time < DOUBLE_TAP_MS) {
+      lastTap.current = null;
+      removeVertex(index, pointIndex);
+      return;
+    }
+    lastTap.current = { index, pointIndex, time: now };
+    interaction.current = { type: "movePoint", index, pointIndex };
+  };
+
+  const onVertexDoubleClick = (event: ReactMouseEvent, index: number, pointIndex: number) => {
+    event.stopPropagation();
+    removeVertex(index, pointIndex);
+  };
+
+  const handleMidpointPointerDown = (index: number, edgeIndex: number, midpoint: RegionPoint) => {
+    const newPointIndex = edgeIndex + 1;
+    onRegionsChange(
+      regions.map((region, i) => {
+        if (i !== index) {
+          return region;
+        }
+        const points = [...region.points];
+        points.splice(newPointIndex, 0, midpoint);
+        return { ...region, points };
+      })
+    );
+    interaction.current = { type: "movePoint", index, pointIndex: newPointIndex };
+  };
+
+  const onMidpointMouseDown = (event: ReactMouseEvent, index: number, edgeIndex: number, midpoint: RegionPoint) => {
+    event.stopPropagation();
+    handleMidpointPointerDown(index, edgeIndex, midpoint);
+  };
+
+  const onMidpointTouchStart = (event: ReactTouchEvent, index: number, edgeIndex: number, midpoint: RegionPoint) => {
+    event.stopPropagation();
+    handleMidpointPointerDown(index, edgeIndex, midpoint);
   };
 
   return (
@@ -282,19 +341,32 @@ export const ImageRegionOverlay = ({
               >
                 {i + 1}
               </text>
-              <rect
-                x={rect.x}
-                y={rect.y}
-                width={rect.width}
-                height={rect.height}
-                fill={alpha(palette.primary.main, 0.4)}
-                stroke={palette.primary.main}
-                strokeWidth={1}
-                style={{ cursor: "move" }}
-                onMouseDown={(e) => onRegionMouseDown(e, i)}
-                onTouchStart={(e) => onRegionTouchStart(e, i)}
-              />
+              {isPolygonEnabled ? (
+                <polygon
+                  points={region.points.map((p) => `${p.x},${p.y}`).join(" ")}
+                  fill={alpha(palette.primary.main, 0.4)}
+                  stroke={palette.primary.main}
+                  strokeWidth={1}
+                  style={{ cursor: "move" }}
+                  onMouseDown={(e) => onRegionMouseDown(e, i)}
+                  onTouchStart={(e) => onRegionTouchStart(e, i)}
+                />
+              ) : (
+                <rect
+                  x={rect.x}
+                  y={rect.y}
+                  width={rect.width}
+                  height={rect.height}
+                  fill={alpha(palette.primary.main, 0.4)}
+                  stroke={palette.primary.main}
+                  strokeWidth={1}
+                  style={{ cursor: "move" }}
+                  onMouseDown={(e) => onRegionMouseDown(e, i)}
+                  onTouchStart={(e) => onRegionTouchStart(e, i)}
+                />
+              )}
               {isSelected &&
+                !isPolygonEnabled &&
                 HANDLES.map((handle) => {
                   const pos = getHandlePosition(rect, handle);
                   return (
@@ -311,6 +383,40 @@ export const ImageRegionOverlay = ({
                     />
                   );
                 })}
+              {isSelected && isPolygonEnabled && (
+                <>
+                  {region.points.map((point, edgeIndex) => {
+                    const next = region.points[(edgeIndex + 1) % region.points.length];
+                    const midpoint = { x: (point.x + next.x) / 2, y: (point.y + next.y) / 2 };
+                    return (
+                      <circle
+                        key={`midpoint-${edgeIndex}`}
+                        cx={midpoint.x}
+                        cy={midpoint.y}
+                        r={6}
+                        fill={palette.primary.main}
+                        style={{ cursor: "copy" }}
+                        onMouseDown={(e) => onMidpointMouseDown(e, i, edgeIndex, midpoint)}
+                        onTouchStart={(e) => onMidpointTouchStart(e, i, edgeIndex, midpoint)}
+                      />
+                    );
+                  })}
+                  {region.points.map((point, pointIndex) => (
+                    <rect
+                      key={`vertex-${pointIndex}`}
+                      x={point.x - HANDLE_SIZE / 2}
+                      y={point.y - HANDLE_SIZE / 2}
+                      width={HANDLE_SIZE}
+                      height={HANDLE_SIZE}
+                      fill={palette.primary.main}
+                      style={{ cursor: "move" }}
+                      onMouseDown={(e) => onVertexMouseDown(e, i, pointIndex)}
+                      onTouchStart={(e) => onVertexTouchStart(e, i, pointIndex)}
+                      onDoubleClick={(e) => onVertexDoubleClick(e, i, pointIndex)}
+                    />
+                  ))}
+                </>
+              )}
             </g>
           );
         })}

@@ -12,11 +12,41 @@ import { Region } from "./ImageRegionOverlay";
 import { EmptyPlaceholder } from "../../components/EmptyPlaceholder";
 
 export const LAYOUT_ITEMS = [
-  { label: "Default", value: "default", isTextRecognitionEnabled: true, isAutoRegionDetectionEnabled: false },
-  { label: "Search", value: "search", isTextRecognitionEnabled: true, isAutoRegionDetectionEnabled: false },
-  { label: "Translate", value: "translate", isTextRecognitionEnabled: true, isAutoRegionDetectionEnabled: false },
-  { label: "Quiz", value: "quiz", isTextRecognitionEnabled: true, isAutoRegionDetectionEnabled: true },
-  { label: "Regions", value: "regions", isTextRecognitionEnabled: false, isAutoRegionDetectionEnabled: false }
+  {
+    label: "Default",
+    value: "default",
+    isTextRecognitionEnabled: true,
+    isAutoRegionDetectionEnabled: false,
+    isPolygonEnabled: false
+  },
+  {
+    label: "Search",
+    value: "search",
+    isTextRecognitionEnabled: true,
+    isAutoRegionDetectionEnabled: false,
+    isPolygonEnabled: false
+  },
+  {
+    label: "Translate",
+    value: "translate",
+    isTextRecognitionEnabled: true,
+    isAutoRegionDetectionEnabled: false,
+    isPolygonEnabled: false
+  },
+  {
+    label: "Quiz",
+    value: "quiz",
+    isTextRecognitionEnabled: true,
+    isAutoRegionDetectionEnabled: true,
+    isPolygonEnabled: false
+  },
+  {
+    label: "Regions",
+    value: "regions",
+    isTextRecognitionEnabled: false,
+    isAutoRegionDetectionEnabled: false,
+    isPolygonEnabled: true
+  }
 ];
 
 const QUIZ_TYPE_ITEMS = [
@@ -126,92 +156,100 @@ const RegionRow = ({
   isTranslating: boolean;
 }) => {
   const rect = getPointsBoundingBox(region.points);
+  const isPolygonEnabled = LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isPolygonEnabled ?? false;
   return (
-  <Stack data-region-index={index}>
-    <ButtonBase
-      sx={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", gap: 1, py: 1, pl: 1, ml: -1 }}
-      onClick={onAvatarClick}
-    >
-      <Avatar
-        sx={{
-          width: 32,
-          height: 32,
-          fontSize: 12,
-          backgroundColor: isSelected ? "common.black" : "background.default",
-          color: isSelected ? "common.white" : "common.black"
-        }}
+    <Stack data-region-index={index}>
+      <ButtonBase
+        sx={{ flexDirection: "row", alignItems: "center", justifyContent: "flex-start", gap: 1, py: 1, pl: 1, ml: -1 }}
+        onClick={onAvatarClick}
       >
-        {index + 1}
-      </Avatar>
-      <Typography variant="body2">
-        x: {Math.round(rect.x)} y: {Math.round(rect.y)} w: {Math.round(rect.width)} h: {Math.round(rect.height)}
-      </Typography>
-    </ButtonBase>
-    <StyledContainer sx={{ flexDirection: "row" }}>
-      <Stack sx={{ flex: 1, p: 1, gap: 1 }}>
-        {selectedLayout === "regions" ? (
-          <TextInput
-            label="Name"
-            value={region.recognisedText ?? ""}
-            onChange={onTextChange}
-            onBlur={onTextBlur}
-            inputSx={{ flex: 1 }}
-          />
-        ) : (
-          <>
-            <SelectInput
-              label="Recognise Language"
-              items={LANGUAGE_ITEMS}
-              value={region.recogniseLanguage ?? "eng"}
-              onChange={onLanguageChange}
-            />
+        <Avatar
+          sx={{
+            width: 32,
+            height: 32,
+            fontSize: 12,
+            backgroundColor: isSelected ? "common.black" : "background.default",
+            color: isSelected ? "common.white" : "common.black"
+          }}
+        >
+          {index + 1}
+        </Avatar>
+        <Typography variant="body2">
+          {isPolygonEnabled
+            ? `x: ${Math.round(rect.x)}, y: ${Math.round(rect.y)}, points: ${region.points.length}`
+            : `x: ${Math.round(rect.x)}, y: ${Math.round(rect.y)}, w: ${Math.round(rect.width)}, h: ${Math.round(rect.height)}`}
+        </Typography>
+      </ButtonBase>
+      <StyledContainer sx={{ flexDirection: "row" }}>
+        <Stack sx={{ flex: 1, p: 1, gap: 1 }}>
+          {selectedLayout === "regions" ? (
             <TextInput
-              label="Text"
+              label="Name"
               value={region.recognisedText ?? ""}
               onChange={onTextChange}
               onBlur={onTextBlur}
               inputSx={{ flex: 1 }}
             />
-          </>
-        )}
-        {selectedLayout === "quiz" && (
-          <SelectInput label="Type" items={QUIZ_TYPE_ITEMS} value={region.type ?? "question"} onChange={onTypeChange} />
-        )}
-        {["translate", "quiz"].includes(selectedLayout) && (
-          <>
-            {selectedLayout === "translate" && (
-              <TranslateContainer
-                translateLanguage={region.translateLanguage ?? ""}
-                translatedText={region.translatedText ?? ""}
-                isTranslating={isTranslating}
-                onTranslateLanguageChange={onTranslateLanguageChange}
+          ) : (
+            <>
+              <SelectInput
+                label="Recognise Language"
+                items={LANGUAGE_ITEMS}
+                value={region.recogniseLanguage ?? "eng"}
+                onChange={onLanguageChange}
               />
-            )}
-            {selectedLayout === "quiz" && region.type === "answers" && (
-              <QuizAnswerContainer
-                text={region.recognisedText ?? ""}
-                delimiter={region.delimiter ?? "letterDot"}
-                correctAnswerIndices={region.correctAnswerIndices}
-                onDelimiterChange={onDelimiterChange}
-                onCorrectAnswerIndicesChange={onCorrectAnswerIndicesChange}
+              <TextInput
+                label="Text"
+                value={region.recognisedText ?? ""}
+                onChange={onTextChange}
+                onBlur={onTextBlur}
+                inputSx={{ flex: 1 }}
               />
-            )}
-          </>
+            </>
+          )}
+          {selectedLayout === "quiz" && (
+            <SelectInput
+              label="Type"
+              items={QUIZ_TYPE_ITEMS}
+              value={region.type ?? "question"}
+              onChange={onTypeChange}
+            />
+          )}
+          {["translate", "quiz"].includes(selectedLayout) && (
+            <>
+              {selectedLayout === "translate" && (
+                <TranslateContainer
+                  translateLanguage={region.translateLanguage ?? ""}
+                  translatedText={region.translatedText ?? ""}
+                  isTranslating={isTranslating}
+                  onTranslateLanguageChange={onTranslateLanguageChange}
+                />
+              )}
+              {selectedLayout === "quiz" && region.type === "answers" && (
+                <QuizAnswerContainer
+                  text={region.recognisedText ?? ""}
+                  delimiter={region.delimiter ?? "letterDot"}
+                  correctAnswerIndices={region.correctAnswerIndices}
+                  onDelimiterChange={onDelimiterChange}
+                  onCorrectAnswerIndicesChange={onCorrectAnswerIndicesChange}
+                />
+              )}
+            </>
+          )}
+        </Stack>
+        {selectedLayout === "search" && controlGroupState === 0 && region.recognisedText && (
+          <ControlGroup scrollHorizontally={false} searchQuery={region.recognisedText} />
         )}
-      </Stack>
-      {selectedLayout === "search" && controlGroupState === 0 && region.recognisedText && (
-        <ControlGroup scrollHorizontally={false} searchQuery={region.recognisedText} />
-      )}
-      {controlGroupState === 1 && (
-        <ControlGroup
-          scrollHorizontally={false}
-          onLeftButtonClick={onMoveUpClick}
-          onRightButtonClick={onMoveDownClick}
-        />
-      )}
-      {controlGroupState === 2 && <ControlGroup scrollHorizontally={false} onDeleteButtonClick={onDeleteClick} />}
-    </StyledContainer>
-  </Stack>
+        {controlGroupState === 1 && (
+          <ControlGroup
+            scrollHorizontally={false}
+            onLeftButtonClick={onMoveUpClick}
+            onRightButtonClick={onMoveDownClick}
+          />
+        )}
+        {controlGroupState === 2 && <ControlGroup scrollHorizontally={false} onDeleteButtonClick={onDeleteClick} />}
+      </StyledContainer>
+    </Stack>
   );
 };
 
