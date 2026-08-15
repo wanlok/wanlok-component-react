@@ -135,12 +135,12 @@ export const ImageRecognitionModal = ({
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const navigate = useNavigate();
-  const { id: folderId, itemId, tab } = useParams();
+  const { id: folderId, itemId, page } = useParams();
   const [editedName, setEditedName] = useState(name);
   const [editedPreviewAlignment, setEditedPreviewAlignment] = useState(previewAlignment);
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
-  const [desktopSelectedPage, setDesktopSelectedPage] = useState(tab === "recognitions" ? 1 : 0);
-  const [mobileSelectedPage, setMobileSelectedPage] = useState(tab === "recognitions" ? 2 : 0);
+  const [desktopSelectedPage, setDesktopSelectedPage] = useState(page === "recognitions" ? 1 : 0);
+  const [mobileSelectedPage, setMobileSelectedPage] = useState(page === "recognitions" ? 2 : 0);
   const [zoom, setZoom] = useState("fit");
   const { isFullScreen, onFullScreenClick, exitFullScreen, isRightHidden, onDetailsClick } = useModalControlGroup();
   const [scrollbarWidths, setScrollbarWidths] = useState({ bottom: 0, right: 0 });

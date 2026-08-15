@@ -149,7 +149,8 @@ export const WModal = ({
           backgroundColor: rightChildren ? "common.white" : undefined,
           borderWidth: fullScreen ? 0 : 1,
           borderStyle: "solid",
-          borderColor: "divider"
+          borderColor: "divider",
+          outline: "none"
         }}
       >
         {mobile && rightChildren ? (
