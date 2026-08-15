@@ -206,8 +206,12 @@ export const ImageRecognitionModal = ({
   };
 
   const rightPages = [
-    { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
-    { icon: <VisibilityIcon sx={{ fontSize: 28 }} />, label: `Recognitions (${regions.length})` }
+    { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details", description: "Edit the name and attributes" },
+    {
+      icon: <VisibilityIcon sx={{ fontSize: 28 }} />,
+      label: `Recognitions (${regions.length})`,
+      description: "Manage detected text regions"
+    }
   ];
 
   return (
@@ -217,7 +221,7 @@ export const ImageRecognitionModal = ({
       width="80vw"
       height="80dvh"
       isFullScreen={isFullScreen}
-      pages={[{ icon: <ImageIcon sx={{ fontSize: 24 }} />, label: "Image" }]}
+      pages={[{ icon: <ImageIcon sx={{ fontSize: 24 }} />, label: "Image", description: "View and zoom the image" }]}
       hideLeftLabel
       bottom={
         mobile ? (

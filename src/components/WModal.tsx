@@ -1,4 +1,4 @@
-import { alpha, Modal, Stack, useMediaQuery, useTheme } from "@mui/material";
+import { alpha, Modal, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { ReactElement, ReactNode, RefObject, useState } from "react";
 import { PanelRow } from "./PanelRow";
 import { DropdownIcon } from "./DropdownIcon";
@@ -7,6 +7,7 @@ import { WCard, WCardList } from "./WCardList";
 export type PageItem = {
   icon?: ReactElement;
   label: string;
+  description?: string;
 };
 
 type PanelProps = {
@@ -62,7 +63,15 @@ const WModalContent = ({ pages, selectedPage = 0, onPageChange, top, bottom, chi
         {pagesOpened && pages ? (
           <WCardList
             items={pages}
-            renderContent={(page) => <PanelRow icon={page.icon} title={page.label} />}
+            renderContent={(page) => (
+              <PanelRow icon={page.icon} title={page.label}>
+                {page.description && (
+                  <Typography variant="body2" sx={{ color: "text.secondary" }}>
+                    {page.description}
+                  </Typography>
+                )}
+              </PanelRow>
+            )}
             onContentClick={(page) => {
               if (page) {
                 onPageChange?.(pages.indexOf(page));
