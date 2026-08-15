@@ -16,7 +16,7 @@ export const UploadImageModal = ({
   <WModal
     open={open}
     onClose={onClose}
-    tabs={[{ label: "Upload Image" }]}
+    pages={[{ label: "Upload Image" }]}
     bottom={<YesNoButtons onYesClick={onUploadButtonClick} onNoClick={onClose} />}
   >
     <Box component="img" src={src} alt="" />

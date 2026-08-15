@@ -7,7 +7,7 @@ import {
   KeyboardArrowRight as KeyboardArrowRightIcon
 } from "@mui/icons-material";
 import { iconButtonSx, WButton } from "./WButton";
-import { TabItem } from "./WTabs";
+import { PageItem } from "./WModal";
 
 const iconSize = 64;
 const space = 8;
@@ -19,8 +19,8 @@ export const ModalControlGroup = ({
   onFullScreenClick,
   isRightHidden,
   onDetailsClick,
-  tabs,
-  selectedTab,
+  pages,
+  selectedPage,
   scrollbarWidths = { right: 0, bottom: 0 },
   topLeftChildren
 }: {
@@ -30,8 +30,8 @@ export const ModalControlGroup = ({
   onFullScreenClick: () => void;
   isRightHidden: boolean;
   onDetailsClick: () => void;
-  tabs: TabItem[];
-  selectedTab: number;
+  pages: PageItem[];
+  selectedPage: number;
   scrollbarWidths?: { bottom: number; right: number };
   topLeftChildren?: ReactNode;
 }) => {
@@ -94,7 +94,7 @@ export const ModalControlGroup = ({
             {isFullScreen ? <FullscreenExitIcon sx={{ fontSize: 30 }} /> : <FullscreenIcon sx={{ fontSize: 30 }} />}
           </WButton>
           <WButton onClick={onDetailsClick} sx={overlayButtonSx}>
-            {isRightHidden ? tabs[selectedTab]?.icon : <KeyboardArrowRightIcon sx={{ fontSize: 32 }} />}
+            {isRightHidden ? pages[selectedPage]?.icon : <KeyboardArrowRightIcon sx={{ fontSize: 32 }} />}
           </WButton>
         </Stack>
       </Stack>

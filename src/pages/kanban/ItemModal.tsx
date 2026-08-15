@@ -69,7 +69,7 @@ export const ItemModal = ({
   const [selectedColumn, setSelectedColumn] = useState(String(item.i));
   const [nameHint, setNameHint] = useState("");
   const [contentHint, setContentHint] = useState("");
-  const [mobileSelectedTab, setMobileSelectedTab] = useState(0);
+  const [mobileSelectedPage, setMobileSelectedPage] = useState(0);
   const {
     isDeletingMessages,
     name: discussionName,
@@ -84,12 +84,12 @@ export const ItemModal = ({
 
   return (
     <WModal
-      mobileSelectedTab={mobileSelectedTab}
-      onMobileSelectedTabChange={setMobileSelectedTab}
+      mobileSelectedPage={mobileSelectedPage}
+      onMobileSelectedPageChange={setMobileSelectedPage}
       open={true}
       onClose={onClose}
-      tabs={[{ icon: <AssignmentIcon sx={{ fontSize: 24 }} />, label: "Task" }]}
-      rightTabs={[{ icon: <ChatIcon sx={{ fontSize: 24 }} />, label: "Discussion" }]}
+      pages={[{ icon: <AssignmentIcon sx={{ fontSize: 24 }} />, label: "Task" }]}
+      rightPages={[{ icon: <ChatIcon sx={{ fontSize: 24 }} />, label: "Discussion" }]}
       top={
         <StyledContainer sx={{ flex: 1, p: 1 }}>
           <SelectInput

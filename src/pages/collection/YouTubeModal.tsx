@@ -33,7 +33,7 @@ export const YouTubeModal = ({
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
-  const [mobileSelectedTab, setMobileSelectedTab] = useState(0);
+  const [mobileSelectedPage, setMobileSelectedPage] = useState(0);
   const { isFullScreen, onFullScreenClick, exitFullScreen, isRightHidden, onDetailsClick } = useModalControlGroup();
 
   const closeModal = () => {
@@ -41,7 +41,7 @@ export const YouTubeModal = ({
     onClose();
   };
 
-  const rightTabs = [{ icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" }];
+  const rightPages = [{ icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" }];
 
   return (
     <WModal
@@ -49,7 +49,7 @@ export const YouTubeModal = ({
       onClose={closeModal}
       width="80vw"
       isFullScreen={isFullScreen}
-      tabs={[{ icon: <SmartDisplayIcon sx={{ fontSize: 24 }} />, label: "Video" }]}
+      pages={[{ icon: <SmartDisplayIcon sx={{ fontSize: 24 }} />, label: "Video" }]}
       hideLeftLabel
       bottom={
         mobile ? (
@@ -58,9 +58,9 @@ export const YouTubeModal = ({
           </WButton>
         ) : undefined
       }
-      mobileSelectedTab={mobileSelectedTab}
-      onMobileSelectedTabChange={setMobileSelectedTab}
-      rightTabs={isRightHidden ? undefined : rightTabs}
+      mobileSelectedPage={mobileSelectedPage}
+      onMobileSelectedPageChange={setMobileSelectedPage}
+      rightPages={isRightHidden ? undefined : rightPages}
       rightBottom={
         isRightHidden ? undefined : (
           <YesNoButtons
@@ -115,8 +115,8 @@ export const YouTubeModal = ({
               onFullScreenClick={onFullScreenClick}
               isRightHidden={isRightHidden}
               onDetailsClick={onDetailsClick}
-              tabs={rightTabs}
-              selectedTab={0}
+              pages={rightPages}
+              selectedPage={0}
               onPreviousClick={onPreviousClick}
               onNextClick={onNextClick}
             />

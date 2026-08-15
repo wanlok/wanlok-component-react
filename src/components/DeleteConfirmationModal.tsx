@@ -20,7 +20,7 @@ export const DeleteConfirmationModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      tabs={[{ icon: <CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />, label: title }]}
+      pages={[{ icon: <CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />, label: title }]}
       bottom={
         <YesNoButtons
           onYesClick={() => {

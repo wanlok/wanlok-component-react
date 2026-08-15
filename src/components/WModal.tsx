@@ -1,11 +1,18 @@
 import { alpha, Modal, Stack, useMediaQuery, useTheme } from "@mui/material";
-import { TabItem, WTabs } from "./WTabs";
-import { ReactNode, RefObject } from "react";
+import { ReactElement, ReactNode, RefObject, useState } from "react";
+import { PanelRow } from "./PanelRow";
+import { DropdownIcon } from "./DropdownIcon";
+import { WCard, WCardList } from "./WCardList";
+
+export type PageItem = {
+  icon?: ReactElement;
+  label: string;
+};
 
 type PanelProps = {
-  tabs?: TabItem[];
-  selectedTab?: number;
-  onTabChange?: (tab: number) => void;
+  pages?: PageItem[];
+  selectedPage?: number;
+  onPageChange?: (page: number) => void;
   top?: ReactNode;
   bottom?: ReactNode;
   children?: ReactNode;
@@ -14,37 +21,63 @@ type PanelProps = {
 
 type RightPanelProps = {
   rightWidth?: number;
-  rightTabs?: TabItem[];
-  rightSelectedTab?: number;
-  onRightTabChange?: (tab: number) => void;
+  rightPages?: PageItem[];
+  rightSelectedPage?: number;
+  onRightPageChange?: (page: number) => void;
   rightTop?: ReactNode;
   rightBottom?: ReactNode;
   rightChildren?: ReactNode;
   rightScrollRef?: RefObject<HTMLDivElement | null>;
 };
 
-const WModalContent = ({
-  tabs,
-  selectedTab = 0,
-  onTabChange,
-  top,
-  bottom,
-  children,
-  scrollRef
-}: PanelProps) => {
-  const hasHeader = (tabs != null && tabs.length > 0) || top != null;
+const WModalContent = ({ pages, selectedPage = 0, onPageChange, top, bottom, children, scrollRef }: PanelProps) => {
+  const hasHeader = (pages != null && pages.length > 0) || top != null;
+  const [pagesOpened, setPagesOpened] = useState(false);
+  const selectedPageItem = pages?.[selectedPage];
   return (
     <Stack sx={{ flex: 1, overflow: "hidden", backgroundColor: "background.default" }}>
       {hasHeader && (
         <Stack sx={{ gap: "1px" }}>
-          {tabs && tabs.length > 0 && <WTabs value={selectedTab} tabs={tabs} onChange={onTabChange ?? (() => {})} />}
-          {top && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{top}</Stack>}
+          {pages &&
+            pages.length > 0 &&
+            selectedPageItem &&
+            (pages.length > 1 ? (
+              <WCard onClick={() => setPagesOpened(!pagesOpened)} sx={{ backgroundColor: "background.default" }}>
+                <Stack sx={{ flexDirection: "row", alignItems: "center" }}>
+                  <Stack sx={{ flex: 1 }}>
+                    <PanelRow icon={selectedPageItem.icon} title={selectedPageItem.label} />
+                  </Stack>
+                  <DropdownIcon panelOpened={pagesOpened} />
+                </Stack>
+              </WCard>
+            ) : (
+              <PanelRow icon={selectedPageItem.icon} title={selectedPageItem.label} />
+            ))}
+          {top && !pagesOpened && (
+            <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{top}</Stack>
+          )}
         </Stack>
       )}
       <Stack ref={scrollRef} sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>
-        {children}
+        {pagesOpened && pages ? (
+          <WCardList
+            items={pages}
+            renderContent={(page) => <PanelRow icon={page.icon} title={page.label} />}
+            onContentClick={(page) => {
+              if (page) {
+                onPageChange?.(pages.indexOf(page));
+              }
+              setPagesOpened(false);
+            }}
+            renderRightContent={() => <></>}
+          />
+        ) : (
+          children
+        )}
       </Stack>
-      {bottom && <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{bottom}</Stack>}
+      {bottom && !pagesOpened && (
+        <Stack sx={{ flexDirection: "row", minHeight: 56, gap: "1px", flexShrink: 0 }}>{bottom}</Stack>
+      )}
     </Stack>
   );
 };
@@ -55,19 +88,19 @@ export const WModal = ({
   width,
   height,
   isFullScreen = false,
-  mobileSelectedTab = 0,
-  onMobileSelectedTabChange,
+  mobileSelectedPage = 0,
+  onMobileSelectedPageChange,
   hideLeftLabel,
-  tabs,
-  selectedTab,
-  onTabChange,
+  pages,
+  selectedPage,
+  onPageChange,
   top,
   bottom,
   children,
   rightWidth = 400,
-  rightTabs,
-  rightSelectedTab,
-  onRightTabChange,
+  rightPages,
+  rightSelectedPage,
+  onRightPageChange,
   rightTop,
   rightBottom,
   rightChildren,
@@ -78,16 +111,16 @@ export const WModal = ({
   width?: number | string;
   height?: number | string;
   isFullScreen?: boolean;
-  mobileSelectedTab?: number;
-  onMobileSelectedTabChange?: (tab: number) => void;
+  mobileSelectedPage?: number;
+  onMobileSelectedPageChange?: (page: number) => void;
   hideLeftLabel?: boolean;
 } & PanelProps &
   RightPanelProps) => {
   const { palette, breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const fullScreen = mobile || isFullScreen;
-  const leftTabs = tabs ?? [];
-  const leftTabCount = leftTabs.length;
+  const leftPages = pages ?? [];
+  const leftPageCount = leftPages.length;
 
   return (
     <Modal
@@ -121,27 +154,27 @@ export const WModal = ({
       >
         {mobile && rightChildren ? (
           <WModalContent
-            tabs={[...leftTabs, ...(rightTabs ?? [])]}
-            selectedTab={mobileSelectedTab}
-            onTabChange={(newTab) => {
-              onMobileSelectedTabChange?.(newTab);
-              if (newTab >= leftTabCount) {
-                onRightTabChange?.(newTab - leftTabCount);
+            pages={[...leftPages, ...(rightPages ?? [])]}
+            selectedPage={mobileSelectedPage}
+            onPageChange={(newPage) => {
+              onMobileSelectedPageChange?.(newPage);
+              if (newPage >= leftPageCount) {
+                onRightPageChange?.(newPage - leftPageCount);
               } else {
-                onTabChange?.(newTab);
+                onPageChange?.(newPage);
               }
             }}
-            top={mobileSelectedTab < leftTabCount ? top : rightTop}
-            bottom={mobileSelectedTab < leftTabCount ? bottom : rightBottom}
+            top={mobileSelectedPage < leftPageCount ? top : rightTop}
+            bottom={mobileSelectedPage < leftPageCount ? bottom : rightBottom}
           >
-            {mobileSelectedTab < leftTabCount ? children : rightChildren}
+            {mobileSelectedPage < leftPageCount ? children : rightChildren}
           </WModalContent>
         ) : (
           <>
             <WModalContent
-              tabs={hideLeftLabel ? undefined : tabs}
-              selectedTab={selectedTab}
-              onTabChange={onTabChange}
+              pages={hideLeftLabel ? undefined : pages}
+              selectedPage={selectedPage}
+              onPageChange={onPageChange}
               top={top}
               bottom={bottom}
             >
@@ -150,9 +183,9 @@ export const WModal = ({
             {rightChildren && (
               <Stack sx={{ width: rightWidth }}>
                 <WModalContent
-                  tabs={rightTabs}
-                  selectedTab={rightSelectedTab}
-                  onTabChange={onRightTabChange}
+                  pages={rightPages}
+                  selectedPage={rightSelectedPage}
+                  onPageChange={onRightPageChange}
                   top={rightTop}
                   bottom={rightBottom}
                   scrollRef={rightScrollRef}

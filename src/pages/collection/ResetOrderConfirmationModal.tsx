@@ -16,7 +16,7 @@ export const ResetOrderConfirmationModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      tabs={[{ icon: <UndoIcon sx={{ fontSize: 20 }} />, label: "Reset Order" }]}
+      pages={[{ icon: <UndoIcon sx={{ fontSize: 20 }} />, label: "Reset Order" }]}
       bottom={
         <YesNoButtons
           onYesClick={() => {

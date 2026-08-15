@@ -31,7 +31,7 @@ export const SubmitModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      tabs={[{ label: showCorrectAnswers ? "Quiz Results" : "Quiz Submission" }]}
+      pages={[{ label: showCorrectAnswers ? "Quiz Results" : "Quiz Submission" }]}
       bottom={
         showCorrectAnswers ? (
           <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>

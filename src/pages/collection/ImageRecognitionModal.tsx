@@ -139,8 +139,8 @@ export const ImageRecognitionModal = ({
   const [editedName, setEditedName] = useState(name);
   const [editedPreviewAlignment, setEditedPreviewAlignment] = useState(previewAlignment);
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
-  const [desktopSelectedTab, setDesktopSelectedTab] = useState(tab === "recognitions" ? 1 : 0);
-  const [mobileSelectedTab, setMobileSelectedTab] = useState(tab === "recognitions" ? 2 : 0);
+  const [desktopSelectedPage, setDesktopSelectedPage] = useState(tab === "recognitions" ? 1 : 0);
+  const [mobileSelectedPage, setMobileSelectedPage] = useState(tab === "recognitions" ? 2 : 0);
   const [zoom, setZoom] = useState("fit");
   const { isFullScreen, onFullScreenClick, exitFullScreen, isRightHidden, onDetailsClick } = useModalControlGroup();
   const [scrollbarWidths, setScrollbarWidths] = useState({ bottom: 0, right: 0 });
@@ -195,7 +195,7 @@ export const ImageRecognitionModal = ({
     rightScrollRef,
     onRegionSelected: () => {
       if (mobile) {
-        setMobileSelectedTab(0);
+        setMobileSelectedPage(0);
       }
     }
   });
@@ -205,9 +205,9 @@ export const ImageRecognitionModal = ({
     onClose();
   };
 
-  const rightTabs = [
+  const rightPages = [
     { icon: <ViewListIcon sx={{ fontSize: 24 }} />, label: "Details" },
-    { icon: <VisibilityIcon sx={{ fontSize: 28 }} />, label: "Recognitions" }
+    { icon: <VisibilityIcon sx={{ fontSize: 28 }} />, label: `Recognitions (${regions.length})` }
   ];
 
   return (
@@ -217,7 +217,7 @@ export const ImageRecognitionModal = ({
       width="80vw"
       height="80dvh"
       isFullScreen={isFullScreen}
-      tabs={[{ icon: <ImageIcon sx={{ fontSize: 24 }} />, label: "Image" }]}
+      pages={[{ icon: <ImageIcon sx={{ fontSize: 24 }} />, label: "Image" }]}
       hideLeftLabel
       bottom={
         mobile ? (
@@ -239,28 +239,28 @@ export const ImageRecognitionModal = ({
           </>
         ) : undefined
       }
-      rightTabs={rightHidden ? undefined : rightTabs}
-      rightSelectedTab={desktopSelectedTab}
-      onRightTabChange={(newTab) => {
-        setDesktopSelectedTab(newTab);
+      rightPages={rightHidden ? undefined : rightPages}
+      rightSelectedPage={desktopSelectedPage}
+      onRightPageChange={(newPage) => {
+        setDesktopSelectedPage(newPage);
         setControlGroupState(0);
         if (folderId && itemId) {
-          navigate(`/collections/${folderId}/${itemId}/${newTab === 1 ? "recognitions" : "details"}`, {
+          navigate(`/collections/${folderId}/${itemId}/${newPage === 1 ? "recognitions" : "details"}`, {
             replace: true
           });
         }
       }}
-      mobileSelectedTab={mobileSelectedTab}
-      onMobileSelectedTabChange={(newTab) => {
-        setMobileSelectedTab(newTab);
+      mobileSelectedPage={mobileSelectedPage}
+      onMobileSelectedPageChange={(newPage) => {
+        setMobileSelectedPage(newPage);
         if (folderId && itemId) {
-          navigate(`/collections/${folderId}/${itemId}/${newTab === 2 ? "recognitions" : "details"}`, {
+          navigate(`/collections/${folderId}/${itemId}/${newPage === 2 ? "recognitions" : "details"}`, {
             replace: true
           });
         }
       }}
       rightTop={
-        !rightHidden && desktopSelectedTab === 1 ? (
+        !rightHidden && desktopSelectedPage === 1 ? (
           <RecognitionsTop
             selectedLayout={selectedLayout}
             controlGroupState={controlGroupState}
@@ -286,7 +286,7 @@ export const ImageRecognitionModal = ({
         )
       }
       rightChildren={
-        rightHidden ? undefined : desktopSelectedTab === 0 ? (
+        rightHidden ? undefined : desktopSelectedPage === 0 ? (
           <Details
             editedName={editedName}
             onEditedNameChange={setEditedName}
@@ -322,7 +322,7 @@ export const ImageRecognitionModal = ({
         <ImageRegionOverlay
           src={src}
           alt={name}
-          regions={mobile || desktopSelectedTab === 1 ? regions : []}
+          regions={mobile || desktopSelectedPage === 1 ? regions : []}
           onRegionsChange={setRegions}
           onRegionMouseUp={onRegionMouseUp}
           scrollRef={imageScrollRef}
@@ -349,10 +349,10 @@ export const ImageRecognitionModal = ({
             onFullScreenClick={onFullScreenClick}
             isRightHidden={isRightHidden}
             onDetailsClick={onDetailsClick}
-            tabs={rightTabs}
-            selectedTab={desktopSelectedTab}
-            onPreviousClick={desktopSelectedTab === 1 ? undefined : onPreviousClick}
-            onNextClick={desktopSelectedTab === 1 ? undefined : onNextClick}
+            pages={rightPages}
+            selectedPage={desktopSelectedPage}
+            onPreviousClick={desktopSelectedPage === 1 ? undefined : onPreviousClick}
+            onNextClick={desktopSelectedPage === 1 ? undefined : onNextClick}
             scrollbarWidths={scrollbarWidths}
           />
         )}

@@ -26,7 +26,7 @@ export const QuizItemsModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      tabs={[{ icon: <AssignmentIcon sx={{ fontSize: 24 }} />, label: `Quizzes (${items.length})` }]}
+      pages={[{ icon: <AssignmentIcon sx={{ fontSize: 24 }} />, label: `Quizzes (${items.length})` }]}
       top={
         <>
           <WButton onClick={() => setItems([...items, { label: "", value: "" }])} sx={iconButtonSx}>

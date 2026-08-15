@@ -81,7 +81,7 @@ export const FolderModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      tabs={[{ icon: <EditIcon sx={{ fontSize: 18, mt: -0.1 }} />, label: "Edit Folder" }]}
+      pages={[{ icon: <EditIcon sx={{ fontSize: 18, mt: -0.1 }} />, label: "Edit Folder" }]}
       bottom={
         <YesNoButtons
           yesLabel="Save"
@@ -121,7 +121,7 @@ export const FolderModal = ({
               onClick={() => setControlGroupState(controlGroupState === 1 ? 0 : 1)}
               sx={iconButtonSx}
             >
-              <VisibilityIcon sx={{ fontSize: 26 }} />
+              <VisibilityIcon sx={{ fontSize: 28 }} />
             </WButton>
             <WButton
               isActivated={controlGroupState === 2}
@@ -185,7 +185,7 @@ export const FolderModal = ({
                 </Stack>
                 {controlGroupState === 1 && (
                   <WButton onClick={() => toggleAttributeVisible(i)} sx={iconButtonSx}>
-                    {visible ? <VisibilityIcon sx={{ fontSize: 24 }} /> : <VisibilityOffIcon sx={{ fontSize: 24 }} />}
+                    {visible ? <VisibilityIcon sx={{ fontSize: 28 }} /> : <VisibilityOffIcon sx={{ fontSize: 28 }} />}
                   </WButton>
                 )}
                 {controlGroupState === 2 && (
