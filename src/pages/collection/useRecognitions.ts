@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useRef, useState } from "react";
+import { RefObject, useCallback, useEffect, useRef, useState } from "react";
 import {
   getImageBase64String,
   getIsoLanguage,
@@ -133,6 +133,14 @@ export const useRecognitions = ({
     await recognizeRegionText(newRegion, newRegion.recogniseLanguage ?? "eng");
   };
 
+  const onDeleteSelectedRegionClick = useCallback(() => {
+    if (!selectedRegionId) {
+      return;
+    }
+    setRegions((prev) => prev.filter((r) => r.id !== selectedRegionId));
+    setSelectedRegionId(null);
+  }, [selectedRegionId]);
+
   useEffect(() => {
     if (!open || !selectedRegionId) {
       return;
@@ -145,12 +153,11 @@ export const useRecognitions = ({
       if (target && ["INPUT", "TEXTAREA"].includes(target.tagName)) {
         return;
       }
-      setRegions((prev) => prev.filter((r) => r.id !== selectedRegionId));
-      setSelectedRegionId(null);
+      onDeleteSelectedRegionClick();
     };
     window.addEventListener("keydown", onKeyDown);
     return () => window.removeEventListener("keydown", onKeyDown);
-  }, [open, selectedRegionId]);
+  }, [open, selectedRegionId, onDeleteSelectedRegionClick]);
 
   const onRegionMouseUp = async (regionId: string) => {
     const region = regions.find((r) => r.id === regionId);
@@ -287,6 +294,7 @@ export const useRecognitions = ({
     onRegionCorrectAnswerIndicesChange,
     onRegionTranslateLanguageChange,
     onRegionSelect,
-    onRegionAvatarClick
+    onRegionAvatarClick,
+    onDeleteSelectedRegionClick
   };
 };

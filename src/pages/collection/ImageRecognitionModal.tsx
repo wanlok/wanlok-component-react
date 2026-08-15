@@ -17,7 +17,7 @@ import { StyledContainer } from "../../components/StyledContainer";
 import { ImageModalControlGroup, ImageModalTopControlGroup } from "../../components/ImageModalControlGroup";
 import { useModalControlGroup } from "../../components/useModalControlGroup";
 import { ImageRegionOverlay, TextRegion } from "./ImageRegionOverlay";
-import { Recognitions, RecognitionsTop } from "./Recognitions";
+import { LAYOUT_ITEMS, Recognitions, RecognitionsTop } from "./Recognitions";
 import { useRecognitions } from "./useRecognitions";
 import { ImageMetaContainer } from "../../components/ImageMetaContainer";
 import { ImageMeta } from "../../services/Types";
@@ -185,7 +185,8 @@ export const ImageRecognitionModal = ({
     onRegionCorrectAnswerIndicesChange,
     onRegionTranslateLanguageChange,
     onRegionSelect,
-    onRegionAvatarClick
+    onRegionAvatarClick,
+    onDeleteSelectedRegionClick
   } = useRecognitions({
     open,
     src,
@@ -219,23 +220,31 @@ export const ImageRecognitionModal = ({
       isFullScreen={isFullScreen}
       pages={[{ icon: <ImageIcon sx={{ fontSize: 24 }} />, label: "Image" }]}
       hideLeftLabel
-      bottom={
-        mobile ? (
-          <WButton onClick={closeModal} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
-            Cancel
-          </WButton>
-        ) : undefined
-      }
       top={
         mobile ? (
           <>
+            <StyledContainer sx={{ flex: 1, p: 1 }}>
+              <SelectInput items={LAYOUT_ITEMS} value={selectedLayout} onChange={onLayoutIndexChange} />
+            </StyledContainer>
             <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
               <AddIcon sx={{ fontSize: 26 }} />
             </WButton>
+            <WButton onClick={onDeleteSelectedRegionClick} sx={iconButtonSx}>
+              <CloseIcon sx={{ fontSize: 24 }} />
+            </WButton>
+          </>
+        ) : undefined
+      }
+      bottom={
+        mobile ? (
+          <>
             <ImageModalTopControlGroup
               onZoomInClick={() => setZoom("original")}
               onZoomOutClick={() => setZoom("fit")}
             />
+            <WButton onClick={closeModal} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
+              Cancel
+            </WButton>
           </>
         ) : undefined
       }
