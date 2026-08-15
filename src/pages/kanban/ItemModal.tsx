@@ -199,7 +199,7 @@ export const ItemModal = ({
         ) : (
           <Stack sx={{ gap: 2 }}>
             <Typography variant="body1" sx={{ color: kanbanItem.name ? "text.primary" : "text.disabled" }}>
-              {kanbanItem.name || "No name"}
+              {kanbanItem.name || "No Name"}
             </Typography>
             <Divider />
             <Typography
@@ -207,7 +207,7 @@ export const ItemModal = ({
               component="div"
               sx={{ color: kanbanItem.content ? "text.primary" : "text.disabled", whiteSpace: "pre-wrap" }}
             >
-              {kanbanItem.content ? parseContent(kanbanItem.content) : "No content"}
+              {kanbanItem.content ? parseContent(kanbanItem.content) : "No Content"}
             </Typography>
           </Stack>
         )}

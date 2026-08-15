@@ -63,7 +63,7 @@ export const KanbanCardContent = ({ item, isDragIconHidden }: { item: KanbanItem
   <Stack sx={{ flexDirection: "row", gap: 2 }}>
     <Stack sx={{ flex: 1, gap: 1 }}>
       <Typography variant="body1" sx={{ color: item.name ? "text.primary" : "text.disabled" }}>
-        {item.name || "No name"}
+        {item.name || "No Name"}
       </Typography>
       <Stack sx={{ flexDirection: "row" }}>
         <Typography variant="body2">{getDateString(new Date(item.createdAt))}</Typography>
@@ -123,7 +123,7 @@ export const KanbanCard = ({
       position={{ x: 0, y: 0 }}
       onStart={(_, { node: draggedNode }) => {
         dragged.current = false;
-        savedScrollTops.current = (stackRefs.current ?? []).map(ref => ref.current?.scrollTop ?? 0);
+        savedScrollTops.current = (stackRefs.current ?? []).map((ref) => ref.current?.scrollTop ?? 0);
         (stackRefs.current ?? []).forEach((ref, i) => {
           if (ref.current) {
             ref.current.style.marginTop = "-" + savedScrollTops.current[i] + "px";

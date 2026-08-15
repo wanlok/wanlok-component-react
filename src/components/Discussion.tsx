@@ -99,7 +99,7 @@ export const DiscussionMessages = ({
     sx={{ flex: messages.length === 0 ? 1 : undefined, backgroundColor: "background.default", gap: 0.5 }}
   >
     {messages.length === 0 ? (
-      <EmptyPlaceholder />
+      <EmptyPlaceholder text={"No Discussion"} />
     ) : (
       messages.map((message, i) => (
         <MessageRow
