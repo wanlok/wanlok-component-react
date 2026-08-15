@@ -25,6 +25,7 @@ const HANDLE_SIZE = 12;
 const MIN_SIZE = 20;
 const MIN_POLYGON_POINTS = 3;
 const DOUBLE_TAP_MS = 300;
+export const AVATAR_RADIUS = 16;
 const HANDLES: Handle[] = ["nw", "ne", "se", "sw"];
 
 const HANDLE_CURSORS: Record<Handle, string> = {
@@ -318,29 +319,10 @@ export const ImageRegionOverlay = ({
         {regions.map((region, i) => {
           const rect = getPointsBoundingBox(region.points);
           const isSelected = i === selectedIndex;
-          const avatarRadius = 16;
-          const avatarCx = rect.x - 24;
-          const avatarCy = rect.y + 16;
+          const avatarCx = isPolygonEnabled ? rect.x + rect.width / 2 : rect.x - 24;
+          const avatarCy = isPolygonEnabled ? rect.y + rect.height / 2 : rect.y + 16;
           return (
             <g key={i}>
-              <circle
-                cx={avatarCx}
-                cy={avatarCy}
-                r={avatarRadius}
-                fill={isSelected ? palette.common.black : palette.primary.main}
-                style={{ pointerEvents: "none" }}
-              />
-              <text
-                x={avatarCx}
-                y={avatarCy}
-                textAnchor="middle"
-                dominantBaseline="central"
-                fill={isSelected ? palette.common.white : palette.primary.contrastText}
-                fontSize={12}
-                style={{ userSelect: "none", pointerEvents: "none", fontFamily: typography.fontFamily }}
-              >
-                {i + 1}
-              </text>
               {isPolygonEnabled ? (
                 <polygon
                   points={region.points.map((p) => `${p.x},${p.y}`).join(" ")}
@@ -417,6 +399,24 @@ export const ImageRegionOverlay = ({
                   ))}
                 </>
               )}
+              <circle
+                cx={avatarCx}
+                cy={avatarCy}
+                r={AVATAR_RADIUS}
+                fill={isSelected ? palette.common.black : palette.primary.main}
+                style={{ pointerEvents: "none" }}
+              />
+              <text
+                x={avatarCx}
+                y={avatarCy}
+                textAnchor="middle"
+                dominantBaseline="central"
+                fill={isSelected ? palette.common.white : palette.primary.contrastText}
+                fontSize={12}
+                style={{ userSelect: "none", pointerEvents: "none", fontFamily: typography.fontFamily }}
+              >
+                {i + 1}
+              </text>
             </g>
           );
         })}

@@ -1,5 +1,10 @@
 import { Avatar, ButtonBase, Skeleton, Stack, Typography } from "@mui/material";
-import { Add as AddIcon, Close as CloseIcon, SwapHoriz as SwapHorizIcon } from "@mui/icons-material";
+import {
+  Add as AddIcon,
+  AutoFixHigh as AutoFixHighIcon,
+  Close as CloseIcon,
+  SwapHoriz as SwapHorizIcon
+} from "@mui/icons-material";
 import { SelectInput } from "../../components/SelectInput";
 import { StyledContainer } from "../../components/StyledContainer";
 import { CheckboxInput } from "../../components/CheckboxInput";
@@ -20,20 +25,6 @@ export const LAYOUT_ITEMS = [
     isPolygonEnabled: false
   },
   {
-    label: "Search",
-    value: "search",
-    isTextRecognitionEnabled: true,
-    isAutoRegionDetectionEnabled: false,
-    isPolygonEnabled: false
-  },
-  {
-    label: "Translate",
-    value: "translate",
-    isTextRecognitionEnabled: true,
-    isAutoRegionDetectionEnabled: false,
-    isPolygonEnabled: false
-  },
-  {
     label: "Quiz",
     value: "quiz",
     isTextRecognitionEnabled: true,
@@ -46,6 +37,20 @@ export const LAYOUT_ITEMS = [
     isTextRecognitionEnabled: false,
     isAutoRegionDetectionEnabled: false,
     isPolygonEnabled: true
+  },
+  {
+    label: "Search",
+    value: "search",
+    isTextRecognitionEnabled: true,
+    isAutoRegionDetectionEnabled: false,
+    isPolygonEnabled: false
+  },
+  {
+    label: "Translate",
+    value: "translate",
+    isTextRecognitionEnabled: true,
+    isAutoRegionDetectionEnabled: false,
+    isPolygonEnabled: false
   }
 ];
 
@@ -135,7 +140,9 @@ const RegionRow = ({
   onTranslateLanguageChange,
   onDelimiterChange,
   onCorrectAnswerIndicesChange,
-  isTranslating
+  onAutoExpandClick,
+  isTranslating,
+  isAutoExpanding
 }: {
   region: Region;
   index: number;
@@ -153,7 +160,9 @@ const RegionRow = ({
   onTranslateLanguageChange: (language: string) => void;
   onDelimiterChange: (delimiter: string) => void;
   onCorrectAnswerIndicesChange: (indices: number[]) => void;
+  onAutoExpandClick: () => void;
   isTranslating: boolean;
+  isAutoExpanding: boolean;
 }) => {
   const rect = getPointsBoundingBox(region.points);
   const isPolygonEnabled = LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isPolygonEnabled ?? false;
@@ -183,13 +192,18 @@ const RegionRow = ({
       <StyledContainer sx={{ flexDirection: "row" }}>
         <Stack sx={{ flex: 1, p: 1, gap: 1 }}>
           {selectedLayout === "regions" ? (
-            <TextInput
-              label="Name"
-              value={region.recognisedText ?? ""}
-              onChange={onTextChange}
-              onBlur={onTextBlur}
-              inputSx={{ flex: 1 }}
-            />
+            <Stack sx={{ flexDirection: "row", alignItems: "flex-end", gap: 1 }}>
+              <TextInput
+                label="Name"
+                value={region.recognisedText ?? ""}
+                onChange={onTextChange}
+                onBlur={onTextBlur}
+                inputSx={{ flex: 1 }}
+              />
+              <WButton onClick={onAutoExpandClick} disabled={isAutoExpanding} sx={iconButtonSx}>
+                <AutoFixHighIcon sx={{ fontSize: 22 }} />
+              </WButton>
+            </Stack>
           ) : (
             <>
               <SelectInput
@@ -298,7 +312,9 @@ export const Recognitions = ({
   onRegionTranslateLanguageChange,
   onRegionDelimiterChange,
   onRegionCorrectAnswerIndicesChange,
-  translatingRegionIndices
+  onRegionAutoExpandClick,
+  translatingRegionIndices,
+  autoExpandingRegionIndices
 }: {
   regions: Region[];
   onRegionsChange: (regions: Region[]) => void;
@@ -313,7 +329,9 @@ export const Recognitions = ({
   onRegionTranslateLanguageChange: (index: number, language: string) => void;
   onRegionDelimiterChange: (index: number, delimiter: string) => void;
   onRegionCorrectAnswerIndicesChange: (index: number, indices: number[]) => void;
+  onRegionAutoExpandClick: (index: number) => void;
   translatingRegionIndices: Set<number>;
+  autoExpandingRegionIndices: Set<number>;
 }) => {
   const moveRegion = (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= regions.length) {
@@ -348,6 +366,8 @@ export const Recognitions = ({
           onTranslateLanguageChange={(language) => onRegionTranslateLanguageChange(i, language)}
           onDelimiterChange={(delimiter) => onRegionDelimiterChange(i, delimiter)}
           onCorrectAnswerIndicesChange={(indices) => onRegionCorrectAnswerIndicesChange(i, indices)}
+          onAutoExpandClick={() => onRegionAutoExpandClick(i)}
+          isAutoExpanding={autoExpandingRegionIndices.has(i)}
         />
       ))}
     </Stack>

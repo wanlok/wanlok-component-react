@@ -10,7 +10,8 @@ import {
 import { regex, Rect } from "../../services/Types";
 import { detectDelimiter } from "../../utils/detectDelimiter";
 import { detectNextTextRegion } from "../../utils/detectNextTextRegion";
-import { Region } from "./ImageRegionOverlay";
+import { floodFillRegion } from "../../utils/floodFillRegion";
+import { AVATAR_RADIUS, Region } from "./ImageRegionOverlay";
 import { LAYOUT_ITEMS } from "./Recognitions";
 
 export const useRecognitions = ({
@@ -35,6 +36,7 @@ export const useRecognitions = ({
   const [controlGroupState, setControlGroupState] = useState(0);
   const [selectedRegionIndex, setSelectedRegionIndex] = useState<number | null>(null);
   const [translatingRegionIndices, setTranslatingRegionIndices] = useState<Set<number>>(new Set());
+  const [autoExpandingRegionIndices, setAutoExpandingRegionIndices] = useState<Set<number>>(new Set());
   const imageCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const scrollImageToRegion = (region: Region) => {
@@ -118,8 +120,10 @@ export const useRecognitions = ({
     const container = imageScrollRef.current;
     const defaultX = (container?.scrollLeft ?? 0) + 80;
     const defaultY = (container?.scrollTop ?? 0) + 40;
-    const defaultWidth = 240;
-    const defaultHeight = 135;
+    const isPolygonEnabled = LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isPolygonEnabled ?? false;
+    const defaultSize = AVATAR_RADIUS * 2 + 8;
+    const defaultWidth = isPolygonEnabled ? defaultSize : 240;
+    const defaultHeight = isPolygonEnabled ? defaultSize : 135;
     const isAutoRegionDetectionEnabled =
       LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isAutoRegionDetectionEnabled ?? false;
     let rect: Rect;
@@ -284,6 +288,31 @@ export const useRecognitions = ({
     }
   };
 
+  const onAutoExpandRegionClick = async (index: number) => {
+    const region = regions[index];
+    if (!region) {
+      return;
+    }
+    setAutoExpandingRegionIndices((prev) => new Set(prev).add(index));
+    try {
+      const canvas = await ensureImageCanvas();
+      if (!canvas) {
+        return;
+      }
+      const rect = getPointsBoundingBox(region.points);
+      const filledPoints = await floodFillRegion(canvas, rect.x + rect.width / 2, rect.y + rect.height / 2);
+      if (filledPoints) {
+        setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, points: filledPoints } : r)));
+      }
+    } finally {
+      setAutoExpandingRegionIndices((prev) => {
+        const next = new Set(prev);
+        next.delete(index);
+        return next;
+      });
+    }
+  };
+
   const effectiveControlGroupState = regions.length === 0 ? 0 : controlGroupState;
 
   return {
@@ -294,6 +323,7 @@ export const useRecognitions = ({
     setControlGroupState,
     selectedRegionIndex,
     translatingRegionIndices,
+    autoExpandingRegionIndices,
     onAddRegionClick,
     onRegionMouseUp,
     onRegionLanguageChange,
@@ -306,6 +336,7 @@ export const useRecognitions = ({
     onRegionTranslateLanguageChange,
     onRegionSelect,
     onRegionAvatarClick,
-    onDeleteSelectedRegionClick
+    onDeleteSelectedRegionClick,
+    onAutoExpandRegionClick
   };
 };

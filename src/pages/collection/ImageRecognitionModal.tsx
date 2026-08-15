@@ -174,6 +174,7 @@ export const ImageRecognitionModal = ({
     setControlGroupState,
     selectedRegionIndex,
     translatingRegionIndices,
+    autoExpandingRegionIndices,
     onAddRegionClick,
     onRegionMouseUp,
     onRegionLanguageChange,
@@ -186,7 +187,8 @@ export const ImageRecognitionModal = ({
     onRegionTranslateLanguageChange,
     onRegionSelect,
     onRegionAvatarClick,
-    onDeleteSelectedRegionClick
+    onDeleteSelectedRegionClick,
+    onAutoExpandRegionClick
   } = useRecognitions({
     open,
     src,
@@ -324,7 +326,9 @@ export const ImageRecognitionModal = ({
             onRegionTranslateLanguageChange={onRegionTranslateLanguageChange}
             onRegionDelimiterChange={onRegionDelimiterChange}
             onRegionCorrectAnswerIndicesChange={onRegionCorrectAnswerIndicesChange}
+            onRegionAutoExpandClick={onAutoExpandRegionClick}
             translatingRegionIndices={translatingRegionIndices}
+            autoExpandingRegionIndices={autoExpandingRegionIndices}
           />
         )
       }
