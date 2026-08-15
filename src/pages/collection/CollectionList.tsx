@@ -7,6 +7,7 @@ import { WChip } from "../../components/WChip";
 import { ImageTitle } from "../../components/ImageTitle";
 import { OneLineTypography } from "../../components/OneLineTypography";
 import { getVisibleAttributeText } from "../../utils/getVisibleAttributeText";
+import { EmptyPlaceholder } from "../../components/EmptyPlaceholder";
 
 export const CollectionList = ({
   charts,
@@ -49,6 +50,17 @@ export const CollectionList = ({
   const mobile = useMediaQuery(breakpoints.down("md"));
 
   const gridTemplateColumns = { xs: "1fr", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)", xl: "repeat(4, 1fr)" };
+  const isEmpty =
+    loadingCount === 0 &&
+    charts.length === 0 &&
+    files.length === 0 &&
+    hyperlinks.length === 0 &&
+    steam.length === 0 &&
+    youTubeRegularVideos.length === 0 &&
+    youTubeShortVideos.length === 0;
+  if (isEmpty) {
+    return <EmptyPlaceholder />;
+  }
   return (
     <Stack ref={containerRef} sx={{ flex: 1, overflowY: "auto" }}>
       <Stack sx={{ display: "grid", gridTemplateColumns, gap: "1px" }}>

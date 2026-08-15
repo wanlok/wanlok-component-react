@@ -12,7 +12,7 @@ export const EmptyPlaceholder = ({ icon, text = "Empty" }: { icon?: ReactNode; t
     }}
   >
     {icon}
-    <Typography variant="body2" sx={{ color: "text.disabled" }}>
+    <Typography variant="body1" sx={{ color: "text.disabled" }}>
       {text}
     </Typography>
   </Stack>

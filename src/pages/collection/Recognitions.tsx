@@ -9,6 +9,7 @@ import { ControlGroup } from "../../components/ControlGroup";
 import { LANGUAGE_ITEMS, TRANSLATE_LANGUAGE_ITEMS } from "../../common/ImageUtils";
 import { splitAnswers } from "../../utils/splitAnswers";
 import { TextRegion } from "./ImageRegionOverlay";
+import { EmptyPlaceholder } from "../../components/EmptyPlaceholder";
 
 export const LAYOUT_ITEMS = [
   { label: "Default", value: "default", isAutoRegionDetectionEnabled: false },
@@ -268,6 +269,9 @@ export const Recognitions = ({
     [next[fromIndex], next[toIndex]] = [next[toIndex], next[fromIndex]];
     onRegionsChange(next);
   };
+  if (regions.length === 0) {
+    return <EmptyPlaceholder />;
+  }
   return (
     <Stack sx={{ px: 2, pt: 1, pb: 2, gap: 1 }}>
       {regions.map((region, i) => (
