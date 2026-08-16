@@ -196,6 +196,7 @@ export const ImageRecognitionModal = ({
     regions: initialRegions,
     imageScrollRef,
     rightScrollRef,
+    mobile,
     onRegionSelected: () => {
       if (mobile) {
         setMobileSelectedPage(0);

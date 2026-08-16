@@ -21,6 +21,7 @@ export const useRecognitions = ({
   regions: initialRegions,
   imageScrollRef,
   rightScrollRef,
+  mobile,
   onRegionSelected
 }: {
   open: boolean;
@@ -29,6 +30,7 @@ export const useRecognitions = ({
   regions: Region[];
   imageScrollRef: RefObject<HTMLDivElement | null>;
   rightScrollRef: RefObject<HTMLDivElement | null>;
+  mobile: boolean;
   onRegionSelected?: () => void;
 }) => {
   const [regions, setRegions] = useState<Region[]>(initialRegions);
@@ -119,7 +121,7 @@ export const useRecognitions = ({
   const onAddRegionClick = async () => {
     const container = imageScrollRef.current;
     const defaultX = (container?.scrollLeft ?? 0) + 80;
-    const defaultY = (container?.scrollTop ?? 0) + 40;
+    const defaultY = (container?.scrollTop ?? 0) + (mobile ? 40 : 120);
     const isPolygonEnabled = LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isPolygonEnabled ?? false;
     const defaultSize = AVATAR_RADIUS * 2 + 8;
     const defaultWidth = isPolygonEnabled ? defaultSize : 240;
@@ -140,6 +142,7 @@ export const useRecognitions = ({
     const newRegion: Region = { points: getRectPoints(rect) };
     const newIndex = regions.length;
     setRegions((prev) => [...prev, newRegion]);
+    setSelectedRegionIndex(newIndex);
     setControlGroupState(0);
     requestAnimationFrame(() => {
       rightScrollRef.current?.scrollTo({ top: rightScrollRef.current.scrollHeight, behavior: "smooth" });
