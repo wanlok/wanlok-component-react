@@ -135,9 +135,7 @@ const RegionRow = ({
   onTranslateLanguageChange,
   onDelimiterChange,
   onCorrectAnswerIndicesChange,
-  onAutoExpandClick,
-  isTranslating,
-  isAutoExpanding
+  isTranslating
 }: {
   region: Region;
   index: number;
@@ -155,52 +153,43 @@ const RegionRow = ({
   onTranslateLanguageChange: (language: string) => void;
   onDelimiterChange: (delimiter: string) => void;
   onCorrectAnswerIndicesChange: (indices: number[]) => void;
-  onAutoExpandClick: () => void;
   isTranslating: boolean;
-  isAutoExpanding: boolean;
 }) => {
   const rect = getPointsBoundingBox(region.points);
   const isPolygonEnabled = LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isPolygonEnabled ?? false;
   return (
     <Stack data-region-index={index} sx={{ gap: "1px" }}>
-      <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-        <ButtonBase
+      <ButtonBase
+        sx={{
+          flexDirection: "row",
+          flex: 1,
+          alignItems: "center",
+          justifyContent: "flex-start",
+          gap: 1,
+          py: 1,
+          pl: 1,
+          pr: 1,
+          ml: -1
+        }}
+        onClick={onAvatarClick}
+      >
+        <Avatar
           sx={{
-            flexDirection: "row",
-            flex: 1,
-            alignItems: "center",
-            justifyContent: "flex-start",
-            gap: 1,
-            py: 1,
-            pl: 1,
-            pr: 1,
-            ml: -1
+            width: 32,
+            height: 32,
+            fontSize: 12,
+            backgroundColor: isSelected ? "common.black" : "background.default",
+            color: isSelected ? "common.white" : "common.black"
           }}
-          onClick={onAvatarClick}
         >
-          <Avatar
-            sx={{
-              width: 32,
-              height: 32,
-              fontSize: 12,
-              backgroundColor: isSelected ? "common.black" : "background.default",
-              color: isSelected ? "common.white" : "common.black"
-            }}
-          >
-            {index + 1}
-          </Avatar>
-          <Typography variant="body2">
-            {isPolygonEnabled
-              ? `x: ${Math.round(rect.x)}, y: ${Math.round(rect.y)}, points: ${region.points.length}`
-              : `x: ${Math.round(rect.x)}, y: ${Math.round(rect.y)}, w: ${Math.round(rect.width)}, h: ${Math.round(rect.height)}`}
-          </Typography>
-        </ButtonBase>
-        {isPolygonEnabled && (
-          <WButton onClick={onAutoExpandClick} disabled={isAutoExpanding}>
-            Auto Expand
-          </WButton>
-        )}
-      </Stack>
+          {index + 1}
+        </Avatar>
+        <Typography variant="body2">
+          {isPolygonEnabled
+            ? `x: ${Math.round(rect.x)}, y: ${Math.round(rect.y)}, points: ${region.points.length}`
+            : `x: ${Math.round(rect.x)}, y: ${Math.round(rect.y)}, w: ${Math.round(rect.width)}, h: ${Math.round(rect.height)}`}
+        </Typography>
+      </ButtonBase>
       <StyledContainer sx={{ flexDirection: "row" }}>
         <Stack sx={{ flex: 1, p: 1, gap: 1 }}>
           {selectedLayout === "regions" ? (
@@ -321,9 +310,7 @@ export const Recognitions = ({
   onRegionTranslateLanguageChange,
   onRegionDelimiterChange,
   onRegionCorrectAnswerIndicesChange,
-  onRegionAutoExpandClick,
-  translatingRegionIndices,
-  autoExpandingRegionIndices
+  translatingRegionIndices
 }: {
   regions: Region[];
   onRegionsChange: (regions: Region[]) => void;
@@ -338,9 +325,7 @@ export const Recognitions = ({
   onRegionTranslateLanguageChange: (index: number, language: string) => void;
   onRegionDelimiterChange: (index: number, delimiter: string) => void;
   onRegionCorrectAnswerIndicesChange: (index: number, indices: number[]) => void;
-  onRegionAutoExpandClick: (index: number) => void;
   translatingRegionIndices: Set<number>;
-  autoExpandingRegionIndices: Set<number>;
 }) => {
   const updateRegionSequences = (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= regions.length) {
@@ -376,8 +361,6 @@ export const Recognitions = ({
           onTranslateLanguageChange={(language) => onRegionTranslateLanguageChange(i, language)}
           onDelimiterChange={(delimiter) => onRegionDelimiterChange(i, delimiter)}
           onCorrectAnswerIndicesChange={(indices) => onRegionCorrectAnswerIndicesChange(i, indices)}
-          onAutoExpandClick={() => onRegionAutoExpandClick(i)}
-          isAutoExpanding={autoExpandingRegionIndices.has(i)}
         />
       ))}
     </Stack>

@@ -244,6 +244,12 @@ export const ImageRecognitionModal = ({
         mobile ? (
           <>
             <ImageModalTopControlGroup
+              onAutoExpandButtonClick={
+                isPolygonEnabled && selectedRegionIndex !== null
+                  ? () => onAutoExpandRegionClick(selectedRegionIndex)
+                  : undefined
+              }
+              isAutoExpanding={selectedRegionIndex !== null && autoExpandingRegionIndices.has(selectedRegionIndex)}
               onZoomInClick={() => setZoom("original")}
               onZoomOutClick={() => setZoom("fit")}
             />
@@ -327,9 +333,7 @@ export const ImageRecognitionModal = ({
             onRegionTranslateLanguageChange={onRegionTranslateLanguageChange}
             onRegionDelimiterChange={onRegionDelimiterChange}
             onRegionCorrectAnswerIndicesChange={onRegionCorrectAnswerIndicesChange}
-            onRegionAutoExpandClick={onAutoExpandRegionClick}
             translatingRegionIndices={translatingRegionIndices}
-            autoExpandingRegionIndices={autoExpandingRegionIndices}
           />
         )
       }
@@ -360,6 +364,14 @@ export const ImageRecognitionModal = ({
         />
         {!mobile && (
           <ImageModalControlGroup
+            onAddButtonClick={onAddRegionClick}
+            onAutoExpandButtonClick={
+              isPolygonEnabled && selectedRegionIndex !== null
+                ? () => onAutoExpandRegionClick(selectedRegionIndex)
+                : undefined
+            }
+            isAutoExpanding={selectedRegionIndex !== null && autoExpandingRegionIndices.has(selectedRegionIndex)}
+            onDeleteButtonClick={onDeleteSelectedRegionClick}
             onZoomInClick={() => setZoom("original")}
             onZoomOutClick={() => setZoom("fit")}
             isFullScreen={isFullScreen}

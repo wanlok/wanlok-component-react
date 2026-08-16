@@ -22,7 +22,8 @@ export const ModalControlGroup = ({
   pages,
   selectedPage,
   scrollbarWidths = { right: 0, bottom: 0 },
-  topLeftChildren
+  topLeftChildren,
+  bottomLeftChildren
 }: {
   onPreviousClick?: () => void;
   onNextClick?: () => void;
@@ -34,6 +35,7 @@ export const ModalControlGroup = ({
   selectedPage: number;
   scrollbarWidths?: { bottom: number; right: number };
   topLeftChildren?: ReactNode;
+  bottomLeftChildren?: ReactNode;
 }) => {
   const { palette } = useTheme();
 
@@ -98,6 +100,7 @@ export const ModalControlGroup = ({
           </WButton>
         </Stack>
       </Stack>
+      {bottomLeftChildren && <Stack sx={{ position: "absolute", bottom, left }}>{bottomLeftChildren}</Stack>}
     </>
   );
 };
