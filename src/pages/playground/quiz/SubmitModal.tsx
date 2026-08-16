@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Divider, Stack, Typography } from "@mui/material";
-import { Close as CloseIcon } from "@mui/icons-material";
 import { WModal } from "../../../components/WModal";
 import { WButton } from "../../../components/WButton";
 import { YesNoButtons } from "../../../components/YesNoButtons";
@@ -34,8 +33,8 @@ export const SubmitModal = ({
       pages={[{ label: showCorrectAnswers ? "Quiz Results" : "Quiz Submission" }]}
       bottom={
         showCorrectAnswers ? (
-          <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
-            Close
+          <WButton onClick={onClose} sx={{ flex: 1 }}>
+            Cancel
           </WButton>
         ) : (
           <YesNoButtons

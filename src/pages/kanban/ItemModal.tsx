@@ -1,11 +1,6 @@
 import { ReactElement, useState } from "react";
 import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import {
-  Assignment as AssignmentIcon,
-  Chat as ChatIcon,
-  Close as CloseIcon,
-  Edit as EditIcon
-} from "@mui/icons-material";
+import { Assignment as AssignmentIcon, Chat as ChatIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
 import { KanbanProject } from "../../services/Types";
 import { WButton } from "../../components/WButton";
@@ -123,7 +118,7 @@ export const ItemModal = ({
                 Edit
               </WButton>
               {mobile && (
-                <WButton onClick={onClose} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
+                <WButton onClick={onClose} sx={{ flex: 1 }}>
                   Cancel
                 </WButton>
               )}

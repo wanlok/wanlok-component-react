@@ -247,7 +247,7 @@ export const ImageRecognitionModal = ({
               onZoomInClick={() => setZoom("original")}
               onZoomOutClick={() => setZoom("fit")}
             />
-            <WButton onClick={closeModal} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
+            <WButton onClick={closeModal} sx={{ flex: 1 }}>
               Cancel
             </WButton>
           </>

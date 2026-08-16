@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { Close as CloseIcon, ViewList as ViewListIcon, SmartDisplay as SmartDisplayIcon } from "@mui/icons-material";
+import { ViewList as ViewListIcon, SmartDisplay as SmartDisplayIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
 import { TextInput } from "../../components/TextInput";
 import { StyledContainer } from "../../components/StyledContainer";
@@ -53,7 +53,7 @@ export const YouTubeModal = ({
       hideLeftLabel
       bottom={
         mobile ? (
-          <WButton onClick={closeModal} rightIcon={<CloseIcon sx={{ fontSize: 24, mt: "-2px" }} />} sx={{ flex: 1 }}>
+          <WButton onClick={closeModal} sx={{ flex: 1 }}>
             Cancel
           </WButton>
         ) : undefined
