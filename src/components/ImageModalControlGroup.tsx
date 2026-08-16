@@ -1,4 +1,4 @@
-import { alpha, Stack, useTheme } from "@mui/material";
+import { alpha, CircularProgress, Stack, useTheme } from "@mui/material";
 import { Add as AddIcon, Close as CloseIcon, ZoomIn as ZoomInIcon, ZoomOut as ZoomOutIcon } from "@mui/icons-material";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { iconButtonSx, WButton } from "./WButton";
@@ -18,8 +18,17 @@ export const ImageModalTopControlGroup = ({
 }) => (
   <>
     {onAutoExpandButtonClick && (
-      <WButton onClick={onAutoExpandButtonClick} disabled={isAutoExpanding} sx={iconButtonSx}>
-        <AutoAwesomeIcon sx={{ fontSize: 24 }} />
+      <WButton
+        onClick={onAutoExpandButtonClick}
+        disabled={isAutoExpanding}
+        isActivated={isAutoExpanding}
+        sx={iconButtonSx}
+      >
+        {isAutoExpanding ? (
+          <CircularProgress size={24} sx={{ color: "common.white" }} />
+        ) : (
+          <AutoAwesomeIcon sx={{ fontSize: 24 }} />
+        )}
       </WButton>
     )}
     <WButton onClick={onZoomInClick} sx={iconButtonSx}>
@@ -69,7 +78,8 @@ export const ImageModalControlGroup = ({
   const overlayButtonSx = {
     ...iconButtonSx,
     backgroundColor: alpha(palette.primary.main, 0.9),
-    "&:hover": { backgroundColor: palette.primary.main }
+    "&:hover": { backgroundColor: "primary.main" },
+    "&.Mui-disabled": { backgroundColor: alpha(palette.common.black, 0.9) }
   };
 
   return (
@@ -102,15 +112,24 @@ export const ImageModalControlGroup = ({
       bottomLeftChildren={
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
           {onAutoExpandButtonClick && (
-            <WButton onClick={onAutoExpandButtonClick} disabled={isAutoExpanding} sx={overlayButtonSx}>
-              <AutoAwesomeIcon sx={{ fontSize: 26 }} />
+            <WButton
+              onClick={onAutoExpandButtonClick}
+              disabled={isAutoExpanding}
+              isActivated={false}
+              sx={overlayButtonSx}
+            >
+              {isAutoExpanding ? (
+                <CircularProgress size={24} sx={{ color: "common.white" }} />
+              ) : (
+                <AutoAwesomeIcon sx={{ fontSize: 24 }} />
+              )}
             </WButton>
           )}
           <WButton onClick={onZoomInClick} sx={overlayButtonSx}>
-            <ZoomInIcon sx={{ fontSize: 28 }} />
+            <ZoomInIcon sx={{ fontSize: 24 }} />
           </WButton>
           <WButton onClick={onZoomOutClick} sx={overlayButtonSx}>
-            <ZoomOutIcon sx={{ fontSize: 28 }} />
+            <ZoomOutIcon sx={{ fontSize: 24 }} />
           </WButton>
         </Stack>
       }
