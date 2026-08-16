@@ -353,8 +353,9 @@ export const Recognitions = ({
   if (regions.length === 0) {
     return <EmptyPlaceholder />;
   }
+  const isPolygonEnabled = LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isPolygonEnabled ?? false;
   return (
-    <Stack sx={{ px: 2, pt: 1, pb: 2, gap: 1 }}>
+    <Stack sx={{ px: 2, pt: isPolygonEnabled ? 2 : 1, pb: 2, gap: 1 }}>
       {regions.map((region, i) => (
         <RegionRow
           key={i}
