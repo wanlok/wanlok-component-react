@@ -364,14 +364,14 @@ export const ImageRecognitionModal = ({
         />
         {!mobile && (
           <ImageModalControlGroup
-            onAddButtonClick={onAddRegionClick}
+            onAddButtonClick={desktopSelectedPage === 1 ? onAddRegionClick : undefined}
             onAutoExpandButtonClick={
-              isPolygonEnabled && selectedRegionIndex !== null
+              desktopSelectedPage === 1 && isPolygonEnabled && selectedRegionIndex !== null
                 ? () => onAutoExpandRegionClick(selectedRegionIndex)
                 : undefined
             }
             isAutoExpanding={selectedRegionIndex !== null && autoExpandingRegionIndices.has(selectedRegionIndex)}
-            onDeleteButtonClick={onDeleteSelectedRegionClick}
+            onDeleteButtonClick={desktopSelectedPage === 1 ? onDeleteSelectedRegionClick : undefined}
             onZoomInClick={() => setZoom("original")}
             onZoomOutClick={() => setZoom("fit")}
             isFullScreen={isFullScreen}

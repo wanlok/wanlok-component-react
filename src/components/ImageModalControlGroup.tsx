@@ -48,10 +48,10 @@ export const ImageModalControlGroup = ({
   onNextClick,
   scrollbarWidths
 }: {
-  onAddButtonClick: () => void;
+  onAddButtonClick?: () => void;
   onAutoExpandButtonClick?: () => void;
   isAutoExpanding?: boolean;
-  onDeleteButtonClick: () => void;
+  onDeleteButtonClick?: () => void;
   onZoomInClick: () => void;
   onZoomOutClick: () => void;
   isFullScreen: boolean;
@@ -84,14 +84,20 @@ export const ImageModalControlGroup = ({
       selectedPage={selectedPage}
       scrollbarWidths={scrollbarWidths}
       topLeftChildren={
-        <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          <WButton onClick={onAddButtonClick} sx={overlayButtonSx}>
-            <AddIcon sx={{ fontSize: 26 }} />
-          </WButton>
-          <WButton onClick={onDeleteButtonClick} sx={overlayButtonSx}>
-            <CloseIcon sx={{ fontSize: 24 }} />
-          </WButton>
-        </Stack>
+        (onAddButtonClick || onDeleteButtonClick) && (
+          <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+            {onAddButtonClick && (
+              <WButton onClick={onAddButtonClick} sx={overlayButtonSx}>
+                <AddIcon sx={{ fontSize: 26 }} />
+              </WButton>
+            )}
+            {onDeleteButtonClick && (
+              <WButton onClick={onDeleteButtonClick} sx={overlayButtonSx}>
+                <CloseIcon sx={{ fontSize: 24 }} />
+              </WButton>
+            )}
+          </Stack>
+        )
       }
       bottomLeftChildren={
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
