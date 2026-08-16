@@ -89,7 +89,7 @@ export const RightContent = ({
         name: file[1].name,
         previewAlignment: file[1].previewAlignment ?? "top",
         attributes: file[1].attributes ?? {},
-        layout: file[1].layout ?? "default",
+        layout: file[1].layout ?? "text",
         regions: file[1].regions ?? [],
         type: file[1].mimeType
       }
@@ -206,7 +206,7 @@ export const RightContent = ({
         name={selectedFile?.name ?? ""}
         previewAlignment={selectedFile?.previewAlignment ?? "top"}
         attributes={selectedFile?.attributes ?? {}}
-        layout={selectedFile?.layout ?? "default"}
+        layout={selectedFile?.layout ?? "text"}
         regions={selectedFile?.regions ?? []}
         folderAttributes={selectedFolder?.attributes ?? []}
         type={selectedFile?.type ?? ""}

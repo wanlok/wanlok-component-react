@@ -13,8 +13,8 @@ import { EmptyPlaceholder } from "../../components/EmptyPlaceholder";
 
 export const LAYOUT_ITEMS = [
   {
-    label: "Default",
-    value: "default",
+    label: "Text",
+    value: "text",
     isTextRecognitionEnabled: true,
     isAutoRegionDetectionEnabled: false,
     isPolygonEnabled: false
