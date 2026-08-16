@@ -40,7 +40,7 @@ export const FolderModal = ({
   );
   const [controlGroupState, setControlGroupState] = useState(0);
 
-  const moveAttribute = (index: number, direction: Direction) => {
+  const updateAttributeSequences = (index: number, direction: Direction) => {
     const newAttributes = [...attributes];
     if (direction === Direction.left && index > 0) {
       const temp = newAttributes[index];
@@ -191,12 +191,12 @@ export const FolderModal = ({
                 {controlGroupState === 2 && (
                   <Stack sx={{ gap: "1px" }}>
                     {i > 0 && (
-                      <WButton onClick={() => moveAttribute(i, Direction.left)} sx={iconButtonSx}>
+                      <WButton onClick={() => updateAttributeSequences(i, Direction.left)} sx={iconButtonSx}>
                         <KeyboardArrowUpIcon sx={{ fontSize: 32 }} />
                       </WButton>
                     )}
                     {i < attributes.length - 1 && (
-                      <WButton onClick={() => moveAttribute(i, Direction.right)} sx={iconButtonSx}>
+                      <WButton onClick={() => updateAttributeSequences(i, Direction.right)} sx={iconButtonSx}>
                         <KeyboardArrowDownIcon sx={{ fontSize: 32 }} />
                       </WButton>
                     )}

@@ -126,8 +126,8 @@ const RegionRow = ({
   isSelected,
   onAvatarClick,
   onDeleteClick,
-  onMoveUpClick,
-  onMoveDownClick,
+  onLeftButtonClick,
+  onRightButtonClick,
   onTypeChange,
   onLanguageChange,
   onTextChange,
@@ -146,8 +146,8 @@ const RegionRow = ({
   isSelected: boolean;
   onAvatarClick: () => void;
   onDeleteClick: () => void;
-  onMoveUpClick: () => void;
-  onMoveDownClick: () => void;
+  onLeftButtonClick?: () => void;
+  onRightButtonClick?: () => void;
   onTypeChange: (type: string) => void;
   onLanguageChange: (language: string) => void;
   onTextChange: (text: string) => void;
@@ -266,8 +266,8 @@ const RegionRow = ({
         {controlGroupState === 1 && (
           <ControlGroup
             scrollHorizontally={false}
-            onLeftButtonClick={onMoveUpClick}
-            onRightButtonClick={onMoveDownClick}
+            onLeftButtonClick={onLeftButtonClick}
+            onRightButtonClick={onRightButtonClick}
           />
         )}
         {controlGroupState === 2 && <ControlGroup scrollHorizontally={false} onDeleteButtonClick={onDeleteClick} />}
@@ -342,7 +342,7 @@ export const Recognitions = ({
   translatingRegionIndices: Set<number>;
   autoExpandingRegionIndices: Set<number>;
 }) => {
-  const moveRegion = (fromIndex: number, toIndex: number) => {
+  const updateRegionSequences = (fromIndex: number, toIndex: number) => {
     if (toIndex < 0 || toIndex >= regions.length) {
       return;
     }
@@ -367,8 +367,8 @@ export const Recognitions = ({
           isTranslating={translatingRegionIndices.has(i)}
           onAvatarClick={() => onRegionAvatarClick(i)}
           onDeleteClick={() => onRegionsChange(regions.filter((_, j) => j !== i))}
-          onMoveUpClick={() => moveRegion(i, i - 1)}
-          onMoveDownClick={() => moveRegion(i, i + 1)}
+          onLeftButtonClick={i > 0 ? () => updateRegionSequences(i, i - 1) : undefined}
+          onRightButtonClick={i < regions.length - 1 ? () => updateRegionSequences(i, i + 1) : undefined}
           onTypeChange={(type) => onRegionTypeChange(i, type)}
           onLanguageChange={(language) => onRegionLanguageChange(i, language)}
           onTextChange={(text) => onRegionTextChange(i, text)}
