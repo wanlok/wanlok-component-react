@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { ViewList as ViewListIcon, SmartDisplay as SmartDisplayIcon } from "@mui/icons-material";
+import { ViewList as ViewListIcon, YouTube as YouTubeIcon } from "@mui/icons-material";
 import { WModal } from "../../components/WModal";
 import { TextInput } from "../../components/TextInput";
 import { StyledContainer } from "../../components/StyledContainer";
@@ -49,7 +49,7 @@ export const YouTubeModal = ({
       onClose={closeModal}
       width="80vw"
       isFullScreen={isFullScreen}
-      pages={[{ icon: <SmartDisplayIcon sx={{ fontSize: 24 }} />, label: "Video" }]}
+      pages={[{ icon: <YouTubeIcon sx={{ fontSize: 24 }} />, label: "Video" }]}
       hideLeftLabel
       bottom={
         mobile ? (
