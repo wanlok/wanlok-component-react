@@ -172,6 +172,8 @@ export const emptyCollectionSequences: CollectionSequences = {
 
 export const serverUrl = "https://wanlok.ddns.net";
 
+export const apiUrl = "https://component.wanlok.workers.dev/api";
+
 export const viewUrls = {
   files: `${serverUrl}/files/`,
   hyperlinks: true,

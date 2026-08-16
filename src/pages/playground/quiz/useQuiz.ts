@@ -1,8 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { db } from "../../../firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { Quiz, QuizItem, QuizzesDocument } from "../../../services/Types";
-import { fetchCollection } from "../../../services/fetchCollection";
+import { apiUrl, ApiResponse, Quiz, QuizItem, QuizzesDocument } from "../../../services/Types";
 
 const collectionName = "configs";
 const documentId = "quizzes";
@@ -59,7 +58,8 @@ export const useQuiz = () => {
     setIsLoading(true);
 
     const controller = new AbortController();
-    fetchCollection<Record<string, { quiz?: Quiz[] }>>(selectedQuizItem, controller.signal)
+    fetch(`${apiUrl}/collections/${selectedQuizItem}`, { signal: controller.signal })
+      .then((response) => response.json() as Promise<ApiResponse<Record<string, { quiz?: Quiz[] }>>>)
       .then((response) => {
         setQuiz(Object.values(response.data).flatMap((item) => item.quiz ?? []));
         setIsLoading(false);
