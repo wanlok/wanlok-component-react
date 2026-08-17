@@ -4,7 +4,7 @@ import { WModal } from "../../../components/WModal";
 import { WButton } from "../../../components/WButton";
 import { YesNoButtons } from "../../../components/YesNoButtons";
 import { AnswerSummaryGrid, isAnswerCorrect } from "./AnswerSummaryGrid";
-import { Quiz } from "../../../services/Types";
+import { Question } from "../../../services/Types";
 
 export const SubmitModal = ({
   open,
@@ -14,7 +14,7 @@ export const SubmitModal = ({
   onConfirm
 }: {
   open: boolean;
-  quiz: Quiz[];
+  quiz: Question[];
   selectedAnswerIndicesByQuestion: number[][];
   onClose: () => void;
   onConfirm: () => void;

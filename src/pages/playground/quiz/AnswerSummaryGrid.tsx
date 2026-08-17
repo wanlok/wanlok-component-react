@@ -1,8 +1,8 @@
 import { Stack, Typography } from "@mui/material";
 import { Done as DoneIcon, Close as CloseIcon } from "@mui/icons-material";
-import { Quiz } from "../../../services/Types";
+import { Question } from "../../../services/Types";
 
-export const isAnswerCorrect = (selectedAnswerIndices: number[], answers: Quiz["answers"]) => {
+export const isAnswerCorrect = (selectedAnswerIndices: number[], answers: Question["answers"]) => {
   const correctIndices = answers.reduce<number[]>(
     (indices, { correct }, i) => (correct ? [...indices, i] : indices),
     []
@@ -18,7 +18,7 @@ export const AnswerSummaryGrid = ({
   selectedAnswerIndicesByQuestion,
   showCorrectAnswers
 }: {
-  quiz: Quiz[];
+  quiz: Question[];
   selectedAnswerIndicesByQuestion: number[][];
   showCorrectAnswers: boolean;
 }) => {

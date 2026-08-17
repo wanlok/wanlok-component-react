@@ -7,7 +7,7 @@ import {
   CollectionDocument,
   CollectionAttributes,
   Folder,
-  Quiz,
+  Question,
   Region,
   TypedAttributes
 } from "../../services/Types";
@@ -15,7 +15,7 @@ import { setTypedAttributes } from "../../common/setTypedAttributes";
 import { toSlug } from "../../common/StringUtils";
 import { splitAnswers } from "../../utils/splitAnswers";
 
-type CollectionItem = Record<string, string | number | Quiz[]>;
+type CollectionItem = Record<string, string | number | Question[]>;
 
 const getCollectionAttributes = async (id: string) => {
   const data = (await getDoc(doc(db, "configs", "folders"))).data() as { folders: Folder[] } | undefined;
@@ -33,20 +33,20 @@ const applyTypedAttributes = (
   return { ...base, ...typedAttributes };
 };
 
-const getQuiz = (layout: string | undefined, regions: Region[] | undefined): Quiz[] | undefined => {
+const getQuiz = (layout: string | undefined, regions: Region[] | undefined): Question[] | undefined => {
   if (layout !== "quiz" || !regions) {
     return undefined;
   }
-  const quiz: Quiz[] = [];
+  const quiz: Question[] = [];
   let collectingQuestion = false;
   regions.forEach((region) => {
     const type = region.type ?? "question";
     if (type === "question") {
       const currentEntry = quiz[quiz.length - 1];
       if (currentEntry && collectingQuestion) {
-        currentEntry.question.push({ type: "text", value: region.recognisedText ?? "" });
+        currentEntry.content.push({ type: "text", value: region.recognisedText ?? "" });
       } else {
-        quiz.push({ question: [{ type: "text", value: region.recognisedText ?? "" }], answers: [] });
+        quiz.push({ content: [{ type: "text", value: region.recognisedText ?? "" }], answers: [] });
         collectingQuestion = true;
       }
       return;

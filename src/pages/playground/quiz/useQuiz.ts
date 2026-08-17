@@ -1,39 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
-import { db } from "../../../firebase";
-import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { apiUrl, ApiResponse, Quiz, QuizItem, QuizzesDocument } from "../../../services/Types";
-
-const collectionName = "configs";
-const documentId = "quizzes";
+import { apiUrl, ApiResponse, Question, QuizItem, QuizzesDocument } from "../../../services/Types";
 
 export const useQuiz = () => {
   const [quizzesDocument, setQuizzesDocument] = useState<QuizzesDocument | null | undefined>(undefined);
   const quizItems = useMemo(() => quizzesDocument?.quizItems ?? [], [quizzesDocument]);
 
-  useEffect(() => {
-    const fetchQuizzesDocument = async () => {
-      const docRef = doc(db, collectionName, documentId);
-      setQuizzesDocument(((await getDoc(docRef)).data() as QuizzesDocument) ?? null);
-    };
-    fetchQuizzesDocument();
-  }, []);
-
-  const updateQuizItems = async (quizItems: QuizItem[]) => {
-    const docRef = doc(db, collectionName, documentId);
-    if (quizzesDocument) {
-      await updateDoc(docRef, { quizItems });
-    } else {
-      await setDoc(docRef, { quizItems });
-    }
-    setQuizzesDocument({ quizItems });
-  };
-
   const [selectedQuizItem, setSelectedQuizItem] = useState("");
-  const [quiz, setQuiz] = useState<Quiz[]>([]);
+  const [quiz, setQuiz] = useState<Question[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Adjust state during render (https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes):
-  // default selectedQuizItem to the first quiz item once quizItems loads, without an effect.
   const [prevQuizItems, setPrevQuizItems] = useState(quizItems);
   if (quizItems !== prevQuizItems) {
     setPrevQuizItems(quizItems);
@@ -41,6 +16,21 @@ export const useQuiz = () => {
       setSelectedQuizItem(quizItems[0].value);
     }
   }
+
+  useEffect(() => {
+    fetch(`${apiUrl}/quizzes`)
+      .then((response) => response.json() as Promise<ApiResponse<QuizItem[]>>)
+      .then((response) => setQuizzesDocument({ quizItems: response.data }));
+  }, []);
+
+  const updateQuizItems = async (quizItems: QuizItem[]) => {
+    await fetch(`${apiUrl}/quizzes`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(quizItems)
+    });
+    setQuizzesDocument({ quizItems });
+  };
 
   useEffect(() => {
     if (selectedQuizItem && !quizItems.some((quizItem) => quizItem.value === selectedQuizItem)) {
@@ -59,9 +49,9 @@ export const useQuiz = () => {
 
     const controller = new AbortController();
     fetch(`${apiUrl}/collections/${selectedQuizItem}`, { signal: controller.signal })
-      .then((response) => response.json() as Promise<ApiResponse<Record<string, { quiz?: Quiz[] }>>>)
+      .then((response) => response.json() as Promise<ApiResponse<Record<string, { questions?: Question[] }>>>)
       .then((response) => {
-        setQuiz(Object.values(response.data).flatMap((item) => item.quiz ?? []));
+        setQuiz(Object.values(response.data).flatMap((item) => item.questions ?? []));
         setIsLoading(false);
       })
       .catch(() => {

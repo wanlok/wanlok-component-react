@@ -80,7 +80,7 @@ export interface Region {
 
 export type QuizContent = { type: "text" | "image"; value: string };
 
-export type Quiz = { question: QuizContent[]; answers: { content: QuizContent[]; correct: boolean }[] };
+export type Question = { content: QuizContent[]; answers: { content: QuizContent[]; correct: boolean }[] };
 
 export interface QuizItem {
   label: string;

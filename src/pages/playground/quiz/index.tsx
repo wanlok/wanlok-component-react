@@ -12,13 +12,13 @@ import { ResetModal } from "./ResetModal";
 import { SubmitModal } from "./SubmitModal";
 import { QuizItemsModal } from "./QuizItemsModal";
 
-const QuestionContainer = ({ number, question }: { number: number; question: QuizContent[] }) => {
+const QuestionContainer = ({ number, content }: { number: number; content: QuizContent[] }) => {
   return (
     <Stack sx={{ p: 2, gap: 1 }}>
       <Typography variant="body2" sx={{ color: "text.secondary" }}>
         Question {number + 1}
       </Typography>
-      {question.map(({ value }, i) => (
+      {content.map(({ value }, i) => (
         <Typography key={`question-${number}-${i + 1}`} variant="body1">
           {value}
         </Typography>
@@ -163,11 +163,11 @@ export const Quiz = () => {
         </Stack>
       )}
       <Stack ref={scrollRef} sx={{ flex: 1, overflow: "auto", gap: "1px" }}>
-        {quiz.map(({ question, answers }, i) => (
+        {quiz.map(({ content, answers }, i) => (
           <Fragment key={`question-${i}`}>
             {i > 0 && <Divider />}
             <Stack data-question-index={i}>
-              <QuestionContainer number={i} question={question} />
+              <QuestionContainer number={i} content={content} />
               <AnswerContainer
                 answers={answers}
                 selectedAnswerIndices={selectedAnswerIndicesByQuestion[i] ?? []}
