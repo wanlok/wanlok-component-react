@@ -3,23 +3,23 @@ import { StyledContainer } from "../../../components/StyledContainer";
 import { TextInput } from "../../../components/TextInput";
 import { useState } from "react";
 import { iconButtonSx, WButton } from "../../../components/WButton";
-import { QuizItem } from "../../../services/Types";
+import { Quiz } from "../../../services/Types";
 import { WModal } from "../../../components/WModal";
 import { YesNoButtons } from "../../../components/YesNoButtons";
 import { Add as AddIcon, Assignment as AssignmentIcon, Close as CloseIcon } from "@mui/icons-material";
 
-export const QuizItemsModal = ({
+export const QuizzesModal = ({
   open,
   onClose,
-  quizItems,
-  updateQuizItems
+  quizzes,
+  updateQuizzes
 }: {
   open: boolean;
   onClose: () => void;
-  quizItems: QuizItem[];
-  updateQuizItems: (quizItems: QuizItem[]) => Promise<void>;
+  quizzes: Quiz[];
+  updateQuizzes: (quizzes: Quiz[]) => Promise<void>;
 }) => {
-  const [items, setItems] = useState<QuizItem[]>(quizItems.map((quizItem) => ({ ...quizItem })));
+  const [items, setItems] = useState<Quiz[]>(quizzes.map((quiz) => ({ ...quiz })));
   const [isDeleting, setIsDeleting] = useState(false);
 
   return (
@@ -41,7 +41,7 @@ export const QuizItemsModal = ({
         <YesNoButtons
           yesLabel="Save"
           onYesClick={async () => {
-            await updateQuizItems(items.filter((item) => item.label.trim() && item.value.trim()));
+            await updateQuizzes(items.filter((item) => item.label.trim() && item.value.trim()));
             onClose();
           }}
           noLabel="Cancel"
@@ -52,7 +52,7 @@ export const QuizItemsModal = ({
       <Stack sx={{ gap: 1, p: 2 }}>
         <Stack sx={{ gap: "1px" }}>
           {items.map(({ label, value }, i) => (
-            <StyledContainer key={`quiz-item-${i}`} sx={{ flexDirection: "row", alignItems: "top" }}>
+            <StyledContainer key={`quiz-${i}`} sx={{ flexDirection: "row", alignItems: "top" }}>
               <Stack sx={{ flex: 1, p: 1, gap: 1 }}>
                 <TextInput
                   placeholder={`Quiz ${i + 1} Name`}

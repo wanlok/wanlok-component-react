@@ -14,11 +14,11 @@ export const isAnswerCorrect = (selectedAnswerIndices: number[], answers: Questi
 };
 
 export const AnswerSummaryGrid = ({
-  quiz,
+  questions,
   selectedAnswerIndicesByQuestion,
   showCorrectAnswers
 }: {
-  quiz: Question[];
+  questions: Question[];
   selectedAnswerIndicesByQuestion: number[][];
   showCorrectAnswers: boolean;
 }) => {
@@ -32,7 +32,7 @@ export const AnswerSummaryGrid = ({
         gap: 1
       }}
     >
-      {quiz.map(({ answers }, i) => {
+      {questions.map(({ answers }, i) => {
         const selectedAnswerIndices = selectedAnswerIndicesByQuestion[i] ?? [];
         return (
           <Stack key={`question-${i}`} sx={{ gap: 0.5 }}>

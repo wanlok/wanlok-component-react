@@ -82,13 +82,13 @@ export type QuizContent = { type: "text" | "image"; value: string };
 
 export type Question = { content: QuizContent[]; answers: { content: QuizContent[]; correct: boolean }[] };
 
-export interface QuizItem {
+export interface Quiz {
   label: string;
   value: string;
 }
 
 export interface QuizzesDocument {
-  quizItems: QuizItem[];
+  quizzes: Quiz[];
 }
 
 export type ApiResponse<T> = { status: string; data: T };

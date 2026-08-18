@@ -8,23 +8,23 @@ import { Question } from "../../../services/Types";
 
 export const SubmitModal = ({
   open,
-  quiz,
+  questions,
   selectedAnswerIndicesByQuestion,
   onClose,
   onConfirm
 }: {
   open: boolean;
-  quiz: Question[];
+  questions: Question[];
   selectedAnswerIndicesByQuestion: number[][];
   onClose: () => void;
   onConfirm: () => void;
 }) => {
   const [showCorrectAnswers, setShowCorrectAnswers] = useState(false);
 
-  const correctCount = quiz.filter(({ answers }, i) =>
+  const correctCount = questions.filter(({ answers }, i) =>
     isAnswerCorrect(selectedAnswerIndicesByQuestion[i] ?? [], answers)
   ).length;
-  const scorePercentage = quiz.length > 0 ? Math.round((correctCount / quiz.length) * 100) : 0;
+  const scorePercentage = questions.length > 0 ? Math.round((correctCount / questions.length) * 100) : 0;
 
   return (
     <WModal
@@ -53,7 +53,7 @@ export const SubmitModal = ({
             <Stack sx={{ alignItems: "center" }}>
               <Typography variant="h1">{scorePercentage}%</Typography>
               <Typography>
-                {correctCount} out of {quiz.length} questions answered correctly
+                {correctCount} out of {questions.length} questions answered correctly
               </Typography>
             </Stack>
             <Divider />
@@ -65,7 +65,7 @@ export const SubmitModal = ({
           </Typography>
         )}
         <AnswerSummaryGrid
-          quiz={quiz}
+          questions={questions}
           selectedAnswerIndicesByQuestion={selectedAnswerIndicesByQuestion}
           showCorrectAnswers={showCorrectAnswers}
         />

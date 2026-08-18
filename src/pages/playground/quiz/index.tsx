@@ -10,7 +10,7 @@ import { iconButtonSx, WButton } from "../../../components/WButton";
 import { Assignment as AssignmentIcon, Send as SendIcon, Undo as UndoIcon } from "@mui/icons-material";
 import { ResetModal } from "./ResetModal";
 import { SubmitModal } from "./SubmitModal";
-import { QuizItemsModal } from "./QuizItemsModal";
+import { QuizzesModal } from "./QuizzesModal";
 
 const QuestionContainer = ({ number, content }: { number: number; content: QuizContent[] }) => {
   return (
@@ -54,16 +54,16 @@ const AnswerContainer = ({
 };
 
 const ControlBar = ({
-  quizItems,
-  selectedQuizItem,
-  setSelectedQuizItem,
+  quizzes,
+  selectedQuiz,
+  setSelectedQuiz,
   onViewListButtonClick,
   onResetButtonClick,
   onSubmitButtonClick
 }: {
-  quizItems: { label: string; value: string }[];
-  selectedQuizItem: string;
-  setSelectedQuizItem: (value: string) => void;
+  quizzes: { label: string; value: string }[];
+  selectedQuiz: string;
+  setSelectedQuiz: (value: string) => void;
   onViewListButtonClick: () => void;
   onResetButtonClick: () => void;
   onSubmitButtonClick: () => void;
@@ -71,7 +71,7 @@ const ControlBar = ({
   return (
     <>
       <StyledContainer sx={{ flex: 1, p: 1 }}>
-        <SelectInput items={quizItems} value={selectedQuizItem} onChange={setSelectedQuizItem} />
+        <SelectInput items={quizzes} value={selectedQuiz} onChange={setSelectedQuiz} />
       </StyledContainer>
       <Stack sx={{ flexDirection: "row", gap: "1px" }}>
         <WButton onClick={onViewListButtonClick} sx={iconButtonSx}>
@@ -91,19 +91,19 @@ const ControlBar = ({
 export const Quiz = () => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
-  const { quizItems, updateQuizItems, selectedQuizItem, setSelectedQuizItem, quiz } = useQuiz();
+  const { quizzes, updateQuizzes, selectedQuiz, setSelectedQuiz, questions } = useQuiz();
   const [selectedAnswerIndicesByQuestion, setSelectedAnswerIndicesByQuestion] = useState<number[][]>([]);
-  const [quizItemsModalOpen, setQuizItemsModalOpen] = useState(false);
+  const [quizzesModalOpen, setQuizzesModalOpen] = useState(false);
   const [resetModalOpen, setResetModalOpen] = useState(false);
   const [submitModalOpen, setSubmitModalOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   // Adjust state during render (https://react.dev/learn/you-might-not-need-an-effect#adjusting-some-state-when-a-prop-changes):
   // reset the answer selections whenever a new quiz loads, without resetting sibling modal-open state.
-  const [prevQuiz, setPrevQuiz] = useState(quiz);
-  if (quiz !== prevQuiz) {
-    setPrevQuiz(quiz);
-    setSelectedAnswerIndicesByQuestion(quiz.map(() => []));
+  const [prevQuestions, setPrevQuestions] = useState(questions);
+  if (questions !== prevQuestions) {
+    setPrevQuestions(questions);
+    setSelectedAnswerIndicesByQuestion(questions.map(() => []));
   }
 
   const onNextQuestionButtonClick = () => {
@@ -140,10 +140,10 @@ export const Quiz = () => {
         bottom={
           <Stack sx={[bottomSx]}>
             <ControlBar
-              quizItems={quizItems}
-              selectedQuizItem={selectedQuizItem}
-              setSelectedQuizItem={setSelectedQuizItem}
-              onViewListButtonClick={() => setQuizItemsModalOpen(true)}
+              quizzes={quizzes}
+              selectedQuiz={selectedQuiz}
+              setSelectedQuiz={setSelectedQuiz}
+              onViewListButtonClick={() => setQuizzesModalOpen(true)}
               onResetButtonClick={() => setResetModalOpen(true)}
               onSubmitButtonClick={() => setSubmitModalOpen(true)}
             />
@@ -153,17 +153,17 @@ export const Quiz = () => {
       {mobile && (
         <Stack sx={{ flexDirection: "row" }}>
           <ControlBar
-            quizItems={quizItems}
-            selectedQuizItem={selectedQuizItem}
-            setSelectedQuizItem={setSelectedQuizItem}
-            onViewListButtonClick={() => setQuizItemsModalOpen(true)}
+            quizzes={quizzes}
+            selectedQuiz={selectedQuiz}
+            setSelectedQuiz={setSelectedQuiz}
+            onViewListButtonClick={() => setQuizzesModalOpen(true)}
             onResetButtonClick={() => setResetModalOpen(true)}
             onSubmitButtonClick={() => setSubmitModalOpen(true)}
           />
         </Stack>
       )}
       <Stack ref={scrollRef} sx={{ flex: 1, overflow: "auto", gap: "1px" }}>
-        {quiz.map(({ content, answers }, i) => (
+        {questions.map(({ content, answers }, i) => (
           <Fragment key={`question-${i}`}>
             {i > 0 && <Divider />}
             <Stack data-question-index={i}>
@@ -180,27 +180,27 @@ export const Quiz = () => {
       <Stack sx={{ flexDirection: "row", backgroundColor: "background.default" }}>
         <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
           <Typography variant="body1">
-            {answeredCount} / {quiz.length} questions answered
+            {answeredCount} / {questions.length} questions answered
           </Typography>
         </Stack>
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          <WButton disabled={answeredCount === quiz.length} onClick={onNextQuestionButtonClick}>
+          <WButton disabled={answeredCount === questions.length} onClick={onNextQuestionButtonClick}>
             Next Question
           </WButton>
         </Stack>
       </Stack>
-      <QuizItemsModal
-        key={`quiz-items-modal-${quizItemsModalOpen ? "open" : "closed"}`}
-        open={quizItemsModalOpen}
-        onClose={() => setQuizItemsModalOpen(false)}
-        quizItems={quizItems}
-        updateQuizItems={updateQuizItems}
+      <QuizzesModal
+        key={`quizzes-modal-${quizzesModalOpen ? "open" : "closed"}`}
+        open={quizzesModalOpen}
+        onClose={() => setQuizzesModalOpen(false)}
+        quizzes={quizzes}
+        updateQuizzes={updateQuizzes}
       />
       <ResetModal
         open={resetModalOpen}
         onClose={() => setResetModalOpen(false)}
         onConfirm={() => {
-          setSelectedAnswerIndicesByQuestion(quiz.map(() => []));
+          setSelectedAnswerIndicesByQuestion(questions.map(() => []));
           scrollRef.current?.querySelector('[data-question-index="0"]')?.scrollIntoView({
             behavior: "smooth",
             block: "start"
@@ -210,7 +210,7 @@ export const Quiz = () => {
       <SubmitModal
         key={`submit-modal-${submitModalOpen ? "open" : "closed"}`}
         open={submitModalOpen}
-        quiz={quiz}
+        questions={questions}
         selectedAnswerIndicesByQuestion={selectedAnswerIndicesByQuestion}
         onClose={() => setSubmitModalOpen(false)}
         onConfirm={() => {}}
