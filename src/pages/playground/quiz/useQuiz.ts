@@ -2,11 +2,14 @@ import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiUrl, ApiResponse, Question, Quiz } from "../../../services/Types";
 
+const emptyQuizzes: Quiz[] = [];
+const emptyQuestions: Question[] = [];
+
 export const useQuiz = () => {
   const queryClient = useQueryClient();
 
   // List quizzes
-  const { data: quizzes = [] } = useQuery({
+  const { data: quizzes = emptyQuizzes } = useQuery({
     queryKey: ["quizzes"],
     queryFn: () =>
       fetch(`${apiUrl}/quizzes`)
@@ -38,7 +41,7 @@ export const useQuiz = () => {
   });
 
   // Get questions
-  const { data: questions = [], isLoading } = useQuery({
+  const { data: questions = emptyQuestions, isLoading } = useQuery({
     queryKey: ["collection", selectedQuiz],
     queryFn: ({ signal }) =>
       fetch(`${apiUrl}/collections/${selectedQuiz}`, { signal })
