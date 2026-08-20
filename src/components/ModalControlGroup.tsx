@@ -23,6 +23,7 @@ export const ModalControlGroup = ({
   selectedPage,
   scrollbarWidths = { right: 0, bottom: 0 },
   topLeftChildren,
+  topRightChildren,
   bottomLeftChildren,
   bottomRightChildren
 }: {
@@ -36,6 +37,7 @@ export const ModalControlGroup = ({
   selectedPage: number;
   scrollbarWidths?: { bottom: number; right: number };
   topLeftChildren?: ReactNode;
+  topRightChildren?: ReactNode;
   bottomLeftChildren?: ReactNode;
   bottomRightChildren?: ReactNode;
 }) => {
@@ -93,9 +95,12 @@ export const ModalControlGroup = ({
       )}
       {topLeftChildren && <Stack sx={{ position: "absolute", top, left }}>{topLeftChildren}</Stack>}
       <Stack sx={{ position: "absolute", top, right }}>
-        <WButton onClick={onDetailsClick} sx={overlayButtonSx}>
-          {isRightHidden ? pages[selectedPage]?.icon : <KeyboardArrowRightIcon sx={{ fontSize: 32 }} />}
-        </WButton>
+        <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+          {topRightChildren}
+          <WButton onClick={onDetailsClick} sx={overlayButtonSx}>
+            {isRightHidden ? pages[selectedPage]?.icon : <KeyboardArrowRightIcon sx={{ fontSize: 32 }} />}
+          </WButton>
+        </Stack>
       </Stack>
       {bottomLeftChildren && <Stack sx={{ position: "absolute", bottom, left }}>{bottomLeftChildren}</Stack>}
       <Stack sx={{ position: "absolute", bottom, right }}>
