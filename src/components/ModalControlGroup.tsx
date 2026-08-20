@@ -23,7 +23,8 @@ export const ModalControlGroup = ({
   selectedPage,
   scrollbarWidths = { right: 0, bottom: 0 },
   topLeftChildren,
-  bottomLeftChildren
+  bottomLeftChildren,
+  bottomRightChildren
 }: {
   onPreviousClick?: () => void;
   onNextClick?: () => void;
@@ -36,6 +37,7 @@ export const ModalControlGroup = ({
   scrollbarWidths?: { bottom: number; right: number };
   topLeftChildren?: ReactNode;
   bottomLeftChildren?: ReactNode;
+  bottomRightChildren?: ReactNode;
 }) => {
   const { palette } = useTheme();
 
@@ -91,16 +93,19 @@ export const ModalControlGroup = ({
       )}
       {topLeftChildren && <Stack sx={{ position: "absolute", top, left }}>{topLeftChildren}</Stack>}
       <Stack sx={{ position: "absolute", top, right }}>
+        <WButton onClick={onDetailsClick} sx={overlayButtonSx}>
+          {isRightHidden ? pages[selectedPage]?.icon : <KeyboardArrowRightIcon sx={{ fontSize: 32 }} />}
+        </WButton>
+      </Stack>
+      {bottomLeftChildren && <Stack sx={{ position: "absolute", bottom, left }}>{bottomLeftChildren}</Stack>}
+      <Stack sx={{ position: "absolute", bottom, right }}>
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+          {bottomRightChildren}
           <WButton onClick={onFullScreenClick} sx={overlayButtonSx}>
             {isFullScreen ? <FullscreenExitIcon sx={{ fontSize: 30 }} /> : <FullscreenIcon sx={{ fontSize: 30 }} />}
           </WButton>
-          <WButton onClick={onDetailsClick} sx={overlayButtonSx}>
-            {isRightHidden ? pages[selectedPage]?.icon : <KeyboardArrowRightIcon sx={{ fontSize: 32 }} />}
-          </WButton>
         </Stack>
       </Stack>
-      {bottomLeftChildren && <Stack sx={{ position: "absolute", bottom, left }}>{bottomLeftChildren}</Stack>}
     </>
   );
 };
