@@ -23,7 +23,14 @@ export const Images = () => {
         <Stack sx={{ flexDirection: "row" }}>
         </Stack>
       )} */}
-      <Box component="img" src="/images/test.jpg" alt="Test" sx={{ display: "block", maxWidth: "100%" }} />
+      <Stack sx={{ flex: 1, minHeight: 0, alignItems: "center", justifyContent: "center", backgroundColor: "black" }}>
+        <Box
+          component="img"
+          src="/images/test.jpg"
+          alt="Test"
+          sx={{ display: "block", width: "100%", height: "100%", objectFit: "contain" }}
+        />
+      </Stack>
     </Stack>
   );
 };
