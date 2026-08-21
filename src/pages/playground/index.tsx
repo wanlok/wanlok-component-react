@@ -8,6 +8,7 @@ import { LeftHeader } from "./LeftHeader";
 import { Puzzle } from "./puzzle";
 import { Quiz } from "./quiz";
 import { Regions } from "./regions";
+import { Images } from "./images";
 
 const iconSize = 24;
 
@@ -45,6 +46,7 @@ export const Playground = () => {
       {selectedFolder?.id === "puzzle" && <Puzzle />}
       {selectedFolder?.id === "quiz" && <Quiz />}
       {selectedFolder?.id === "regions" && <Regions />}
+      {selectedFolder?.id === "images" && <Images />}
     </LayoutPanel>
   );
 };

@@ -7,6 +7,7 @@ export interface PlaygroundFolder {
 }
 
 export const folders: PlaygroundFolder[] = [
+  { name: "Images", id: "images" },
   { name: "Puzzle", id: "puzzle" },
   { name: "Quiz", id: "quiz" },
   { name: "Regions", id: "regions" }
