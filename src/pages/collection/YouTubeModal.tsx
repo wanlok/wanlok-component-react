@@ -48,6 +48,7 @@ export const YouTubeModal = ({
       open={open}
       onClose={closeModal}
       width="80vw"
+      height="80dvh"
       isFullScreen={isFullScreen}
       pages={[{ icon: <YouTubeIcon sx={{ fontSize: 24 }} />, label: "Video" }]}
       hideLeftLabel
@@ -106,7 +107,7 @@ export const YouTubeModal = ({
               src={`https://www.youtube.com/embed/${id}`}
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
               allowFullScreen
-              sx={{ display: "block", height: "100%", maxWidth: "100%", aspectRatio: "16/9", border: 0 }}
+              sx={{ display: "block", height: "100%", width: "100%", border: 0 }}
             />
           </Stack>
           {!mobile && (
