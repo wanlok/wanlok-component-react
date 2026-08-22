@@ -61,11 +61,25 @@ export const ImageModalControlGroup = ({
       selectedPage={selectedPage}
       scrollbarWidths={scrollbarWidths}
       topLeftChildren={
-        (onAddButtonClick || onDeleteButtonClick) && (
+        (onAddButtonClick || onAutoExpandButtonClick || onDeleteButtonClick) && (
           <Stack sx={{ flexDirection: "row", gap: "1px" }}>
             {onAddButtonClick && (
               <WButton onClick={onAddButtonClick} sx={overlayButtonSx}>
                 <AddIcon sx={{ fontSize: 26 }} />
+              </WButton>
+            )}
+            {onAutoExpandButtonClick && (
+              <WButton
+                onClick={onAutoExpandButtonClick}
+                disabled={isAutoExpanding}
+                isActivated={isAutoExpanding}
+                sx={overlayButtonSx}
+              >
+                {isAutoExpanding ? (
+                  <CircularProgress size={24} sx={{ color: "common.white" }} />
+                ) : (
+                  <AutoAwesomeIcon sx={{ fontSize: 24 }} />
+                )}
               </WButton>
             )}
             {onDeleteButtonClick && (
@@ -74,22 +88,6 @@ export const ImageModalControlGroup = ({
               </WButton>
             )}
           </Stack>
-        )
-      }
-      bottomLeftChildren={
-        onAutoExpandButtonClick && (
-          <WButton
-            onClick={onAutoExpandButtonClick}
-            disabled={isAutoExpanding}
-            isActivated={isAutoExpanding}
-            sx={overlayButtonSx}
-          >
-            {isAutoExpanding ? (
-              <CircularProgress size={24} sx={{ color: "common.white" }} />
-            ) : (
-              <AutoAwesomeIcon sx={{ fontSize: 24 }} />
-            )}
-          </WButton>
         )
       }
       bottomRightChildren={

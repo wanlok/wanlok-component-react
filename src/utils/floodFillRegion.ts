@@ -2,10 +2,14 @@ import type { Mat } from "@techstark/opencv-js";
 import { RegionPoint } from "../services/Types";
 import { loadOpenCv } from "./loadOpenCv";
 
-const CANNY_LOW_THRESHOLD = 50;
-const CANNY_HIGH_THRESHOLD = 150;
+// Border strokes on real map images are often only 1-2px wide and heavily anti-aliased (a gradual
+// ramp of blended colors rather than a crisp line), so these thresholds need to be low enough to
+// catch that weak a gradient. The fill areas themselves are flat/noise-free, so there's no
+// downside to high sensitivity here.
+const CANNY_LOW_THRESHOLD = 15;
+const CANNY_HIGH_THRESHOLD = 45;
 const DILATE_KERNEL_SIZE = 3;
-const DILATE_ITERATIONS = 2;
+const DILATE_ITERATIONS = 3;
 const COLOR_DISTANCE_TOLERANCE = 32;
 const MASK_FILL_VALUE = 128;
 const MAX_POLYGON_POINTS = 60;
@@ -29,7 +33,6 @@ export const floodFillRegion = async (
 
   const src = cv.imread(canvas);
   const gray = new cv.Mat();
-  const blurred = new cv.Mat();
   const edges = new cv.Mat();
   const dilated = new cv.Mat();
   const kernel = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(DILATE_KERNEL_SIZE, DILATE_KERNEL_SIZE));
@@ -44,9 +47,10 @@ export const floodFillRegion = async (
   try {
     // Detect the border strokes as edges (not by color difference — this is what lets the fill
     // stop at a border even when the areas on both sides of it share the exact same fill color).
+    // No blur beforehand: the fill areas are flat/noise-free, and blurring would only further
+    // wash out borders that are already just 1-2px wide and lightly anti-aliased.
     cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
-    cv.GaussianBlur(gray, blurred, new cv.Size(3, 3), 0);
-    cv.Canny(blurred, edges, CANNY_LOW_THRESHOLD, CANNY_HIGH_THRESHOLD);
+    cv.Canny(gray, edges, CANNY_LOW_THRESHOLD, CANNY_HIGH_THRESHOLD);
     // Bridge dashed/dotted border gaps into a continuous barrier.
     cv.dilate(edges, dilated, kernel, new cv.Point(-1, -1), DILATE_ITERATIONS);
 
@@ -124,7 +128,6 @@ export const floodFillRegion = async (
   } finally {
     src.delete();
     gray.delete();
-    blurred.delete();
     edges.delete();
     dilated.delete();
     kernel.delete();
