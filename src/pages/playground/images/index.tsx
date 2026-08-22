@@ -1,16 +1,9 @@
 import { useState } from "react";
 import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { bottomSx, LayoutHeader, topSx } from "../../../components/LayoutHeader";
-import { ZoomPanImage } from "../../../components/ZoomPanImage";
+import { ZOOM_ITEMS, ZoomPanImage } from "../../../components/ZoomPanImage";
 import { SelectInput } from "../../../components/SelectInput";
 import { StyledContainer } from "../../../components/StyledContainer";
-
-const ZOOM_ITEMS = [
-  { label: "1x", value: "1" },
-  { label: "2x", value: "2" },
-  { label: "3x", value: "3" },
-  { label: "4x", value: "4" }
-];
 
 export const Images = () => {
   const { breakpoints } = useTheme();

@@ -11,6 +11,17 @@ export interface ZoomPanImageHandle {
   setPosition: (position: { x: number; y: number }, scaleOverride?: number) => void;
 }
 
+export const MAX_ZOOM_SCALE = 32;
+
+export const ZOOM_ITEMS = [
+  { label: "1x", value: "1" },
+  { label: "2x", value: "2" },
+  { label: "4x", value: "4" },
+  { label: "8x", value: "8" },
+  { label: "16x", value: "16" },
+  { label: "32x", value: "32" }
+];
+
 export const getBaseSize = (
   containerWidth: number,
   containerHeight: number,
@@ -51,7 +62,7 @@ export const ZoomPanImage = ({
 
   if (requestedScale !== undefined && requestedScale !== appliedRequestedScale) {
     setAppliedRequestedScale(requestedScale);
-    setScale(Math.min(Math.max(requestedScale, 1), 32));
+    setScale(Math.min(Math.max(requestedScale, 1), MAX_ZOOM_SCALE));
     setPosition({ x: 0, y: 0 });
   }
 
@@ -119,7 +130,7 @@ export const ZoomPanImage = ({
     mobile,
     scale,
     position,
-    setScale: (newScale) => setScale(Math.min(Math.max(newScale, 1), 32)),
+    setScale: (newScale) => setScale(Math.min(Math.max(newScale, 1), MAX_ZOOM_SCALE)),
     setPosition: (newPosition, scaleOverride) => setPosition(clampPositionForScale(newPosition, scaleOverride ?? scale))
   }));
 
@@ -141,7 +152,7 @@ export const ZoomPanImage = ({
       const newDistance = getDistance(e.touches);
       const delta = newDistance / lastDistance.current;
       const oldScale = scale;
-      const newScale = Math.min(Math.max(oldScale * delta, 1), 32);
+      const newScale = Math.min(Math.max(oldScale * delta, 1), MAX_ZOOM_SCALE);
 
       const newMidpoint = getMidpoint(e.touches);
       if (newMidpoint) {

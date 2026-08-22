@@ -6,13 +6,7 @@ import { ModalControlGroup } from "./ModalControlGroup";
 import { PageItem } from "./WModal";
 import { SelectInput } from "./SelectInput";
 import { StyledContainer } from "./StyledContainer";
-
-export const ZOOM_ITEMS = [
-  { label: "1x", value: "1" },
-  { label: "2x", value: "2" },
-  { label: "3x", value: "3" },
-  { label: "4x", value: "4" }
-];
+import { ZOOM_ITEMS } from "./ZoomPanImage";
 
 export const ImageModalTopControlGroup = ({
   onAutoExpandButtonClick,
@@ -109,25 +103,32 @@ export const ImageModalControlGroup = ({
         )
       }
       bottomLeftChildren={
-        <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-          <StyledContainer sx={{ minWidth: 80, p: 1, backgroundColor: alpha(palette.background.default, 0.9) }}>
-            <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={onZoomChange} />
-          </StyledContainer>
-          {onAutoExpandButtonClick && (
-            <WButton
-              onClick={onAutoExpandButtonClick}
-              disabled={isAutoExpanding}
-              isActivated={false}
-              sx={overlayButtonSx}
-            >
-              {isAutoExpanding ? (
-                <CircularProgress size={24} sx={{ color: "common.white" }} />
-              ) : (
-                <AutoAwesomeIcon sx={{ fontSize: 24 }} />
-              )}
-            </WButton>
-          )}
-        </Stack>
+        onAutoExpandButtonClick && (
+          <WButton
+            onClick={onAutoExpandButtonClick}
+            disabled={isAutoExpanding}
+            isActivated={false}
+            sx={overlayButtonSx}
+          >
+            {isAutoExpanding ? (
+              <CircularProgress size={24} sx={{ color: "common.white" }} />
+            ) : (
+              <AutoAwesomeIcon sx={{ fontSize: 24 }} />
+            )}
+          </WButton>
+        )
+      }
+      bottomRightChildren={
+        <StyledContainer
+          sx={{
+            minWidth: 80,
+            p: 1,
+            backgroundColor: alpha(palette.background.default, 0.9),
+            borderLeftColor: alpha(palette.divider, 0.9)
+          }}
+        >
+          <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={onZoomChange} />
+        </StyledContainer>
       }
     />
   );
