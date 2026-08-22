@@ -194,6 +194,9 @@ export const ImageRegionOverlay = ({
   };
 
   const onRegionTouchStart = (event: ReactTouchEvent, index: number) => {
+    if (event.touches.length > 1) {
+      return;
+    }
     event.stopPropagation();
     handleRegionPointerDown(event.touches[0].clientX, event.touches[0].clientY, index);
   };
@@ -217,6 +220,9 @@ export const ImageRegionOverlay = ({
   };
 
   const onHandleTouchStart = (event: ReactTouchEvent, index: number, handle: Handle) => {
+    if (event.touches.length > 1) {
+      return;
+    }
     event.stopPropagation();
     handleHandlePointerDown(event.touches[0].clientX, event.touches[0].clientY, index, handle);
   };
@@ -238,6 +244,9 @@ export const ImageRegionOverlay = ({
   };
 
   const onVertexTouchStart = (event: ReactTouchEvent, index: number, pointIndex: number) => {
+    if (event.touches.length > 1) {
+      return;
+    }
     event.stopPropagation();
     const now = event.timeStamp;
     const last = lastTap.current;
@@ -276,6 +285,9 @@ export const ImageRegionOverlay = ({
   };
 
   const onMidpointTouchStart = (event: ReactTouchEvent, index: number, edgeIndex: number, midpoint: RegionPoint) => {
+    if (event.touches.length > 1) {
+      return;
+    }
     event.stopPropagation();
     handleMidpointPointerDown(index, edgeIndex, midpoint);
   };
