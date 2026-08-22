@@ -2,7 +2,7 @@ import { MouseEvent as ReactMouseEvent, Ref, TouchEvent as ReactTouchEvent, useE
 import { alpha, Box, useTheme } from "@mui/material";
 import { Region, RegionPoint, Rect } from "../../services/Types";
 import { getPointsBoundingBox, getRectPoints } from "../../common/ImageUtils";
-import { ZoomPanImage, ZoomPanImageHandle } from "../../components/ZoomPanImage";
+import { getBaseSize, ZoomPanImage, ZoomPanImageHandle } from "../../components/ZoomPanImage";
 
 export type { Region };
 
@@ -122,13 +122,20 @@ export const ImageRegionOverlay = ({
     };
   }, []);
 
+  // getBoundingClientRect() always reflects the fully-composed post-transform rendered box,
+  // regardless of whether the ancestor scaling comes from a CSS transform (mobile) or real
+  // pixel sizing (desktop) — unlike svg.getScreenCTM(), which has known WebKit inconsistencies
+  // when the scale it needs to account for lives on an ancestor element rather than the SVG itself.
   const getSvgPoint = (clientX: number, clientY: number) => {
     const svg = svgRef.current!;
-    const point = svg.createSVGPoint();
-    point.x = clientX;
-    point.y = clientY;
-    const transformed = point.matrixTransform(svg.getScreenCTM()!.inverse());
-    return { x: transformed.x, y: transformed.y };
+    const svgRect = svg.getBoundingClientRect();
+    const { baseWidth, baseHeight } = getBaseSize(svgRect.width, svgRect.height, naturalSize);
+    const offsetX = (svgRect.width - baseWidth) / 2;
+    const offsetY = (svgRect.height - baseHeight) / 2;
+    return {
+      x: ((clientX - svgRect.left - offsetX) / baseWidth) * naturalSize.width,
+      y: ((clientY - svgRect.top - offsetY) / baseHeight) * naturalSize.height
+    };
   };
 
   const handleMove = (clientX: number, clientY: number) => {
