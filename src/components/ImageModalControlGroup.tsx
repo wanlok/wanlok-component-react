@@ -98,7 +98,7 @@ export const ImageModalControlGroup = ({
             minWidth: 80,
             p: 1,
             backgroundColor: alpha(palette.background.default, 0.9),
-            borderLeftColor: alpha(palette.divider, 0.9)
+            borderLeft: 0
           }}
         >
           <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={onZoomChange} />

@@ -13,7 +13,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <ThemeProvider theme={theme}>
-        <RouterProvider router={createHashRouter(routes)} />
+        <RouterProvider router={createHashRouter(routes)} future={{ v7_startTransition: true }} />
       </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>

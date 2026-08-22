@@ -15,8 +15,6 @@ import { getBaseSize, ZoomPanImageHandle } from "../../components/ZoomPanImage";
 import { AVATAR_RADIUS, Region } from "./ImageRegionOverlay";
 import { LAYOUT_ITEMS } from "./Recognitions";
 
-const FOCUS_REGION_PADDING = 0.8;
-
 // Natural-pixel point currently at the top-left corner of the ZoomPanImage viewport, plus the
 // natural-pixel size of one screen pixel at the current zoom (so a caller can add a fixed
 // screen-space offset instead of one that balloons in natural-pixel terms as zoom increases).
@@ -74,36 +72,24 @@ export const useRecognitions = ({
     if (!handle || !handle.element || !handle.naturalSize) {
       return;
     }
-    const { element, naturalSize } = handle;
+    const { element, naturalSize, scale } = handle;
     const rect = getPointsBoundingBox(region.points);
     const { baseWidth } = getBaseSize(element.clientWidth, element.clientHeight, naturalSize);
     const baseScale = baseWidth / naturalSize.width;
-
-    const newScale = Math.min(
-      Math.max(
-        Math.min(
-          (element.clientWidth * FOCUS_REGION_PADDING) / (rect.width * baseScale),
-          (element.clientHeight * FOCUS_REGION_PADDING) / (rect.height * baseScale)
-        ),
-        1
-      ),
-      32
-    );
-    handle.setScale(newScale);
 
     if (handle.mobile) {
       const centerOffset = {
         x: (rect.x + rect.width / 2 - naturalSize.width / 2) * baseScale,
         y: (rect.y + rect.height / 2 - naturalSize.height / 2) * baseScale
       };
-      handle.setPosition({ x: -newScale * centerOffset.x, y: -newScale * centerOffset.y }, newScale);
+      handle.setPosition({ x: -scale * centerOffset.x, y: -scale * centerOffset.y }, scale);
     } else {
       requestAnimationFrame(() => {
         const scrolledElement = handle.element;
         if (!scrolledElement) {
           return;
         }
-        const scrollBaseScale = baseScale * newScale;
+        const scrollBaseScale = baseScale * scale;
         scrolledElement.scrollTo({
           left: (rect.x + rect.width / 2) * scrollBaseScale - scrolledElement.clientWidth / 2,
           top: (rect.y + rect.height / 2) * scrollBaseScale - scrolledElement.clientHeight / 2,
