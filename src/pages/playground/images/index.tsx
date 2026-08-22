@@ -1,5 +1,6 @@
-import { Box, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { bottomSx, LayoutHeader, topSx } from "../../../components/LayoutHeader";
+import { PinchZoomImage } from "../../../components/PinchZoomImage";
 
 export const Images = () => {
   const { breakpoints } = useTheme();
@@ -23,14 +24,7 @@ export const Images = () => {
         <Stack sx={{ flexDirection: "row" }}>
         </Stack>
       )} */}
-      <Stack sx={{ flex: 1, minHeight: 0, alignItems: "center", justifyContent: "center", backgroundColor: "black" }}>
-        <Box
-          component="img"
-          src="/images/test.jpg"
-          alt="Test"
-          sx={{ display: "block", width: "100%", height: "100%", objectFit: "contain" }}
-        />
-      </Stack>
+      <PinchZoomImage src="/images/test.jpg" alt="Test" sx={{ backgroundColor: "black" }} />
     </Stack>
   );
 };
