@@ -8,31 +8,6 @@ import { SelectInput } from "./SelectInput";
 import { StyledContainer } from "./StyledContainer";
 import { ZOOM_ITEMS } from "./ZoomPanImage";
 
-export const ImageModalTopControlGroup = ({
-  onAutoExpandButtonClick,
-  isAutoExpanding
-}: {
-  onAutoExpandButtonClick?: () => void;
-  isAutoExpanding?: boolean;
-}) => (
-  <>
-    {onAutoExpandButtonClick && (
-      <WButton
-        onClick={onAutoExpandButtonClick}
-        disabled={isAutoExpanding}
-        isActivated={isAutoExpanding}
-        sx={iconButtonSx}
-      >
-        {isAutoExpanding ? (
-          <CircularProgress size={24} sx={{ color: "common.white" }} />
-        ) : (
-          <AutoAwesomeIcon sx={{ fontSize: 24 }} />
-        )}
-      </WButton>
-    )}
-  </>
-);
-
 export const ImageModalControlGroup = ({
   onAddButtonClick,
   onAutoExpandButtonClick,
@@ -71,8 +46,7 @@ export const ImageModalControlGroup = ({
   const overlayButtonSx = {
     ...iconButtonSx,
     backgroundColor: alpha(palette.primary.main, 0.9),
-    "&:hover": { backgroundColor: "primary.main" },
-    "&.Mui-disabled": { backgroundColor: alpha(palette.common.black, 0.9) }
+    "&:hover": { backgroundColor: "primary.main" }
   };
 
   return (
@@ -107,7 +81,7 @@ export const ImageModalControlGroup = ({
           <WButton
             onClick={onAutoExpandButtonClick}
             disabled={isAutoExpanding}
-            isActivated={false}
+            isActivated={isAutoExpanding}
             sx={overlayButtonSx}
           >
             {isAutoExpanding ? (

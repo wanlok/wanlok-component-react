@@ -48,7 +48,10 @@ export const WButton = ({
         ...(isActivated && {
           backgroundColor: "common.black",
           "&:hover": { backgroundColor: "common.black" },
-          color: "common.white"
+          color: "common.white",
+          // MUI's own .Mui-disabled background/color otherwise wins this specificity race when
+          // isActivated and disabled are both true at once (e.g. a loading-state icon button).
+          "&.Mui-disabled": { backgroundColor: "common.black", color: "common.white" }
         }),
         ...sx
       }}

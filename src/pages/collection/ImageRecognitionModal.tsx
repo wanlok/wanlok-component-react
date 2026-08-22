@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Box, Stack } from "@mui/material";
+import { Box, CircularProgress, Stack } from "@mui/material";
 import {
   Add as AddIcon,
   Close as CloseIcon,
@@ -7,6 +7,7 @@ import {
   Visibility as VisibilityIcon,
   ViewList as ViewListIcon
 } from "@mui/icons-material";
+import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { useMediaQuery, useTheme } from "@mui/material";
 import { useNavigate, useParams } from "react-router-dom";
 import { WModal } from "../../components/WModal";
@@ -14,7 +15,7 @@ import { iconButtonSx, WButton } from "../../components/WButton";
 import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
 import { StyledContainer } from "../../components/StyledContainer";
-import { ImageModalControlGroup, ImageModalTopControlGroup } from "../../components/ImageModalControlGroup";
+import { ImageModalControlGroup } from "../../components/ImageModalControlGroup";
 import { useModalControlGroup } from "../../components/useModalControlGroup";
 import { ZoomPanImageHandle } from "../../components/ZoomPanImage";
 import { ImageRegionOverlay, Region } from "./ImageRegionOverlay";
@@ -235,6 +236,20 @@ export const ImageRecognitionModal = ({
             <WButton onClick={onAddRegionClick} sx={iconButtonSx}>
               <AddIcon sx={{ fontSize: 26 }} />
             </WButton>
+            {isPolygonEnabled && selectedRegionIndex !== null && (
+              <WButton
+                onClick={() => onAutoExpandRegionClick(selectedRegionIndex)}
+                disabled={autoExpandingRegionIndices.has(selectedRegionIndex)}
+                isActivated={autoExpandingRegionIndices.has(selectedRegionIndex)}
+                sx={iconButtonSx}
+              >
+                {autoExpandingRegionIndices.has(selectedRegionIndex) ? (
+                  <CircularProgress size={24} sx={{ color: "common.white" }} />
+                ) : (
+                  <AutoAwesomeIcon sx={{ fontSize: 24 }} />
+                )}
+              </WButton>
+            )}
             <WButton onClick={onDeleteSelectedRegionClick} sx={iconButtonSx}>
               <CloseIcon sx={{ fontSize: 24 }} />
             </WButton>
@@ -243,19 +258,15 @@ export const ImageRecognitionModal = ({
       }
       bottom={
         mobile ? (
-          <>
-            <ImageModalTopControlGroup
-              onAutoExpandButtonClick={
-                isPolygonEnabled && selectedRegionIndex !== null
-                  ? () => onAutoExpandRegionClick(selectedRegionIndex)
-                  : undefined
-              }
-              isAutoExpanding={selectedRegionIndex !== null && autoExpandingRegionIndices.has(selectedRegionIndex)}
-            />
-            <WButton onClick={closeModal} sx={{ flex: 1 }}>
-              Cancel
-            </WButton>
-          </>
+          <YesNoButtons
+            yesLabel="Save"
+            onYesClick={() => {
+              onSaveButtonClick(editedName, editedPreviewAlignment, editedAttributes, selectedLayout, regions);
+              closeModal();
+            }}
+            noLabel="Cancel"
+            onNoClick={closeModal}
+          />
         ) : undefined
       }
       rightPages={rightHidden ? undefined : rightPages}
