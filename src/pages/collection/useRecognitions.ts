@@ -178,15 +178,23 @@ export const useRecognitions = ({
   };
 
   const onAddRegionClick = async () => {
-    const handle = zoomPanRef.current;
-    const visibleTopLeft = handle ? getVisibleTopLeft(handle) : null;
-    const naturalPerScreenPixel = visibleTopLeft?.naturalPerScreenPixel ?? 1;
-    const defaultX = (visibleTopLeft?.x ?? 0) + 80 * naturalPerScreenPixel;
-    const defaultY = (visibleTopLeft?.y ?? 0) + (mobile ? 40 : 120) * naturalPerScreenPixel;
     const isPolygonEnabled = LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isPolygonEnabled ?? false;
     const defaultSize = AVATAR_RADIUS * 2 + 8;
     const defaultWidth = isPolygonEnabled ? defaultSize : 240;
     const defaultHeight = isPolygonEnabled ? defaultSize : 135;
+
+    const handle = zoomPanRef.current;
+    const visibleTopLeft = handle ? getVisibleTopLeft(handle) : null;
+    const naturalPerScreenPixel = visibleTopLeft?.naturalPerScreenPixel ?? 1;
+    const naturalSize = handle?.naturalSize;
+    const maxX = naturalSize ? Math.max(0, naturalSize.width - defaultWidth) : Infinity;
+    const maxY = naturalSize ? Math.max(0, naturalSize.height - defaultHeight) : Infinity;
+    // If the viewport's visible corner is outside the image (panned/scrolled past its edge), anchor
+    // the same top/left space to the image's own edge instead, rather than flush against it with no gap.
+    const anchorX = Math.min(Math.max(visibleTopLeft?.x ?? 0, 0), naturalSize?.width ?? Infinity);
+    const anchorY = Math.min(Math.max(visibleTopLeft?.y ?? 0, 0), naturalSize?.height ?? Infinity);
+    const defaultX = Math.min(Math.max(anchorX + 80 * naturalPerScreenPixel, 0), maxX);
+    const defaultY = Math.min(Math.max(anchorY + (mobile ? 40 : 120) * naturalPerScreenPixel, 0), maxY);
     const isAutoRegionDetectionEnabled =
       LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isAutoRegionDetectionEnabled ?? false;
     let rect: Rect;
