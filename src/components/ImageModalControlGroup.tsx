@@ -1,20 +1,25 @@
 import { alpha, CircularProgress, Stack, useTheme } from "@mui/material";
-import { Add as AddIcon, Close as CloseIcon, ZoomIn as ZoomInIcon, ZoomOut as ZoomOutIcon } from "@mui/icons-material";
+import { Add as AddIcon, Close as CloseIcon } from "@mui/icons-material";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { iconButtonSx, WButton } from "./WButton";
 import { ModalControlGroup } from "./ModalControlGroup";
 import { PageItem } from "./WModal";
+import { SelectInput } from "./SelectInput";
+import { StyledContainer } from "./StyledContainer";
+
+export const ZOOM_ITEMS = [
+  { label: "1x", value: "1" },
+  { label: "2x", value: "2" },
+  { label: "3x", value: "3" },
+  { label: "4x", value: "4" }
+];
 
 export const ImageModalTopControlGroup = ({
   onAutoExpandButtonClick,
-  isAutoExpanding,
-  onZoomInClick,
-  onZoomOutClick
+  isAutoExpanding
 }: {
   onAutoExpandButtonClick?: () => void;
   isAutoExpanding?: boolean;
-  onZoomInClick: () => void;
-  onZoomOutClick: () => void;
 }) => (
   <>
     {onAutoExpandButtonClick && (
@@ -31,12 +36,6 @@ export const ImageModalTopControlGroup = ({
         )}
       </WButton>
     )}
-    <WButton onClick={onZoomInClick} sx={iconButtonSx}>
-      <ZoomInIcon sx={{ fontSize: 24 }} />
-    </WButton>
-    <WButton onClick={onZoomOutClick} sx={iconButtonSx}>
-      <ZoomOutIcon sx={{ fontSize: 24 }} />
-    </WButton>
   </>
 );
 
@@ -45,8 +44,8 @@ export const ImageModalControlGroup = ({
   onAutoExpandButtonClick,
   isAutoExpanding,
   onDeleteButtonClick,
-  onZoomInClick,
-  onZoomOutClick,
+  zoom,
+  onZoomChange,
   isFullScreen,
   onFullScreenClick,
   isRightHidden,
@@ -61,8 +60,8 @@ export const ImageModalControlGroup = ({
   onAutoExpandButtonClick?: () => void;
   isAutoExpanding?: boolean;
   onDeleteButtonClick?: () => void;
-  onZoomInClick: () => void;
-  onZoomOutClick: () => void;
+  zoom: string;
+  onZoomChange: (value: string) => void;
   isFullScreen: boolean;
   onFullScreenClick: () => void;
   isRightHidden: boolean;
@@ -71,7 +70,7 @@ export const ImageModalControlGroup = ({
   selectedPage: number;
   onPreviousClick?: () => void;
   onNextClick?: () => void;
-  scrollbarWidths: { right: number; bottom: number };
+  scrollbarWidths?: { right: number; bottom: number };
 }) => {
   const { palette } = useTheme();
 
@@ -111,6 +110,9 @@ export const ImageModalControlGroup = ({
       }
       bottomLeftChildren={
         <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+          <StyledContainer sx={{ minWidth: 80, p: 1, backgroundColor: alpha(palette.background.default, 0.9) }}>
+            <SelectInput items={ZOOM_ITEMS} value={zoom} onChange={onZoomChange} />
+          </StyledContainer>
           {onAutoExpandButtonClick && (
             <WButton
               onClick={onAutoExpandButtonClick}
@@ -125,12 +127,6 @@ export const ImageModalControlGroup = ({
               )}
             </WButton>
           )}
-          <WButton onClick={onZoomInClick} sx={overlayButtonSx}>
-            <ZoomInIcon sx={{ fontSize: 24 }} />
-          </WButton>
-          <WButton onClick={onZoomOutClick} sx={overlayButtonSx}>
-            <ZoomOutIcon sx={{ fontSize: 24 }} />
-          </WButton>
         </Stack>
       }
     />

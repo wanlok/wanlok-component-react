@@ -11,15 +11,43 @@ import { regex, Rect } from "../../services/Types";
 import { detectDelimiter } from "../../utils/detectDelimiter";
 import { detectNextTextRegion } from "../../utils/detectNextTextRegion";
 import { floodFillRegion } from "../../utils/floodFillRegion";
+import { getBaseSize, ZoomPanImageHandle } from "../../components/ZoomPanImage";
 import { AVATAR_RADIUS, Region } from "./ImageRegionOverlay";
 import { LAYOUT_ITEMS } from "./Recognitions";
+
+const FOCUS_REGION_PADDING = 0.8;
+
+// Natural-pixel point currently at the top-left corner of the ZoomPanImage viewport, plus the
+// natural-pixel size of one screen pixel at the current zoom (so a caller can add a fixed
+// screen-space offset instead of one that balloons in natural-pixel terms as zoom increases).
+const getVisibleTopLeft = (handle: ZoomPanImageHandle) => {
+  const { element, naturalSize, mobile, scale, position } = handle;
+  if (!element || !naturalSize) {
+    return null;
+  }
+  const { baseWidth } = getBaseSize(element.clientWidth, element.clientHeight, naturalSize);
+  const baseScale = baseWidth / naturalSize.width;
+  const naturalPerScreenPixel = 1 / (baseScale * scale);
+  if (mobile) {
+    return {
+      x: naturalSize.width / 2 + (-element.clientWidth / 2 - position.x) / scale / baseScale,
+      y: naturalSize.height / 2 + (-element.clientHeight / 2 - position.y) / scale / baseScale,
+      naturalPerScreenPixel
+    };
+  }
+  return {
+    x: element.scrollLeft / (baseScale * scale),
+    y: element.scrollTop / (baseScale * scale),
+    naturalPerScreenPixel
+  };
+};
 
 export const useRecognitions = ({
   open,
   src,
   layout,
   regions: initialRegions,
-  imageScrollRef,
+  zoomPanRef,
   rightScrollRef,
   mobile,
   onRegionSelected
@@ -28,7 +56,7 @@ export const useRecognitions = ({
   src: string;
   layout: string;
   regions: Region[];
-  imageScrollRef: RefObject<HTMLDivElement | null>;
+  zoomPanRef: RefObject<ZoomPanImageHandle | null>;
   rightScrollRef: RefObject<HTMLDivElement | null>;
   mobile: boolean;
   onRegionSelected?: () => void;
@@ -41,17 +69,48 @@ export const useRecognitions = ({
   const [autoExpandingRegionIndices, setAutoExpandingRegionIndices] = useState<Set<number>>(new Set());
   const imageCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const scrollImageToRegion = (region: Region) => {
-    const container = imageScrollRef.current;
-    if (!container) {
+  const focusRegion = (region: Region) => {
+    const handle = zoomPanRef.current;
+    if (!handle || !handle.element || !handle.naturalSize) {
       return;
     }
+    const { element, naturalSize } = handle;
     const rect = getPointsBoundingBox(region.points);
-    container.scrollTo({
-      left: rect.x - container.clientWidth / 2 + rect.width / 2,
-      top: rect.y - container.clientHeight / 2 + rect.height / 2,
-      behavior: "smooth"
-    });
+    const { baseWidth } = getBaseSize(element.clientWidth, element.clientHeight, naturalSize);
+    const baseScale = baseWidth / naturalSize.width;
+
+    const newScale = Math.min(
+      Math.max(
+        Math.min(
+          (element.clientWidth * FOCUS_REGION_PADDING) / (rect.width * baseScale),
+          (element.clientHeight * FOCUS_REGION_PADDING) / (rect.height * baseScale)
+        ),
+        1
+      ),
+      32
+    );
+    handle.setScale(newScale);
+
+    if (handle.mobile) {
+      const centerOffset = {
+        x: (rect.x + rect.width / 2 - naturalSize.width / 2) * baseScale,
+        y: (rect.y + rect.height / 2 - naturalSize.height / 2) * baseScale
+      };
+      handle.setPosition({ x: -newScale * centerOffset.x, y: -newScale * centerOffset.y }, newScale);
+    } else {
+      requestAnimationFrame(() => {
+        const scrolledElement = handle.element;
+        if (!scrolledElement) {
+          return;
+        }
+        const scrollBaseScale = baseScale * newScale;
+        scrolledElement.scrollTo({
+          left: (rect.x + rect.width / 2) * scrollBaseScale - scrolledElement.clientWidth / 2,
+          top: (rect.y + rect.height / 2) * scrollBaseScale - scrolledElement.clientHeight / 2,
+          behavior: "smooth"
+        });
+      });
+    }
   };
 
   const ensureImageCanvas = async () => {
@@ -119,9 +178,11 @@ export const useRecognitions = ({
   };
 
   const onAddRegionClick = async () => {
-    const container = imageScrollRef.current;
-    const defaultX = (container?.scrollLeft ?? 0) + 80;
-    const defaultY = (container?.scrollTop ?? 0) + (mobile ? 40 : 120);
+    const handle = zoomPanRef.current;
+    const visibleTopLeft = handle ? getVisibleTopLeft(handle) : null;
+    const naturalPerScreenPixel = visibleTopLeft?.naturalPerScreenPixel ?? 1;
+    const defaultX = (visibleTopLeft?.x ?? 0) + 80 * naturalPerScreenPixel;
+    const defaultY = (visibleTopLeft?.y ?? 0) + (mobile ? 40 : 120) * naturalPerScreenPixel;
     const isPolygonEnabled = LAYOUT_ITEMS.find((item) => item.value === selectedLayout)?.isPolygonEnabled ?? false;
     const defaultSize = AVATAR_RADIUS * 2 + 8;
     const defaultWidth = isPolygonEnabled ? defaultSize : 240;
@@ -286,7 +347,7 @@ export const useRecognitions = ({
     onRegionSelect(index);
     const region = regions[index];
     if (region) {
-      scrollImageToRegion(region);
+      focusRegion(region);
     }
   };
 

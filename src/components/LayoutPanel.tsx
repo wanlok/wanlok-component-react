@@ -66,7 +66,7 @@ export const LayoutPanel = ({
         </LayoutDivider>
       )}
       {!panelOpened && (
-        <Stack sx={{ flex: 1 }}>
+        <Stack sx={{ flex: 1, minWidth: 0 }}>
           {mobile && !isLoading && (
             <TopCard
               panelOpened={panelOpened}

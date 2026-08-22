@@ -16,6 +16,7 @@ import { TextInput } from "../../components/TextInput";
 import { StyledContainer } from "../../components/StyledContainer";
 import { ImageModalControlGroup, ImageModalTopControlGroup } from "../../components/ImageModalControlGroup";
 import { useModalControlGroup } from "../../components/useModalControlGroup";
+import { ZoomPanImageHandle } from "../../components/ZoomPanImage";
 import { ImageRegionOverlay, Region } from "./ImageRegionOverlay";
 import { LAYOUT_ITEMS, Recognitions, RecognitionsTop } from "./Recognitions";
 import { useRecognitions } from "./useRecognitions";
@@ -141,16 +142,16 @@ export const ImageRecognitionModal = ({
   const [editedAttributes, setEditedAttributes] = useState<{ [key: string]: string }>(attributes);
   const [desktopSelectedPage, setDesktopSelectedPage] = useState(page === "recognitions" ? 1 : 0);
   const [mobileSelectedPage, setMobileSelectedPage] = useState(page === "recognitions" ? 2 : 0);
-  const [zoom, setZoom] = useState("fit");
+  const [zoom, setZoom] = useState("1");
   const { isFullScreen, onFullScreenClick, exitFullScreen, isRightHidden, onDetailsClick } = useModalControlGroup();
-  const [scrollbarWidths, setScrollbarWidths] = useState({ bottom: 0, right: 0 });
   const [imageMeta, setImageMeta] = useState<ImageMeta | undefined>(undefined);
-  const imageScrollRef = useRef<HTMLDivElement>(null);
+  const [scrollbarWidths, setScrollbarWidths] = useState({ bottom: 0, right: 0 });
+  const zoomPanRef = useRef<ZoomPanImageHandle>(null);
   const rightScrollRef = useRef<HTMLDivElement>(null);
   const rightHidden = mobile ? false : isRightHidden;
 
   useEffect(() => {
-    const element = imageScrollRef.current;
+    const element = zoomPanRef.current?.element;
     if (!element) {
       return;
     }
@@ -194,7 +195,7 @@ export const ImageRecognitionModal = ({
     src,
     layout,
     regions: initialRegions,
-    imageScrollRef,
+    zoomPanRef,
     rightScrollRef,
     mobile,
     onRegionSelected: () => {
@@ -250,8 +251,6 @@ export const ImageRecognitionModal = ({
                   : undefined
               }
               isAutoExpanding={selectedRegionIndex !== null && autoExpandingRegionIndices.has(selectedRegionIndex)}
-              onZoomInClick={() => setZoom("original")}
-              onZoomOutClick={() => setZoom("fit")}
             />
             <WButton onClick={closeModal} sx={{ flex: 1 }}>
               Cancel
@@ -338,29 +337,19 @@ export const ImageRecognitionModal = ({
         )
       }
     >
-      <Box sx={{ position: "relative", height: "100%" }}>
+      <Stack sx={{ position: "relative", height: "100%", minHeight: 0 }}>
         <ImageRegionOverlay
           src={src}
           alt={name}
           regions={mobile || desktopSelectedPage === 1 ? regions : []}
           onRegionsChange={setRegions}
           onRegionMouseUp={onRegionMouseUp}
-          scrollRef={imageScrollRef}
-          fitScreen={zoom === "fit"}
-          fullScreen={mobile || isFullScreen}
+          scale={Number(zoom)}
+          ref={zoomPanRef}
           selectedIndex={selectedRegionIndex}
           onSelectedIndexChange={onRegionSelect}
           isPolygonEnabled={isPolygonEnabled}
-          onImageLoad={(size) => {
-            setImageMeta({ ...size, type });
-            const element = imageScrollRef.current;
-            if (element) {
-              setScrollbarWidths({
-                bottom: element.offsetHeight - element.clientHeight,
-                right: element.offsetWidth - element.clientWidth
-              });
-            }
-          }}
+          onImageLoad={(size) => setImageMeta({ ...size, type })}
         />
         {!mobile && (
           <ImageModalControlGroup
@@ -372,8 +361,8 @@ export const ImageRecognitionModal = ({
             }
             isAutoExpanding={selectedRegionIndex !== null && autoExpandingRegionIndices.has(selectedRegionIndex)}
             onDeleteButtonClick={desktopSelectedPage === 1 ? onDeleteSelectedRegionClick : undefined}
-            onZoomInClick={() => setZoom("original")}
-            onZoomOutClick={() => setZoom("fit")}
+            zoom={zoom}
+            onZoomChange={setZoom}
             isFullScreen={isFullScreen}
             onFullScreenClick={onFullScreenClick}
             isRightHidden={isRightHidden}
@@ -385,7 +374,7 @@ export const ImageRecognitionModal = ({
             scrollbarWidths={scrollbarWidths}
           />
         )}
-      </Box>
+      </Stack>
     </WModal>
   );
 };

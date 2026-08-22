@@ -1,16 +1,8 @@
-import {
-  MouseEvent as ReactMouseEvent,
-  RefObject,
-  SyntheticEvent,
-  TouchEvent as ReactTouchEvent,
-  useEffect,
-  useRef,
-  useState
-} from "react";
+import { MouseEvent as ReactMouseEvent, Ref, TouchEvent as ReactTouchEvent, useEffect, useRef, useState } from "react";
 import { alpha, Box, useTheme } from "@mui/material";
 import { Region, RegionPoint, Rect } from "../../services/Types";
 import { getPointsBoundingBox, getRectPoints } from "../../common/ImageUtils";
-import { ImageModalImage } from "../../components/ImageModalImage";
+import { ZoomPanImage, ZoomPanImageHandle } from "../../components/ZoomPanImage";
 
 export type { Region };
 
@@ -89,26 +81,24 @@ export const ImageRegionOverlay = ({
   regions,
   onRegionsChange,
   onRegionMouseUp,
-  scrollRef,
-  fitScreen,
-  fullScreen,
+  scale,
   selectedIndex,
   onSelectedIndexChange,
   isPolygonEnabled,
-  onImageLoad
+  onImageLoad,
+  ref
 }: {
   src: string;
   alt: string;
   regions: Region[];
   onRegionsChange: (regions: Region[]) => void;
   onRegionMouseUp?: (index: number) => void;
-  scrollRef?: RefObject<HTMLDivElement | null>;
-  fitScreen?: boolean;
-  fullScreen?: boolean;
+  scale?: number;
   selectedIndex?: number | null;
   onSelectedIndexChange?: (index: number | null) => void;
   isPolygonEnabled?: boolean;
   onImageLoad?: (naturalSize: { width: number; height: number }) => void;
+  ref?: Ref<ZoomPanImageHandle>;
 }) => {
   const { palette, typography } = useTheme();
   const svgRef = useRef<SVGSVGElement>(null);
@@ -291,14 +281,13 @@ export const ImageRegionOverlay = ({
   };
 
   return (
-    <ImageModalImage
+    <ZoomPanImage
       src={src}
       alt={alt}
-      fitScreen={fitScreen}
-      fullScreen={fullScreen}
-      scrollRef={scrollRef}
-      onImageLoad={(e: SyntheticEvent<HTMLImageElement>) => {
-        const size = { width: e.currentTarget.naturalWidth, height: e.currentTarget.naturalHeight };
+      scale={scale}
+      ref={ref}
+      sx={{ backgroundColor: "common.black" }}
+      onNaturalSizeChange={(size) => {
         setNaturalSize(size);
         onImageLoad?.(size);
       }}
@@ -306,7 +295,7 @@ export const ImageRegionOverlay = ({
       <Box
         component="svg"
         ref={svgRef}
-        {...(fitScreen && naturalSize.width > 0 && { viewBox: `0 0 ${naturalSize.width} ${naturalSize.height}` })}
+        {...(naturalSize.width > 0 && { viewBox: `0 0 ${naturalSize.width} ${naturalSize.height}` })}
         sx={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", overflow: "visible" }}
         onMouseDown={() => onSelectedIndexChange?.(null)}
         onTouchStart={() => onSelectedIndexChange?.(null)}
@@ -421,6 +410,6 @@ export const ImageRegionOverlay = ({
           );
         })}
       </Box>
-    </ImageModalImage>
+    </ZoomPanImage>
   );
 };
