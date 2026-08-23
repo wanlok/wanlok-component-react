@@ -15,12 +15,8 @@ export const useRegion = () => {
         )
   });
 
-  // Select first region -- asserted every render (not just on a detected list change) so it
-  // still fires when regionNames is already warm from react-query's cache on mount.
+  // No default selection -- the user picks a region explicitly, and the placeholder shows until then.
   const [selectedRegionName, setSelectedRegionName] = useState("");
-  if (!selectedRegionName && regionNames.length > 0) {
-    setSelectedRegionName(regionNames[0]);
-  }
 
   // List item names with regions in the selected collection
   const { data: items = {} } = useQuery({
@@ -35,13 +31,10 @@ export const useRegion = () => {
     .filter((item) => (item.regions?.length ?? 0) > 0)
     .map((item) => item.name);
 
-  // Select first item -- same value-based assertion as above, plus resetting to the new list's
-  // first item once the previously selected name stops being valid (e.g. after switching regions).
+  // No default selection either, but reset it if it stops being valid (e.g. after switching regions).
   const [selectedRegionItemName, setSelectedRegionItemName] = useState("");
   if (selectedRegionItemName && !regionItemNames.includes(selectedRegionItemName)) {
-    setSelectedRegionItemName(regionItemNames[0] ?? "");
-  } else if (!selectedRegionItemName && regionItemNames.length > 0) {
-    setSelectedRegionItemName(regionItemNames[0]);
+    setSelectedRegionItemName("");
   }
 
   const selectedRegionItem = Object.values(items).find((item) => item.name === selectedRegionItemName);
