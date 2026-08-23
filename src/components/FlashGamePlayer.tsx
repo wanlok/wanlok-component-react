@@ -5,7 +5,7 @@ import {
   getImageBase64String,
   getImageData,
   loadImageData,
-  recognizeText,
+  recogniseText,
   resizeImageData,
   scaleRect
 } from "../common/ImageUtils";
@@ -112,7 +112,7 @@ export const FlashGamePlayer = ({
         if (Math.abs(diffRef.current - diff) > threshold) {
           const imageBase64String = getImageBase64String(playerCanvas, scoreRectRef.current);
           if (imageBase64String) {
-            const text = await recognizeText(imageBase64String, "eng");
+            const text = await recogniseText(imageBase64String, "eng");
             if (text.length > 0) {
               const score = extractScore(text);
               if (score !== undefined && score > scoreRef.current) {

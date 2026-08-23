@@ -70,7 +70,7 @@ interface ParentInfo {
 export interface Region {
   points: RegionPoint[];
   recogniseLanguage?: string;
-  recognisedText?: string;
+  text?: string;
   translateLanguage?: string;
   translatedText?: string;
   type?: "question" | "answers";

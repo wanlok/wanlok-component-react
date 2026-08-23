@@ -92,7 +92,7 @@ export const LANGUAGE_ITEMS = [
   { label: "Spanish", value: "spa" }
 ];
 
-export const recognizeText = async (imageBase64String: string, language: string) => {
+export const recogniseText = async (imageBase64String: string, language: string) => {
   const { data } = await Tesseract.recognize(imageBase64String, language);
   return data.text.trim().replace(/\n+/g, " ").replace(/ {2,}/g, " ");
 };

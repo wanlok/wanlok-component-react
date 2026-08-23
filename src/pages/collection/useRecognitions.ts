@@ -4,7 +4,7 @@ import {
   getIsoLanguage,
   getPointsBoundingBox,
   getRectPoints,
-  recognizeText,
+  recogniseText,
   translateText
 } from "../../common/ImageUtils";
 import { regex, Rect } from "../../services/Types";
@@ -149,15 +149,13 @@ export const useRecognitions = ({
     if (!base64) {
       return;
     }
-    const recognisedText = await recognizeText(base64, language);
+    const recognisedText = await recogniseText(base64, language);
     const text =
       selectedLayout === "quiz" && (region.type ?? "question") === "question"
         ? recognisedText.replace(regex.QUESTION_NUMBER, "")
         : recognisedText;
     const delimiter = region.type === "answers" && !region.delimiter ? detectDelimiter(text) : undefined;
-    setRegions((prev) =>
-      prev.map((r, i) => (i === index ? { ...r, recognisedText: text, ...(delimiter && { delimiter }) } : r))
-    );
+    setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, text, ...(delimiter && { delimiter }) } : r)));
     if (controlGroupState === 3 && text && region.translateLanguage) {
       await performTranslation(index, text, getIsoLanguage(language), region.translateLanguage);
     }
@@ -249,7 +247,7 @@ export const useRecognitions = ({
   };
 
   const onRegionTextChange = (index: number, text: string) => {
-    setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, recognisedText: text } : r)));
+    setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, text } : r)));
   };
 
   const onRegionTextBlur = async (index: number) => {
@@ -257,12 +255,12 @@ export const useRecognitions = ({
       return;
     }
     const region = regions[index];
-    if (!region || !region.recognisedText || !region.translateLanguage) {
+    if (!region || !region.text || !region.translateLanguage) {
       return;
     }
     await performTranslation(
       index,
-      region.recognisedText,
+      region.text,
       getIsoLanguage(region.recogniseLanguage ?? "eng"),
       region.translateLanguage
     );
@@ -275,19 +273,14 @@ export const useRecognitions = ({
       return;
     }
     regions.forEach(async (region, index) => {
-      if (!region.recognisedText || region.translatedText) {
+      if (!region.text || region.translatedText) {
         return;
       }
       const targetLanguage = region.translateLanguage ?? "";
       if (!targetLanguage) {
         return;
       }
-      await performTranslation(
-        index,
-        region.recognisedText,
-        getIsoLanguage(region.recogniseLanguage ?? "eng"),
-        targetLanguage
-      );
+      await performTranslation(index, region.text, getIsoLanguage(region.recogniseLanguage ?? "eng"), targetLanguage);
     });
   };
 
@@ -297,8 +290,7 @@ export const useRecognitions = ({
         if (i !== index) {
           return r;
         }
-        const delimiter =
-          type === "answers" && !r.delimiter && r.recognisedText ? detectDelimiter(r.recognisedText) : r.delimiter;
+        const delimiter = type === "answers" && !r.delimiter && r.text ? detectDelimiter(r.text) : r.delimiter;
         return { ...r, type: type as Region["type"], delimiter };
       })
     );
@@ -314,17 +306,12 @@ export const useRecognitions = ({
 
   const onRegionTranslateLanguageChange = async (index: number, translateLanguage: string) => {
     const region = regions[index];
-    if (!region || !region.recognisedText) {
+    if (!region || !region.text) {
       setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, translateLanguage } : r)));
       return;
     }
     setRegions((prev) => prev.map((r, i) => (i === index ? { ...r, translateLanguage } : r)));
-    await performTranslation(
-      index,
-      region.recognisedText,
-      getIsoLanguage(region.recogniseLanguage ?? "eng"),
-      translateLanguage
-    );
+    await performTranslation(index, region.text, getIsoLanguage(region.recogniseLanguage ?? "eng"), translateLanguage);
   };
 
   const onRegionSelect = (index: number | null) => {

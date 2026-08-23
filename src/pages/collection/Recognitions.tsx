@@ -195,8 +195,8 @@ const RegionRow = ({
           {selectedLayout === "regions" ? (
             <>
               <TextInput
-                label="Name"
-                value={region.recognisedText ?? ""}
+                label="Text"
+                value={region.text ?? ""}
                 onChange={onTextChange}
                 onBlur={onTextBlur}
                 inputSx={{ flex: 1 }}
@@ -212,7 +212,7 @@ const RegionRow = ({
               />
               <TextInput
                 label="Text"
-                value={region.recognisedText ?? ""}
+                value={region.text ?? ""}
                 onChange={onTextChange}
                 onBlur={onTextBlur}
                 inputSx={{ flex: 1 }}
@@ -239,7 +239,7 @@ const RegionRow = ({
               )}
               {selectedLayout === "quiz" && region.type === "answers" && (
                 <QuizAnswerContainer
-                  text={region.recognisedText ?? ""}
+                  text={region.text ?? ""}
                   delimiter={region.delimiter ?? "letterDot"}
                   correctAnswerIndices={region.correctAnswerIndices}
                   onDelimiterChange={onDelimiterChange}
@@ -249,8 +249,8 @@ const RegionRow = ({
             </>
           )}
         </Stack>
-        {selectedLayout === "search" && controlGroupState === 0 && region.recognisedText && (
-          <ControlGroup scrollHorizontally={false} searchQuery={region.recognisedText} />
+        {selectedLayout === "search" && controlGroupState === 0 && region.text && (
+          <ControlGroup scrollHorizontally={false} searchQuery={region.text} />
         )}
         {controlGroupState === 1 && (
           <ControlGroup
