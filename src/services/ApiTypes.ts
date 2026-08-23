@@ -31,21 +31,13 @@ export interface Region {
   text?: string;
 }
 
-export interface CollectionItem {
-  name: string;
-  url: string;
-  regions?: Region[];
-}
-
 export type QuizContent = { type: "text" | "image"; value: string };
 
 export type Question = { content: QuizContent[]; answers: { content: QuizContent[]; correct: boolean }[] };
 
-export interface Quiz {
-  label: string;
-  value: string;
-}
-
-export interface QuizzesDocument {
-  quizzes: Quiz[];
+export interface CollectionItem {
+  name: string;
+  url: string;
+  regions?: Region[];
+  questions?: Question[];
 }

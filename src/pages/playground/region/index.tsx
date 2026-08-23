@@ -5,7 +5,7 @@ import { SelectInput } from "../../../components/SelectInput";
 import { StyledContainer } from "../../../components/StyledContainer";
 import { EmptyPlaceholder } from "../../../components/EmptyPlaceholder";
 import { ZoomPanImage } from "../../../components/ZoomPanImage";
-import { Region } from "../../../services/ApiTypes";
+import { CollectionItem, Region } from "../../../services/ApiTypes";
 import { useRegion } from "./useRegion";
 
 const RegionImage = ({ src, regions }: { src: string; regions: Region[] }) => {
@@ -41,27 +41,27 @@ const ControlBar = ({
   regionNames,
   selectedRegionName,
   setSelectedRegionName,
-  regionItemNames,
-  selectedRegionItemName,
-  setSelectedRegionItemName
+  regionItems,
+  selectedRegionItemId,
+  setSelectedRegionItemId
 }: {
   regionNames: string[];
   selectedRegionName: string;
   setSelectedRegionName: (value: string) => void;
-  regionItemNames: string[];
-  selectedRegionItemName: string;
-  setSelectedRegionItemName: (value: string) => void;
+  regionItems: [string, CollectionItem][];
+  selectedRegionItemId: string;
+  setSelectedRegionItemId: (value: string) => void;
 }) => {
   const items = regionNames.map((name) => ({ label: name, value: name }));
-  const itemItems = regionItemNames.map((name) => ({ label: name, value: name }));
+  const itemItems = regionItems.map(([id, item]) => ({ label: item.name, value: id }));
   return (
     <StyledContainer sx={{ flex: 1, flexDirection: "row", p: 1, gap: 1 }}>
       <Stack sx={{ flex: 1 }}>
         <SelectInput items={items} value={selectedRegionName} onChange={setSelectedRegionName} />
       </Stack>
-      {regionItemNames.length > 0 && (
+      {regionItems.length > 0 && (
         <Stack sx={{ flex: 1 }}>
-          <SelectInput items={itemItems} value={selectedRegionItemName} onChange={setSelectedRegionItemName} />
+          <SelectInput items={itemItems} value={selectedRegionItemId} onChange={setSelectedRegionItemId} />
         </Stack>
       )}
     </StyledContainer>
@@ -75,9 +75,9 @@ export const Index = () => {
     regionNames,
     selectedRegionName,
     setSelectedRegionName,
-    regionItemNames,
-    selectedRegionItemName,
-    setSelectedRegionItemName,
+    regionItems,
+    selectedRegionItemId,
+    setSelectedRegionItemId,
     selectedRegionItem
   } = useRegion();
 
@@ -95,9 +95,9 @@ export const Index = () => {
               regionNames={regionNames}
               selectedRegionName={selectedRegionName}
               setSelectedRegionName={setSelectedRegionName}
-              regionItemNames={regionItemNames}
-              selectedRegionItemName={selectedRegionItemName}
-              setSelectedRegionItemName={setSelectedRegionItemName}
+              regionItems={regionItems}
+              selectedRegionItemId={selectedRegionItemId}
+              setSelectedRegionItemId={setSelectedRegionItemId}
             />
           </Stack>
         }
@@ -108,9 +108,9 @@ export const Index = () => {
             regionNames={regionNames}
             selectedRegionName={selectedRegionName}
             setSelectedRegionName={setSelectedRegionName}
-            regionItemNames={regionItemNames}
-            selectedRegionItemName={selectedRegionItemName}
-            setSelectedRegionItemName={setSelectedRegionItemName}
+            regionItems={regionItems}
+            selectedRegionItemId={selectedRegionItemId}
+            setSelectedRegionItemId={setSelectedRegionItemId}
           />
         </Stack>
       )}
