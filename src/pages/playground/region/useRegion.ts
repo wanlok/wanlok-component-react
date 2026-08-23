@@ -1,14 +1,11 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ApiResponse, apiUrl, Collection, CollectionItem } from "../../../services/ApiTypes";
 import { toSlug } from "../../../common/StringUtils";
 
-const emptyRegionNames: string[] = [];
-const emptyItems: Record<string, CollectionItem> = {};
-
 export const useRegion = () => {
   // List collection names that have regions
-  const { data: regionNames = emptyRegionNames } = useQuery({
+  const { data: regionNames = [] } = useQuery({
     queryKey: ["collections"],
     queryFn: () =>
       fetch(`${apiUrl}/collections`)
@@ -18,19 +15,15 @@ export const useRegion = () => {
         )
   });
 
-  // Select first region
+  // Select first region -- asserted every render (not just on a detected list change) so it
+  // still fires when regionNames is already warm from react-query's cache on mount.
   const [selectedRegionName, setSelectedRegionName] = useState("");
-
-  const [prevRegionNames, setPrevRegionNames] = useState(regionNames);
-  if (regionNames !== prevRegionNames) {
-    setPrevRegionNames(regionNames);
-    if (!selectedRegionName && regionNames.length > 0) {
-      setSelectedRegionName(regionNames[0]);
-    }
+  if (!selectedRegionName && regionNames.length > 0) {
+    setSelectedRegionName(regionNames[0]);
   }
 
   // List item names with regions in the selected collection
-  const { data: items = emptyItems } = useQuery({
+  const { data: items = {} } = useQuery({
     queryKey: ["collection", selectedRegionName],
     queryFn: ({ signal }) =>
       fetch(`${apiUrl}/collections/${toSlug(selectedRegionName)}`, { signal })
@@ -38,26 +31,17 @@ export const useRegion = () => {
         .then((response) => response.data),
     enabled: !!selectedRegionName
   });
+  const regionItemNames = Object.values(items)
+    .filter((item) => (item.regions?.length ?? 0) > 0)
+    .map((item) => item.name);
 
-  // items stays a stable reference from react-query while unchanged, so memoizing on it keeps
-  // regionItemNames stable too -- required for the reference-equality check below to terminate.
-  const regionItemNames = useMemo(
-    () =>
-      Object.values(items)
-        .filter((item) => (item.regions?.length ?? 0) > 0)
-        .map((item) => item.name),
-    [items]
-  );
-
-  // Select first item
+  // Select first item -- same value-based assertion as above, plus resetting to the new list's
+  // first item once the previously selected name stops being valid (e.g. after switching regions).
   const [selectedRegionItemName, setSelectedRegionItemName] = useState("");
-
-  const [prevRegionItemNames, setPrevRegionItemNames] = useState(regionItemNames);
-  if (regionItemNames !== prevRegionItemNames) {
-    setPrevRegionItemNames(regionItemNames);
-    setSelectedRegionItemName(
-      regionItemNames.includes(selectedRegionItemName) ? selectedRegionItemName : (regionItemNames[0] ?? "")
-    );
+  if (selectedRegionItemName && !regionItemNames.includes(selectedRegionItemName)) {
+    setSelectedRegionItemName(regionItemNames[0] ?? "");
+  } else if (!selectedRegionItemName && regionItemNames.length > 0) {
+    setSelectedRegionItemName(regionItemNames[0]);
   }
 
   const selectedRegionItem = Object.values(items).find((item) => item.name === selectedRegionItemName);

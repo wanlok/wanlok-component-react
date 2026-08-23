@@ -5,10 +5,10 @@ import { WCardList } from "../../components/WCardList";
 import { BugReport as BugReportIcon, BugReportOutlined as BugReportOutlinedIcon } from "@mui/icons-material";
 import { PanelRow } from "../../components/PanelRow";
 import { LeftHeader } from "./LeftHeader";
-import { Puzzle } from "./puzzle";
-import { Quiz } from "./quiz";
-import { Regions } from "./regions";
-import { Images } from "./images";
+import { Index as ImageIndex } from "./image";
+import { Index as PuzzleIndex } from "./puzzle";
+import { Index as QuizIndex } from "./quiz";
+import { Index as RegionIndex } from "./region";
 
 const iconSize = 24;
 
@@ -43,10 +43,10 @@ export const Playground = () => {
         selectedFolder ? <PanelRow icon={<BugReportIcon sx={{ fontSize: 24 }} />} title={selectedFolder.name} /> : <></>
       }
     >
-      {selectedFolder?.id === "puzzle" && <Puzzle />}
-      {selectedFolder?.id === "quiz" && <Quiz />}
-      {selectedFolder?.id === "regions" && <Regions />}
-      {selectedFolder?.id === "images" && <Images />}
+      {selectedFolder?.id === "image" && <ImageIndex />}
+      {selectedFolder?.id === "puzzle" && <PuzzleIndex />}
+      {selectedFolder?.id === "quiz" && <QuizIndex />}
+      {selectedFolder?.id === "region" && <RegionIndex />}
     </LayoutPanel>
   );
 };

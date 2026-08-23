@@ -68,7 +68,7 @@ const ControlBar = ({
   );
 };
 
-export const Regions = () => {
+export const Index = () => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const {
@@ -86,7 +86,7 @@ export const Regions = () => {
       <LayoutHeader
         top={
           <Stack sx={[topSx, { flex: 1, px: 2, alignItems: "center" }]}>
-            <Typography variant="body1">Quiz</Typography>
+            <Typography variant="body1">Region</Typography>
           </Stack>
         }
         bottom={
@@ -117,7 +117,7 @@ export const Regions = () => {
       {selectedRegionItem ? (
         <RegionImage src={selectedRegionItem.url} regions={selectedRegionItem.regions ?? []} />
       ) : (
-        <EmptyPlaceholder text="No region item" />
+        <EmptyPlaceholder text="No region selected" />
       )}
     </Stack>
   );

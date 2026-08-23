@@ -1,7 +1,7 @@
 import { Stack, Typography } from "@mui/material";
 import { LayoutHeader, topSx } from "../../../components/LayoutHeader";
 
-export const Puzzle = () => {
+export const Index = () => {
   return (
     <Stack sx={{ flex: 1, minHeight: 0 }}>
       <LayoutHeader

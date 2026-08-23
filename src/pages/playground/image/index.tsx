@@ -5,7 +5,7 @@ import { ZOOM_ITEMS, ZoomPanImage } from "../../../components/ZoomPanImage";
 import { SelectInput } from "../../../components/SelectInput";
 import { StyledContainer } from "../../../components/StyledContainer";
 
-export const Images = () => {
+export const Index = () => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const [zoom, setZoom] = useState("1");

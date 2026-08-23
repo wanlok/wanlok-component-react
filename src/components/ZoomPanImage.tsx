@@ -231,7 +231,15 @@ export const ZoomPanImage = ({
             src={src}
             alt={alt}
             onLoad={onLoad}
-            sx={{ display: "block", width: "100%", height: "100%", objectFit: "contain" }}
+            draggable={false}
+            sx={{
+              display: "block",
+              width: "100%",
+              height: "100%",
+              objectFit: "contain",
+              userSelect: "none",
+              WebkitUserSelect: "none"
+            }}
           />
           {children}
         </Box>

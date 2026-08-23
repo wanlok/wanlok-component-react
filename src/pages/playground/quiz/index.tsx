@@ -88,7 +88,7 @@ const ControlBar = ({
   );
 };
 
-export const Quiz = () => {
+export const Index = () => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const { quizzes, updateQuizzes, selectedQuiz, setSelectedQuiz, questions } = useQuiz();
