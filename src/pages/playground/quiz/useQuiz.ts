@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { apiUrl, ApiResponse, Question, Quiz } from "../../../services/Types";
+import { apiUrl, ApiResponse, Question, Quiz } from "../../../services/ApiTypes";
 
 const emptyQuizzes: Quiz[] = [];
 const emptyQuestions: Question[] = [];

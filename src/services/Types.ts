@@ -78,21 +78,6 @@ export interface Region {
   correctAnswerIndices?: number[];
 }
 
-export type QuizContent = { type: "text" | "image"; value: string };
-
-export type Question = { content: QuizContent[]; answers: { content: QuizContent[]; correct: boolean }[] };
-
-export interface Quiz {
-  label: string;
-  value: string;
-}
-
-export interface QuizzesDocument {
-  quizzes: Quiz[];
-}
-
-export type ApiResponse<T> = { status: string; data: T };
-
 export interface CloudinaryFileInfo extends ParentInfo {
   name: string;
   mimeType: string;
@@ -186,8 +171,6 @@ export const emptyCollectionSequences: CollectionSequences = {
 };
 
 export const serverUrl = "https://wanlok.ddns.net";
-
-export const apiUrl = "https://component.wanlok.workers.dev/api";
 
 export const viewUrls = {
   files: `${serverUrl}/files/`,

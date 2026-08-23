@@ -3,7 +3,7 @@ import { StyledContainer } from "../../../components/StyledContainer";
 import { TextInput } from "../../../components/TextInput";
 import { useState } from "react";
 import { iconButtonSx, WButton } from "../../../components/WButton";
-import { Quiz } from "../../../services/Types";
+import { Quiz } from "../../../services/ApiTypes";
 import { WModal } from "../../../components/WModal";
 import { YesNoButtons } from "../../../components/YesNoButtons";
 import { Add as AddIcon, Assignment as AssignmentIcon, Close as CloseIcon } from "@mui/icons-material";

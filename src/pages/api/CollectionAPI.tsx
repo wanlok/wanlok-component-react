@@ -2,15 +2,8 @@ import { doc, getDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import { db } from "../../firebase";
-import {
-  ApiResponse,
-  CollectionDocument,
-  CollectionAttributes,
-  Folder,
-  Question,
-  Region,
-  TypedAttributes
-} from "../../services/Types";
+import { CollectionDocument, CollectionAttributes, Folder, Region, TypedAttributes } from "../../services/Types";
+import { ApiResponse, Question } from "../../services/ApiTypes";
 import { setTypedAttributes } from "../../common/setTypedAttributes";
 import { toSlug } from "../../common/StringUtils";
 import { splitAnswers } from "../../utils/splitAnswers";

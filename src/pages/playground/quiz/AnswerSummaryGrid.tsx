@@ -1,6 +1,6 @@
 import { Stack, Typography } from "@mui/material";
 import { Done as DoneIcon, Close as CloseIcon } from "@mui/icons-material";
-import { Question } from "../../../services/Types";
+import { Question } from "../../../services/ApiTypes";
 
 export const isAnswerCorrect = (selectedAnswerIndices: number[], answers: Question["answers"]) => {
   const correctIndices = answers.reduce<number[]>(

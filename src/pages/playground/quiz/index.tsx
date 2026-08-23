@@ -5,7 +5,7 @@ import { CheckboxInput } from "../../../components/CheckboxInput";
 import { bottomSx, LayoutHeader, topSx } from "../../../components/LayoutHeader";
 import { StyledContainer } from "../../../components/StyledContainer";
 import { useQuiz } from "./useQuiz";
-import { QuizContent } from "../../../services/Types";
+import { QuizContent } from "../../../services/ApiTypes";
 import { iconButtonSx, WButton } from "../../../components/WButton";
 import { Assignment as AssignmentIcon, Send as SendIcon, Undo as UndoIcon } from "@mui/icons-material";
 import { ResetModal } from "./ResetModal";

@@ -4,7 +4,7 @@ import { WModal } from "../../../components/WModal";
 import { WButton } from "../../../components/WButton";
 import { YesNoButtons } from "../../../components/YesNoButtons";
 import { AnswerSummaryGrid, isAnswerCorrect } from "./AnswerSummaryGrid";
-import { Question } from "../../../services/Types";
+import { Question } from "../../../services/ApiTypes";
 
 export const SubmitModal = ({
   open,
