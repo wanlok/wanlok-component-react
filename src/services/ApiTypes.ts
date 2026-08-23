@@ -21,6 +21,22 @@ export interface Collection {
   counts: CollectionCounts;
 }
 
+export interface RegionPoint {
+  x: number;
+  y: number;
+}
+
+export interface Region {
+  points: RegionPoint[];
+  text?: string;
+}
+
+export interface CollectionItem {
+  name: string;
+  url: string;
+  regions?: Region[];
+}
+
 export type QuizContent = { type: "text" | "image"; value: string };
 
 export type Question = { content: QuizContent[]; answers: { content: QuizContent[]; correct: boolean }[] };
