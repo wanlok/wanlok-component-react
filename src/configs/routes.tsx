@@ -13,7 +13,6 @@ import {
   ViewKanbanOutlined as KanbanOutlinedIcon
 } from "@mui/icons-material";
 import { Kanban } from "../pages/kanban";
-import { CollectionAPI } from "../pages/api/CollectionAPI";
 
 const iconSize = 32;
 
@@ -58,9 +57,5 @@ export const routes = [
         // children: [{ path: "/snapshot/:id2", element: <Playground /> }]
       }
     ]
-  },
-  {
-    path: "/api/collections/:id",
-    element: <CollectionAPI />
   }
 ];

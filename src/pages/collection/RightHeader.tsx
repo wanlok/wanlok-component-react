@@ -1,6 +1,5 @@
 import { Stack } from "@mui/material";
 import {
-  Api as ApiIcon,
   Close as CloseIcon,
   Download as DownloadIcon,
   Edit as EditIcon,
@@ -10,7 +9,6 @@ import {
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { OneLineTypography } from "../../components/OneLineTypography";
 import { Folder } from "../../services/Types";
-import { toSlug } from "../../common/StringUtils";
 import { SelectInput } from "../../components/SelectInput";
 import { bottomSx, LayoutHeader, topSx } from "../../components/LayoutHeader";
 import { StyledContainer } from "../../components/StyledContainer";
@@ -46,9 +44,6 @@ const Top = ({
       <Stack sx={{ flexDirection: "row", gap: "1px" }}>
         <WButton onClick={onDownloadButtonClick} sx={iconButtonSx}>
           <DownloadIcon sx={{ fontSize: 24 }} />
-        </WButton>
-        <WButton onClick={() => window.open(`#/api/collections/${toSlug(folder.name)}`, "_blank")} sx={iconButtonSx}>
-          <ApiIcon sx={{ fontSize: 24 }} />
         </WButton>
         {!resetButtonHidden && (
           <WButton onClick={onResetButtonClick} sx={iconButtonSx}>
