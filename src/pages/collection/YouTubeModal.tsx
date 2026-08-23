@@ -50,7 +50,7 @@ export const YouTubeModal = ({
       width="80vw"
       height="80dvh"
       isFullScreen={isFullScreen}
-      pages={[{ icon: <YouTubeIcon sx={{ fontSize: 24 }} />, label: "Video" }]}
+      pages={[{ icon: <YouTubeIcon sx={{ fontSize: 28, mt: -0.25 }} />, label: "Video" }]}
       hideLeftLabel
       bottom={
         mobile ? (

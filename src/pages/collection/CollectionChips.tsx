@@ -1,8 +1,10 @@
 import { Stack } from "@mui/material";
 import {
   Description as DescriptionIcon,
+  Image as ImageIcon,
   Link as LinkIcon,
   SwapHoriz as SwapHorizIcon,
+  Videocam as VideocamIcon,
   YouTube as YouTubeIcon
 } from "@mui/icons-material";
 import { Folder } from "../../services/Types";
@@ -10,7 +12,7 @@ import { WChip } from "../../components/WChip";
 import SteamIcon from "../../assets/images/icons/steam.png";
 
 export const CollectionChips = ({ folder }: { folder: Folder }) => {
-  const { files, hyperlinks, steam, youtubeRegular, youtubeShorts } = folder.counts;
+  const { file, hyperlink, image, steam, video, youTubeRegular, youTubeShort } = folder.counts;
   const isContainSequences = Object.values(folder.sequences).some((sequence) => sequence.length > 0);
   if (!isContainSequences && !Object.values(folder.counts).some((count) => count > 0)) {
     return <></>;
@@ -18,24 +20,28 @@ export const CollectionChips = ({ folder }: { folder: Folder }) => {
   return (
     <Stack sx={{ flexDirection: "row", gap: 1 }}>
       {isContainSequences && <WChip icon={<SwapHorizIcon sx={{ fontSize: 22 }} style={{ color: "black" }} />} />}
-      {files > 0 && (
-        <WChip icon={<DescriptionIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${files}`} />
+      {file > 0 && (
+        <WChip icon={<DescriptionIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${file}`} />
       )}
-      {hyperlinks > 0 && (
-        <WChip icon={<LinkIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${hyperlinks}`} />
+      {hyperlink > 0 && (
+        <WChip icon={<LinkIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${hyperlink}`} />
       )}
+      {image > 0 && <WChip icon={<ImageIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${image}`} />}
       {steam > 0 && <WChip icon={SteamIcon} label={`${steam}`} />}
-      {youtubeRegular > 0 && youtubeShorts > 0 && (
+      {video > 0 && (
+        <WChip icon={<VideocamIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${video}`} />
+      )}
+      {youTubeRegular > 0 && youTubeShort > 0 && (
         <WChip
-          icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />}
-          label={`${youtubeShorts} + ${youtubeRegular}`}
+          icon={<YouTubeIcon sx={{ fontSize: 24 }} style={{ color: "black" }} />}
+          label={`${youTubeShort} + ${youTubeRegular}`}
         />
       )}
-      {youtubeRegular === 0 && youtubeShorts > 0 && (
-        <WChip icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${youtubeShorts}`} />
+      {youTubeRegular === 0 && youTubeShort > 0 && (
+        <WChip icon={<YouTubeIcon sx={{ fontSize: 24 }} style={{ color: "black" }} />} label={`${youTubeShort}`} />
       )}
-      {youtubeRegular > 0 && youtubeShorts === 0 && (
-        <WChip icon={<YouTubeIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${youtubeRegular}`} />
+      {youTubeRegular > 0 && youTubeShort === 0 && (
+        <WChip icon={<YouTubeIcon sx={{ fontSize: 24 }} style={{ color: "black" }} />} label={`${youTubeRegular}`} />
       )}
     </Stack>
   );

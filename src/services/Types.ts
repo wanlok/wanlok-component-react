@@ -145,16 +145,31 @@ export type CollectionAttributes = { name: string; type: "text" | "number"; visi
 export const emptyCollectionAttributes: CollectionAttributes = [];
 
 export type CollectionCounts = {
-  [key in keyof CollectionDocument]: number;
+  chart: number;
+  file: number;
+  hyperlink: number;
+  image: number;
+  pdf: number;
+  quiz: number;
+  region: number;
+  steam: number;
+  video: number;
+  youTubeRegular: number;
+  youTubeShort: number;
 };
 
 export const emptyCollectionCounts: CollectionCounts = {
-  charts: 0,
-  files: 0,
-  hyperlinks: 0,
+  chart: 0,
+  file: 0,
+  hyperlink: 0,
+  image: 0,
+  pdf: 0,
+  quiz: 0,
+  region: 0,
   steam: 0,
-  youtubeRegular: 0,
-  youtubeShorts: 0
+  video: 0,
+  youTubeRegular: 0,
+  youTubeShort: 0
 };
 
 export type CollectionSequences = {

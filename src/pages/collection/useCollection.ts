@@ -229,6 +229,7 @@ export const useCollection = (
     layout: string,
     regions: Region[]
   ) => {
+    let counts: CollectionCounts | undefined = undefined;
     if (collectionDocument && documentId) {
       const newCollectionDocument = {
         ...collectionDocument,
@@ -240,7 +241,9 @@ export const useCollection = (
       const docRef = doc(db, collectionName, documentId);
       await updateDoc(docRef, newCollectionDocument);
       setCollectionDocumentAndRef(newCollectionDocument);
+      counts = getCounts(newCollectionDocument);
     }
+    return counts;
   };
 
   const updateCollectionVideo = async (

@@ -49,10 +49,16 @@ export const RightContent = ({
   controlGroupState: number;
   selectedFolder: Folder | undefined;
   deleteCollectionItem: (type: string, id: string) => Promise<CollectionCounts | undefined>;
-  updateFolder: (params: { counts?: CollectionCounts; sequences?: Partial<CollectionSequences>; attributes?: CollectionAttributes }) => Promise<void>;
+  updateFolder: (params: {
+    counts?: CollectionCounts;
+    sequences?: Partial<CollectionSequences>;
+    attributes?: CollectionAttributes;
+  }) => Promise<void>;
   updateCollectionSequences: (type: string, id: string, direction: Direction) => void;
   addCollectionItems: (collectionId: string, text: string) => Promise<CollectionCounts | undefined>;
-  addCollectionFiles: (collectionId: string) => Promise<{ counts: CollectionCounts; sequences?: string[]; attributes?: CollectionAttributes } | undefined>;
+  addCollectionFiles: (
+    collectionId: string
+  ) => Promise<{ counts: CollectionCounts; sequences?: string[]; attributes?: CollectionAttributes } | undefined>;
   updateCollectionFile: (
     id: string,
     name: string,
@@ -60,7 +66,7 @@ export const RightContent = ({
     attributes: { [key: string]: string },
     layout: string,
     regions: Region[]
-  ) => Promise<void>;
+  ) => Promise<CollectionCounts | undefined>;
   updateCollectionVideo: (
     type: "youtubeRegular" | "youtubeShorts",
     id: string,
@@ -97,10 +103,20 @@ export const RightContent = ({
 
   const shortVideo = !file && itemId ? youTubeShortVideos.find(([id]) => id === itemId) : undefined;
   const regularVideo = !file && !shortVideo && itemId ? youTubeRegularVideos.find(([id]) => id === itemId) : undefined;
-  const selectedVideo: { type: "youtubeRegular" | "youtubeShorts"; id: string; name: string; attributes: { [key: string]: string } } | null = shortVideo
+  const selectedVideo: {
+    type: "youtubeRegular" | "youtubeShorts";
+    id: string;
+    name: string;
+    attributes: { [key: string]: string };
+  } | null = shortVideo
     ? { type: "youtubeShorts", id: shortVideo[0], name: shortVideo[1].name, attributes: shortVideo[1].attributes ?? {} }
     : regularVideo
-      ? { type: "youtubeRegular", id: regularVideo[0], name: regularVideo[1].name, attributes: regularVideo[1].attributes ?? {} }
+      ? {
+          type: "youtubeRegular",
+          id: regularVideo[0],
+          name: regularVideo[1].name,
+          attributes: regularVideo[1].attributes ?? {}
+        }
       : null;
 
   const previewableItems: { type: "files" | "youtubeShorts" | "youtubeRegular"; id: string }[] = [
@@ -119,7 +135,9 @@ export const RightContent = ({
     if (!item || !folderId) {
       return;
     }
-    navigate(item.type === "files" ? `/collections/${folderId}/${item.id}/details` : `/collections/${folderId}/${item.id}`);
+    navigate(
+      item.type === "files" ? `/collections/${folderId}/${item.id}/details` : `/collections/${folderId}/${item.id}`
+    );
   };
 
   return (
@@ -214,7 +232,17 @@ export const RightContent = ({
         onNextClick={nextItem ? () => navigateToItem(nextItem) : undefined}
         onSaveButtonClick={async (name, previewAlignment, attributes, layout, regions) => {
           if (selectedFile) {
-            await updateCollectionFile(selectedFile.id, name, previewAlignment, attributes, layout, regions);
+            const counts = await updateCollectionFile(
+              selectedFile.id,
+              name,
+              previewAlignment,
+              attributes,
+              layout,
+              regions
+            );
+            if (counts) {
+              await updateFolder({ counts });
+            }
           }
         }}
         onClose={() => {
