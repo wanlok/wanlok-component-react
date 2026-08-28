@@ -151,7 +151,7 @@ export const Index = () => {
         <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>
           {gameEntries.map(({ platform, name, game }, i) => (
             <Stack key={`${platform}-${name}`}>
-              {i > 0 && <Divider />}
+              {i > 0 && <Divider sx={{ mx: 2 }} />}
               <Row
                 platform={platform}
                 name={name}
