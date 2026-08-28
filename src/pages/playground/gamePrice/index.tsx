@@ -29,12 +29,30 @@ const PriceButton = ({
     <ButtonBase
       disabled={!url}
       onClick={() => url && window.open(url, "_blank", "noopener,noreferrer")}
-      sx={{ flexDirection: "column", aspectRatio: "1", p: 2, gap: 0.5 }}
+      sx={{ flexDirection: "column", justifyContent: "center", p: 2, gap: 0.5, width: 100, aspectRatio: "1" }}
     >
-      <Typography variant="body1">{latestPrice !== undefined ? `$${latestPrice.toFixed(2)}` : "-"}</Typography>
+      <Typography variant="body1" noWrap>
+        {latestPrice !== undefined ? `$${latestPrice.toFixed(2)}` : "-"}
+      </Typography>
     </ButtonBase>
   );
 };
+
+const PriceHeader = ({ currencyCode }: { currencyCode: "hkd" | "aud" }) => (
+  <Stack
+    sx={{
+      width: 100,
+      alignItems: "center",
+      justifyContent: "center",
+      backgroundColor: "common.black",
+      color: "common.white",
+      borderTopLeftRadius: 8,
+      borderTopRightRadius: 8
+    }}
+  >
+    <Typography>{currencyCode.toUpperCase()}</Typography>
+  </Stack>
+);
 
 const Row = ({
   platform,
@@ -69,7 +87,9 @@ const Row = ({
           {platform}
         </Typography>
       </ButtonBase>
+      <Divider orientation="vertical" flexItem sx={{ my: 2 }} />
       <PriceButton platform={platform} game={game} currencyCode="hkd" />
+      <Divider orientation="vertical" flexItem sx={{ my: 2 }} />
       <PriceButton platform={platform} game={game} currencyCode="aud" />
       {deleteMode && (
         <WButton
@@ -117,7 +137,13 @@ export const Index = () => {
             </Stack>
           </Stack>
         }
-        bottom={<Stack sx={[bottomSx]} />}
+        bottom={
+          <Stack sx={[bottomSx, { gap: "1px" }]}>
+            <Stack sx={{ flex: 1, px: 2 }}></Stack>
+            <PriceHeader currencyCode="hkd" />
+            <PriceHeader currencyCode="aud" />
+          </Stack>
+        }
       />
       {empty ? (
         <EmptyPlaceholder text="No games" />
