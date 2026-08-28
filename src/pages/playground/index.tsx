@@ -5,6 +5,7 @@ import { WCardList } from "../../components/WCardList";
 import { BugReport as BugReportIcon, BugReportOutlined as BugReportOutlinedIcon } from "@mui/icons-material";
 import { PanelRow } from "../../components/PanelRow";
 import { LeftHeader } from "./LeftHeader";
+import { Index as GamePriceIndex } from "./gamePrice";
 import { Index as ImageIndex } from "./image";
 import { Index as PuzzleIndex } from "./puzzle";
 import { Index as QuizIndex } from "./quiz";
@@ -43,6 +44,7 @@ export const Playground = () => {
         selectedFolder ? <PanelRow icon={<BugReportIcon sx={{ fontSize: 24 }} />} title={selectedFolder.name} /> : <></>
       }
     >
+      {selectedFolder?.id === "gamePrice" && <GamePriceIndex />}
       {selectedFolder?.id === "image" && <ImageIndex />}
       {selectedFolder?.id === "puzzle" && <PuzzleIndex />}
       {selectedFolder?.id === "quiz" && <QuizIndex />}

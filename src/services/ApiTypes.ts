@@ -41,3 +41,29 @@ export interface CollectionItem {
   regions?: Region[];
   questions?: Question[];
 }
+
+export const CURRENCY_CODES = ["aud", "hkd", "rmb"] as const;
+
+export type CurrencyCode = (typeof CURRENCY_CODES)[number];
+
+export type Game = Partial<Record<CurrencyCode, { id: string; prices: { datetime: string; price: number }[] }>>;
+
+export const PLATFORMS = ["nintendo", "steam"] as const;
+
+export type Platform = (typeof PLATFORMS)[number];
+
+export type Games = Record<Platform, Record<string, Game>>;
+
+// A game's store page URL is this prefix plus its currency-specific id (Steam reuses the same
+// appId/prefix across currencies; Nintendo's id and storefront both differ per region).
+export const GAME_URL_PREFIXES: Record<Platform, Partial<Record<CurrencyCode, string>>> = {
+  steam: {
+    aud: "https://store.steampowered.com/app/",
+    hkd: "https://store.steampowered.com/app/",
+    rmb: "https://store.steampowered.com/app/"
+  },
+  nintendo: {
+    aud: "https://ec.nintendo.com/AU/en/titles/",
+    hkd: "https://store.nintendo.com.hk/"
+  }
+};
