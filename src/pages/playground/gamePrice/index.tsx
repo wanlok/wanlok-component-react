@@ -19,11 +19,11 @@ const PriceButton = ({
   game: Game;
   currencyCode: "hkd" | "aud";
 }) => {
-  const prices = game[currencyCode]?.prices ?? [];
+  const entry = game[currencyCode];
+  const prices = entry?.prices ?? [];
   const latestPrice = prices[prices.length - 1]?.price;
-  const id = game[currencyCode]?.id;
   const prefix = GAME_URL_PREFIXES[platform][currencyCode];
-  const url = id && prefix ? prefix + id : undefined;
+  const url = entry?.id && prefix ? prefix + (entry.type ? `${entry.type}/` : "") + entry.id : undefined;
 
   return (
     <ButtonBase
