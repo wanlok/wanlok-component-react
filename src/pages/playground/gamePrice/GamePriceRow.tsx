@@ -1,17 +1,20 @@
 import { ButtonBase, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { DropdownIcon } from "../../../components/DropdownIcon";
+import { layoutHeaderHeight } from "../../../components/LayoutHeader";
 import { iconButtonSx, WButton } from "../../../components/WButton";
 import { GAME_URL_PREFIXES, Game, Platform } from "../../../services/ApiTypes";
 
 const PriceButton = ({
   platform,
   game,
-  currencyCode
+  currencyCode,
+  mobile
 }: {
   platform: Platform;
   game: Game;
   currencyCode: "hkd" | "aud";
+  mobile: boolean;
 }) => {
   const entry = game[currencyCode];
   const prices = entry?.prices ?? [];
@@ -23,11 +26,19 @@ const PriceButton = ({
     <ButtonBase
       disabled={!url}
       onClick={() => url && window.open(url, "_blank", "noopener,noreferrer")}
-      sx={{ flexDirection: "column", justifyContent: "center", p: 2, gap: 0.5, width: 100, aspectRatio: "1" }}
+      sx={{
+        flexDirection: "column",
+        justifyContent: "center",
+        p: 2,
+        gap: 0.5,
+        width: layoutHeaderHeight,
+        aspectRatio: "1"
+      }}
     >
       <Typography variant="body1" noWrap>
         {latestPrice !== undefined ? `$${latestPrice.toFixed(2)}` : "-"}
       </Typography>
+      {mobile && <Typography variant="body2">{currencyCode.toUpperCase()}</Typography>}
     </ButtonBase>
   );
 };
@@ -71,9 +82,9 @@ export const GamePriceRow = ({
         </Typography>
       </ButtonBase>
       <Stack sx={{ flexDirection: "row" }}>
-        <PriceButton platform={platform} game={game} currencyCode="aud" />
+        <PriceButton platform={platform} game={game} currencyCode="aud" mobile={mobile} />
         <Divider orientation="vertical" flexItem sx={{ my: 2 }} />
-        <PriceButton platform={platform} game={game} currencyCode="hkd" />
+        <PriceButton platform={platform} game={game} currencyCode="hkd" mobile={mobile} />
         <Stack sx={{ width: 56, ml: mobile ? "auto" : 0 }}>
           {deleteMode ? (
             <WButton

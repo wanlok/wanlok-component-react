@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Add as AddIcon, Close as CloseIcon } from "@mui/icons-material";
-import { bottomSx, LayoutHeader, topSx } from "../../../components/LayoutHeader";
+import { bottomSx, layoutHeaderHeight, LayoutHeader, topSx } from "../../../components/LayoutHeader";
 import { DeleteConfirmationModal } from "../../../components/DeleteConfirmationModal";
 import { EmptyPlaceholder } from "../../../components/EmptyPlaceholder";
 import { iconButtonSx, WButton } from "../../../components/WButton";
+import { useScrollbarWidths } from "../../../components/useScrollbarWidths";
 import { Platform, PLATFORMS } from "../../../services/ApiTypes";
 import { AddGameModal } from "./AddGameModal";
 import { EditGameModal } from "./EditGameModal";
@@ -38,7 +39,7 @@ const Top = ({
 const PriceHeader = ({ currencyCode }: { currencyCode: "hkd" | "aud" }) => (
   <Stack
     sx={{
-      width: 100,
+      width: layoutHeaderHeight,
       alignItems: "center",
       justifyContent: "center",
       backgroundColor: "common.black",
@@ -64,6 +65,8 @@ export const Index = () => {
   const [controlGroupState, setControlGroupState] = useState(0);
   const effectiveControlGroupState = empty ? 0 : controlGroupState;
   const [gameToDelete, setGameToDelete] = useState<{ platform: Platform; name: string }>();
+  const listRef = useRef<HTMLDivElement>(null);
+  const scrollbarWidths = useScrollbarWidths(() => listRef.current, [empty]);
 
   return (
     <Stack sx={{ flex: 1, minWidth: 0, minHeight: 0 }}>
@@ -82,14 +85,14 @@ export const Index = () => {
               <PriceHeader currencyCode="aud" />
               <PriceHeader currencyCode="hkd" />
             </Stack>
-            <Stack sx={{ width: 56 }} />
+            <Stack sx={{ width: 56 + scrollbarWidths.right }} />
           </Stack>
         }
       />
       {empty ? (
         <EmptyPlaceholder text="No games" />
       ) : (
-        <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>
+        <Stack ref={listRef} sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>
           {gameEntries.map(({ platform, name, game }, i) => (
             <Stack key={`${platform}-${name}`}>
               {i > 0 && !mobile && <Divider sx={{ ml: 2 }} />}

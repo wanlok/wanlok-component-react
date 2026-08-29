@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Box, CircularProgress, Stack } from "@mui/material";
 import {
   Add as AddIcon,
@@ -17,6 +17,7 @@ import { TextInput } from "../../components/TextInput";
 import { StyledContainer } from "../../components/StyledContainer";
 import { ImageModalControlGroup } from "../../components/ImageModalControlGroup";
 import { useModalControlGroup } from "../../components/useModalControlGroup";
+import { useScrollbarWidths } from "../../components/useScrollbarWidths";
 import { ZoomPanImageHandle } from "../../components/ZoomPanImage";
 import { ImageRegionOverlay, Region } from "./ImageRegionOverlay";
 import { LAYOUT_ITEMS, Recognitions, RecognitionsTop } from "./Recognitions";
@@ -146,27 +147,10 @@ export const ImageRecognitionModal = ({
   const [zoom, setZoom] = useState("1");
   const { isFullScreen, onFullScreenClick, exitFullScreen, isRightHidden, onDetailsClick } = useModalControlGroup();
   const [imageMeta, setImageMeta] = useState<ImageMeta | undefined>(undefined);
-  const [scrollbarWidths, setScrollbarWidths] = useState({ bottom: 0, right: 0 });
   const zoomPanRef = useRef<ZoomPanImageHandle>(null);
   const rightScrollRef = useRef<HTMLDivElement>(null);
   const rightHidden = mobile ? false : isRightHidden;
-
-  useEffect(() => {
-    const element = zoomPanRef.current?.element;
-    if (!element) {
-      return;
-    }
-    const updateScrollbarWidths = () => {
-      setScrollbarWidths({
-        bottom: element.offsetHeight - element.clientHeight,
-        right: element.offsetWidth - element.clientWidth
-      });
-    };
-    updateScrollbarWidths();
-    const resizeObserver = new ResizeObserver(updateScrollbarWidths);
-    resizeObserver.observe(element);
-    return () => resizeObserver.disconnect();
-  }, [zoom]);
+  const scrollbarWidths = useScrollbarWidths(() => zoomPanRef.current?.element, [zoom]);
 
   const {
     regions,
