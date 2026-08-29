@@ -44,7 +44,7 @@ export const Playground = () => {
         selectedFolder ? <PanelRow icon={<BugReportIcon sx={{ fontSize: 24 }} />} title={selectedFolder.name} /> : <></>
       }
     >
-      {selectedFolder?.id === "gamePrice" && <GamePriceIndex />}
+      {selectedFolder?.id === "game-price" && <GamePriceIndex />}
       {selectedFolder?.id === "image" && <ImageIndex />}
       {selectedFolder?.id === "puzzle" && <PuzzleIndex />}
       {selectedFolder?.id === "quiz" && <QuizIndex />}
