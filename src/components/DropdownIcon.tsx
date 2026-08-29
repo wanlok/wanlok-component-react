@@ -2,13 +2,13 @@ import {
   KeyboardArrowDown as KeyboardArrowDownIcon,
   KeyboardArrowUp as KeyboardArrowUpIcon
 } from "@mui/icons-material";
-import { Stack } from "@mui/material";
+import { Stack, SxProps, Theme } from "@mui/material";
 
 const iconSize = 40;
 
-export const DropdownIcon = ({ panelOpened }: { panelOpened: boolean }) => {
+export const DropdownIcon = ({ panelOpened, sx }: { panelOpened: boolean; sx?: SxProps<Theme> }) => {
   return (
-    <Stack sx={{ justifyContent: "center", pr: 1 }}>
+    <Stack sx={[{ justifyContent: "center", pr: 1 }, ...(sx ? (Array.isArray(sx) ? sx : [sx]) : [])]}>
       {panelOpened ? (
         <KeyboardArrowUpIcon sx={{ fontSize: iconSize }} />
       ) : (

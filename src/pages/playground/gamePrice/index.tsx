@@ -3,6 +3,7 @@ import { ButtonBase, Divider, Stack, Typography } from "@mui/material";
 import { Add as AddIcon, Close as CloseIcon } from "@mui/icons-material";
 import { bottomSx, LayoutHeader, topSx } from "../../../components/LayoutHeader";
 import { DeleteConfirmationModal } from "../../../components/DeleteConfirmationModal";
+import { DropdownIcon } from "../../../components/DropdownIcon";
 import { EmptyPlaceholder } from "../../../components/EmptyPlaceholder";
 import { iconButtonSx, WButton } from "../../../components/WButton";
 import { GAME_URL_PREFIXES, Game, Platform, PLATFORMS } from "../../../services/ApiTypes";
@@ -26,18 +27,15 @@ const PriceButton = ({
   const url = entry?.id && prefix ? prefix + (entry.type ? `${entry.type}/` : "") + entry.id : undefined;
 
   return (
-    <>
-      <Divider orientation="vertical" flexItem sx={{ my: 2 }} />
-      <ButtonBase
-        disabled={!url}
-        onClick={() => url && window.open(url, "_blank", "noopener,noreferrer")}
-        sx={{ flexDirection: "column", justifyContent: "center", p: 2, gap: 0.5, width: 100, aspectRatio: "1" }}
-      >
-        <Typography variant="body1" noWrap>
-          {latestPrice !== undefined ? `$${latestPrice.toFixed(2)}` : "-"}
-        </Typography>
-      </ButtonBase>
-    </>
+    <ButtonBase
+      disabled={!url}
+      onClick={() => url && window.open(url, "_blank", "noopener,noreferrer")}
+      sx={{ flexDirection: "column", justifyContent: "center", p: 2, gap: 0.5, width: 100, aspectRatio: "1" }}
+    >
+      <Typography variant="body1" noWrap>
+        {latestPrice !== undefined ? `$${latestPrice.toFixed(2)}` : "-"}
+      </Typography>
+    </ButtonBase>
   );
 };
 
@@ -54,7 +52,7 @@ const Top = ({
     <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
       <Typography variant="body1">Game Price</Typography>
     </Stack>
-    <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+    <Stack sx={{ flexDirection: "row" }}>
       <WButton onClick={onAddButtonClick} sx={iconButtonSx}>
         <AddIcon sx={{ fontSize: 26 }} />
       </WButton>
@@ -115,9 +113,10 @@ const Row = ({
         </Typography>
       </ButtonBase>
       <PriceButton platform={platform} game={game} currencyCode="aud" />
+      <Divider orientation="vertical" flexItem sx={{ my: 2 }} />
       <PriceButton platform={platform} game={game} currencyCode="hkd" />
-      <Stack sx={{ width: 56, ml: "1px" }}>
-        {deleteMode && (
+      <Stack sx={{ width: 56 }}>
+        {deleteMode ? (
           <WButton
             onClick={onDeleteButtonClick}
             sx={{
@@ -128,6 +127,17 @@ const Row = ({
             }}
           >
             <CloseIcon sx={{ fontSize: 24 }} />
+          </WButton>
+        ) : (
+          <WButton
+            sx={{
+              ...iconButtonSx,
+              height: "100%",
+              backgroundColor: "transparent",
+              "&:hover": { backgroundColor: "action.hover" }
+            }}
+          >
+            <DropdownIcon panelOpened={false} sx={{ alignItems: "center", pr: 0 }} />
           </WButton>
         )}
       </Stack>
@@ -158,10 +168,12 @@ export const Index = () => {
           />
         }
         bottom={
-          <Stack sx={[bottomSx, { gap: "1px" }]}>
+          <Stack sx={[bottomSx]}>
             <Stack sx={{ flex: 1, px: 2 }}></Stack>
-            <PriceHeader currencyCode="aud" />
-            <PriceHeader currencyCode="hkd" />
+            <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+              <PriceHeader currencyCode="aud" />
+              <PriceHeader currencyCode="hkd" />
+            </Stack>
             <Stack sx={{ width: 56 }} />
           </Stack>
         }
