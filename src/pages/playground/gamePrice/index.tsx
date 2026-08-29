@@ -26,17 +26,44 @@ const PriceButton = ({
   const url = entry?.id && prefix ? prefix + (entry.type ? `${entry.type}/` : "") + entry.id : undefined;
 
   return (
-    <ButtonBase
-      disabled={!url}
-      onClick={() => url && window.open(url, "_blank", "noopener,noreferrer")}
-      sx={{ flexDirection: "column", justifyContent: "center", p: 2, gap: 0.5, width: 100, aspectRatio: "1" }}
-    >
-      <Typography variant="body1" noWrap>
-        {latestPrice !== undefined ? `$${latestPrice.toFixed(2)}` : "-"}
-      </Typography>
-    </ButtonBase>
+    <>
+      <Divider orientation="vertical" flexItem sx={{ my: 2 }} />
+      <ButtonBase
+        disabled={!url}
+        onClick={() => url && window.open(url, "_blank", "noopener,noreferrer")}
+        sx={{ flexDirection: "column", justifyContent: "center", p: 2, gap: 0.5, width: 100, aspectRatio: "1" }}
+      >
+        <Typography variant="body1" noWrap>
+          {latestPrice !== undefined ? `$${latestPrice.toFixed(2)}` : "-"}
+        </Typography>
+      </ButtonBase>
+    </>
   );
 };
+
+const Top = ({
+  onAddButtonClick,
+  deleteModeActivated,
+  onDeleteModeButtonClick
+}: {
+  onAddButtonClick: () => void;
+  deleteModeActivated: boolean;
+  onDeleteModeButtonClick: () => void;
+}) => (
+  <Stack sx={[topSx]}>
+    <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
+      <Typography variant="body1">Game Price</Typography>
+    </Stack>
+    <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+      <WButton onClick={onAddButtonClick} sx={iconButtonSx}>
+        <AddIcon sx={{ fontSize: 26 }} />
+      </WButton>
+      <WButton isActivated={deleteModeActivated} onClick={onDeleteModeButtonClick} sx={iconButtonSx}>
+        <CloseIcon sx={{ fontSize: 24 }} />
+      </WButton>
+    </Stack>
+  </Stack>
+);
 
 const PriceHeader = ({ currencyCode }: { currencyCode: "hkd" | "aud" }) => (
   <Stack
@@ -87,18 +114,23 @@ const Row = ({
           {platform}
         </Typography>
       </ButtonBase>
-      <Divider orientation="vertical" flexItem sx={{ my: 2 }} />
-      <PriceButton platform={platform} game={game} currencyCode="hkd" />
-      <Divider orientation="vertical" flexItem sx={{ my: 2 }} />
       <PriceButton platform={platform} game={game} currencyCode="aud" />
-      {deleteMode && (
-        <WButton
-          onClick={onDeleteButtonClick}
-          sx={{ ...iconButtonSx, backgroundColor: "transparent", "&:hover": { backgroundColor: "action.hover" } }}
-        >
-          <CloseIcon sx={{ fontSize: 24 }} />
-        </WButton>
-      )}
+      <PriceButton platform={platform} game={game} currencyCode="hkd" />
+      <Stack sx={{ width: 56, ml: "1px" }}>
+        {deleteMode && (
+          <WButton
+            onClick={onDeleteButtonClick}
+            sx={{
+              ...iconButtonSx,
+              height: "100%",
+              backgroundColor: "transparent",
+              "&:hover": { backgroundColor: "action.hover" }
+            }}
+          >
+            <CloseIcon sx={{ fontSize: 24 }} />
+          </WButton>
+        )}
+      </Stack>
     </Stack>
   );
 };
@@ -119,29 +151,18 @@ export const Index = () => {
     <Stack sx={{ flex: 1, minWidth: 0, minHeight: 0 }}>
       <LayoutHeader
         top={
-          <Stack sx={[topSx]}>
-            <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
-              <Typography variant="body1">Game Price</Typography>
-            </Stack>
-            <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-              <WButton onClick={() => setAddModalOpen(true)} sx={iconButtonSx}>
-                <AddIcon sx={{ fontSize: 26 }} />
-              </WButton>
-              <WButton
-                isActivated={effectiveControlGroupState === 1}
-                onClick={() => setControlGroupState(effectiveControlGroupState === 1 ? 0 : 1)}
-                sx={iconButtonSx}
-              >
-                <CloseIcon sx={{ fontSize: 24 }} />
-              </WButton>
-            </Stack>
-          </Stack>
+          <Top
+            onAddButtonClick={() => setAddModalOpen(true)}
+            deleteModeActivated={effectiveControlGroupState === 1}
+            onDeleteModeButtonClick={() => setControlGroupState(effectiveControlGroupState === 1 ? 0 : 1)}
+          />
         }
         bottom={
           <Stack sx={[bottomSx, { gap: "1px" }]}>
             <Stack sx={{ flex: 1, px: 2 }}></Stack>
-            <PriceHeader currencyCode="hkd" />
             <PriceHeader currencyCode="aud" />
+            <PriceHeader currencyCode="hkd" />
+            <Stack sx={{ width: 56 }} />
           </Stack>
         }
       />
