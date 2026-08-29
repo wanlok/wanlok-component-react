@@ -1,4 +1,4 @@
-import { ButtonBase, Divider, Stack, Typography } from "@mui/material";
+import { ButtonBase, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { DropdownIcon } from "../../../components/DropdownIcon";
 import { iconButtonSx, WButton } from "../../../components/WButton";
@@ -47,17 +47,22 @@ export const GamePriceRow = ({
   onClick: () => void;
   onDeleteButtonClick: () => void;
 }) => {
+  const { breakpoints } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
+
   return (
-    <Stack sx={{ flexDirection: "row" }}>
+    <Stack sx={{ flexDirection: mobile ? "column" : "row" }}>
       <ButtonBase
         onClick={onClick}
         sx={{
-          flex: 1,
+          flex: mobile ? undefined : 1,
           display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
+          flexDirection: mobile ? "row" : "column",
+          alignItems: mobile ? "center" : "flex-start",
+          justifyContent: mobile ? "space-between" : undefined,
           p: 2,
-          gap: 0.5
+          gap: 0.5,
+          backgroundColor: mobile ? "primary.main" : undefined
         }}
       >
         <Typography variant="body1">{name}</Typography>
@@ -65,34 +70,36 @@ export const GamePriceRow = ({
           {platform}
         </Typography>
       </ButtonBase>
-      <PriceButton platform={platform} game={game} currencyCode="aud" />
-      <Divider orientation="vertical" flexItem sx={{ my: 2 }} />
-      <PriceButton platform={platform} game={game} currencyCode="hkd" />
-      <Stack sx={{ width: 56 }}>
-        {deleteMode ? (
-          <WButton
-            onClick={onDeleteButtonClick}
-            sx={{
-              ...iconButtonSx,
-              height: "100%",
-              backgroundColor: "transparent",
-              "&:hover": { backgroundColor: "action.hover" }
-            }}
-          >
-            <CloseIcon sx={{ fontSize: 24 }} />
-          </WButton>
-        ) : (
-          <WButton
-            sx={{
-              ...iconButtonSx,
-              height: "100%",
-              backgroundColor: "transparent",
-              "&:hover": { backgroundColor: "action.hover" }
-            }}
-          >
-            <DropdownIcon panelOpened={false} sx={{ alignItems: "center", pr: 0 }} />
-          </WButton>
-        )}
+      <Stack sx={{ flexDirection: "row" }}>
+        <PriceButton platform={platform} game={game} currencyCode="aud" />
+        <Divider orientation="vertical" flexItem sx={{ my: 2 }} />
+        <PriceButton platform={platform} game={game} currencyCode="hkd" />
+        <Stack sx={{ width: 56, ml: mobile ? "auto" : 0 }}>
+          {deleteMode ? (
+            <WButton
+              onClick={onDeleteButtonClick}
+              sx={{
+                ...iconButtonSx,
+                height: "100%",
+                backgroundColor: "transparent",
+                "&:hover": { backgroundColor: "action.hover" }
+              }}
+            >
+              <CloseIcon sx={{ fontSize: 24 }} />
+            </WButton>
+          ) : (
+            <WButton
+              sx={{
+                ...iconButtonSx,
+                height: "100%",
+                backgroundColor: "transparent",
+                "&:hover": { backgroundColor: "action.hover" }
+              }}
+            >
+              <DropdownIcon panelOpened={false} sx={{ alignItems: "center", pr: 0 }} />
+            </WButton>
+          )}
+        </Stack>
       </Stack>
     </Stack>
   );

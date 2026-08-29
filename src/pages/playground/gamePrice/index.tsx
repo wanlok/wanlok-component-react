@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Divider, Stack, Typography } from "@mui/material";
+import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { Add as AddIcon, Close as CloseIcon } from "@mui/icons-material";
 import { bottomSx, LayoutHeader, topSx } from "../../../components/LayoutHeader";
 import { DeleteConfirmationModal } from "../../../components/DeleteConfirmationModal";
@@ -24,7 +24,7 @@ const Top = ({
     <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
       <Typography variant="body1">Game Price</Typography>
     </Stack>
-    <Stack sx={{ flexDirection: "row" }}>
+    <Stack sx={{ flexDirection: "row", gap: "1px" }}>
       <WButton onClick={onAddButtonClick} sx={iconButtonSx}>
         <AddIcon sx={{ fontSize: 26 }} />
       </WButton>
@@ -52,6 +52,8 @@ const PriceHeader = ({ currencyCode }: { currencyCode: "hkd" | "aud" }) => (
 );
 
 export const Index = () => {
+  const { breakpoints } = useTheme();
+  const mobile = useMediaQuery(breakpoints.down("md"));
   const { games, addGame, renameGame, deleteGame } = useGamePrice();
   const gameEntries = PLATFORMS.flatMap((platform) =>
     Object.entries(games[platform]).map(([name, game]) => ({ platform, name, game }))
@@ -90,7 +92,7 @@ export const Index = () => {
         <Stack sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>
           {gameEntries.map(({ platform, name, game }, i) => (
             <Stack key={`${platform}-${name}`}>
-              {i > 0 && <Divider sx={{ ml: 2 }} />}
+              {i > 0 && !mobile && <Divider sx={{ ml: 2 }} />}
               <GamePriceRow
                 platform={platform}
                 name={name}
