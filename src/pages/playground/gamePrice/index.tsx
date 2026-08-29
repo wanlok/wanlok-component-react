@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
+import { Stack, Typography } from "@mui/material";
 import { Add as AddIcon, Close as CloseIcon } from "@mui/icons-material";
 import { bottomSx, layoutHeaderHeight, LayoutHeader, topSx } from "../../../components/LayoutHeader";
 import { DeleteConfirmationModal } from "../../../components/DeleteConfirmationModal";
@@ -53,8 +53,6 @@ const PriceHeader = ({ currencyCode }: { currencyCode: "hkd" | "aud" }) => (
 );
 
 export const Index = () => {
-  const { breakpoints } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("md"));
   const { games, addGame, renameGame, deleteGame } = useGamePrice();
   const gameEntries = PLATFORMS.flatMap((platform) =>
     Object.entries(games[platform]).map(([name, game]) => ({ platform, name, game }))
@@ -93,18 +91,16 @@ export const Index = () => {
         <EmptyPlaceholder text="No games" />
       ) : (
         <Stack ref={listRef} sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>
-          {gameEntries.map(({ platform, name, game }, i) => (
-            <Stack key={`${platform}-${name}`}>
-              {i > 0 && !mobile && <Divider sx={{ ml: 2 }} />}
-              <GamePriceRow
-                platform={platform}
-                name={name}
-                game={game}
-                deleteMode={effectiveControlGroupState === 1}
-                onClick={() => setSelectedGame({ platform, name })}
-                onDeleteButtonClick={() => setGameToDelete({ platform, name })}
-              />
-            </Stack>
+          {gameEntries.map(({ platform, name, game }) => (
+            <GamePriceRow
+              key={`${platform}-${name}`}
+              platform={platform}
+              name={name}
+              game={game}
+              deleteMode={effectiveControlGroupState === 1}
+              onClick={() => setSelectedGame({ platform, name })}
+              onDeleteButtonClick={() => setGameToDelete({ platform, name })}
+            />
           ))}
         </Stack>
       )}
