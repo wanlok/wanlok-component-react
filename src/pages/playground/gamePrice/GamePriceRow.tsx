@@ -64,7 +64,7 @@ const GameDetails = ({ game }: { game: Game }) => {
     <Stack sx={{ pl: mobile ? 0 : 2 }}>
       <StyledContainer sx={{ p: 1, gap: 1 }}>
         <SelectInput
-          items={CURRENCY_CODES.map((currencyCode) => ({ label: currencyCode, value: currencyCode }))}
+          items={CURRENCY_CODES.map((currencyCode) => ({ label: currencyCode.toUpperCase(), value: currencyCode }))}
           value={selectedCurrency}
           onChange={(value) => setSelectedCurrency(value as CurrencyCode)}
         />
