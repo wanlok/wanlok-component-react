@@ -80,10 +80,11 @@ const GameDetails = ({ game }: { game: Game }) => {
           <Stack
             sx={{
               display: "grid",
-              gridTemplateColumns: { xs: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" },
+              gridTemplateColumns: { xs: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" },
               gap: 2
             }}
           >
+            <MetaItem title="Number of data" value={String(selectedPrices.length)} />
             <MetaItem title="Last Updated" value={lastUpdatedDate} />
             <MetaItem title="Lowest Price" value={formatPriceWithDate(selectedEntry?.lowest)} />
             <MetaItem title="Highest Price" value={formatPriceWithDate(selectedEntry?.highest)} />
