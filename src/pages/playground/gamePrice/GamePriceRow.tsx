@@ -111,12 +111,12 @@ const GameDetails = ({ game }: { game: Game }) => {
             axisHighlight={{ x: "none" }}
             series={[{ data: selectedPrices.map((price) => price.price), color: palette.text.primary, showMark: true }]}
             height={240}
-            margin={{ top: mobile ? 16 : 32, bottom: 0, left: 0, right: 0 }}
+            margin={{ top: mobile ? 16 : 32, bottom: 0, left: mobile ? -8 : 0, right: 0 }}
             slotProps={{
               axisLine: { style: { stroke: palette.divider, strokeWidth: 1 } },
               axisTick: { style: { stroke: "none" } },
               line: { strokeWidth: 1 },
-              mark: { style: { fill: palette.common.white, stroke: palette.common.black } },
+              mark: { style: { fill: palette.common.white, stroke: palette.common.black, strokeWidth: 1 } },
               lineHighlight: { fill: palette.common.black }
             }}
           />
