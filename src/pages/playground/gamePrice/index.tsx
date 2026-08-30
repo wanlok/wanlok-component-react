@@ -55,7 +55,9 @@ const PriceHeader = ({ currencyCode }: { currencyCode: "hkd" | "aud" }) => (
 export const Index = () => {
   const { games, addGame, renameGame, deleteGame } = useGamePrice();
   const gameEntries = PLATFORMS.flatMap((platform) =>
-    Object.entries(games[platform]).map(([name, game]) => ({ platform, name, game }))
+    Object.entries(games[platform])
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([name, game]) => ({ platform, name, game }))
   );
   const empty = gameEntries.length === 0;
   const [addModalOpen, setAddModalOpen] = useState(false);

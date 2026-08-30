@@ -8,6 +8,7 @@ import { iconButtonSx, WButton } from "../../../components/WButton";
 import { CURRENCY_CODES, CurrencyCode, GAME_URL_PREFIXES, Game, Platform } from "../../../services/ApiTypes";
 import { StyledContainer } from "../../../components/StyledContainer";
 import { SelectInput } from "../../../components/SelectInput";
+import { MetaItem } from "../../../components/MetaItem";
 
 const controlButtonSx = {
   ...iconButtonSx,
@@ -46,8 +47,8 @@ const PriceButton = ({
         aspectRatio: "1"
       }}
     >
-      <Typography variant="body1" noWrap>
-        {latestPrice !== undefined ? `$${latestPrice.toFixed(2)}` : "-"}
+      <Typography variant="body1" noWrap sx={{ color: latestPrice === undefined ? "text.disabled" : undefined }}>
+        {latestPrice !== undefined ? `$${latestPrice.toFixed(2)}` : "N/A"}
       </Typography>
       {mobile && <Typography variant="body2">{currencyCode.toUpperCase()}</Typography>}
     </ButtonBase>
@@ -59,6 +60,20 @@ const GameDetails = ({ game }: { game: Game }) => {
   const mobile = useMediaQuery(breakpoints.down("md"));
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>(CURRENCY_CODES[0]);
   const selectedPrices = game[selectedCurrency]?.prices ?? [];
+  const lastUpdatedDate =
+    selectedPrices.length > 0 ? selectedPrices[selectedPrices.length - 1].datetime.split("T")[0] : undefined;
+
+  // TODO: temporary client-side min/max; replace once the backend caps price history and exposes all-time lowest/highest directly
+  const lowestPriceEntry = selectedPrices.reduce(
+    (lowest, price) => (lowest === undefined || price.price <= lowest.price ? price : lowest),
+    undefined as (typeof selectedPrices)[number] | undefined
+  );
+  const highestPriceEntry = selectedPrices.reduce(
+    (highest, price) => (highest === undefined || price.price >= highest.price ? price : highest),
+    undefined as (typeof selectedPrices)[number] | undefined
+  );
+  const formatPriceWithDate = (entry: (typeof selectedPrices)[number] | undefined) =>
+    entry ? `$${entry.price.toFixed(2)} (${entry.datetime.split("T")[0]})` : undefined;
 
   return (
     <Stack sx={{ pl: mobile ? 0 : 2 }}>
@@ -68,7 +83,18 @@ const GameDetails = ({ game }: { game: Game }) => {
           value={selectedCurrency}
           onChange={(value) => setSelectedCurrency(value as CurrencyCode)}
         />
-        <Stack sx={{ backgroundColor: "white", border: "1px solid", borderColor: "primary.dark" }}>
+        <Stack sx={{ p: 2, backgroundColor: "white", border: "1px solid", borderColor: "primary.dark" }}>
+          <Stack
+            sx={{
+              display: "grid",
+              gridTemplateColumns: { xs: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" },
+              gap: 2
+            }}
+          >
+            <MetaItem title="Last Updated" value={lastUpdatedDate} />
+            <MetaItem title="Lowest Price" value={formatPriceWithDate(lowestPriceEntry)} />
+            <MetaItem title="Highest Price" value={formatPriceWithDate(highestPriceEntry)} />
+          </Stack>
           <LineChart
             xAxis={[
               {
@@ -91,7 +117,7 @@ const GameDetails = ({ game }: { game: Game }) => {
             axisHighlight={{ x: "none" }}
             series={[{ data: selectedPrices.map((price) => price.price), color: palette.text.primary }]}
             height={240}
-            margin={{ top: 32, bottom: 16, right: 16, left: 8 }}
+            margin={{ top: 48, bottom: 32, right: 0, left: 0 }}
             slotProps={{
               axisLine: { style: { stroke: palette.divider, strokeWidth: 1 } },
               axisTick: { style: { stroke: "none" } },
