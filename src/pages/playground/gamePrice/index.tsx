@@ -6,7 +6,7 @@ import { DeleteConfirmationModal } from "../../../components/DeleteConfirmationM
 import { EmptyPlaceholder } from "../../../components/EmptyPlaceholder";
 import { iconButtonSx, WButton } from "../../../components/WButton";
 import { useScrollbarWidths } from "../../../components/useScrollbarWidths";
-import { Platform, PLATFORMS } from "../../../services/ApiTypes";
+import { CURRENCY_CODES, CurrencyCode, Platform, PLATFORMS } from "../../../services/ApiTypes";
 import { AddGameModal } from "./AddGameModal";
 import { EditGameModal } from "./EditGameModal";
 import { GamePriceRow } from "./GamePriceRow";
@@ -23,7 +23,7 @@ const Top = ({
 }) => (
   <Stack sx={[topSx]}>
     <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
-      <Typography variant="body1">Game Price</Typography>
+      <Typography variant="body1">Game Price Analysis</Typography>
     </Stack>
     <Stack sx={{ flexDirection: "row", gap: "1px" }}>
       <WButton onClick={onAddButtonClick} sx={iconButtonSx}>
@@ -36,7 +36,7 @@ const Top = ({
   </Stack>
 );
 
-const PriceHeader = ({ currencyCode }: { currencyCode: "hkd" | "aud" }) => (
+const PriceHeader = ({ currencyCode }: { currencyCode: CurrencyCode }) => (
   <Stack
     sx={{
       width: layoutHeaderHeight,
@@ -82,8 +82,9 @@ export const Index = () => {
           <Stack sx={[bottomSx]}>
             <Stack sx={{ flex: 1, px: 2 }}></Stack>
             <Stack sx={{ flexDirection: "row", gap: "1px" }}>
-              <PriceHeader currencyCode="aud" />
-              <PriceHeader currencyCode="hkd" />
+              {CURRENCY_CODES.map((currencyCode) => (
+                <PriceHeader key={currencyCode} currencyCode={currencyCode} />
+              ))}
             </Stack>
             <Stack sx={{ width: 56 + scrollbarWidths.right }} />
           </Stack>

@@ -42,7 +42,7 @@ export interface CollectionItem {
   questions?: Question[];
 }
 
-export const CURRENCY_CODES = ["aud", "hkd"] as const;
+export const CURRENCY_CODES = ["aud", "cad", "hkd"] as const;
 
 export type CurrencyCode = (typeof CURRENCY_CODES)[number];
 
@@ -67,10 +67,12 @@ export type Games = Record<Platform, Record<string, Game>>;
 export const GAME_URL_PREFIXES: Record<Platform, Partial<Record<CurrencyCode, string>>> = {
   steam: {
     aud: "https://store.steampowered.com/app/",
+    cad: "https://store.steampowered.com/app/",
     hkd: "https://store.steampowered.com/app/"
   },
   nintendo: {
     aud: "https://ec.nintendo.com/AU/en/",
+    cad: "https://www.nintendo.com/en-ca/store/products/",
     hkd: "https://store.nintendo.com.hk/"
   }
 };

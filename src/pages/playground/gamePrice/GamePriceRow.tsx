@@ -25,7 +25,7 @@ const PriceButton = ({
 }: {
   platform: Platform;
   game: Game;
-  currencyCode: "hkd" | "aud";
+  currencyCode: CurrencyCode;
 }) => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
@@ -81,8 +81,8 @@ const GameDetails = ({ game }: { game: Game }) => {
               gap: 2
             }}
           >
-            <MetaItem title="Number of data" value={String(selectedPrices.length)} />
-            <MetaItem title="Last Updated" value={lastUpdatedDate} />
+            {selectedPrices.length > 0 && <MetaItem title="Number of data" value={String(selectedPrices.length)} />}
+            {lastUpdatedDate && <MetaItem title="Last Updated" value={lastUpdatedDate} />}
             {selectedEntry?.lowest && (
               <MetaItem title="Lowest Price" value={`$${selectedEntry.lowest.price.toFixed(2)}`} />
             )}
@@ -183,9 +183,12 @@ export const GamePriceRow = ({
       <Stack sx={{ flexDirection: mobile ? "column" : "row" }}>
         <GameTitle name={name} platform={platform} onClick={onClick} />
         <Stack sx={{ flexDirection: "row" }}>
-          <PriceButton platform={platform} game={game} currencyCode="aud" />
-          <Divider orientation="vertical" flexItem sx={{ my: 2 }} />
-          <PriceButton platform={platform} game={game} currencyCode="hkd" />
+          {CURRENCY_CODES.map((currencyCode, i) => (
+            <Stack key={currencyCode} sx={{ flexDirection: "row" }}>
+              {i > 0 && <Divider orientation="vertical" flexItem sx={{ my: 2 }} />}
+              <PriceButton platform={platform} game={game} currencyCode={currencyCode} />
+            </Stack>
+          ))}
           <Stack sx={{ width: 56, ml: mobile ? "auto" : 0 }}>
             {deleteMode ? (
               <WButton onClick={onDeleteButtonClick} sx={controlButtonSx}>
