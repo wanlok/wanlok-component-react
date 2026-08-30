@@ -64,6 +64,8 @@ export type Platform = (typeof PLATFORMS)[number];
 
 export type Games = Record<Platform, Record<string, Game>>;
 
+export type SaveGameResponse = { status: "ok"; data: Games } | { status: "error"; message: string };
+
 export const GAME_URL_PREFIXES: Record<Platform, Partial<Record<CurrencyCode, string>>> = {
   steam: {
     aud: "https://store.steampowered.com/app/",

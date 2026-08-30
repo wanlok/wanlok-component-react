@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Stack } from "@mui/material";
+import { Alert, Stack } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import { StyledContainer } from "../../../components/StyledContainer";
 import { TextInput } from "../../../components/TextInput";
@@ -13,10 +13,11 @@ export const AddGameModal = ({
 }: {
   open: boolean;
   onClose: () => void;
-  onSaveButtonClick: (name: string, url: string) => void;
+  onSaveButtonClick: (name: string, url: string) => Promise<{ error?: string }>;
 }) => {
   const [name, setName] = useState("");
   const [url, setUrl] = useState("");
+  const [error, setError] = useState<string>();
 
   return (
     <WModal
@@ -27,22 +28,41 @@ export const AddGameModal = ({
         <YesNoButtons
           yesLabel="Save"
           yesDisabled={!name || !url}
-          onYesClick={() => {
-            onSaveButtonClick(name, url);
-            onClose();
+          onYesClick={async () => {
+            const result = await onSaveButtonClick(name, url);
+            if (result.error) {
+              setError(result.error);
+            } else {
+              onClose();
+            }
           }}
           noLabel="Cancel"
           onNoClick={onClose}
         />
       }
     >
-      <Stack sx={{ gap: "1px", p: 2 }}>
-        <StyledContainer sx={{ p: 1 }}>
-          <TextInput label="Name" value={name} onChange={(value) => setName(value)} inputSx={{ flex: 1 }} />
-        </StyledContainer>
-        <StyledContainer sx={{ p: 1 }}>
-          <TextInput label="URL" value={url} onChange={(value) => setUrl(value)} inputSx={{ flex: 1 }} />
-        </StyledContainer>
+      <Stack sx={{ gap: 2, p: 2 }}>
+        <Stack sx={{ gap: "1px" }}>
+          <StyledContainer sx={{ p: 1 }}>
+            <TextInput label="Name" value={name} onChange={(value) => setName(value)} inputSx={{ flex: 1 }} />
+          </StyledContainer>
+          <StyledContainer isError={!!error} sx={{ p: 1 }}>
+            <TextInput
+              label="URL"
+              value={url}
+              onChange={(value) => {
+                setUrl(value);
+                setError(undefined);
+              }}
+              inputSx={{ flex: 1 }}
+            />
+          </StyledContainer>
+        </Stack>
+        {error && (
+          <Alert severity="error" sx={{ borderRadius: 0 }}>
+            {error}
+          </Alert>
+        )}
       </Stack>
     </WModal>
   );

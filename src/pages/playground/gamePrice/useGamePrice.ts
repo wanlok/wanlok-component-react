@@ -1,5 +1,5 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { ApiResponse, apiUrl, Games, Platform } from "../../../services/ApiTypes";
+import { ApiResponse, apiUrl, Games, Platform, SaveGameResponse } from "../../../services/ApiTypes";
 
 const emptyGames: Games = { nintendo: {}, steam: {} };
 
@@ -16,20 +16,23 @@ export const useGamePrice = () => {
 
   // postGame returns the whole updated Games document, so write it straight into the cache
   // instead of invalidating and refetching.
-  const { mutate: postGame } = useMutation({
+  const { mutateAsync: postGame } = useMutation({
     mutationFn: (variables: { name: string; url: string }) =>
       fetch(`${apiUrl}/games`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(variables)
-      })
-        .then((response) => response.json() as Promise<ApiResponse<Games>>)
-        .then((response) => response.data),
-    onSuccess: (data) => queryClient.setQueryData(["games"], data)
+      }).then((response) => response.json() as Promise<SaveGameResponse>),
+    onSuccess: (response) => {
+      if (response.status === "ok") {
+        queryClient.setQueryData(["games"], response.data);
+      }
+    }
   });
 
-  const addGame = (name: string, url: string) => {
-    postGame({ name, url });
+  const addGame = async (name: string, url: string) => {
+    const response = await postGame({ name, url });
+    return response.status === "error" ? { error: response.message } : {};
   };
 
   // patchGame also returns the whole updated Games document.
