@@ -46,10 +46,14 @@ export const CURRENCY_CODES = ["aud", "hkd"] as const;
 
 export type CurrencyCode = (typeof CURRENCY_CODES)[number];
 
+export type GamePrice = { datetime: string; price: number };
+
 export type GameEntry = {
   id: string;
   type?: "titles" | "bundles";
-  prices: { datetime: string; price: number }[];
+  prices: GamePrice[];
+  lowest?: GamePrice;
+  highest?: GamePrice;
 };
 
 export type Game = Partial<Record<CurrencyCode, GameEntry>>;

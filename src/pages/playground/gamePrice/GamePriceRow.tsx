@@ -5,7 +5,7 @@ import { Close as CloseIcon } from "@mui/icons-material";
 import { DropdownIcon } from "../../../components/DropdownIcon";
 import { layoutHeaderHeight } from "../../../components/LayoutHeader";
 import { iconButtonSx, WButton } from "../../../components/WButton";
-import { CURRENCY_CODES, CurrencyCode, GAME_URL_PREFIXES, Game, Platform } from "../../../services/ApiTypes";
+import { CURRENCY_CODES, CurrencyCode, GAME_URL_PREFIXES, Game, GamePrice, Platform } from "../../../services/ApiTypes";
 import { StyledContainer } from "../../../components/StyledContainer";
 import { SelectInput } from "../../../components/SelectInput";
 import { MetaItem } from "../../../components/MetaItem";
@@ -59,20 +59,12 @@ const GameDetails = ({ game }: { game: Game }) => {
   const { breakpoints, typography, palette } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>(CURRENCY_CODES[0]);
-  const selectedPrices = game[selectedCurrency]?.prices ?? [];
+  const selectedEntry = game[selectedCurrency];
+  const selectedPrices = selectedEntry?.prices ?? [];
   const lastUpdatedDate =
     selectedPrices.length > 0 ? selectedPrices[selectedPrices.length - 1].datetime.split("T")[0] : undefined;
 
-  // TODO: temporary client-side min/max; replace once the backend caps price history and exposes all-time lowest/highest directly
-  const lowestPriceEntry = selectedPrices.reduce(
-    (lowest, price) => (lowest === undefined || price.price <= lowest.price ? price : lowest),
-    undefined as (typeof selectedPrices)[number] | undefined
-  );
-  const highestPriceEntry = selectedPrices.reduce(
-    (highest, price) => (highest === undefined || price.price >= highest.price ? price : highest),
-    undefined as (typeof selectedPrices)[number] | undefined
-  );
-  const formatPriceWithDate = (entry: (typeof selectedPrices)[number] | undefined) =>
+  const formatPriceWithDate = (entry: GamePrice | undefined) =>
     entry ? `$${entry.price.toFixed(2)} (${entry.datetime.split("T")[0]})` : undefined;
 
   return (
@@ -92,8 +84,8 @@ const GameDetails = ({ game }: { game: Game }) => {
             }}
           >
             <MetaItem title="Last Updated" value={lastUpdatedDate} />
-            <MetaItem title="Lowest Price" value={formatPriceWithDate(lowestPriceEntry)} />
-            <MetaItem title="Highest Price" value={formatPriceWithDate(highestPriceEntry)} />
+            <MetaItem title="Lowest Price" value={formatPriceWithDate(selectedEntry?.lowest)} />
+            <MetaItem title="Highest Price" value={formatPriceWithDate(selectedEntry?.highest)} />
           </Stack>
           <LineChart
             xAxis={[
@@ -115,13 +107,15 @@ const GameDetails = ({ game }: { game: Game }) => {
               }
             ]}
             axisHighlight={{ x: "none" }}
-            series={[{ data: selectedPrices.map((price) => price.price), color: palette.text.primary }]}
+            series={[{ data: selectedPrices.map((price) => price.price), color: palette.text.primary, showMark: true }]}
             height={240}
-            margin={{ top: 48, bottom: 32, right: 0, left: 0 }}
+            margin={{ top: mobile ? 16 : 32, bottom: 0, left: 0, right: 0 }}
             slotProps={{
               axisLine: { style: { stroke: palette.divider, strokeWidth: 1 } },
               axisTick: { style: { stroke: "none" } },
-              line: { strokeWidth: 1 }
+              line: { strokeWidth: 1 },
+              mark: { style: { fill: palette.common.white, stroke: palette.common.black } },
+              lineHighlight: { fill: palette.common.black }
             }}
           />
         </Stack>
@@ -176,6 +170,7 @@ export const GamePriceRow = ({
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
   const [expanded, setExpanded] = useState(false);
+  const effectiveExpanded = expanded && !deleteMode;
 
   return (
     <>
@@ -191,15 +186,18 @@ export const GamePriceRow = ({
                 <CloseIcon sx={{ fontSize: 24 }} />
               </WButton>
             ) : (
-              <WButton onClick={() => setExpanded(!expanded)} sx={controlButtonSx}>
-                <DropdownIcon panelOpened={expanded} sx={{ alignItems: "center", pr: 0 }} />
+              <WButton
+                onClick={() => setExpanded(!effectiveExpanded)}
+                sx={{ ...controlButtonSx, backgroundColor: effectiveExpanded ? "background.default" : "transparent" }}
+              >
+                <DropdownIcon panelOpened={effectiveExpanded} sx={{ alignItems: "center", pr: 0 }} />
               </WButton>
             )}
           </Stack>
         </Stack>
       </Stack>
-      {expanded && <GameDetails game={game} />}
-      {!mobile && !expanded && <Divider sx={{ ml: 2 }} />}
+      {effectiveExpanded && <GameDetails game={game} />}
+      {!mobile && !effectiveExpanded && <Divider sx={{ ml: 2 }} />}
     </>
   );
 };
