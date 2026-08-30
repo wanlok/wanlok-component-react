@@ -3,6 +3,7 @@ import { ButtonBase, Divider, Stack, Typography, useMediaQuery, useTheme } from 
 import { LineChart } from "@mui/x-charts";
 import { Close as CloseIcon } from "@mui/icons-material";
 import { DropdownIcon } from "../../../components/DropdownIcon";
+import { OneLineTypography } from "../../../components/OneLineTypography";
 import { layoutHeaderHeight } from "../../../components/LayoutHeader";
 import { iconButtonSx, WButton } from "../../../components/WButton";
 import { CURRENCY_CODES, CurrencyCode, GAME_URL_PREFIXES, Game, GamePrice, Platform } from "../../../services/ApiTypes";
@@ -132,19 +133,22 @@ const GameTitle = ({ name, platform, onClick }: { name: string; platform: Platfo
     <ButtonBase
       onClick={onClick}
       sx={{
-        flex: mobile ? undefined : 1,
         display: "flex",
-        flexDirection: mobile ? "row" : "column",
-        alignItems: mobile ? "center" : "flex-start",
-        justifyContent: mobile ? "space-between" : undefined,
         p: 2,
-        gap: 0.5,
-        backgroundColor: mobile ? "primary.main" : undefined
+        ...(mobile
+          ? {
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
+              gap: 2,
+              backgroundColor: "primary.main"
+            }
+          : { flex: 1, flexDirection: "column", alignItems: "flex-start", gap: 0.5 })
       }}
     >
-      <Typography variant="body1" sx={{ textAlign: "left" }}>
+      <OneLineTypography variant="body1" sx={{ textAlign: "left" }}>
         {name}
-      </Typography>
+      </OneLineTypography>
       <Typography variant="body2" sx={{ color: "text.secondary" }}>
         {platform}
       </Typography>
