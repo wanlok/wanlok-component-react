@@ -182,14 +182,16 @@ export const GamePriceRow = ({
     <>
       <Stack sx={{ flexDirection: mobile ? "column" : "row" }}>
         <GameTitle name={name} platform={platform} onClick={onClick} />
-        <Stack sx={{ flexDirection: "row" }}>
-          {CURRENCY_CODES.map((currencyCode, i) => (
-            <Stack key={currencyCode} sx={{ flexDirection: "row" }}>
-              {i > 0 && <Divider orientation="vertical" flexItem sx={{ my: 2 }} />}
-              <PriceButton platform={platform} game={game} currencyCode={currencyCode} />
-            </Stack>
-          ))}
-          <Stack sx={{ width: 56, ml: mobile ? "auto" : 0 }}>
+        <Stack sx={{ flexDirection: "row", minWidth: 0 }}>
+          <Stack sx={{ flexDirection: "row", overflowX: "auto", minWidth: 0 }}>
+            {CURRENCY_CODES.map((currencyCode, i) => (
+              <Stack key={currencyCode} sx={{ flexDirection: "row", flexShrink: 0 }}>
+                {i > 0 && <Divider orientation="vertical" flexItem sx={{ my: 2 }} />}
+                <PriceButton platform={platform} game={game} currencyCode={currencyCode} />
+              </Stack>
+            ))}
+          </Stack>
+          <Stack sx={{ width: 56, flexShrink: 0, ml: mobile ? "auto" : 0 }}>
             {deleteMode ? (
               <WButton onClick={onDeleteButtonClick} sx={controlButtonSx}>
                 <CloseIcon sx={{ fontSize: 24 }} />
