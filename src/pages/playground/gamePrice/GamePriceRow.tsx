@@ -6,7 +6,7 @@ import { DropdownIcon } from "../../../components/DropdownIcon";
 import { OneLineTypography } from "../../../components/OneLineTypography";
 import { layoutHeaderHeight } from "../../../components/LayoutHeader";
 import { iconButtonSx, WButton } from "../../../components/WButton";
-import { CURRENCY_CODES, CurrencyCode, GAME_URL_PREFIXES, Game, GamePrice, Platform } from "../../../services/ApiTypes";
+import { CURRENCY_CODES, CurrencyCode, GAME_URL_PREFIXES, Game, Platform } from "../../../services/ApiTypes";
 import { StyledContainer } from "../../../components/StyledContainer";
 import { SelectInput } from "../../../components/SelectInput";
 import { MetaItem } from "../../../components/MetaItem";
@@ -65,9 +65,6 @@ const GameDetails = ({ game }: { game: Game }) => {
   const lastUpdatedDate =
     selectedPrices.length > 0 ? selectedPrices[selectedPrices.length - 1].datetime.split("T")[0] : undefined;
 
-  const formatPriceWithDate = (entry: GamePrice | undefined) =>
-    entry ? `$${entry.price.toFixed(2)} (${entry.datetime.split("T")[0]})` : undefined;
-
   return (
     <Stack sx={{ pl: mobile ? 0 : 2 }}>
       <StyledContainer sx={{ p: 1, gap: 1 }}>
@@ -86,8 +83,12 @@ const GameDetails = ({ game }: { game: Game }) => {
           >
             <MetaItem title="Number of data" value={String(selectedPrices.length)} />
             <MetaItem title="Last Updated" value={lastUpdatedDate} />
-            <MetaItem title="Lowest Price" value={formatPriceWithDate(selectedEntry?.lowest)} />
-            <MetaItem title="Highest Price" value={formatPriceWithDate(selectedEntry?.highest)} />
+            {selectedEntry?.lowest && (
+              <MetaItem title="Lowest Price" value={`$${selectedEntry.lowest.price.toFixed(2)}`} />
+            )}
+            {selectedEntry?.highest && (
+              <MetaItem title="Highest Price" value={`$${selectedEntry.highest.price.toFixed(2)}`} />
+            )}
           </Stack>
           <LineChart
             xAxis={[
