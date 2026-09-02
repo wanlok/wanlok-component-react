@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Stack, useMediaQuery, useTheme } from "@mui/material";
+import { Divider, Stack, Typography, useTheme } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
 import { Edit as EditIcon } from "@mui/icons-material";
 import { StyledContainer } from "../../../components/StyledContainer";
@@ -23,14 +23,17 @@ export const DetailsModal = ({
   game: Game;
   onSaveButtonClick: (newName: string) => void;
 }) => {
-  const { breakpoints, typography, palette } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("md"));
+  const { palette } = useTheme();
   const [newName, setNewName] = useState(name);
   const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>(CURRENCY_CODES[0]);
   const selectedEntry = game[selectedCurrency];
   const selectedPrices = selectedEntry?.prices ?? [];
   const lastUpdatedDate =
     selectedPrices.length > 0 ? selectedPrices[selectedPrices.length - 1].datetime.split("T")[0] : undefined;
+  const priceValues = selectedPrices.map((price) => price.price);
+  const minPrice = priceValues.length > 0 ? Math.min(...priceValues) : undefined;
+  const maxPrice = priceValues.length > 0 ? Math.max(...priceValues) : undefined;
+  const pricePadding = minPrice !== undefined && maxPrice !== undefined ? (maxPrice - minPrice) * 0.8 || 1 : 0;
 
   return (
     <WModal
@@ -59,57 +62,72 @@ export const DetailsModal = ({
         />
       }
     >
-      <LineChart
-        xAxis={[
-          {
-            data: selectedPrices.map((price) => price.datetime),
-            scaleType: "band",
-            height: 40,
-            tickSize: 16,
-            tickLabelStyle: { fontSize: typography.body2.fontSize, fill: palette.text.secondary },
-            valueFormatter: (value: string) => value.split("T")[0]
-          }
-        ]}
-        yAxis={[
-          {
-            width: 80,
-            tickSize: 16,
-            tickLabelStyle: { fontSize: typography.body2.fontSize, fill: palette.text.secondary },
-            valueFormatter: (value: number) => `$${value.toFixed(2)}`
-          }
-        ]}
-        axisHighlight={{ x: "none" }}
-        series={[{ data: selectedPrices.map((price) => price.price), color: palette.text.primary, showMark: true }]}
-        height={240}
-        margin={{ top: mobile ? 16 : 32, bottom: 0, left: mobile ? -8 : 0, right: 16 }}
-        slotProps={{
-          axisLine: { style: { stroke: palette.divider, strokeWidth: 1 } },
-          axisTick: { style: { stroke: "none" } },
-          line: { strokeWidth: 1 },
-          mark: { style: { fill: palette.common.white, stroke: palette.common.black, strokeWidth: 1 } },
-          lineHighlight: { fill: palette.common.black }
-        }}
-      />
-      <Stack sx={{ p: 2, gap: 2 }}>
+      <Stack sx={{ p: 2 }}>
         <StyledContainer sx={{ p: 1 }}>
           <TextInput label="Name" value={newName} onChange={(value) => setNewName(value)} inputSx={{ flex: 1 }} />
         </StyledContainer>
-        <Stack
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(2, 1fr)",
-            gap: 2
+      </Stack>
+      <Stack sx={{ px: 2 }}>
+        <Typography variant="body2" sx={{ color: "text.secondary" }}>
+          Price Chart
+        </Typography>
+      </Stack>
+      <Stack sx={{ aspectRatio: "4/1" }}>
+        <LineChart
+          xAxis={[
+            {
+              data: selectedPrices.map((price) => price.datetime),
+              scaleType: "band",
+              height: 0,
+              disableLine: true,
+              disableTicks: true
+            }
+          ]}
+          yAxis={[
+            {
+              width: 0,
+              disableLine: true,
+              disableTicks: true,
+              min: minPrice !== undefined ? minPrice - pricePadding : undefined,
+              max: maxPrice !== undefined ? maxPrice + pricePadding : undefined
+            }
+          ]}
+          axisHighlight={{ x: "none" }}
+          series={[
+            {
+              data: selectedPrices.map((price) => price.price),
+              color: palette.text.primary,
+              showMark: true,
+              curve: "linear"
+            }
+          ]}
+          margin={{ top: 0, bottom: 0, left: 0, right: 0 }}
+          slotProps={{
+            axisLine: { style: { stroke: palette.divider, strokeWidth: 1 } },
+            axisTick: { style: { stroke: "none" } },
+            line: { strokeWidth: 1 },
+            mark: { style: { fill: palette.common.white, stroke: palette.common.black, strokeWidth: 1 } },
+            lineHighlight: { fill: palette.common.black }
           }}
-        >
-          {selectedPrices.length > 0 && <MetaItem title="Number of data" value={String(selectedPrices.length)} />}
-          {lastUpdatedDate && <MetaItem title="Last Updated" value={lastUpdatedDate} />}
-          {selectedEntry?.lowest && (
-            <MetaItem title="Lowest Price" value={`$${selectedEntry.lowest.price.toFixed(2)}`} hideDivider={true} />
-          )}
-          {selectedEntry?.highest && (
-            <MetaItem title="Highest Price" value={`$${selectedEntry.highest.price.toFixed(2)}`} hideDivider={true} />
-          )}
-        </Stack>
+        />
+      </Stack>
+      <Divider />
+      <Stack
+        sx={{
+          display: "grid",
+          gridTemplateColumns: "repeat(2, 1fr)",
+          p: 2,
+          gap: 2
+        }}
+      >
+        {selectedPrices.length > 0 && <MetaItem title="Number of points" value={String(selectedPrices.length)} />}
+        {lastUpdatedDate && <MetaItem title="Last Updated" value={lastUpdatedDate} />}
+        {selectedEntry?.lowest && (
+          <MetaItem title="Lowest Price" value={`$${selectedEntry.lowest.price.toFixed(2)}`} hideDivider={true} />
+        )}
+        {selectedEntry?.highest && (
+          <MetaItem title="Highest Price" value={`$${selectedEntry.highest.price.toFixed(2)}`} hideDivider={true} />
+        )}
       </Stack>
     </WModal>
   );
