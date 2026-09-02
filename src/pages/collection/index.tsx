@@ -1,6 +1,6 @@
 import { useCollection } from "./useCollection";
 import { useCollectionFilter } from "./useCollectionFilter";
-import { toSlug } from "../../common/StringUtils";
+import { toSlug } from "../../utils/StringUtils";
 import { useState } from "react";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { getDocumentId, useFolder } from "./useFolder";

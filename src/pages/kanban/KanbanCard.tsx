@@ -2,7 +2,7 @@ import { RefObject, useRef } from "react";
 import { Card, CardActionArea, CardContent, Divider, Typography } from "@mui/material";
 import Draggable from "react-draggable";
 import { KanbanItem } from "../../services/Types";
-import { getDateString } from "../../common/DateUtils";
+import { getDateString } from "../../utils/DateUtils";
 import { Stack } from "@mui/material";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { Close as CloseIcon, DragIndicator as DragIndicatorIcon } from "@mui/icons-material";

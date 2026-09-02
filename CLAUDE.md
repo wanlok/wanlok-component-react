@@ -7,8 +7,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 npm run dev        # Dev server at http://localhost:5173
 npm run build      # Production build to ./dist
-npm test           # Run tests in watch mode
-npm test -- --testPathPattern=<file>  # Run a single test file
 ./deploy.sh        # Build and deploy to wanlok.github.io (requires wanlok.github.io repo at sibling path)
 ```
 
@@ -32,12 +30,12 @@ npm test -- --testPathPattern=<file>  # Run a single test file
 - `collections/<folder-id>` — one document per folder containing its items, keyed by content ID, across types: `charts`, `files`, `hyperlinks`, `steam`, `youtubeRegular`, `youtubeShorts`
 - `discussions/<YYYYMMDD>` — one document per day with an array of chat messages; uses `onSnapshot` for real-time updates
 
-**Collection item ordering:** Firestore stores collection items as dicts (`{ [id]: item }`). Display order is maintained separately as a `sequences: string[]` per type inside the folder document. `toList()` in `src/common/ListDictUtils.ts` merges a dict with its sequence array to produce a stable ordered list.
+**Collection item ordering:** Firestore stores collection items as dicts (`{ [id]: item }`). Display order is maintained separately as a `sequences: string[]` per type inside the folder document. `toList()` in `src/utils/ListDictUtils.ts` merges a dict with its sequence array to produce a stable ordered list.
 
 **Shared code:**
 - `src/services/Types.ts` — all shared TypeScript types/interfaces and app-wide constants (`serverUrl`, `viewUrls`, `regex`)
-- `src/common/` — pure utility functions (date, string, count, file, layout, sorting, etc.)
-- `src/services/` — external API integrations (Steam, YouTube oEmbed, Cloudinary image upload, server health check, hyperlink/chart parsing)
+- `src/utils/` — pure utility functions (date, string, count, file, layout, sorting, etc.)
+- `src/services/` — external API integrations (YouTube oEmbed, Cloudinary image upload, server health check, hyperlink/chart parsing)
 - `src/components/` — reusable UI components prefixed with `W` (e.g. `WModal`, `WButton`, `WChart`) and layout primitives (`LayoutMenu`, `LayoutPanel`, `LayoutHeader`, `PanelRow`, `DropdownIcon`)
 
 **Icons:** Use MUI icons from `@mui/icons-material` — no PNG icon imports. `WButton` accepts `leftIcon` and `rightIcon` props (pass a MUI icon element). Use the exported `iconButtonSx` constant from `WButtonSx.ts` for icon-only square buttons.

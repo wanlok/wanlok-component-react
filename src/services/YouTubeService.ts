@@ -1,4 +1,4 @@
-import { extractUrlStrings } from "../common/StringUtils";
+import { extractUrlStrings } from "../utils/StringUtils";
 import { regex, YouTubeInfo } from "./Types";
 
 const SINGLE_URL_REGEX =

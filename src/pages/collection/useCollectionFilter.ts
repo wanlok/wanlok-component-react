@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { useSearchParams } from "react-router-dom";
 import { CloudinaryFileInfo, Folder, YouTubeInfo } from "../../services/Types";
-import { toSlug } from "../../common/StringUtils";
+import { toSlug } from "../../utils/StringUtils";
 
 const uncategorisedValue = "__uncategorised__";
 

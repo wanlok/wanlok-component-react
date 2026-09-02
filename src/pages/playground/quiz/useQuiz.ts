@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { ApiResponse, apiUrl, Collection, CollectionItem, Question } from "../../../services/ApiTypes";
-import { toSlug } from "../../../common/StringUtils";
+import { toSlug } from "../../../utils/StringUtils";
 
 const emptyItems: Record<string, CollectionItem> = {};
 const emptyQuestions: Question[] = [];

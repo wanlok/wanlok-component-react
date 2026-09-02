@@ -6,7 +6,7 @@ import { CheckboxInput } from "../../components/CheckboxInput";
 import { TextInput } from "../../components/TextInput";
 import { iconButtonSx, WButton } from "../../components/WButton";
 import { ControlGroup } from "../../components/ControlGroup";
-import { getPointsBoundingBox, LANGUAGE_ITEMS, TRANSLATE_LANGUAGE_ITEMS } from "../../common/ImageUtils";
+import { getPointsBoundingBox, LANGUAGE_ITEMS, TRANSLATE_LANGUAGE_ITEMS } from "../../utils/ImageUtils";
 import { splitAnswers } from "../../utils/splitAnswers";
 import { Region } from "./ImageRegionOverlay";
 import { EmptyPlaceholder } from "../../components/EmptyPlaceholder";

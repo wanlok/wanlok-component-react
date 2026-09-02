@@ -1,7 +1,7 @@
 import { MouseEvent as ReactMouseEvent, Ref, TouchEvent as ReactTouchEvent, useEffect, useRef, useState } from "react";
 import { alpha, Box, useTheme } from "@mui/material";
 import { Region, RegionPoint, Rect } from "../../services/Types";
-import { getPointsBoundingBox, getRectPoints } from "../../common/ImageUtils";
+import { getPointsBoundingBox, getRectPoints } from "../../utils/ImageUtils";
 import { getBaseSize, ZoomPanImage, ZoomPanImageHandle } from "../../components/ZoomPanImage";
 
 export type { Region };

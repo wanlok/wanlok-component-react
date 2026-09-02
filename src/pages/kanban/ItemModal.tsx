@@ -6,7 +6,7 @@ import { KanbanProject } from "../../services/Types";
 import { WButton } from "../../components/WButton";
 import { YesNoButtons } from "../../components/YesNoButtons";
 import { TextInput } from "../../components/TextInput";
-import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
+import { getDaysSinceString, getDisplayDateTimeString } from "../../utils/DateUtils";
 import { applyCorrections, checkGrammar } from "../../services/GrammarService";
 import { StyledContainer } from "../../components/StyledContainer";
 import { DiscussionTop, DiscussionBottom, DiscussionMessages } from "../../components/Discussion";

@@ -11,14 +11,14 @@ import {
   Direction,
   Region
 } from "../../services/Types";
-import { appendSequences, isAllEmpty, toList } from "../../common/ListDictUtils";
-import { getFiles } from "../../common/FileUtils";
+import { appendSequences, isAllEmpty, toList } from "../../utils/ListDictUtils";
+import { getFiles } from "../../utils/FileUtils";
 import { getChartItems } from "../../services/ChartService";
 import { getYouTubeRegularAndShortInfos } from "../../services/YouTubeService";
 import { uploadAndGetFileInfos, uploadImageBlobs } from "../../services/FileService";
 import { convertPdfToImageBlobs } from "../../utils/convertPdfToImageBlobs";
 import { getHyperlinks } from "../../services/HyperlinkService";
-import { getCounts } from "../../common/CountUtils";
+import { getCounts } from "../../utils/CountUtils";
 
 const collectionName = "collections";
 

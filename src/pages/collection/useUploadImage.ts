@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Folder } from "../../services/Types";
-import { getDateTimeString } from "../../common/DateUtils";
+import { getDateTimeString } from "../../utils/DateUtils";
 
 export const useUploadImage = ({
   selectedFolder,

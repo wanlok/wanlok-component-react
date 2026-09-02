@@ -14,10 +14,10 @@ import {
   isCollectionKey
 } from "../../services/Types";
 import { useCollection } from "./useCollection";
-import { getDateTimeString } from "../../common/DateUtils";
-import { getFiles } from "../../common/FileUtils";
-import { getCountsByUrlStrings } from "../../common/CountUtils";
-import { toSlug } from "../../common/StringUtils";
+import { getDateTimeString } from "../../utils/DateUtils";
+import { getFiles } from "../../utils/FileUtils";
+import { getCountsByUrlStrings } from "../../utils/CountUtils";
+import { toSlug } from "../../utils/StringUtils";
 
 const collectionName = "configs";
 const documentId = "folders";

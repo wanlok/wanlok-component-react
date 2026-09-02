@@ -1,5 +1,5 @@
 import { Hyperlink, regex, serverUrl } from "./Types";
-import { extractUrlStrings } from "../common/StringUtils";
+import { extractUrlStrings } from "../utils/StringUtils";
 
 const submitHyperlinks = async (urls: string[]) => {
   const response = await fetch(`${serverUrl}/save-screenshot`, {

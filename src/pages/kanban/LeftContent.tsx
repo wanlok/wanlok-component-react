@@ -8,7 +8,7 @@ import {
   ViewKanban as KanbanIcon,
   ViewKanbanOutlined as KanbanOutlinedIcon
 } from "@mui/icons-material";
-import { getDateString } from "../../common/DateUtils";
+import { getDateString } from "../../utils/DateUtils";
 import { Kanban, KanbanColumn, KanbanItem, KanbanProject, Message } from "../../services/Types";
 import { WCardList } from "../../components/WCardList";
 import { iconButtonSx, WButton } from "../../components/WButton";

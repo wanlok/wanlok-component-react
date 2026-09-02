@@ -8,9 +8,9 @@ import {
   recogniseText,
   resizeImageData,
   scaleRect
-} from "../common/ImageUtils";
+} from "../utils/ImageUtils";
 import { Rect } from "../services/Types";
-import { startAnimationLoop } from "../common/AnimationUtils";
+import { startAnimationLoop } from "../utils/AnimationUtils";
 
 export const FlashGamePlayer = ({
   filePath,

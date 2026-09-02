@@ -4,7 +4,7 @@ import { Close as CloseIcon, Refresh as RefreshIcon, Send as SendIcon } from "@m
 import { Message } from "../services/Types";
 import { iconButtonSx, WButton } from "./WButton";
 import { TextInputWithButtons } from "./TextInputWithButtons";
-import { getDisplayDateTimeString } from "../common/DateUtils";
+import { getDisplayDateTimeString } from "../utils/DateUtils";
 import { StyledContainer } from "./StyledContainer";
 import { EmptyPlaceholder } from "./EmptyPlaceholder";
 

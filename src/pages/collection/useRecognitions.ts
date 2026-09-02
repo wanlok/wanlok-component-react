@@ -6,7 +6,7 @@ import {
   getRectPoints,
   recogniseText,
   translateText
-} from "../../common/ImageUtils";
+} from "../../utils/ImageUtils";
 import { regex, Rect } from "../../services/Types";
 import { detectDelimiter } from "../../utils/detectDelimiter";
 import { detectNextTextRegion } from "../../utils/detectNextTextRegion";

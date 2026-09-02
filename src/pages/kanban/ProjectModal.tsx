@@ -7,7 +7,7 @@ import { WModal } from "../../components/WModal";
 import { YesNoButtons } from "../../components/YesNoButtons";
 import { useState } from "react";
 import { KanbanProject } from "../../services/Types";
-import { getDaysSinceString, getDisplayDateTimeString } from "../../common/DateUtils";
+import { getDaysSinceString, getDisplayDateTimeString } from "../../utils/DateUtils";
 
 const defaultColumnNames: Record<number, string[]> = {
   1: ["To Do"],
