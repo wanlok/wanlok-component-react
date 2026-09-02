@@ -18,6 +18,7 @@ export default defineConfig({
         home: entry("./index.html"),
         kanban: entry("./kanban/index.html"),
         collections: entry("./collections/index.html"),
+        prices: entry("./prices/index.html"),
         playground: entry("./playground/index.html")
       }
     }

@@ -6,13 +6,15 @@ import {
   BugReportOutlined as BugReportOutlinedIcon,
   Folder as FolderIcon,
   FolderOutlined as FolderOutlinedIcon,
+  MonetizationOn as MonetizationOnIcon,
+  MonetizationOnOutlined as MonetizationOnOutlinedIcon,
   ViewKanban as KanbanIcon,
   ViewKanbanOutlined as KanbanOutlinedIcon
 } from "@mui/icons-material";
 
 const iconSize = 32;
 
-export type NavSectionId = "home" | "kanban" | "collections" | "playground";
+export type NavSectionId = "home" | "kanban" | "collections" | "prices" | "playground";
 
 interface NavSection {
   id: NavSectionId;
@@ -37,6 +39,13 @@ export const navSections: NavSection[] = [
     href: "/collections/",
     icon: <FolderOutlinedIcon sx={{ fontSize: iconSize }} />,
     iconSelected: <FolderIcon sx={{ fontSize: iconSize }} />
+  },
+  {
+    id: "prices",
+    name: "Prices",
+    href: "/prices/",
+    icon: <MonetizationOnOutlinedIcon sx={{ fontSize: iconSize }} />,
+    iconSelected: <MonetizationOnIcon sx={{ fontSize: iconSize }} />
   },
   {
     id: "playground",

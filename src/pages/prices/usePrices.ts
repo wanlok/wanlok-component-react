@@ -1,24 +1,19 @@
 import { useCallback, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-export interface PlaygroundFolder {
+export interface PricesFolder {
   id: string;
   name: string;
 }
 
-export const folders: PlaygroundFolder[] = [
-  { name: "Image", id: "image" },
-  { name: "Puzzle", id: "puzzle" },
-  { name: "Quiz", id: "quiz" },
-  { name: "Region", id: "region" }
-];
+export const folders: PricesFolder[] = [{ name: "Game Price Analysis", id: "game-price-analysis" }];
 
-export const usePlayground = () => {
+export const usePrices = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const openFolder = useCallback(
-    (folder: PlaygroundFolder) => {
+    (folder: PricesFolder) => {
       navigate(`/${folder.id}`);
     },
     [navigate]

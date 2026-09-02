@@ -1,19 +1,19 @@
 import { useState } from "react";
-import { folders, usePlayground } from "./usePlayground";
+import { folders, usePrices } from "./usePrices";
 import { LayoutPanel } from "../../components/LayoutPanel";
 import { WCardList } from "../../components/WCardList";
-import { BugReport as BugReportIcon, BugReportOutlined as BugReportOutlinedIcon } from "@mui/icons-material";
+import {
+  MonetizationOn as MonetizationOnIcon,
+  MonetizationOnOutlined as MonetizationOnOutlinedIcon
+} from "@mui/icons-material";
 import { PanelRow } from "../../components/PanelRow";
 import { LeftHeader } from "./LeftHeader";
-import { Index as ImageIndex } from "./image";
-import { Index as PuzzleIndex } from "./puzzle";
-import { Index as QuizIndex } from "./quiz";
-import { Index as RegionIndex } from "./region";
+import { Index as GamePriceIndex } from "./gamePrice";
 
 const iconSize = 24;
 
-export const Playground = () => {
-  const { selectedFolder, openFolder } = usePlayground();
+export const Prices = () => {
+  const { selectedFolder, openFolder } = usePrices();
   const [panelOpened, setPanelOpened] = useState<boolean>(false);
   return (
     <LayoutPanel
@@ -26,7 +26,7 @@ export const Playground = () => {
           <WCardList
             items={folders}
             renderContent={(folder) => {
-              const Icon = folder === selectedFolder ? BugReportIcon : BugReportOutlinedIcon;
+              const Icon = folder === selectedFolder ? MonetizationOnIcon : MonetizationOnOutlinedIcon;
               return <PanelRow icon={<Icon sx={{ fontSize: iconSize }} />} title={folder.name} />;
             }}
             onContentClick={(folder) => {
@@ -40,13 +40,14 @@ export const Playground = () => {
         </>
       }
       topChildren={
-        selectedFolder ? <PanelRow icon={<BugReportIcon sx={{ fontSize: 24 }} />} title={selectedFolder.name} /> : <></>
+        selectedFolder ? (
+          <PanelRow icon={<MonetizationOnIcon sx={{ fontSize: 24 }} />} title={selectedFolder.name} />
+        ) : (
+          <></>
+        )
       }
     >
-      {selectedFolder?.id === "image" && <ImageIndex />}
-      {selectedFolder?.id === "puzzle" && <PuzzleIndex />}
-      {selectedFolder?.id === "quiz" && <QuizIndex />}
-      {selectedFolder?.id === "region" && <RegionIndex />}
+      {selectedFolder?.id === "game-price-analysis" && <GamePriceIndex />}
     </LayoutPanel>
   );
 };
