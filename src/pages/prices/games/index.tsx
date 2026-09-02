@@ -6,9 +6,9 @@ import { DeleteConfirmationModal } from "../../../components/DeleteConfirmationM
 import { EmptyPlaceholder } from "../../../components/EmptyPlaceholder";
 import { iconButtonSx, WButton } from "../../../components/WButton";
 import { useScrollbarWidths } from "../../../components/useScrollbarWidths";
-import { CURRENCY_CODES, CurrencyCode, Platform, PLATFORMS } from "../../../services/ApiTypes";
+import { CURRENCY_CODES, CurrencyCode, Game, Platform, PLATFORMS } from "../../../services/ApiTypes";
 import { AddGameModal } from "./AddGameModal";
-import { EditGameModal } from "./EditGameModal";
+import { DetailsModal } from "./DetailsModal";
 import { GamePriceRow } from "./GamePriceRow";
 import { useGamePrice } from "./useGamePrice";
 
@@ -61,7 +61,7 @@ export const Index = () => {
   );
   const empty = gameEntries.length === 0;
   const [addModalOpen, setAddModalOpen] = useState(false);
-  const [selectedGame, setSelectedGame] = useState<{ platform: Platform; name: string }>();
+  const [selectedGame, setSelectedGame] = useState<{ platform: Platform; name: string; game: Game }>();
   const [controlGroupState, setControlGroupState] = useState(0);
   const effectiveControlGroupState = empty ? 0 : controlGroupState;
   const [gameToDelete, setGameToDelete] = useState<{ platform: Platform; name: string }>();
@@ -101,7 +101,7 @@ export const Index = () => {
               name={name}
               game={game}
               deleteMode={effectiveControlGroupState === 1}
-              onClick={() => setSelectedGame({ platform, name })}
+              onClick={() => setSelectedGame({ platform, name, game })}
               onDeleteButtonClick={() => setGameToDelete({ platform, name })}
             />
           ))}
@@ -114,11 +114,12 @@ export const Index = () => {
         onSaveButtonClick={addGame}
       />
       {selectedGame && (
-        <EditGameModal
-          key={`edit-game-modal-${selectedGame.platform}-${selectedGame.name}`}
+        <DetailsModal
+          key={`details-modal-${selectedGame.platform}-${selectedGame.name}`}
           open={!!selectedGame}
           onClose={() => setSelectedGame(undefined)}
           name={selectedGame.name}
+          game={selectedGame.game}
           onSaveButtonClick={(newName) => renameGame(selectedGame.platform, selectedGame.name, newName)}
         />
       )}

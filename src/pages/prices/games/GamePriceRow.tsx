@@ -1,22 +1,9 @@
-import { useState } from "react";
 import { ButtonBase, Divider, Stack, Typography, useMediaQuery, useTheme } from "@mui/material";
-import { LineChart } from "@mui/x-charts";
 import { Close as CloseIcon } from "@mui/icons-material";
-import { DropdownIcon } from "../../../components/DropdownIcon";
 import { OneLineTypography } from "../../../components/OneLineTypography";
 import { layoutHeaderHeight } from "../../../components/LayoutHeader";
 import { iconButtonSx, WButton } from "../../../components/WButton";
 import { CURRENCY_CODES, CurrencyCode, GAME_URL_PREFIXES, Game, Platform } from "../../../services/ApiTypes";
-import { StyledContainer } from "../../../components/StyledContainer";
-import { SelectInput } from "../../../components/SelectInput";
-import { MetaItem } from "../../../components/MetaItem";
-
-const controlButtonSx = {
-  ...iconButtonSx,
-  height: "100%",
-  backgroundColor: "transparent",
-  "&:hover": { backgroundColor: "action.hover" }
-};
 
 const PriceButton = ({
   platform,
@@ -53,77 +40,6 @@ const PriceButton = ({
       </Typography>
       {mobile && <Typography variant="body2">{currencyCode.toUpperCase()}</Typography>}
     </ButtonBase>
-  );
-};
-
-const GameDetails = ({ game }: { game: Game }) => {
-  const { breakpoints, typography, palette } = useTheme();
-  const mobile = useMediaQuery(breakpoints.down("md"));
-  const [selectedCurrency, setSelectedCurrency] = useState<CurrencyCode>(CURRENCY_CODES[0]);
-  const selectedEntry = game[selectedCurrency];
-  const selectedPrices = selectedEntry?.prices ?? [];
-  const lastUpdatedDate =
-    selectedPrices.length > 0 ? selectedPrices[selectedPrices.length - 1].datetime.split("T")[0] : undefined;
-
-  return (
-    <Stack sx={{ pl: mobile ? 0 : 2 }}>
-      <StyledContainer sx={{ p: 1, gap: 1 }}>
-        <SelectInput
-          items={CURRENCY_CODES.map((currencyCode) => ({ label: currencyCode.toUpperCase(), value: currencyCode }))}
-          value={selectedCurrency}
-          onChange={(value) => setSelectedCurrency(value as CurrencyCode)}
-        />
-        <Stack sx={{ p: 2, backgroundColor: "white", border: "1px solid", borderColor: "primary.dark" }}>
-          <Stack
-            sx={{
-              display: "grid",
-              gridTemplateColumns: { xs: "repeat(2, 1fr)", md: "repeat(2, 1fr)", lg: "repeat(4, 1fr)" },
-              gap: 2
-            }}
-          >
-            {selectedPrices.length > 0 && <MetaItem title="Number of data" value={String(selectedPrices.length)} />}
-            {lastUpdatedDate && <MetaItem title="Last Updated" value={lastUpdatedDate} />}
-            {selectedEntry?.lowest && (
-              <MetaItem title="Lowest Price" value={`$${selectedEntry.lowest.price.toFixed(2)}`} />
-            )}
-            {selectedEntry?.highest && (
-              <MetaItem title="Highest Price" value={`$${selectedEntry.highest.price.toFixed(2)}`} />
-            )}
-          </Stack>
-          <LineChart
-            xAxis={[
-              {
-                data: selectedPrices.map((price) => price.datetime),
-                scaleType: "band",
-                height: 40,
-                tickSize: 16,
-                tickLabelStyle: { fontSize: typography.body2.fontSize, fill: palette.text.secondary },
-                valueFormatter: (value: string) => value.split("T")[0]
-              }
-            ]}
-            yAxis={[
-              {
-                width: 80,
-                tickSize: 16,
-                tickLabelStyle: { fontSize: typography.body2.fontSize, fill: palette.text.secondary },
-                valueFormatter: (value: number) => `$${value.toFixed(2)}`
-              }
-            ]}
-            axisHighlight={{ x: "none" }}
-            series={[{ data: selectedPrices.map((price) => price.price), color: palette.text.primary, showMark: true }]}
-            height={240}
-            margin={{ top: mobile ? 16 : 32, bottom: 0, left: mobile ? -8 : 0, right: 0 }}
-            slotProps={{
-              axisLine: { style: { stroke: palette.divider, strokeWidth: 1 } },
-              axisTick: { style: { stroke: "none" } },
-              line: { strokeWidth: 1 },
-              mark: { style: { fill: palette.common.white, stroke: palette.common.black, strokeWidth: 1 } },
-              lineHighlight: { fill: palette.common.black }
-            }}
-          />
-        </Stack>
-      </StyledContainer>
-    </Stack>
   );
 };
 
@@ -175,8 +91,6 @@ export const GamePriceRow = ({
 }) => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
-  const [expanded, setExpanded] = useState(false);
-  const effectiveExpanded = expanded && !deleteMode;
 
   return (
     <>
@@ -191,24 +105,19 @@ export const GamePriceRow = ({
               </Stack>
             ))}
           </Stack>
-          <Stack sx={{ width: 56, flexShrink: 0, ml: mobile ? "auto" : 0 }}>
-            {deleteMode ? (
-              <WButton onClick={onDeleteButtonClick} sx={controlButtonSx}>
-                <CloseIcon sx={{ fontSize: 24 }} />
-              </WButton>
-            ) : (
+          <Stack>
+            {deleteMode && (
               <WButton
-                onClick={() => setExpanded(!effectiveExpanded)}
-                sx={{ ...controlButtonSx, backgroundColor: effectiveExpanded ? "background.default" : "transparent" }}
+                onClick={onDeleteButtonClick}
+                sx={{ ...iconButtonSx, backgroundColor: "transparent", "&:hover": { backgroundColor: "action.hover" } }}
               >
-                <DropdownIcon panelOpened={effectiveExpanded} sx={{ alignItems: "center", pr: 0 }} />
+                <CloseIcon sx={{ fontSize: 24 }} />
               </WButton>
             )}
           </Stack>
         </Stack>
       </Stack>
-      {effectiveExpanded && <GameDetails game={game} />}
-      {!mobile && !effectiveExpanded && <Divider sx={{ ml: 2 }} />}
+      {!mobile && <Divider sx={{ ml: 2 }} />}
     </>
   );
 };
