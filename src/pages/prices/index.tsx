@@ -8,7 +8,8 @@ import {
 } from "@mui/icons-material";
 import { PanelRow } from "../../components/PanelRow";
 import { LeftHeader } from "./LeftHeader";
-import { Index as GamePriceIndex } from "./gamePrice";
+import { Index as GamePriceIndex } from "./games";
+import { Index as SupermarketsIndex } from "./supermarkets";
 
 const iconSize = 24;
 
@@ -47,7 +48,8 @@ export const Prices = () => {
         )
       }
     >
-      {selectedFolder?.id === "game-price-analysis" && <GamePriceIndex />}
+      {selectedFolder?.id === "games" && <GamePriceIndex />}
+      {selectedFolder?.id === "supermarkets" && <SupermarketsIndex />}
     </LayoutPanel>
   );
 };

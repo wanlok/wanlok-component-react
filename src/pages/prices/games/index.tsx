@@ -23,7 +23,7 @@ const Top = ({
 }) => (
   <Stack sx={[topSx]}>
     <Stack sx={{ flex: 1, p: 2, justifyContent: "center" }}>
-      <Typography variant="body1">Game Price Analysis</Typography>
+      <Typography variant="body1">Games</Typography>
     </Stack>
     <Stack sx={{ flexDirection: "row", gap: "1px" }}>
       <WButton onClick={onAddButtonClick} sx={iconButtonSx}>
@@ -80,13 +80,13 @@ export const Index = () => {
         }
         bottom={
           <Stack sx={[bottomSx]}>
-            <Stack sx={{ flex: 1, px: 2 }}></Stack>
-            <Stack sx={{ flexDirection: "row", gap: "1px" }}>
+            {/* <Stack sx={{ flex: 1, px: 2 }}></Stack> */}
+            {/* <Stack sx={{ flexDirection: "row", gap: "1px" }}>
               {CURRENCY_CODES.map((currencyCode) => (
                 <PriceHeader key={currencyCode} currencyCode={currencyCode} />
               ))}
             </Stack>
-            <Stack sx={{ width: 56 + scrollbarWidths.right }} />
+            <Stack sx={{ width: 56 + scrollbarWidths.right }} /> */}
           </Stack>
         }
       />

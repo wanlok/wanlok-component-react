@@ -6,7 +6,10 @@ export interface PricesFolder {
   name: string;
 }
 
-export const folders: PricesFolder[] = [{ name: "Game Price Analysis", id: "game-price-analysis" }];
+export const folders: PricesFolder[] = [
+  { name: "Games", id: "games" },
+  { name: "Supermarkets", id: "supermarkets" }
+];
 
 export const usePrices = () => {
   const { id } = useParams();
