@@ -7,7 +7,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 npm run dev        # Dev server at http://localhost:5173
 npm run build      # Production build to ./dist
-./deploy.sh        # Build and deploy to wanlok.github.io (requires wanlok.github.io repo at sibling path)
 ```
 
 ## Architecture
@@ -54,7 +53,7 @@ VITE_FIREBASE_MESSAGING_SENDER_ID
 VITE_FIREBASE_APP_ID
 ```
 
-**Deployment:** `deploy.sh` builds the app, wipes the `wanlok.github.io` repo directory, copies the build output into it, and pushes. The app uses a hash router (`createHashRouter`) so all routes work as static files on GitHub Pages.
+**Deployment:** `.github/workflows/deploy.yml` builds the app and deploys `dist` to the `wanlok/wanlok.github.io` repo on every push to `main`, via `peaceiris/actions-gh-pages`. The app uses a hash router (`createHashRouter`) so all routes work as static files on GitHub Pages.
 
 ## Conventions
 
