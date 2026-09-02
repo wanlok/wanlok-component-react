@@ -11,9 +11,9 @@ npm run build      # Production build to ./dist
 
 ## Architecture
 
-**Stack:** React 19 + TypeScript, Vite, MUI v9, Firebase Firestore, react-router-dom v6 (hash router for GitHub Pages compatibility).
+**Stack:** React 19 + TypeScript, Vite, MUI v9, Firebase Firestore, react-router-dom v6 (hash router, scoped per section, for GitHub Pages compatibility).
 
-**Routing:** `src/configs/routes.tsx` defines all routes. The top-level route renders `LayoutMenu` as the shell with nav icons on the left (desktop) or bottom (mobile). Child routes render into the `<Outlet>`. The `name` field on a route controls whether it appears in the nav.
+**Routing:** The app builds as 4 independent static entry points — Home (`/`), Kanban (`/kanban/`), Collections (`/collections/`), Playground (`/playground/`) — each its own physical `index.html` (see `vite.config.ts`'s `build.rollupOptions.input`) with its own bootstrap file under `src/entries/<section>/main.tsx`. Each bootstrap calls the shared `mountApp()` (`src/mountApp.tsx`) with its own scoped `createHashRouter` (so URLs look like `/collections/#/folderId/itemId`) wrapped in `LayoutMenu`. `LayoutMenu` is a routing-agnostic shell: it takes `activeSection` and `children` props, and renders nav links from the static `src/configs/navSections.tsx` list using plain `<a href>` (full page navigation between sections, since each is a separate bundle) — it does not use `<Link>`/`<Outlet>`.
 
 **Page pattern:** Each feature page lives in `src/pages/<name>/` and follows a consistent split:
 - `index.tsx` — presentational component, receives all state/handlers from the hook
@@ -26,7 +26,7 @@ npm run build      # Production build to ./dist
 **Firebase Firestore layout:**
 - `configs/kanban` — single document holding all kanban projects and their columns/items
 - `configs/folders` — single document holding all collection folders with metadata (attributes, counts, sequences)
-- `collections/<folder-id>` — one document per folder containing its items, keyed by content ID, across types: `charts`, `files`, `hyperlinks`, `steam`, `youtubeRegular`, `youtubeShorts`
+- `collections/<folder-id>` — one document per folder containing its items, keyed by content ID, across types: `charts`, `files`, `hyperlinks`, `youtubeRegular`, `youtubeShorts`
 - `discussions/<YYYYMMDD>` — one document per day with an array of chat messages; uses `onSnapshot` for real-time updates
 
 **Collection item ordering:** Firestore stores collection items as dicts (`{ [id]: item }`). Display order is maintained separately as a `sequences: string[]` per type inside the folder document. `toList()` in `src/utils/ListDictUtils.ts` merges a dict with its sequence array to produce a stable ordered list.
@@ -53,7 +53,7 @@ VITE_FIREBASE_MESSAGING_SENDER_ID
 VITE_FIREBASE_APP_ID
 ```
 
-**Deployment:** `.github/workflows/deploy.yml` builds the app and deploys `dist` to the `wanlok/wanlok.github.io` repo on every push to `main`, via `peaceiris/actions-gh-pages`. The app uses a hash router (`createHashRouter`) so all routes work as static files on GitHub Pages.
+**Deployment:** `.github/workflows/deploy.yml` builds the app and deploys `dist` to the `wanlok/wanlok.github.io` repo on every push to `main`, via `peaceiris/actions-gh-pages`. `dist` contains 4 static entry points (see Routing above); each section's hash router keeps its nested paths working as static files on GitHub Pages.
 
 ## Conventions
 

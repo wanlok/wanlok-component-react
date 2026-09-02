@@ -1,25 +1,20 @@
 import { Box, Divider, Stack, useMediaQuery, useTheme } from "@mui/material";
-import { Link, matchPath, Outlet, useLocation } from "react-router-dom";
-import { routes } from "../configs/routes";
+import { Fragment, ReactNode } from "react";
 import { WButton } from "./WButton";
-import { Fragment } from "react/jsx-runtime";
 import { LayoutDivider } from "./LayoutDivider";
 import { layoutHeaderHeight } from "./LayoutHeader";
+import { navSections, NavSectionId } from "../configs/navSections";
 
-export const LayoutMenu = () => {
-  const { pathname } = useLocation();
+export const LayoutMenu = ({ activeSection, children }: { activeSection: NavSectionId; children: ReactNode }) => {
   const { breakpoints } = useTheme();
   const mobile = useMediaQuery(breakpoints.down("md"));
-
-  const mainRoute = routes.find((route) => route.element?.type === LayoutMenu);
-  const filteredRoutes = mainRoute?.children?.filter((child) => child.name !== undefined) ?? [];
 
   return (
     <Stack sx={{ flexDirection: mobile ? "column" : "row", height: "100dvh" }}>
       <LayoutDivider>
         <Stack sx={{ flexDirection: mobile ? "row" : "column", overflowX: "auto", alignItems: "center" }}>
-          {filteredRoutes.map((route, index) => {
-            const selected = matchPath({ path: route.path, end: route.path === "/" }, pathname);
+          {navSections.map((section, index) => {
+            const selected = section.id === activeSection;
             return (
               <Fragment key={`menu-fragment-${index}`}>
                 {index > 1 && (
@@ -29,7 +24,7 @@ export const LayoutMenu = () => {
                     sx={[mobile ? { height: "70%" } : { width: "70%" }]}
                   />
                 )}
-                <Link to={route.path.replace(/\/:[\w]+\??$/, "")} key={`menu-link-${index}`}>
+                <a href={section.href} key={`menu-link-${index}`}>
                   <WButton
                     sx={{
                       height: layoutHeaderHeight,
@@ -43,7 +38,7 @@ export const LayoutMenu = () => {
                     }}
                   >
                     {(() => {
-                      const icon = selected ? route.iconSelected : route.icon;
+                      const icon = selected ? section.iconSelected : section.icon;
                       const renderedIcon =
                         typeof icon === "string" ? (
                           <Box
@@ -60,20 +55,18 @@ export const LayoutMenu = () => {
                       ) : (
                         <>
                           {renderedIcon}
-                          {route.name}
+                          {section.name}
                         </>
                       );
                     })()}
                   </WButton>
-                </Link>
+                </a>
               </Fragment>
             );
           })}
         </Stack>
       </LayoutDivider>
-      <Stack sx={{ flex: 1, overflow: "auto" }}>
-        <Outlet />
-      </Stack>
+      <Stack sx={{ flex: 1, overflow: "auto" }}>{children}</Stack>
     </Stack>
   );
 };

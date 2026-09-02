@@ -52,7 +52,7 @@ export const useFolder = () => {
 
   const openFolder = useCallback(
     (folder: Folder) => {
-      navigate(`/collections/${getDocumentId(folder.name)}`);
+      navigate(`/${getDocumentId(folder.name)}`);
     },
     [navigate]
   );

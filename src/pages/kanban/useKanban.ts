@@ -20,7 +20,7 @@ export const useKanban = () => {
 
   const openProject = useCallback(
     (project: KanbanProject) => {
-      navigate(`/kanban/${project.id}`);
+      navigate(`/${project.id}`);
     },
     [navigate]
   );

@@ -20,7 +20,7 @@ export const usePlayground = () => {
 
   const openFolder = useCallback(
     (folder: PlaygroundFolder) => {
-      navigate(`/playground/${folder.id}`);
+      navigate(`/${folder.id}`);
     },
     [navigate]
   );

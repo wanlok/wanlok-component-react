@@ -132,9 +132,7 @@ export const RightContent = ({
     if (!item || !folderId) {
       return;
     }
-    navigate(
-      item.type === "files" ? `/collections/${folderId}/${item.id}/details` : `/collections/${folderId}/${item.id}`
-    );
+    navigate(item.type === "files" ? `/${folderId}/${item.id}/details` : `/${folderId}/${item.id}`);
   };
 
   return (
@@ -142,12 +140,12 @@ export const RightContent = ({
       <CollectionList
         onFileClick={(id) => {
           if (folderId) {
-            navigate(`/collections/${folderId}/${id}/details`);
+            navigate(`/${folderId}/${id}/details`);
           }
         }}
         onVideoClick={(_type, id) => {
           if (folderId) {
-            navigate(`/collections/${folderId}/${id}`);
+            navigate(`/${folderId}/${id}`);
           }
         }}
         charts={charts}
@@ -243,7 +241,7 @@ export const RightContent = ({
         }}
         onClose={() => {
           if (folderId) {
-            navigate(`/collections/${folderId}`);
+            navigate(`/${folderId}`);
           }
         }}
       />
@@ -263,7 +261,7 @@ export const RightContent = ({
         }}
         onClose={() => {
           if (folderId) {
-            navigate(`/collections/${folderId}`);
+            navigate(`/${folderId}`);
           }
         }}
       />

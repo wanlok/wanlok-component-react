@@ -259,7 +259,7 @@ export const ImageRecognitionModal = ({
         setDesktopSelectedPage(newPage);
         setControlGroupState(0);
         if (folderId && itemId) {
-          navigate(`/collections/${folderId}/${itemId}/${newPage === 1 ? "recognitions" : "details"}`, {
+          navigate(`/${folderId}/${itemId}/${newPage === 1 ? "recognitions" : "details"}`, {
             replace: true
           });
         }
@@ -268,7 +268,7 @@ export const ImageRecognitionModal = ({
       onMobileSelectedPageChange={(newPage) => {
         setMobileSelectedPage(newPage);
         if (folderId && itemId) {
-          navigate(`/collections/${folderId}/${itemId}/${newPage === 2 ? "recognitions" : "details"}`, {
+          navigate(`/${folderId}/${itemId}/${newPage === 2 ? "recognitions" : "details"}`, {
             replace: true
           });
         }
