@@ -89,11 +89,6 @@ export interface CloudinaryFileInfo extends ParentInfo {
 
 export type ImageMeta = { width: number; height: number; type: string };
 
-export interface SteamInfo extends ParentInfo {
-  name: string;
-  imageUrl: string;
-}
-
 export interface YouTubeInfo extends ParentInfo {
   name: string;
   imageUrl: string;
@@ -112,13 +107,12 @@ export interface CollectionDocument {
   charts: { [key: string]: ChartItem };
   files: { [key: string]: CloudinaryFileInfo };
   hyperlinks: { [key: string]: string };
-  steam: { [key: string]: SteamInfo };
   youtubeRegular: { [key: string]: YouTubeInfo };
   youtubeShorts: { [key: string]: YouTubeInfo };
 }
 
 export const isCollectionKey = (key: string): key is keyof CollectionDocument => {
-  return ["charts", "files", "hyperlinks", "steam", "youtubeRegular", "youtubeShorts"].includes(key);
+  return ["charts", "files", "hyperlinks", "youtubeRegular", "youtubeShorts"].includes(key);
 };
 
 export type Attributes = { [key: string]: string };
@@ -137,7 +131,6 @@ export type CollectionCounts = {
   pdf: number;
   quiz: number;
   region: number;
-  steam: number;
   video: number;
   youTubeRegular: number;
   youTubeShort: number;
@@ -151,7 +144,6 @@ export const emptyCollectionCounts: CollectionCounts = {
   pdf: 0,
   quiz: 0,
   region: 0,
-  steam: 0,
   video: 0,
   youTubeRegular: 0,
   youTubeShort: 0
@@ -165,7 +157,6 @@ export const emptyCollectionSequences: CollectionSequences = {
   charts: [],
   files: [],
   hyperlinks: [],
-  steam: [],
   youtubeRegular: [],
   youtubeShorts: []
 };
@@ -175,14 +166,12 @@ export const serverUrl = "https://wanlok.ddns.net";
 export const viewUrls = {
   files: `${serverUrl}/files/`,
   hyperlinks: true,
-  steam: "https://store.steampowered.com/agecheck/app/",
   youtubeRegular: "https://www.youtube.com/watch?v=",
   youtubeShorts: "https://www.youtube.com/shorts/"
 };
 
 export const regex = {
   HYPERLINK: /https?:\/\/[^\s"']+/g,
-  STEAM: /https:\/\/store\.steampowered\.com\/[^\s]+/g,
   YOUTUBE:
     /https?:\/\/(?:www\.)?(?:youtube\.com\/(?:(?:watch\?v=([\w-]{11})(?:[^\s]*)?)|(?:embed\/([\w-]{11})(?:[^\s]*)?)|(?:shorts\/([\w-]{11})(?:[^\s]*)?))|youtu\.be\/([\w-]{11})(?:[^\s]*)?)/g,
   QUESTION_NUMBER: /^\s*(?:Q\s*)?(?:\d+|[A-Za-z])[.):]\s*/i

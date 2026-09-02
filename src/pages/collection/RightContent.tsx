@@ -8,7 +8,6 @@ import {
   Direction,
   Folder,
   Region,
-  SteamInfo,
   YouTubeInfo
 } from "../../services/Types";
 import { CollectionList } from "./CollectionList";
@@ -24,7 +23,6 @@ export const RightContent = ({
   charts,
   files,
   hyperlinks,
-  steam,
   youTubeRegularVideos,
   youTubeShortVideos,
   loadingCount,
@@ -42,7 +40,6 @@ export const RightContent = ({
   charts: [string, ChartItem][];
   files: [string, CloudinaryFileInfo][];
   hyperlinks: [string, string][];
-  steam: [string, SteamInfo][];
   youTubeRegularVideos: [string, YouTubeInfo][];
   youTubeShortVideos: [string, YouTubeInfo][];
   loadingCount: number;
@@ -156,7 +153,6 @@ export const RightContent = ({
         charts={charts}
         files={files}
         hyperlinks={hyperlinks}
-        steam={steam}
         youTubeRegularVideos={youTubeRegularVideos}
         youTubeShortVideos={youTubeShortVideos}
         loadingCount={isLoading || !selectedFolder ? 8 : loadingCount}

@@ -37,7 +37,6 @@ export const CollectionPage = () => {
     charts,
     files,
     hyperlinks,
-    steam,
     youTubeRegularVideos,
     youTubeShortVideos,
     loadingCount,
@@ -85,7 +84,6 @@ export const CollectionPage = () => {
     charts.length +
     files.length +
     hyperlinks.length +
-    steam.length +
     youTubeRegularVideos.length +
     youTubeShortVideos.length;
   const effectiveControlGroupState = count === 0 ? 0 : controlGroupState;
@@ -160,7 +158,6 @@ export const CollectionPage = () => {
         charts={charts}
         files={filteredFiles}
         hyperlinks={hyperlinks}
-        steam={steam}
         youTubeRegularVideos={filteredYouTubeRegularVideos}
         youTubeShortVideos={filteredYouTubeShortVideos}
         controlGroupState={effectiveControlGroupState}

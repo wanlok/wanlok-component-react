@@ -20,10 +20,7 @@ const submitHyperlinks = async (urls: string[]) => {
 
 export const getHyperlinks = async (text: string) => {
   const hyperlinks: { [key: string]: string } = {};
-  const urlStrings = extractUrlStrings(text, regex.HYPERLINK, [
-    ...extractUrlStrings(text, regex.STEAM),
-    ...extractUrlStrings(text, regex.YOUTUBE)
-  ]);
+  const urlStrings = extractUrlStrings(text, regex.HYPERLINK, [...extractUrlStrings(text, regex.YOUTUBE)]);
   if (urlStrings.length > 0) {
     (await submitHyperlinks(urlStrings)).forEach(({ url, id }) => {
       hyperlinks[url] = id;

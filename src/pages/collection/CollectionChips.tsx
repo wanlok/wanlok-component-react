@@ -9,10 +9,9 @@ import {
 } from "@mui/icons-material";
 import { Folder } from "../../services/Types";
 import { WChip } from "../../components/WChip";
-import SteamIcon from "../../assets/images/icons/steam.png";
 
 export const CollectionChips = ({ folder }: { folder: Folder }) => {
-  const { file, hyperlink, image, steam, video, youTubeRegular, youTubeShort } = folder.counts;
+  const { file, hyperlink, image, video, youTubeRegular, youTubeShort } = folder.counts;
   const isContainSequences = Object.values(folder.sequences).some((sequence) => sequence.length > 0);
   if (!isContainSequences && !Object.values(folder.counts).some((count) => count > 0)) {
     return <></>;
@@ -27,7 +26,6 @@ export const CollectionChips = ({ folder }: { folder: Folder }) => {
         <WChip icon={<LinkIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${hyperlink}`} />
       )}
       {image > 0 && <WChip icon={<ImageIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${image}`} />}
-      {steam > 0 && <WChip icon={SteamIcon} label={`${steam}`} />}
       {video > 0 && (
         <WChip icon={<VideocamIcon sx={{ fontSize: 20 }} style={{ color: "black" }} />} label={`${video}`} />
       )}

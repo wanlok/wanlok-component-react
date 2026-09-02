@@ -26,7 +26,6 @@ export const getCounts = (collectionDocument: CollectionDocument): CollectionCou
     pdf: files.filter(([, file]) => getFileType(file) === "pdf").length,
     quiz: files.filter(([, file]) => file.layout === "quiz" && (file.regions?.length ?? 0) > 0).length,
     region: files.filter(([, file]) => file.layout === "regions" && (file.regions?.length ?? 0) > 0).length,
-    steam: toList(collectionDocument?.steam).length,
     video: files.filter(([, file]) => getFileType(file) === "video").length,
     youTubeRegular: toList(collectionDocument?.youtubeRegular).length,
     youTubeShort: toList(collectionDocument?.youtubeShorts).length
@@ -35,9 +34,8 @@ export const getCounts = (collectionDocument: CollectionDocument): CollectionCou
 
 export const getCountsByUrlStrings = (urlStrings: string[]): CollectionCounts => {
   const text = urlStrings.join("\n");
-  const steamUrlStrings = extractUrlStrings(text, regex.STEAM);
   const youTubeUrlStrings = extractUrlStrings(text, regex.YOUTUBE);
-  const hyperlinks = extractUrlStrings(text, regex.HYPERLINK, [...steamUrlStrings, ...youTubeUrlStrings]);
+  const hyperlinks = extractUrlStrings(text, regex.HYPERLINK, [...youTubeUrlStrings]);
   const youTubeInfos = extractYouTubeInfos(youTubeUrlStrings);
   return {
     chart: 0,
@@ -47,7 +45,6 @@ export const getCountsByUrlStrings = (urlStrings: string[]): CollectionCounts =>
     pdf: 0,
     quiz: 0,
     region: 0,
-    steam: steamUrlStrings.length,
     video: 0,
     youTubeRegular: youTubeInfos.filter((info) => info.type === "youtubeRegular").length,
     youTubeShort: youTubeInfos.filter((info) => info.type === "youtubeShorts").length

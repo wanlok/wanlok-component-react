@@ -14,7 +14,6 @@ import {
 import { appendSequences, isAllEmpty, toList } from "../../common/ListDictUtils";
 import { getFiles } from "../../common/FileUtils";
 import { getChartItems } from "../../services/ChartService";
-import { getSteamInfos } from "../../services/SteamService";
 import { getYouTubeRegularAndShortInfos } from "../../services/YouTubeService";
 import { uploadAndGetFileInfos, uploadImageBlobs } from "../../services/FileService";
 import { convertPdfToImageBlobs } from "../../utils/convertPdfToImageBlobs";
@@ -61,7 +60,6 @@ export const useCollection = (
     let counts: CollectionCounts | undefined = undefined;
     if (collectionId && text) {
       const { charts } = getChartItems(text);
-      const { steam } = await getSteamInfos(text);
       const { youtubeRegular, youtubeShorts } = await getYouTubeRegularAndShortInfos(text);
       const { hyperlinks } = await getHyperlinks(text);
       const docRef = doc(db, collectionName, collectionId);
@@ -72,13 +70,12 @@ export const useCollection = (
           charts: { ...collectionDocument.charts, ...charts },
           files: { ...collectionDocument.files },
           hyperlinks: { ...collectionDocument.hyperlinks, ...hyperlinks },
-          steam: { ...collectionDocument.steam, ...steam },
           youtubeRegular: { ...collectionDocument.youtubeRegular, ...youtubeRegular },
           youtubeShorts: { ...collectionDocument.youtubeShorts, ...youtubeShorts }
         };
         await updateDoc(docRef, document);
       } else {
-        document = { charts, files: {}, hyperlinks, steam, youtubeRegular, youtubeShorts };
+        document = { charts, files: {}, hyperlinks, youtubeRegular, youtubeShorts };
         await setDoc(docRef, document);
       }
       setCollectionDocumentAndRef(document);
@@ -129,7 +126,6 @@ export const useCollection = (
               charts: {},
               files: fileInfos,
               hyperlinks: {},
-              steam: {},
               youtubeRegular: {},
               youtubeShorts: {}
             };
@@ -280,7 +276,6 @@ export const useCollection = (
             charts: {},
             files: fileInfos,
             hyperlinks: {},
-            steam: {},
             youtubeRegular: {},
             youtubeShorts: {}
           };
@@ -335,7 +330,6 @@ export const useCollection = (
     charts: toList(collectionDocument?.charts, collectionSequences?.charts),
     files: toList(collectionDocument?.files, collectionSequences?.files),
     hyperlinks: toList(collectionDocument?.hyperlinks, collectionSequences?.hyperlinks),
-    steam: toList(collectionDocument?.steam, collectionSequences?.steam),
     youTubeRegularVideos: toList(collectionDocument?.youtubeRegular, collectionSequences?.youtubeRegular),
     youTubeShortVideos: toList(collectionDocument?.youtubeShorts, collectionSequences?.youtubeShorts),
     addCollectionItems,

@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { Avatar, Divider, Skeleton, Stack, useMediaQuery, useTheme } from "@mui/material";
 import { CropFree as CropFreeIcon } from "@mui/icons-material";
-import { ChartItem, CloudinaryFileInfo, CollectionAttributes, SteamInfo, viewUrls, YouTubeInfo } from "../../services/Types";
+import { ChartItem, CloudinaryFileInfo, CollectionAttributes, YouTubeInfo } from "../../services/Types";
 import { WChart } from "../../components/WChart";
 import { WChip } from "../../components/WChip";
 import { ImageTitle } from "../../components/ImageTitle";
@@ -13,7 +13,6 @@ export const CollectionList = ({
   charts,
   files,
   hyperlinks,
-  steam,
   youTubeRegularVideos,
   youTubeShortVideos,
   loadingCount,
@@ -28,7 +27,6 @@ export const CollectionList = ({
   charts: [string, ChartItem][];
   files: [string, CloudinaryFileInfo][];
   hyperlinks: [string, string][];
-  steam: [string, SteamInfo][];
   youTubeRegularVideos: [string, YouTubeInfo][];
   youTubeShortVideos: [string, YouTubeInfo][];
   loadingCount: number;
@@ -55,7 +53,6 @@ export const CollectionList = ({
     charts.length === 0 &&
     files.length === 0 &&
     hyperlinks.length === 0 &&
-    steam.length === 0 &&
     youTubeRegularVideos.length === 0 &&
     youTubeShortVideos.length === 0;
   if (isEmpty) {
@@ -134,22 +131,6 @@ export const CollectionList = ({
             onDeleteButtonClick={() => onDeleteButtonClick("hyperlinks", url)}
             onLeftButtonClick={() => onLeftButtonClick("hyperlinks", url)}
             onRightButtonClick={() => onRightButtonClick("hyperlinks", url)}
-          />
-        ))}
-        {steam.map(([appId, { name, imageUrl }], i) => (
-          <ImageTitle
-            key={`steam-${i}`}
-            imageUrl={imageUrl}
-            name={name}
-            href={`${viewUrls.steam}${appId}`}
-            aspectRatio="92/43"
-            leftMost={i === 0}
-            rightMost={i === steam.length - 1}
-            scrollHorizontally={!mobile}
-            controlGroupState={controlGroupState}
-            onDeleteButtonClick={() => onDeleteButtonClick("steam", appId)}
-            onLeftButtonClick={() => onLeftButtonClick("steam", appId)}
-            onRightButtonClick={() => onRightButtonClick("steam", appId)}
           />
         ))}
         {youTubeShortVideos.map(([id, { name, imageUrl, attributes }], i) => {
