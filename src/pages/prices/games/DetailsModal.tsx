@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Divider, Stack, Typography, useTheme } from "@mui/material";
+import { Stack, Typography, useTheme } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
 import { Edit as EditIcon } from "@mui/icons-material";
 import { StyledContainer } from "../../../components/StyledContainer";
@@ -62,10 +62,26 @@ export const DetailsModal = ({
         />
       }
     >
-      <Stack sx={{ p: 2 }}>
+      <Stack sx={{ p: 2, gap: 2 }}>
         <StyledContainer sx={{ p: 1 }}>
           <TextInput label="Name" value={newName} onChange={(value) => setNewName(value)} inputSx={{ flex: 1 }} />
         </StyledContainer>
+        <Stack
+          sx={{
+            display: "grid",
+            gridTemplateColumns: "repeat(2, 1fr)",
+            gap: 2
+          }}
+        >
+          {selectedPrices.length > 0 && <MetaItem title="Number of points" value={String(selectedPrices.length)} />}
+          {lastUpdatedDate && <MetaItem title="Last Updated" value={lastUpdatedDate} />}
+          {selectedEntry?.lowest && (
+            <MetaItem title="Lowest Price" value={`$${selectedEntry.lowest.price.toFixed(2)}`} />
+          )}
+          {selectedEntry?.highest && (
+            <MetaItem title="Highest Price" value={`$${selectedEntry.highest.price.toFixed(2)}`} />
+          )}
+        </Stack>
       </Stack>
       <Stack sx={{ px: 2 }}>
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
@@ -110,24 +126,6 @@ export const DetailsModal = ({
             lineHighlight: { fill: palette.common.black }
           }}
         />
-      </Stack>
-      <Divider />
-      <Stack
-        sx={{
-          display: "grid",
-          gridTemplateColumns: "repeat(2, 1fr)",
-          p: 2,
-          gap: 2
-        }}
-      >
-        {selectedPrices.length > 0 && <MetaItem title="Number of points" value={String(selectedPrices.length)} />}
-        {lastUpdatedDate && <MetaItem title="Last Updated" value={lastUpdatedDate} />}
-        {selectedEntry?.lowest && (
-          <MetaItem title="Lowest Price" value={`$${selectedEntry.lowest.price.toFixed(2)}`} hideDivider={true} />
-        )}
-        {selectedEntry?.highest && (
-          <MetaItem title="Highest Price" value={`$${selectedEntry.highest.price.toFixed(2)}`} hideDivider={true} />
-        )}
       </Stack>
     </WModal>
   );
