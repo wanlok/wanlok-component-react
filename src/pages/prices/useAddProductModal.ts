@@ -18,7 +18,7 @@ export const useAddProductModal = () => {
     }
     setIsLoading(true);
     setProduct(undefined);
-    const response = await fetch(`${apiUrl}/products?url=${encodeURIComponent(url)}`);
+    const response = await fetch(`${apiUrl}/searchProducts?url=${encodeURIComponent(url)}`);
     const result = (await response.json()) as ApiResponse<Product | null>;
     if (result.data) {
       setProduct(result.data);
