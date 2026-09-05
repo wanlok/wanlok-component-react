@@ -1,23 +1,16 @@
-import { useState } from "react";
-import { Alert, Stack } from "@mui/material";
+import { Alert, CircularProgress, Divider, Stack } from "@mui/material";
 import { Add as AddIcon } from "@mui/icons-material";
 import { StyledContainer } from "../../components/StyledContainer";
 import { TextInput } from "../../components/TextInput";
 import { WModal } from "../../components/WModal";
 import { YesNoButtons } from "../../components/YesNoButtons";
+import { MetaItem } from "../../components/MetaItem";
+import { useAddProductModal } from "./useAddProductModal";
+import { WButton } from "../../components/WButton";
 
-export const AddProductModal = ({
-  open,
-  onClose,
-  onSaveButtonClick
-}: {
-  open: boolean;
-  onClose: () => void;
-  onSaveButtonClick: (url: string, name: string) => Promise<{ error?: string }>;
-}) => {
-  const [url, setUrl] = useState("");
-  const [name, setName] = useState("");
-  const [error, setError] = useState<string>();
+export const AddProductModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
+  const { url, onUrlChange, product, isLoading, error, onSearchButtonClick, onNameChange, onSaveButtonClick } =
+    useAddProductModal();
 
   return (
     <WModal
@@ -27,12 +20,10 @@ export const AddProductModal = ({
       bottom={
         <YesNoButtons
           yesLabel="Save"
-          yesDisabled={!name || !url}
+          yesDisabled={!product?.name || !url}
           onYesClick={async () => {
-            const result = await onSaveButtonClick(name, url);
-            if (result.error) {
-              setError(result.error);
-            } else {
+            const result = await onSaveButtonClick();
+            if (!result.error) {
               onClose();
             }
           }}
@@ -42,21 +33,24 @@ export const AddProductModal = ({
       }
     >
       <Stack sx={{ gap: 2, p: 2 }}>
-        <Stack sx={{ gap: "1px" }}>
+        <Stack sx={{ gap: 2 }}>
           <StyledContainer isError={!!error} sx={{ p: 1 }}>
-            <TextInput
-              label="URL"
-              value={url}
-              onChange={(value) => {
-                setUrl(value);
-                setError(undefined);
-              }}
-              inputSx={{ flex: 1 }}
-            />
+            <TextInput label="URL" value={url} onChange={onUrlChange} inputSx={{ flex: 1 }} />
           </StyledContainer>
-          <StyledContainer sx={{ p: 1 }}>
-            <TextInput label="Name" value={name} onChange={(value) => setName(value)} inputSx={{ flex: 1 }} />
-          </StyledContainer>
+          <Stack sx={{ height: 40 }}>
+            <WButton disabled={!url || isLoading} onClick={onSearchButtonClick} sx={{ flex: 1 }}>
+              {isLoading ? <CircularProgress size={16} sx={{ color: "text.primary" }} /> : "Search"}
+            </WButton>
+          </Stack>
+          {!isLoading && product && (
+            <>
+              <Divider />
+              <StyledContainer sx={{ p: 1 }}>
+                <TextInput label="Name" value={product.name} onChange={onNameChange} inputSx={{ flex: 1 }} />
+              </StyledContainer>
+              <MetaItem title="Price" value={`$${product.price.toFixed(2)}`} hideDivider />
+            </>
+          )}
         </Stack>
         {error && (
           <Alert severity="error" sx={{ borderRadius: 0 }}>

@@ -8,6 +8,7 @@ import {
 } from "@mui/icons-material";
 import { PanelRow } from "../../components/PanelRow";
 import { LeftHeader } from "./LeftHeader";
+import { Index as ComputerHardwareIndex } from "./computerHardware";
 import { Index as GamePriceIndex } from "./games";
 import { Index as SupermarketsIndex } from "./supermarkets";
 
@@ -48,6 +49,7 @@ export const Prices = () => {
         )
       }
     >
+      {selectedFolder?.id === "computer-hardware" && <ComputerHardwareIndex />}
       {selectedFolder?.id === "games" && <GamePriceIndex />}
       {selectedFolder?.id === "supermarkets" && <SupermarketsIndex />}
     </LayoutPanel>

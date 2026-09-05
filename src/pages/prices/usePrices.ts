@@ -7,6 +7,7 @@ export interface PricesFolder {
 }
 
 export const folders: PricesFolder[] = [
+  { name: "Computer Hardware", id: "computer-hardware" },
   { name: "Games", id: "games" },
   { name: "Supermarkets", id: "supermarkets" }
 ];
