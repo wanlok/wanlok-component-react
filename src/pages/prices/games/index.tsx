@@ -6,11 +6,21 @@ import { DeleteConfirmationModal } from "../../../components/DeleteConfirmationM
 import { EmptyPlaceholder } from "../../../components/EmptyPlaceholder";
 import { iconButtonSx, WButton } from "../../../components/WButton";
 import { useScrollbarWidths } from "../../../components/useScrollbarWidths";
-import { CURRENCY_CODES, CurrencyCode, Game, Platform, PLATFORMS } from "../../../services/ApiTypes";
+import { CURRENCY_CODES, CurrencyCode, GAME_URL_PREFIXES, Game, Platform, PLATFORMS } from "../../../services/ApiTypes";
 import { AddGameModal } from "./AddGameModal";
 import { DetailsModal } from "./DetailsModal";
-import { GamePriceRow } from "./GamePriceRow";
+import { PriceItem, ProductRow } from "../ProductRow";
 import { useGamePrice } from "./useGamePrice";
+
+const getPrices = (platform: Platform, game: Game): PriceItem[] =>
+  CURRENCY_CODES.map((currencyCode) => {
+    const entry = game[currencyCode];
+    const entryPrices = entry?.prices ?? [];
+    const latestPrice = entryPrices[entryPrices.length - 1]?.price;
+    const prefix = GAME_URL_PREFIXES[platform][currencyCode];
+    const url = entry?.id && prefix ? prefix + (entry.type ? `${entry.type}/` : "") + entry.id : undefined;
+    return { price: latestPrice, line1: currencyCode.toUpperCase(), url };
+  });
 
 const Top = ({
   onAddButtonClick,
@@ -95,11 +105,11 @@ export const Index = () => {
       ) : (
         <Stack ref={listRef} sx={{ flex: 1, overflow: "auto", backgroundColor: "common.white" }}>
           {gameEntries.map(({ platform, name, game }) => (
-            <GamePriceRow
+            <ProductRow
               key={`${platform}-${name}`}
-              platform={platform}
-              name={name}
-              game={game}
+              title={name}
+              subtitle={platform}
+              prices={getPrices(platform, game)}
               deleteMode={effectiveControlGroupState === 1}
               onClick={() => setSelectedGame({ platform, name, game })}
               onDeleteButtonClick={() => setGameToDelete({ platform, name })}
