@@ -50,7 +50,7 @@ export const ProductModal = ({
       onMobileSelectedPageChange={setMobileSelectedPage}
       open={open}
       onClose={onClose}
-      pages={[{ icon: <MonetizationOnIcon sx={{ fontSize: 18, mt: 0.2 }} />, label: "Prices" }]}
+      pages={[{ icon: <MonetizationOnIcon sx={{ fontSize: 24 }} />, label: "Prices" }]}
       top={
         <StyledContainer sx={{ flex: 1, p: 1 }}>
           <SelectInput
