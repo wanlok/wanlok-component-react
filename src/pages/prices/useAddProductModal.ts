@@ -1,14 +1,15 @@
 import { useState } from "react";
-import { ApiResponse, apiUrl, Product, SaveProductResponse } from "../../services/ApiTypes";
+import { ApiResponse, apiUrl, Product, SearchProduct } from "../../services/ApiTypes";
 
 export const useAddProductModal = () => {
   const [url, setUrl] = useState("");
-  const [product, setProduct] = useState<Product>();
+  const [product, setProduct] = useState<SearchProduct>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>();
 
   const onUrlChange = (value: string) => {
     setUrl(value);
+    setProduct(undefined);
     setError(undefined);
   };
 
@@ -19,7 +20,7 @@ export const useAddProductModal = () => {
     setIsLoading(true);
     setProduct(undefined);
     const response = await fetch(`${apiUrl}/searchProducts?url=${encodeURIComponent(url)}`);
-    const result = (await response.json()) as ApiResponse<Product | null>;
+    const result = (await response.json()) as ApiResponse<SearchProduct | null>;
     if (result.data) {
       setProduct(result.data);
     }
@@ -27,7 +28,12 @@ export const useAddProductModal = () => {
   };
 
   const onNameChange = (name: string) => {
-    setProduct((previous) => ({ type: previous?.type ?? "computer-hardware", name, price: previous?.price ?? 0 }));
+    setProduct((previous) => {
+      if (!previous) {
+        return previous;
+      }
+      return { ...previous, name };
+    });
   };
 
   const onSaveButtonClick = async () => {
@@ -39,10 +45,11 @@ export const useAddProductModal = () => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ url, ...product })
     });
-    const result = (await response.json()) as SaveProductResponse;
+    const result = (await response.json()) as ApiResponse<Record<string, Record<string, Product>>>;
     if (result.status === "error") {
-      setError(result.message);
-      return { error: result.message };
+      const message = "Failed to save product";
+      setError(message);
+      return { error: message };
     }
     return {};
   };

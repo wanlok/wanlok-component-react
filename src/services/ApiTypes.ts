@@ -6,13 +6,11 @@ export const PRODUCT_TYPES = ["computer-hardware", "games", "supermarkets"] as c
 
 export type ProductType = (typeof PRODUCT_TYPES)[number];
 
-export type Product = { type: ProductType; name: string; price: number };
+export type SearchProduct = { type: ProductType; seller: string; name: string; price: number };
 
 export type ProductPrice = { datetime: string; price: number };
 
-export type ProductPrices = Record<string, Record<string, ProductPrice[]>>;
-
-export type SaveProductResponse = { status: "ok"; data: ProductPrices } | { status: "error"; message: string };
+export type Product = { seller: string; prices: ProductPrice[] };
 
 export interface CollectionCounts {
   chart: number;

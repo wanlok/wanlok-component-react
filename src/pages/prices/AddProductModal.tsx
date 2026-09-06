@@ -48,7 +48,10 @@ export const AddProductModal = ({ open, onClose }: { open: boolean; onClose: () 
               <StyledContainer sx={{ p: 1 }}>
                 <TextInput label="Name" value={product.name} onChange={onNameChange} inputSx={{ flex: 1 }} />
               </StyledContainer>
-              <MetaItem title="Price" value={`$${product.price.toFixed(2)}`} hideDivider />
+              <Stack sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2 }}>
+                <MetaItem title="Seller" value={product.seller} hideDivider />
+                <MetaItem title="Price" value={`$${product.price.toFixed(2)}`} hideDivider />
+              </Stack>
             </>
           )}
         </Stack>
