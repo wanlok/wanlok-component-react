@@ -15,7 +15,13 @@ export const MetaItem = ({
         <Typography variant="body2" sx={{ color: "text.secondary" }}>
           {title}
         </Typography>
-        {value === undefined ? <Stack sx={{ height: 24 }} /> : <Typography variant="body1">{value}</Typography>}
+        {value === undefined ? (
+          <Typography variant="body1" sx={{ color: "text.disabled" }}>
+            N/A
+          </Typography>
+        ) : (
+          <Typography variant="body1">{value}</Typography>
+        )}
       </Stack>
       {!hideDivider && <Divider />}
     </Stack>

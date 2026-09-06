@@ -21,12 +21,9 @@ export const ImageMetaContainer = ({ imageMeta }: { imageMeta: ImageMeta | undef
         gap: 2
       }}
     >
-      <MetaItem title="Resolution" value={imageMeta ? `${imageMeta.width}x${imageMeta.height}` : undefined} />
-      <MetaItem
-        title="Aspect Ratio"
-        value={imageMeta ? getAspectRatio(imageMeta.width, imageMeta.height) : undefined}
-      />
-      <MetaItem title="Type" value={imageMeta?.type} hideDivider />
+      <MetaItem title="Resolution" value={imageMeta ? `${imageMeta.width}x${imageMeta.height}` : ""} />
+      <MetaItem title="Aspect Ratio" value={imageMeta ? getAspectRatio(imageMeta.width, imageMeta.height) : ""} />
+      <MetaItem title="Type" value={imageMeta?.type ?? ""} hideDivider />
     </Stack>
   );
 };

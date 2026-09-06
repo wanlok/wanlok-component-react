@@ -1,15 +1,16 @@
-import { useState } from "react";
-import { Divider, Stack, Typography, useTheme } from "@mui/material";
+import { CircularProgress, Divider, Stack, Typography, useTheme } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
-import { useQueryClient } from "@tanstack/react-query";
-import { Edit as EditIcon, Insights as InsightsIcon } from "@mui/icons-material";
+import { useState } from "react";
+import { Edit as EditIcon, Insights as InsightsIcon, Refresh as RefreshIcon } from "@mui/icons-material";
 import { StyledContainer } from "../../components/StyledContainer";
 import { TextInput } from "../../components/TextInput";
 import { WModal } from "../../components/WModal";
 import { YesNoButtons } from "../../components/YesNoButtons";
 import { SelectInput } from "../../components/SelectInput";
 import { MetaItem } from "../../components/MetaItem";
-import { ApiResponse, apiUrl, Product, ProductType } from "../../services/ApiTypes";
+import { iconButtonSx, WButton } from "../../components/WButton";
+import { Product, ProductType } from "../../services/ApiTypes";
+import { useProductModal } from "./useProductModal";
 
 export const ProductModal = ({
   open,
@@ -25,30 +26,23 @@ export const ProductModal = ({
   sellers: Record<string, Product>;
 }) => {
   const { palette } = useTheme();
-  const queryClient = useQueryClient();
   const [mobileSelectedPage, setMobileSelectedPage] = useState(0);
-  const [newName, setNewName] = useState(name);
-  const [selectedUrl, setSelectedUrl] = useState(Object.keys(sellers)[0] ?? "");
-  const prices = sellers[selectedUrl]?.prices ?? [];
-  const lastUpdatedDate = prices.length > 0 ? prices[prices.length - 1].datetime.split("T")[0] : undefined;
-  const lowest = prices.length > 0 ? prices.reduce((a, b) => (b.price < a.price ? b : a)) : undefined;
-  const highest = prices.length > 0 ? prices.reduce((a, b) => (b.price > a.price ? b : a)) : undefined;
-  const priceValues = prices.map((price) => price.price);
-  const minPrice = priceValues.length > 0 ? Math.min(...priceValues) : undefined;
-  const maxPrice = priceValues.length > 0 ? Math.max(...priceValues) : undefined;
-  const pricePadding = minPrice !== undefined && maxPrice !== undefined ? (maxPrice - minPrice) * 0.8 || 1 : 0;
-
-  const onSaveButtonClick = async () => {
-    const response = await fetch(`${apiUrl}/products`, {
-      method: "PATCH",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ type, name, newName })
-    });
-    const result = (await response.json()) as ApiResponse<Record<string, Record<string, Product>>>;
-    if (result.status === "ok") {
-      queryClient.setQueryData(["products", type], result.data);
-    }
-  };
+  const {
+    newName,
+    onNewNameChange,
+    selectedUrl,
+    onSelectedUrlChange,
+    isUpdatingPrice,
+    prices,
+    lastUpdatedDate,
+    lowest,
+    highest,
+    minPrice,
+    maxPrice,
+    pricePadding,
+    onSaveButtonClick,
+    onUpdatePriceButtonClick
+  } = useProductModal({ type, name, sellers });
 
   return (
     <WModal
@@ -62,12 +56,20 @@ export const ProductModal = ({
           <SelectInput
             items={Object.entries(sellers).map(([url, product]) => ({ label: product.seller, value: url }))}
             value={selectedUrl}
-            onChange={setSelectedUrl}
+            onChange={onSelectedUrlChange}
           />
         </StyledContainer>
       }
       rightPages={[{ icon: <EditIcon sx={{ fontSize: 18, mt: 0.1 }} />, label: "Details" }]}
-      rightTop={<></>}
+      rightTop={
+        <WButton disabled={isUpdatingPrice} onClick={onUpdatePriceButtonClick} sx={iconButtonSx}>
+          {isUpdatingPrice ? (
+            <CircularProgress size={16} sx={{ color: "text.primary" }} />
+          ) : (
+            <RefreshIcon sx={{ fontSize: 24 }} />
+          )}
+        </WButton>
+      }
       rightBottom={
         <YesNoButtons
           yesLabel="Save"
@@ -83,7 +85,7 @@ export const ProductModal = ({
       rightChildren={
         <Stack sx={{ p: 2, gap: 2 }}>
           <StyledContainer sx={{ p: 1 }}>
-            <TextInput label="Name" value={newName} onChange={(value) => setNewName(value)} inputSx={{ flex: 1 }} />
+            <TextInput label="Name" value={newName} onChange={onNewNameChange} inputSx={{ flex: 1 }} />
           </StyledContainer>
         </Stack>
       }
@@ -142,10 +144,10 @@ export const ProductModal = ({
               gap: 2
             }}
           >
-            {prices.length > 0 && <MetaItem title="Number of points" value={String(prices.length)} />}
-            {lastUpdatedDate && <MetaItem title="Last Updated" value={lastUpdatedDate} />}
-            {lowest && <MetaItem title="Lowest Price" value={`$${lowest.price.toFixed(2)}`} hideDivider />}
-            {highest && <MetaItem title="Highest Price" value={`$${highest.price.toFixed(2)}`} hideDivider />}
+            <MetaItem title="Number of points" value={String(prices.length)} />
+            <MetaItem title="Last Updated" value={lastUpdatedDate} />
+            <MetaItem title="Lowest Price" value={lowest ? `$${lowest.price.toFixed(2)}` : undefined} hideDivider />
+            <MetaItem title="Highest Price" value={highest ? `$${highest.price.toFixed(2)}` : undefined} hideDivider />
           </Stack>
         </Stack>
       </Stack>
