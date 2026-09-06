@@ -8,8 +8,8 @@ import { iconButtonSx, WButton } from "../../../components/WButton";
 import { useScrollbarWidths } from "../../../components/useScrollbarWidths";
 import { CURRENCY_CODES, CurrencyCode, GAME_URL_PREFIXES, Game, Platform, PLATFORMS } from "../../../services/ApiTypes";
 import { AddGameModal } from "./AddGameModal";
-import { DetailsModal } from "./DetailsModal";
 import { PriceItem, ProductRow } from "../ProductRow";
+import { ProductModal } from "../ProductModal";
 import { useGamePrice } from "./useGamePrice";
 
 const getPrices = (platform: Platform, game: Game): PriceItem[] =>
@@ -124,13 +124,12 @@ export const Index = () => {
         onSaveButtonClick={addGame}
       />
       {selectedGame && (
-        <DetailsModal
+        <ProductModal
           key={`details-modal-${selectedGame.platform}-${selectedGame.name}`}
           open={!!selectedGame}
           onClose={() => setSelectedGame(undefined)}
+          type="games"
           name={selectedGame.name}
-          game={selectedGame.game}
-          onSaveButtonClick={(newName) => renameGame(selectedGame.platform, selectedGame.name, newName)}
         />
       )}
       <DeleteConfirmationModal

@@ -8,6 +8,7 @@ import { iconButtonSx, WButton } from "../../../components/WButton";
 import { Product } from "../../../services/ApiTypes";
 import { AddProductModal } from "../AddProductModal";
 import { PriceItem, ProductRow } from "../ProductRow";
+import { ProductModal } from "../ProductModal";
 import { useComputerHardware } from "./useComputerHardware";
 
 const getPrices = (urls: Record<string, Product>): PriceItem[] =>
@@ -48,6 +49,7 @@ export const Index = () => {
   const [controlGroupState, setControlGroupState] = useState(0);
   const effectiveControlGroupState = empty ? 0 : controlGroupState;
   const [productToDelete, setProductToDelete] = useState<{ name: string }>();
+  const [selectedProductName, setSelectedProductName] = useState<string>();
 
   return (
     <Stack sx={{ flex: 1, minWidth: 0, minHeight: 0 }}>
@@ -72,7 +74,7 @@ export const Index = () => {
               subtitle=""
               prices={getPrices(urls)}
               deleteMode={effectiveControlGroupState === 1}
-              onClick={() => {}}
+              onClick={() => setSelectedProductName(name)}
               onDeleteButtonClick={() => setProductToDelete({ name })}
             />
           ))}
@@ -83,6 +85,15 @@ export const Index = () => {
         open={addModalOpen}
         onClose={() => setAddModalOpen(false)}
       />
+      {selectedProductName && (
+        <ProductModal
+          key={`product-modal-${selectedProductName}`}
+          open={!!selectedProductName}
+          onClose={() => setSelectedProductName(undefined)}
+          type="computer-hardware"
+          name={selectedProductName}
+        />
+      )}
       <DeleteConfirmationModal
         open={!!productToDelete}
         title="Delete Product"
