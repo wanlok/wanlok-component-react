@@ -92,6 +92,7 @@ export const Index = () => {
           onClose={() => setSelectedProductName(undefined)}
           type="supermarkets"
           name={selectedProductName}
+          sellers={products[selectedProductName]}
         />
       )}
       <DeleteConfirmationModal

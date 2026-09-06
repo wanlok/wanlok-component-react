@@ -130,6 +130,7 @@ export const Index = () => {
           onClose={() => setSelectedGame(undefined)}
           type="games"
           name={selectedGame.name}
+          sellers={{}}
         />
       )}
       <DeleteConfirmationModal
