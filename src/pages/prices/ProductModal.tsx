@@ -1,7 +1,7 @@
 import { CircularProgress, Divider, Stack, Typography, useTheme } from "@mui/material";
 import { LineChart } from "@mui/x-charts";
 import { useState } from "react";
-import { Edit as EditIcon, Insights as InsightsIcon, Refresh as RefreshIcon } from "@mui/icons-material";
+import { Edit as EditIcon, MonetizationOn as MonetizationOnIcon, Refresh as RefreshIcon } from "@mui/icons-material";
 import { StyledContainer } from "../../components/StyledContainer";
 import { TextInput } from "../../components/TextInput";
 import { WModal } from "../../components/WModal";
@@ -50,7 +50,7 @@ export const ProductModal = ({
       onMobileSelectedPageChange={setMobileSelectedPage}
       open={open}
       onClose={onClose}
-      pages={[{ icon: <InsightsIcon sx={{ fontSize: 18, mt: 0.2 }} />, label: "Prices" }]}
+      pages={[{ icon: <MonetizationOnIcon sx={{ fontSize: 18, mt: 0.2 }} />, label: "Prices" }]}
       top={
         <StyledContainer sx={{ flex: 1, p: 1 }}>
           <SelectInput
