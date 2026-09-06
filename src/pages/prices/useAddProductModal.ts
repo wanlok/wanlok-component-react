@@ -1,7 +1,9 @@
 import { useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { ApiResponse, apiUrl, Product, SearchProduct } from "../../services/ApiTypes";
 
 export const useAddProductModal = () => {
+  const queryClient = useQueryClient();
   const [url, setUrl] = useState("");
   const [product, setProduct] = useState<SearchProduct>();
   const [isLoading, setIsLoading] = useState(false);
@@ -51,6 +53,7 @@ export const useAddProductModal = () => {
       setError(message);
       return { error: message };
     }
+    queryClient.setQueryData(["products", product.type], result.data);
     return {};
   };
 
