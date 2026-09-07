@@ -4,13 +4,24 @@ import { StyledContainer } from "../../components/StyledContainer";
 import { TextInput } from "../../components/TextInput";
 import { WModal } from "../../components/WModal";
 import { YesNoButtons } from "../../components/YesNoButtons";
-import { MetaItem } from "../../components/MetaItem";
 import { useAddProductModal } from "./useAddProductModal";
 import { WButton } from "../../components/WButton";
+import { ProductType } from "../../services/ApiTypes";
 
-export const AddProductModal = ({ open, onClose }: { open: boolean; onClose: () => void }) => {
-  const { url, onUrlChange, product, isLoading, error, onSearchButtonClick, onNameChange, onSaveButtonClick } =
-    useAddProductModal();
+export const AddProductModal = ({ open, onClose, type }: { open: boolean; onClose: () => void; type: ProductType }) => {
+  const {
+    url,
+    onUrlChange,
+    product,
+    isLoading,
+    error,
+    onSearchButtonClick,
+    onNameChange,
+    onSellerChange,
+    onPriceChange,
+    onManualButtonClick,
+    onSaveButtonClick
+  } = useAddProductModal({ type });
 
   return (
     <WModal
@@ -37,20 +48,36 @@ export const AddProductModal = ({ open, onClose }: { open: boolean; onClose: () 
           <StyledContainer isError={!!error} sx={{ p: 1 }}>
             <TextInput label="URL" value={url} onChange={onUrlChange} inputSx={{ flex: 1 }} />
           </StyledContainer>
-          <Stack sx={{ height: 40 }}>
-            <WButton disabled={!url || isLoading} onClick={onSearchButtonClick} sx={{ flex: 1 }}>
-              {isLoading ? <CircularProgress size={16} sx={{ color: "text.primary" }} /> : "Search"}
-            </WButton>
+          <Stack sx={{ gap: "1px" }}>
+            <Stack sx={{ height: 48 }}>
+              <WButton disabled={!url || isLoading} onClick={onSearchButtonClick} sx={{ flex: 1 }}>
+                {isLoading ? <CircularProgress size={16} sx={{ color: "text.primary" }} /> : "Search"}
+              </WButton>
+            </Stack>
+            <Stack sx={{ height: 48 }}>
+              <WButton disabled={isLoading} onClick={onManualButtonClick} sx={{ flex: 1 }}>
+                Enter Manually
+              </WButton>
+            </Stack>
           </Stack>
           {!isLoading && product && (
             <>
               <Divider />
-              <StyledContainer sx={{ p: 1 }}>
-                <TextInput label="Name" value={product.name} onChange={onNameChange} inputSx={{ flex: 1 }} />
-              </StyledContainer>
-              <Stack sx={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 2 }}>
-                <MetaItem title="Seller" value={product.seller} hideDivider />
-                <MetaItem title="Price" value={`$${product.price.toFixed(2)}`} hideDivider />
+              <Stack sx={{ gap: "1px" }}>
+                <StyledContainer sx={{ p: 1 }}>
+                  <TextInput label="Name" value={product.name} onChange={onNameChange} inputSx={{ flex: 1 }} />
+                </StyledContainer>
+                <StyledContainer sx={{ p: 1 }}>
+                  <TextInput label="Seller" value={product.seller} onChange={onSellerChange} inputSx={{ flex: 1 }} />
+                </StyledContainer>
+                <StyledContainer sx={{ p: 1 }}>
+                  <TextInput
+                    label="Price"
+                    value={product.price ?? ""}
+                    onChange={onPriceChange}
+                    inputSx={{ flex: 1 }}
+                  />
+                </StyledContainer>
               </Stack>
             </>
           )}

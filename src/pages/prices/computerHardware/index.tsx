@@ -84,6 +84,7 @@ export const Index = () => {
         key={`add-product-modal-${addModalOpen ? "open" : "closed"}`}
         open={addModalOpen}
         onClose={() => setAddModalOpen(false)}
+        type="computer-hardware"
       />
       {selectedProductName && (
         <ProductModal
