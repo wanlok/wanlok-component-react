@@ -8,6 +8,7 @@ import { Calculation, useLoanCalculator } from "./useLoanCalculator";
 import { MetaItem } from "../../../components/MetaItem";
 import { AmortizationSchedule } from "../../../utils/AmortizationUtils";
 import { formatCurrency } from "../../../utils/formatCurrency";
+import { calculateComparisonRate } from "../../../utils/calculateComparisonRate";
 
 const renderTooltip = (lines: string[]) => (
   <Stack sx={{ gap: 0.5 }}>
@@ -52,6 +53,15 @@ const Content = ({
     ongoingFees * numberOfPayments;
   const repaymentPerMonth = payment + ongoingFees;
   const repaymentPerYear = repaymentPerMonth * 12;
+  const comparisonRate = calculateComparisonRate(
+    loanAmount,
+    payment,
+    numberOfPayments,
+    applicationFee,
+    settlementFee,
+    annualFee,
+    ongoingFees
+  );
   return (
     <Stack sx={{ flex: 1, minHeight: 0, minWidth: 0, overflow: "auto" }}>
       <Stack
@@ -74,6 +84,16 @@ const Content = ({
           title={"Interest rate"}
           value={`${calculation.interestRate}%`}
           tooltip={renderTooltip(["Inputted by user"])}
+          hideDivider
+        />
+        <MetaItem
+          title={"Personalised comparison rate"}
+          value={`${comparisonRate.toFixed(2)}%`}
+          tooltip={renderTooltip([
+            "= rate r that solves NPV(r) = 0 for the fee-inclusive repayment stream",
+            "= found via bisection search, not a closed-form substitution",
+            `= ${comparisonRate.toFixed(2)}%`
+          ])}
           hideDivider
         />
         <MetaItem
