@@ -34,29 +34,21 @@ const Content = ({
       </Stack>
     );
   }
-  const { loanAmount, monthlyRate, numberOfPayments, payment, rows } = schedule;
+  const { loanAmount, numberOfPayments, rows, fixedPeriod, remainingPeriod } = schedule;
   const applicationFee = Number(calculation.applicationFee);
   const settlementFee = Number(calculation.settlementFee);
   const annualFee = Number(calculation.annualFee);
   const ongoingFees = Number(calculation.ongoingFees);
   const numberOfYears = numberOfPayments / 12;
-  const paymentFormula = renderTooltip([
-    "= loan amount × monthly rate / (1 - (1 + monthly rate)^-number of payments)",
-    `= ${formatCurrency(loanAmount)} × ${(monthlyRate * 100).toFixed(6)}% / (1 - (1 + ${(monthlyRate * 100).toFixed(6)}%)^-${numberOfPayments})`,
-    `= ${formatCurrency(payment)}`
-  ]);
   const totalAmountToBePaidBack =
-    payment * numberOfPayments +
+    rows.reduce((sum, row) => sum + row.payment, 0) +
     applicationFee +
     settlementFee +
     annualFee * numberOfYears +
     ongoingFees * numberOfPayments;
-  const repaymentPerMonth = payment + ongoingFees;
-  const repaymentPerYear = repaymentPerMonth * 12;
   const comparisonRate = calculateComparisonRate(
     loanAmount,
-    payment,
-    numberOfPayments,
+    rows.map((row) => row.payment),
     applicationFee,
     settlementFee,
     annualFee,
@@ -103,6 +95,18 @@ const Content = ({
           hideDivider
         />
         <MetaItem
+          title={"Fixed interest rate"}
+          value={`${calculation.fixedInterestRate}%`}
+          tooltip={renderTooltip(["Inputted by user"])}
+          hideDivider
+        />
+        <MetaItem
+          title={"Fixed loan term (in years)"}
+          value={calculation.fixedLoanTerm}
+          tooltip={renderTooltip(["Inputted by user"])}
+          hideDivider
+        />
+        <MetaItem
           title={"Application fee"}
           value={formatCurrency(applicationFee)}
           tooltip={renderTooltip(["Inputted by user"])}
@@ -128,11 +132,11 @@ const Content = ({
         />
         <MetaItem
           title={"Monthly rate"}
-          value={`${(monthlyRate * 100).toFixed(6)}%`}
+          value={`${(remainingPeriod.monthlyRate * 100).toFixed(6)}%`}
           tooltip={renderTooltip([
             "= interest rate / 100 / 12",
             `= ${calculation.interestRate} / 100 / 12`,
-            `= ${(monthlyRate * 100).toFixed(6)}%`
+            `= ${(remainingPeriod.monthlyRate * 100).toFixed(6)}%`
           ])}
           hideDivider
         />
@@ -140,8 +144,8 @@ const Content = ({
           title={"Total amount to be paid back"}
           value={formatCurrency(totalAmountToBePaidBack)}
           tooltip={renderTooltip([
-            "= (payment × number of payments) + application fee + settlement fee + (annual fee × number of years) + (ongoing fees × number of payments)",
-            `= (${formatCurrency(payment)} × ${numberOfPayments}) + ${formatCurrency(applicationFee)} + ${formatCurrency(settlementFee)} + (${formatCurrency(annualFee)} × ${numberOfYears}) + (${formatCurrency(ongoingFees)} × ${numberOfPayments})`,
+            "= (sum of all payments) + application fee + settlement fee + (annual fee × number of years) + (ongoing fees × number of payments)",
+            `= ${formatCurrency(rows.reduce((sum, row) => sum + row.payment, 0))} + ${formatCurrency(applicationFee)} + ${formatCurrency(settlementFee)} + (${formatCurrency(annualFee)} × ${numberOfYears}) + (${formatCurrency(ongoingFees)} × ${numberOfPayments})`,
             `= ${formatCurrency(totalAmountToBePaidBack)}`
           ])}
           hideDivider
@@ -156,26 +160,73 @@ const Content = ({
           ])}
           hideDivider
         />
-        <MetaItem
-          title={"Repayment per month (including ongoing fees)"}
-          value={formatCurrency(repaymentPerMonth)}
-          tooltip={renderTooltip([
-            "= payment + ongoing fees",
-            `= ${formatCurrency(payment)} + ${formatCurrency(ongoingFees)}`,
-            `= ${formatCurrency(repaymentPerMonth)}`
-          ])}
-          hideDivider
-        />
-        <MetaItem
-          title={"Repayment per year (including ongoing fees)"}
-          value={formatCurrency(repaymentPerYear)}
-          tooltip={renderTooltip([
-            "= repayment per month × 12",
-            `= ${formatCurrency(repaymentPerMonth)} × 12`,
-            `= ${formatCurrency(repaymentPerYear)}`
-          ])}
-          hideDivider
-        />
+        {fixedPeriod ? (
+          <>
+            <MetaItem
+              title={`Repayment per month for the first ${calculation.fixedLoanTerm} years (including ongoing fees)`}
+              value={formatCurrency(fixedPeriod.payment + ongoingFees)}
+              tooltip={renderTooltip([
+                "= fixed period payment + ongoing fees",
+                `= ${formatCurrency(fixedPeriod.payment)} + ${formatCurrency(ongoingFees)}`,
+                `= ${formatCurrency(fixedPeriod.payment + ongoingFees)}`
+              ])}
+              hideDivider
+            />
+            <MetaItem
+              title={`Repayment per year for the first ${calculation.fixedLoanTerm} years (including ongoing fees)`}
+              value={formatCurrency((fixedPeriod.payment + ongoingFees) * 12)}
+              tooltip={renderTooltip([
+                "= repayment per month for the first fixed years × 12",
+                `= ${formatCurrency(fixedPeriod.payment + ongoingFees)} × 12`,
+                `= ${formatCurrency((fixedPeriod.payment + ongoingFees) * 12)}`
+              ])}
+              hideDivider
+            />
+            <MetaItem
+              title={`Repayment per month after ${calculation.fixedLoanTerm} years (including ongoing fees)`}
+              value={formatCurrency(remainingPeriod.payment + ongoingFees)}
+              tooltip={renderTooltip([
+                "= remaining period payment + ongoing fees",
+                `= ${formatCurrency(remainingPeriod.payment)} + ${formatCurrency(ongoingFees)}`,
+                `= ${formatCurrency(remainingPeriod.payment + ongoingFees)}`
+              ])}
+              hideDivider
+            />
+            <MetaItem
+              title={`Repayment per year after ${calculation.fixedLoanTerm} years (including ongoing fees)`}
+              value={formatCurrency((remainingPeriod.payment + ongoingFees) * 12)}
+              tooltip={renderTooltip([
+                "= repayment per month after fixed years × 12",
+                `= ${formatCurrency(remainingPeriod.payment + ongoingFees)} × 12`,
+                `= ${formatCurrency((remainingPeriod.payment + ongoingFees) * 12)}`
+              ])}
+              hideDivider
+            />
+          </>
+        ) : (
+          <>
+            <MetaItem
+              title={"Repayment per month (including ongoing fees)"}
+              value={formatCurrency(remainingPeriod.payment + ongoingFees)}
+              tooltip={renderTooltip([
+                "= payment + ongoing fees",
+                `= ${formatCurrency(remainingPeriod.payment)} + ${formatCurrency(ongoingFees)}`,
+                `= ${formatCurrency(remainingPeriod.payment + ongoingFees)}`
+              ])}
+              hideDivider
+            />
+            <MetaItem
+              title={"Repayment per year (including ongoing fees)"}
+              value={formatCurrency((remainingPeriod.payment + ongoingFees) * 12)}
+              tooltip={renderTooltip([
+                "= repayment per month × 12",
+                `= ${formatCurrency(remainingPeriod.payment + ongoingFees)} × 12`,
+                `= ${formatCurrency((remainingPeriod.payment + ongoingFees) * 12)}`
+              ])}
+              hideDivider
+            />
+          </>
+        )}
       </Stack>
       <Stack sx={{ minWidth: 0, flexShrink: 0 }}>
         <Table stickyHeader sx={{ "& .MuiTableCell-root": { typography: "body1", borderBottomWidth: 0 } }}>
@@ -200,9 +251,14 @@ const Content = ({
           </TableHead>
           <TableBody>
             {rows.map((row) => {
+              const paymentFormula = renderTooltip([
+                "= payment basis principal × monthly rate / (1 - (1 + monthly rate)^-payment basis months)",
+                `= ${formatCurrency(row.paymentBasisPrincipal)} × ${(row.monthlyRate * 100).toFixed(6)}% / (1 - (1 + ${(row.monthlyRate * 100).toFixed(6)}%)^-${row.paymentBasisMonths})`,
+                `= ${formatCurrency(row.payment)}`
+              ]);
               const interestFormula = renderTooltip([
                 "= opening balance × monthly rate",
-                `= ${formatCurrency(row.openingBalance)} × ${(monthlyRate * 100).toFixed(6)}%`,
+                `= ${formatCurrency(row.openingBalance)} × ${(row.monthlyRate * 100).toFixed(6)}%`,
                 `= ${formatCurrency(row.interest)}`
               ]);
               const principalFormula = renderTooltip([

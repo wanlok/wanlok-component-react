@@ -1,19 +1,19 @@
 export const calculateComparisonRate = (
   loanAmount: number,
-  actualMonthlyPayment: number,
-  numberOfPayments: number,
+  monthlyPayments: number[],
   applicationFee: number,
   settlementFee: number,
   annualFee: number,
   ongoingFees: number
 ): number => {
   const upfrontFees = applicationFee + settlementFee;
+  const numberOfPayments = monthlyPayments.length;
 
   const netPresentValue = (monthlyRate: number): number => {
     let presentValue = 0;
     for (let month = numberOfPayments; month >= 1; month--) {
       const fee = month % 12 === 0 ? annualFee : 0;
-      const cash = actualMonthlyPayment + ongoingFees + fee;
+      const cash = monthlyPayments[month - 1] + ongoingFees + fee;
       presentValue = (presentValue + cash) / (1 + monthlyRate);
     }
     return presentValue + upfrontFees - loanAmount;

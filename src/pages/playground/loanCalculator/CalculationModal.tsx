@@ -19,6 +19,8 @@ export const CalculationModal = ({
   const [loanAmount, setLoanAmount] = useState("400000");
   const [loanTerm, setLoanTerm] = useState("30");
   const [interestRate, setInterestRate] = useState("6.14");
+  const [fixedLoanTerm, setFixedLoanTerm] = useState("0");
+  const [fixedInterestRate, setFixedInterestRate] = useState("0");
   const [applicationFee, setApplicationFee] = useState("0");
   const [settlementFee, setSettlementFee] = useState("0");
   const [annualFee, setAnnualFee] = useState("0");
@@ -33,13 +35,23 @@ export const CalculationModal = ({
         <YesNoButtons
           yesLabel="Calculate"
           yesDisabled={
-            !loanAmount || !interestRate || !loanTerm || !applicationFee || !settlementFee || !annualFee || !ongoingFees
+            !loanAmount ||
+            !interestRate ||
+            !loanTerm ||
+            !fixedInterestRate ||
+            !fixedLoanTerm ||
+            !applicationFee ||
+            !settlementFee ||
+            !annualFee ||
+            !ongoingFees
           }
           onYesClick={() => {
             onCalculateButtonClick({
               loanAmount,
               interestRate,
               loanTerm,
+              fixedInterestRate,
+              fixedLoanTerm,
               applicationFee,
               settlementFee,
               annualFee,
@@ -61,6 +73,22 @@ export const CalculationModal = ({
         </StyledContainer>
         <StyledContainer sx={{ p: 1 }}>
           <TextInput label="Interest Rate" value={interestRate} onChange={setInterestRate} inputSx={{ flex: 1 }} />
+        </StyledContainer>
+        <StyledContainer sx={{ p: 1 }}>
+          <TextInput
+            label="Fixed Loan Term (in years)"
+            value={fixedLoanTerm}
+            onChange={setFixedLoanTerm}
+            inputSx={{ flex: 1 }}
+          />
+        </StyledContainer>
+        <StyledContainer sx={{ p: 1 }}>
+          <TextInput
+            label="Fixed Interest Rate"
+            value={fixedInterestRate}
+            onChange={setFixedInterestRate}
+            inputSx={{ flex: 1 }}
+          />
         </StyledContainer>
         <StyledContainer sx={{ p: 1 }}>
           <TextInput

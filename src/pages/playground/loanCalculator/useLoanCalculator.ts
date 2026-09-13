@@ -5,6 +5,8 @@ export interface Calculation {
   loanAmount: string;
   interestRate: string;
   loanTerm: string;
+  fixedInterestRate: string;
+  fixedLoanTerm: string;
   applicationFee: string;
   settlementFee: string;
   annualFee: string;
@@ -13,10 +15,9 @@ export interface Calculation {
 
 const emptySchedule: AmortizationSchedule = {
   loanAmount: 0,
-  monthlyRate: 0,
   numberOfPayments: 0,
-  payment: 0,
-  rows: []
+  rows: [],
+  remainingPeriod: { monthlyRate: 0, numberOfPayments: 0, paymentBasisMonths: 0, paymentBasisPrincipal: 0, payment: 0 }
 };
 
 export const useLoanCalculator = () => {
@@ -31,7 +32,9 @@ export const useLoanCalculator = () => {
     return calculateAmortizationSchedule(
       Number(calculation.loanAmount),
       Number(calculation.interestRate),
-      Number(calculation.loanTerm)
+      Number(calculation.loanTerm),
+      Number(calculation.fixedInterestRate),
+      Number(calculation.fixedLoanTerm)
     );
   }, [calculation]);
 
