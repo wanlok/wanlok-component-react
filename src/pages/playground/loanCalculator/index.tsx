@@ -7,6 +7,7 @@ import { DeleteCalculationModal } from "./DeleteCalculationModal";
 import { Calculation, useLoanCalculator } from "./useLoanCalculator";
 import { MetaItem } from "../../../components/MetaItem";
 import { AmortizationSchedule } from "../../../utils/AmortizationUtils";
+import { formatCurrency } from "../../../utils/formatCurrency";
 
 const Content = ({
   calculation,
@@ -23,9 +24,9 @@ const Content = ({
     );
   }
   const { loanAmount, monthlyRate, numberOfPayments, payment, rows } = schedule;
-  const paymentFormula = `$${loanAmount.toFixed(2)} × ${(monthlyRate * 100).toFixed(6)}% / (1 - (1 + ${(
+  const paymentFormula = `${formatCurrency(loanAmount)} × ${(monthlyRate * 100).toFixed(6)}% / (1 - (1 + ${(
     monthlyRate * 100
-  ).toFixed(6)}%)^-${numberOfPayments}) = $${payment.toFixed(2)}`;
+  ).toFixed(6)}%)^-${numberOfPayments}) = ${formatCurrency(payment)}`;
   return (
     <Stack sx={{ flex: 1, minHeight: 0, minWidth: 0, overflow: "auto" }}>
       <Stack
@@ -38,7 +39,7 @@ const Content = ({
           left: 0
         }}
       >
-        <MetaItem title={"Loan amount"} value={calculation.loanAmount} hideDivider />
+        <MetaItem title={"Loan amount"} value={formatCurrency(Number(calculation.loanAmount))} hideDivider />
         <MetaItem title={"Interest rate"} value={calculation.interestRate} hideDivider />
         <MetaItem title={"Loan term"} value={calculation.loanTerm} hideDivider />
         <MetaItem
@@ -48,7 +49,7 @@ const Content = ({
         />
       </Stack>
       <Stack sx={{ minWidth: 0, flexShrink: 0 }}>
-        <Table stickyHeader>
+        <Table stickyHeader sx={{ "& .MuiTableCell-root": { typography: "body1" } }}>
           <TableHead>
             <TableRow sx={{ "& .MuiTableCell-root": { whiteSpace: "nowrap" } }}>
               <TableCell>Month</TableCell>
@@ -62,24 +63,56 @@ const Content = ({
           </TableHead>
           <TableBody>
             {rows.map((row) => {
-              const interestFormula = `$${row.openingBalance.toFixed(2)} × ${(monthlyRate * 100).toFixed(6)}% = $${row.interest.toFixed(2)}`;
+              const interestFormula = `${formatCurrency(row.openingBalance)} × ${(monthlyRate * 100).toFixed(6)}% = ${formatCurrency(row.interest)}`;
+              const principalFormula = `${formatCurrency(row.payment)} - ${formatCurrency(row.interest)} = ${formatCurrency(row.principal)}`;
+              const balanceFormula = `${formatCurrency(row.openingBalance)} - ${formatCurrency(row.principal)} = ${formatCurrency(row.balance)}`;
+              const percentInterestFormula = `${formatCurrency(row.interest)} / ${formatCurrency(row.payment)} = ${row.percentInterest.toFixed(2)}%`;
+              const percentPrincipalFormula = `${formatCurrency(row.principal)} / ${formatCurrency(row.payment)} = ${row.percentPrincipal.toFixed(2)}%`;
               return (
                 <TableRow key={row.month}>
                   <TableCell>{row.month}</TableCell>
                   <TableCell>
                     <Tooltip title={paymentFormula}>
-                      <span>${row.payment.toFixed(2)}</span>
+                      <Typography component="span" variant="body1">
+                        {formatCurrency(row.payment)}
+                      </Typography>
                     </Tooltip>
                   </TableCell>
                   <TableCell>
                     <Tooltip title={interestFormula}>
-                      <span>${row.interest.toFixed(2)}</span>
+                      <Typography component="span" variant="body1">
+                        {formatCurrency(row.interest)}
+                      </Typography>
                     </Tooltip>
                   </TableCell>
-                  <TableCell>${row.principal.toFixed(2)}</TableCell>
-                  <TableCell>${row.balance.toFixed(2)}</TableCell>
-                  <TableCell>{row.percentInterest.toFixed(2)}%</TableCell>
-                  <TableCell>{row.percentPrincipal.toFixed(2)}%</TableCell>
+                  <TableCell>
+                    <Tooltip title={principalFormula}>
+                      <Typography component="span" variant="body1">
+                        {formatCurrency(row.principal)}
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip title={balanceFormula}>
+                      <Typography component="span" variant="body1">
+                        {formatCurrency(row.balance)}
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip title={percentInterestFormula}>
+                      <Typography component="span" variant="body1">
+                        {row.percentInterest.toFixed(2)}%
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
+                  <TableCell>
+                    <Tooltip title={percentPrincipalFormula}>
+                      <Typography component="span" variant="body1">
+                        {row.percentPrincipal.toFixed(2)}%
+                      </Typography>
+                    </Tooltip>
+                  </TableCell>
                 </TableRow>
               );
             })}
