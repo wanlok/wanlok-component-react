@@ -1,4 +1,14 @@
-import { Stack, Typography } from "@mui/material";
+import {
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography
+} from "@mui/material";
 import { Close as CloseIcon, MonetizationOn as MonetizationOnIcon } from "@mui/icons-material";
 import { bottomSx, LayoutHeader, topSx } from "../../../components/LayoutHeader";
 import { iconButtonSx, WButton } from "../../../components/WButton";
@@ -6,8 +16,9 @@ import { CalculationModal } from "./CalculationModal";
 import { DeleteCalculationModal } from "./DeleteCalculationModal";
 import { Calculation, useLoanCalculator } from "./useLoanCalculator";
 import { MetaItem } from "../../../components/MetaItem";
+import { AmortizationRow } from "../../../utils/AmortizationUtils";
 
-const Content = ({ calculation }: { calculation: Calculation | undefined }) => {
+const Content = ({ calculation, schedule }: { calculation: Calculation | undefined; schedule: AmortizationRow[] }) => {
   if (!calculation) {
     return (
       <Stack sx={{ flex: 1, alignItems: "center", justifyContent: "center" }}>
@@ -16,10 +27,40 @@ const Content = ({ calculation }: { calculation: Calculation | undefined }) => {
     );
   }
   return (
-    <Stack sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", p: 2, gap: 2 }}>
-      <MetaItem title={"Loan amount"} value={calculation.loanAmount} />
-      <MetaItem title={"Interest rate"} value={calculation.interestRate} />
-      <MetaItem title={"Loan term"} value={calculation.loanTerm} />
+    <Stack sx={{ flex: 1, minHeight: 0, gap: 2, p: 2 }}>
+      <Stack sx={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 2 }}>
+        <MetaItem title={"Loan amount"} value={calculation.loanAmount} hideDivider />
+        <MetaItem title={"Interest rate"} value={calculation.interestRate} hideDivider />
+        <MetaItem title={"Loan term"} value={calculation.loanTerm} hideDivider />
+      </Stack>
+      <TableContainer component={Paper} sx={{ flex: 1, minHeight: 0 }}>
+        <Table stickyHeader size="small">
+          <TableHead>
+            <TableRow>
+              <TableCell>Month</TableCell>
+              <TableCell>Payment</TableCell>
+              <TableCell>Interest</TableCell>
+              <TableCell>Principal</TableCell>
+              <TableCell>Balance</TableCell>
+              <TableCell>% Interest</TableCell>
+              <TableCell>% Principal</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {schedule.map((row) => (
+              <TableRow key={row.month}>
+                <TableCell>{row.month}</TableCell>
+                <TableCell>${row.payment.toFixed(2)}</TableCell>
+                <TableCell>${row.interest.toFixed(2)}</TableCell>
+                <TableCell>${row.principal.toFixed(2)}</TableCell>
+                <TableCell>${row.balance.toFixed(2)}</TableCell>
+                <TableCell>{row.percentInterest.toFixed(2)}%</TableCell>
+                <TableCell>{row.percentPrincipal.toFixed(2)}%</TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Stack>
   );
 };
@@ -29,6 +70,7 @@ export const Index = () => {
     calculationModalOpen,
     deleteCalculationModalOpen,
     calculation,
+    schedule,
     onCalculatorButtonClick,
     onCalculationModalClose,
     onCalculateButtonClick,
@@ -57,7 +99,7 @@ export const Index = () => {
         }
         bottom={<Stack sx={[bottomSx]} />}
       />
-      <Content calculation={calculation} />
+      <Content calculation={calculation} schedule={schedule} />
       <CalculationModal
         open={calculationModalOpen}
         onClose={onCalculationModalClose}
