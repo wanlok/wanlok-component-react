@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { AmortizationRow, calculateAmortizationSchedule } from "../../../utils/AmortizationUtils";
+import { AmortizationSchedule, calculateAmortizationSchedule } from "../../../utils/AmortizationUtils";
 
 export interface Calculation {
   loanAmount: string;
@@ -7,14 +7,16 @@ export interface Calculation {
   loanTerm: string;
 }
 
+const emptySchedule: AmortizationSchedule = { loanAmount: 0, monthlyRate: 0, numberOfPayments: 0, payment: 0, rows: [] };
+
 export const useLoanCalculator = () => {
   const [calculationModalOpen, setCalculationModalOpen] = useState(false);
   const [deleteCalculationModalOpen, setDeleteCalculationModalOpen] = useState(false);
   const [calculation, setCalculation] = useState<Calculation>();
 
-  const schedule = useMemo<AmortizationRow[]>(() => {
+  const schedule = useMemo<AmortizationSchedule>(() => {
     if (!calculation) {
-      return [];
+      return emptySchedule;
     }
     return calculateAmortizationSchedule(
       Number(calculation.loanAmount),

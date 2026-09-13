@@ -1,5 +1,6 @@
 export interface AmortizationRow {
   month: number;
+  openingBalance: number;
   payment: number;
   interest: number;
   principal: number;
@@ -8,11 +9,19 @@ export interface AmortizationRow {
   percentPrincipal: number;
 }
 
+export interface AmortizationSchedule {
+  loanAmount: number;
+  monthlyRate: number;
+  numberOfPayments: number;
+  payment: number;
+  rows: AmortizationRow[];
+}
+
 export const calculateAmortizationSchedule = (
   loanAmount: number,
   annualInterestRatePercent: number,
   loanTermYears: number
-): AmortizationRow[] => {
+): AmortizationSchedule => {
   const monthlyRate = annualInterestRatePercent / 100 / 12;
   const numberOfPayments = loanTermYears * 12;
   const payment =
@@ -23,11 +32,13 @@ export const calculateAmortizationSchedule = (
   const rows: AmortizationRow[] = [];
   let balance = loanAmount;
   for (let month = 1; month <= numberOfPayments; month++) {
-    const interest = balance * monthlyRate;
+    const openingBalance = balance;
+    const interest = openingBalance * monthlyRate;
     const principal = payment - interest;
     balance -= principal;
     rows.push({
       month,
+      openingBalance,
       payment,
       interest,
       principal,
@@ -36,5 +47,5 @@ export const calculateAmortizationSchedule = (
       percentPrincipal: (principal / payment) * 100
     });
   }
-  return rows;
+  return { loanAmount, monthlyRate, numberOfPayments, payment, rows };
 };
