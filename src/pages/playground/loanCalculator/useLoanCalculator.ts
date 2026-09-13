@@ -5,9 +5,19 @@ export interface Calculation {
   loanAmount: string;
   interestRate: string;
   loanTerm: string;
+  applicationFee: string;
+  settlementFee: string;
+  annualFee: string;
+  ongoingFees: string;
 }
 
-const emptySchedule: AmortizationSchedule = { loanAmount: 0, monthlyRate: 0, numberOfPayments: 0, payment: 0, rows: [] };
+const emptySchedule: AmortizationSchedule = {
+  loanAmount: 0,
+  monthlyRate: 0,
+  numberOfPayments: 0,
+  payment: 0,
+  rows: []
+};
 
 export const useLoanCalculator = () => {
   const [calculationModalOpen, setCalculationModalOpen] = useState(false);

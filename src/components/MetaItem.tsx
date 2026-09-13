@@ -1,3 +1,4 @@
+import { ReactNode } from "react";
 import { Divider, Stack, Tooltip, Typography } from "@mui/material";
 
 export const MetaItem = ({
@@ -8,7 +9,7 @@ export const MetaItem = ({
 }: {
   title: string;
   value: string | undefined;
-  tooltip?: string;
+  tooltip?: ReactNode;
   hideDivider?: boolean;
 }) => {
   const valueTypography =
@@ -28,7 +29,7 @@ export const MetaItem = ({
           {title}
         </Typography>
         {tooltip ? (
-          <Tooltip title={tooltip} arrow>
+          <Tooltip title={tooltip} arrow slotProps={{ tooltip: { sx: { maxWidth: "none" } } }}>
             {valueTypography}
           </Tooltip>
         ) : (

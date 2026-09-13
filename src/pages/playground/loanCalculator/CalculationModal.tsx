@@ -17,8 +17,12 @@ export const CalculationModal = ({
   onCalculateButtonClick: (calculation: Calculation) => void;
 }) => {
   const [loanAmount, setLoanAmount] = useState("400000");
-  const [interestRate, setInterestRate] = useState("6.14");
   const [loanTerm, setLoanTerm] = useState("30");
+  const [interestRate, setInterestRate] = useState("6.14");
+  const [applicationFee, setApplicationFee] = useState("0");
+  const [settlementFee, setSettlementFee] = useState("0");
+  const [annualFee, setAnnualFee] = useState("0");
+  const [ongoingFees, setOngoingFees] = useState("0");
 
   return (
     <WModal
@@ -28,9 +32,19 @@ export const CalculationModal = ({
       bottom={
         <YesNoButtons
           yesLabel="Calculate"
-          yesDisabled={!loanAmount || !interestRate || !loanTerm}
+          yesDisabled={
+            !loanAmount || !interestRate || !loanTerm || !applicationFee || !settlementFee || !annualFee || !ongoingFees
+          }
           onYesClick={() => {
-            onCalculateButtonClick({ loanAmount, interestRate, loanTerm });
+            onCalculateButtonClick({
+              loanAmount,
+              interestRate,
+              loanTerm,
+              applicationFee,
+              settlementFee,
+              annualFee,
+              ongoingFees
+            });
             onClose();
           }}
           noLabel="Cancel"
@@ -43,10 +57,32 @@ export const CalculationModal = ({
           <TextInput label="Loan Amount" value={loanAmount} onChange={setLoanAmount} inputSx={{ flex: 1 }} />
         </StyledContainer>
         <StyledContainer sx={{ p: 1 }}>
+          <TextInput label="Loan Term (in years)" value={loanTerm} onChange={setLoanTerm} inputSx={{ flex: 1 }} />
+        </StyledContainer>
+        <StyledContainer sx={{ p: 1 }}>
           <TextInput label="Interest Rate" value={interestRate} onChange={setInterestRate} inputSx={{ flex: 1 }} />
         </StyledContainer>
         <StyledContainer sx={{ p: 1 }}>
-          <TextInput label="Loan Term (in years)" value={loanTerm} onChange={setLoanTerm} inputSx={{ flex: 1 }} />
+          <TextInput
+            label="Application Fee"
+            value={applicationFee}
+            onChange={setApplicationFee}
+            inputSx={{ flex: 1 }}
+          />
+        </StyledContainer>
+        <StyledContainer sx={{ p: 1 }}>
+          <TextInput label="Settlement Fee" value={settlementFee} onChange={setSettlementFee} inputSx={{ flex: 1 }} />
+        </StyledContainer>
+        <StyledContainer sx={{ p: 1 }}>
+          <TextInput label="Annual Fee" value={annualFee} onChange={setAnnualFee} inputSx={{ flex: 1 }} />
+        </StyledContainer>
+        <StyledContainer sx={{ p: 1 }}>
+          <TextInput
+            label="Ongoing Fees (per month)"
+            value={ongoingFees}
+            onChange={setOngoingFees}
+            inputSx={{ flex: 1 }}
+          />
         </StyledContainer>
       </Stack>
     </WModal>
