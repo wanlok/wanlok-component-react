@@ -40,18 +40,51 @@ const Content = ({
         }}
       >
         <MetaItem title={"Loan amount"} value={formatCurrency(Number(calculation.loanAmount))} hideDivider />
-        <MetaItem title={"Interest rate"} value={calculation.interestRate} hideDivider />
-        <MetaItem title={"Loan term"} value={calculation.loanTerm} hideDivider />
+        <MetaItem title={"Interest rate"} value={`${calculation.interestRate}%`} hideDivider />
+        <MetaItem title={"Loan term (in years)"} value={calculation.loanTerm} hideDivider />
         <MetaItem
           title={"Monthly rate"}
-          value={`${calculation.interestRate} / 100 / 12 = ${(monthlyRate * 100).toFixed(6)}%`}
+          value={`${(monthlyRate * 100).toFixed(6)}%`}
+          tooltip={`${calculation.interestRate} / 100 / 12 = ${(monthlyRate * 100).toFixed(6)}%`}
+          hideDivider
+        />
+        <MetaItem
+          title={"Total amount to be paid back"}
+          value={formatCurrency(payment * numberOfPayments)}
+          tooltip={`${formatCurrency(payment)} × ${numberOfPayments} = ${formatCurrency(payment * numberOfPayments)}`}
+          hideDivider
+        />
+        <MetaItem
+          title={"This means you will pay back"}
+          value={`$${((payment * numberOfPayments) / loanAmount).toFixed(2)} for every $1 borrowed`}
+          tooltip={`${formatCurrency(payment * numberOfPayments)} / ${formatCurrency(loanAmount)} = ${((payment * numberOfPayments) / loanAmount).toFixed(2)}`}
+          hideDivider
+        />
+        <MetaItem
+          title={"Repayment per month (including ongoing fees)"}
+          value={formatCurrency(payment)}
+          tooltip={`${formatCurrency(payment)} + $0.00 = ${formatCurrency(payment)}`}
+          hideDivider
+        />
+        <MetaItem
+          title={"Repayment per year (including ongoing fees)"}
+          value={formatCurrency(payment * 12)}
+          tooltip={`${formatCurrency(payment)} × 12 = ${formatCurrency(payment * 12)}`}
           hideDivider
         />
       </Stack>
       <Stack sx={{ minWidth: 0, flexShrink: 0 }}>
-        <Table stickyHeader sx={{ "& .MuiTableCell-root": { typography: "body1" } }}>
+        <Table stickyHeader sx={{ "& .MuiTableCell-root": { typography: "body1", borderBottomWidth: 0 } }}>
           <TableHead>
-            <TableRow sx={{ "& .MuiTableCell-root": { whiteSpace: "nowrap" } }}>
+            <TableRow
+              sx={{
+                "& .MuiTableCell-root": {
+                  whiteSpace: "nowrap",
+                  backgroundColor: "common.black",
+                  color: "common.white"
+                }
+              }}
+            >
               <TableCell>Month</TableCell>
               <TableCell>Payment</TableCell>
               <TableCell>Interest</TableCell>
@@ -72,42 +105,42 @@ const Content = ({
                 <TableRow key={row.month}>
                   <TableCell>{row.month}</TableCell>
                   <TableCell>
-                    <Tooltip title={paymentFormula}>
+                    <Tooltip title={paymentFormula} arrow>
                       <Typography component="span" variant="body1">
                         {formatCurrency(row.payment)}
                       </Typography>
                     </Tooltip>
                   </TableCell>
                   <TableCell>
-                    <Tooltip title={interestFormula}>
+                    <Tooltip title={interestFormula} arrow>
                       <Typography component="span" variant="body1">
                         {formatCurrency(row.interest)}
                       </Typography>
                     </Tooltip>
                   </TableCell>
                   <TableCell>
-                    <Tooltip title={principalFormula}>
+                    <Tooltip title={principalFormula} arrow>
                       <Typography component="span" variant="body1">
                         {formatCurrency(row.principal)}
                       </Typography>
                     </Tooltip>
                   </TableCell>
                   <TableCell>
-                    <Tooltip title={balanceFormula}>
+                    <Tooltip title={balanceFormula} arrow>
                       <Typography component="span" variant="body1">
                         {formatCurrency(row.balance)}
                       </Typography>
                     </Tooltip>
                   </TableCell>
                   <TableCell>
-                    <Tooltip title={percentInterestFormula}>
+                    <Tooltip title={percentInterestFormula} arrow>
                       <Typography component="span" variant="body1">
                         {row.percentInterest.toFixed(2)}%
                       </Typography>
                     </Tooltip>
                   </TableCell>
                   <TableCell>
-                    <Tooltip title={percentPrincipalFormula}>
+                    <Tooltip title={percentPrincipalFormula} arrow>
                       <Typography component="span" variant="body1">
                         {row.percentPrincipal.toFixed(2)}%
                       </Typography>

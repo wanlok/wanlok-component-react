@@ -16,7 +16,7 @@ export const DeleteCalculationModal = ({
     <WModal
       open={open}
       onClose={onClose}
-      pages={[{ icon: <CloseIcon sx={{ fontSize: 24 }} />, label: "Delete Calculation" }]}
+      pages={[{ icon: <CloseIcon sx={{ fontSize: 24 }} />, label: "Clear Calculation" }]}
       bottom={
         <YesNoButtons
           onYesClick={() => {
@@ -29,7 +29,7 @@ export const DeleteCalculationModal = ({
     >
       <Stack sx={{ p: 2 }}>
         <Typography variant="body1" sx={{ lineHeight: 1.5 }}>
-          Are you sure you want to delete the calculation?
+          Are you sure you want to clear the calculation?
         </Typography>
       </Stack>
     </WModal>

@@ -16,9 +16,9 @@ export const CalculationModal = ({
   onClose: () => void;
   onCalculateButtonClick: (calculation: Calculation) => void;
 }) => {
-  const [loanAmount, setLoanAmount] = useState("");
-  const [interestRate, setInterestRate] = useState("");
-  const [loanTerm, setLoanTerm] = useState("");
+  const [loanAmount, setLoanAmount] = useState("400000");
+  const [interestRate, setInterestRate] = useState("6.14");
+  const [loanTerm, setLoanTerm] = useState("30");
 
   return (
     <WModal
@@ -46,7 +46,7 @@ export const CalculationModal = ({
           <TextInput label="Interest Rate" value={interestRate} onChange={setInterestRate} inputSx={{ flex: 1 }} />
         </StyledContainer>
         <StyledContainer sx={{ p: 1 }}>
-          <TextInput label="Loan Term" value={loanTerm} onChange={setLoanTerm} inputSx={{ flex: 1 }} />
+          <TextInput label="Loan Term (in years)" value={loanTerm} onChange={setLoanTerm} inputSx={{ flex: 1 }} />
         </StyledContainer>
       </Stack>
     </WModal>
