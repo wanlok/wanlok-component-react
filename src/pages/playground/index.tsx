@@ -6,6 +6,7 @@ import { BugReport as BugReportIcon, BugReportOutlined as BugReportOutlinedIcon 
 import { PanelRow } from "../../components/PanelRow";
 import { LeftHeader } from "./LeftHeader";
 import { Index as ImageIndex } from "./image";
+import { Index as LoanCalculatorIndex } from "./loanCalculator";
 import { Index as PuzzleIndex } from "./puzzle";
 import { Index as QuizIndex } from "./quiz";
 import { Index as RegionIndex } from "./region";
@@ -44,6 +45,7 @@ export const Playground = () => {
       }
     >
       {selectedFolder?.id === "image" && <ImageIndex />}
+      {selectedFolder?.id === "loan-calculator" && <LoanCalculatorIndex />}
       {selectedFolder?.id === "puzzle" && <PuzzleIndex />}
       {selectedFolder?.id === "quiz" && <QuizIndex />}
       {selectedFolder?.id === "region" && <RegionIndex />}
